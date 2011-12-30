@@ -1,0 +1,309 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		CE2B4A7314489BD500F33415 /* MyCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2B4A7214489BD500F33415 /* MyCategory.m */; };
+		CE2B4A771448B09A00F33415 /* MyParserDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2B4A761448B09900F33415 /* MyParserDelegate.m */; };
+		CE89C4991449CA1D00E2E13E /* KMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = CE89C4981449CA1D00E2E13E /* KMLReader.m */; };
+		CE89C49E144A445100E2E13E /* JavaStringCat.m in Sources */ = {isa = PBXBuildFile; fileRef = CE89C49D144A445100E2E13E /* JavaStringCat.m */; };
+		CE8A315A1449908A00785579 /* POIData.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8A31591449908A00785579 /* POIData.m */; };
+		CE8A77331448DD9A00DF0036 /* GDataXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8A77321448DD9A00DF0036 /* GDataXMLNode.m */; };
+		CE8A77371448DDD500DF0036 /* XMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8A77361448DDD500DF0036 /* XMLReader.m */; };
+		CE8EE2AC14464065006EA3D3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE8EE2AB14464065006EA3D3 /* Foundation.framework */; };
+		CE8EE2AF14464065006EA3D3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8EE2AE14464065006EA3D3 /* main.m */; };
+		CE8EE2BA14464086006EA3D3 /* MyClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8EE2B914464086006EA3D3 /* MyClass.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		CE8EE2A514464065006EA3D3 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		CE2B4A7114489BD500F33415 /* MyCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCategory.h; sourceTree = "<group>"; };
+		CE2B4A7214489BD500F33415 /* MyCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCategory.m; sourceTree = "<group>"; };
+		CE2B4A751448B09800F33415 /* MyParserDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyParserDelegate.h; sourceTree = "<group>"; };
+		CE2B4A761448B09900F33415 /* MyParserDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyParserDelegate.m; sourceTree = "<group>"; };
+		CE89C4971449CA1D00E2E13E /* KMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KMLReader.h; sourceTree = "<group>"; };
+		CE89C4981449CA1D00E2E13E /* KMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KMLReader.m; sourceTree = "<group>"; };
+		CE89C49C144A445100E2E13E /* JavaStringCat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JavaStringCat.h; sourceTree = "<group>"; };
+		CE89C49D144A445100E2E13E /* JavaStringCat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JavaStringCat.m; sourceTree = "<group>"; };
+		CE8A31581449908A00785579 /* POIData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POIData.h; sourceTree = "<group>"; };
+		CE8A31591449908A00785579 /* POIData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = POIData.m; sourceTree = "<group>"; };
+		CE8A77311448DD9A00DF0036 /* GDataXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDataXMLNode.h; sourceTree = "<group>"; };
+		CE8A77321448DD9A00DF0036 /* GDataXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDataXMLNode.m; sourceTree = "<group>"; };
+		CE8A77351448DDD500DF0036 /* XMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLReader.h; sourceTree = "<group>"; };
+		CE8A77361448DDD500DF0036 /* XMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMLReader.m; sourceTree = "<group>"; };
+		CE8EE2A714464065006EA3D3 /* JZBTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = JZBTest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE8EE2AB14464065006EA3D3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		CE8EE2AE14464065006EA3D3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		CE8EE2B114464065006EA3D3 /* JZBTest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JZBTest-Prefix.pch"; sourceTree = "<group>"; };
+		CE8EE2B214464065006EA3D3 /* JZBTest.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = JZBTest.1; sourceTree = "<group>"; };
+		CE8EE2B814464086006EA3D3 /* MyClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyClass.h; sourceTree = "<group>"; };
+		CE8EE2B914464086006EA3D3 /* MyClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyClass.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CE8EE2A414464065006EA3D3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE8EE2AC14464065006EA3D3 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		CE88ACDA1448D9BE00955FA7 /* GData */ = {
+			isa = PBXGroup;
+			children = (
+				CE8A77311448DD9A00DF0036 /* GDataXMLNode.h */,
+				CE8A77321448DD9A00DF0036 /* GDataXMLNode.m */,
+			);
+			name = GData;
+			sourceTree = "<group>";
+		};
+		CE89C49B144A442B00E2E13E /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				CE89C49C144A445100E2E13E /* JavaStringCat.h */,
+				CE89C49D144A445100E2E13E /* JavaStringCat.m */,
+			);
+			name = Categories;
+			sourceTree = "<group>";
+		};
+		CE8A31551449902700785579 /* TTSync */ = {
+			isa = PBXGroup;
+			children = (
+				CE89C49B144A442B00E2E13E /* Categories */,
+				CE8A31571449903100785579 /* Core */,
+			);
+			name = TTSync;
+			sourceTree = "<group>";
+		};
+		CE8A31571449903100785579 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				CE8A31581449908A00785579 /* POIData.h */,
+				CE8A31591449908A00785579 /* POIData.m */,
+				CE89C4971449CA1D00E2E13E /* KMLReader.h */,
+				CE89C4981449CA1D00E2E13E /* KMLReader.m */,
+			);
+			name = Core;
+			sourceTree = "<group>";
+		};
+		CE8EE29C14464065006EA3D3 = {
+			isa = PBXGroup;
+			children = (
+				CE8EE2AD14464065006EA3D3 /* JZBTest */,
+				CE8EE2AA14464065006EA3D3 /* Frameworks */,
+				CE8EE2A814464065006EA3D3 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		CE8EE2A814464065006EA3D3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CE8EE2A714464065006EA3D3 /* JZBTest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CE8EE2AA14464065006EA3D3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CE8EE2AB14464065006EA3D3 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CE8EE2AD14464065006EA3D3 /* JZBTest */ = {
+			isa = PBXGroup;
+			children = (
+				CE8A31551449902700785579 /* TTSync */,
+				CE88ACDA1448D9BE00955FA7 /* GData */,
+				CE8A77351448DDD500DF0036 /* XMLReader.h */,
+				CE8A77361448DDD500DF0036 /* XMLReader.m */,
+				CE8EE2AE14464065006EA3D3 /* main.m */,
+				CE8EE2B814464086006EA3D3 /* MyClass.h */,
+				CE8EE2B914464086006EA3D3 /* MyClass.m */,
+				CE2B4A7114489BD500F33415 /* MyCategory.h */,
+				CE2B4A7214489BD500F33415 /* MyCategory.m */,
+				CE2B4A751448B09800F33415 /* MyParserDelegate.h */,
+				CE2B4A761448B09900F33415 /* MyParserDelegate.m */,
+				CE8EE2B214464065006EA3D3 /* JZBTest.1 */,
+				CE8EE2B014464065006EA3D3 /* Supporting Files */,
+			);
+			path = JZBTest;
+			sourceTree = "<group>";
+		};
+		CE8EE2B014464065006EA3D3 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				CE8EE2B114464065006EA3D3 /* JZBTest-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		CE8EE2A614464065006EA3D3 /* JZBTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CE8EE2B514464065006EA3D3 /* Build configuration list for PBXNativeTarget "JZBTest" */;
+			buildPhases = (
+				CE8EE2A314464065006EA3D3 /* Sources */,
+				CE8EE2A414464065006EA3D3 /* Frameworks */,
+				CE8EE2A514464065006EA3D3 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = JZBTest;
+			productName = JZBTest;
+			productReference = CE8EE2A714464065006EA3D3 /* JZBTest */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CE8EE29E14464065006EA3D3 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = CE8EE2A114464065006EA3D3 /* Build configuration list for PBXProject "JZBTest" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = CE8EE29C14464065006EA3D3;
+			productRefGroup = CE8EE2A814464065006EA3D3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CE8EE2A614464065006EA3D3 /* JZBTest */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CE8EE2A314464065006EA3D3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE8EE2AF14464065006EA3D3 /* main.m in Sources */,
+				CE8EE2BA14464086006EA3D3 /* MyClass.m in Sources */,
+				CE2B4A7314489BD500F33415 /* MyCategory.m in Sources */,
+				CE2B4A771448B09A00F33415 /* MyParserDelegate.m in Sources */,
+				CE8A77331448DD9A00DF0036 /* GDataXMLNode.m in Sources */,
+				CE8A77371448DDD500DF0036 /* XMLReader.m in Sources */,
+				CE8A315A1449908A00785579 /* POIData.m in Sources */,
+				CE89C4991449CA1D00E2E13E /* KMLReader.m in Sources */,
+				CE89C49E144A445100E2E13E /* JavaStringCat.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		CE8EE2B314464065006EA3D3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				"HEADER_SEARCH_PATHS[arch=*]" = /usr/include/libxml2;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
+				"OTHER_LDFLAGS[arch=*]" = "-lxml2";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		CE8EE2B414464065006EA3D3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				"HEADER_SEARCH_PATHS[arch=*]" = /usr/include/libxml2;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				"OTHER_LDFLAGS[arch=*]" = "-lxml2";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		CE8EE2B614464065006EA3D3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "JZBTest/JZBTest-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		CE8EE2B714464065006EA3D3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "JZBTest/JZBTest-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CE8EE2A114464065006EA3D3 /* Build configuration list for PBXProject "JZBTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE8EE2B314464065006EA3D3 /* Debug */,
+				CE8EE2B414464065006EA3D3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CE8EE2B514464065006EA3D3 /* Build configuration list for PBXNativeTarget "JZBTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE8EE2B614464065006EA3D3 /* Debug */,
+				CE8EE2B714464065006EA3D3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = CE8EE29E14464065006EA3D3 /* Project object */;
+}

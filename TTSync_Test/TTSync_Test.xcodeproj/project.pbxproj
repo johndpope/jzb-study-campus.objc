@@ -1,0 +1,346 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		425189E814549B2A0093FE68 /* libicucore.A.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 425189E714549B2A0093FE68 /* libicucore.A.dylib */; };
+		429CEFD514547CD20082072D /* JavaStringCat.m in Sources */ = {isa = PBXBuildFile; fileRef = 429CEFCE14547CD20082072D /* JavaStringCat.m */; };
+		429CEFD614547CD20082072D /* GDataXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 429CEFD114547CD20082072D /* GDataXMLNode.m */; };
+		429CEFD714547CD20082072D /* XMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 429CEFD414547CD20082072D /* XMLReader.m */; };
+		429CEFE014547CEE0082072D /* POIData.m in Sources */ = {isa = PBXBuildFile; fileRef = 429CEFDB14547CEE0082072D /* POIData.m */; };
+		429CEFE114547CEE0082072D /* TT_main_test.m in Sources */ = {isa = PBXBuildFile; fileRef = 429CEFDC14547CEE0082072D /* TT_main_test.m */; };
+		429CEFE214547CEE0082072D /* KMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 429CEFDF14547CEE0082072D /* KMLReader.m */; };
+		42C2C11E145490980046B2A2 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 42C2C11D145490980046B2A2 /* RegexKitLite.m */; };
+		42CFEF1E145479A700C59059 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42CFEF1D145479A700C59059 /* Foundation.framework */; };
+		42CFEF21145479A700C59059 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CFEF20145479A700C59059 /* main.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		42CFEF17145479A700C59059 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		425189E714549B2A0093FE68 /* libicucore.A.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.A.dylib; path = usr/lib/libicucore.A.dylib; sourceTree = SDKROOT; };
+		429CEFCD14547CD20082072D /* JavaStringCat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JavaStringCat.h; sourceTree = "<group>"; };
+		429CEFCE14547CD20082072D /* JavaStringCat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JavaStringCat.m; sourceTree = "<group>"; };
+		429CEFD014547CD20082072D /* GDataXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDataXMLNode.h; sourceTree = "<group>"; };
+		429CEFD114547CD20082072D /* GDataXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDataXMLNode.m; sourceTree = "<group>"; };
+		429CEFD314547CD20082072D /* XMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLReader.h; sourceTree = "<group>"; };
+		429CEFD414547CD20082072D /* XMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMLReader.m; sourceTree = "<group>"; };
+		429CEFDA14547CEE0082072D /* POIData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POIData.h; sourceTree = "<group>"; };
+		429CEFDB14547CEE0082072D /* POIData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = POIData.m; sourceTree = "<group>"; };
+		429CEFDC14547CEE0082072D /* TT_main_test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TT_main_test.m; sourceTree = "<group>"; };
+		429CEFDE14547CEE0082072D /* KMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KMLReader.h; sourceTree = "<group>"; };
+		429CEFDF14547CEE0082072D /* KMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KMLReader.m; sourceTree = "<group>"; };
+		42C2C11B145490980046B2A2 /* RegexKitLite-4.0.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "RegexKitLite-4.0.pdf"; sourceTree = "<group>"; };
+		42C2C11C145490980046B2A2 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
+		42C2C11D145490980046B2A2 /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
+		42CFEF19145479A700C59059 /* TTSync_Test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TTSync_Test; sourceTree = BUILT_PRODUCTS_DIR; };
+		42CFEF1D145479A700C59059 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		42CFEF20145479A700C59059 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		42CFEF23145479A700C59059 /* TTSync_Test-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TTSync_Test-Prefix.pch"; sourceTree = "<group>"; };
+		42CFEF24145479A700C59059 /* TTSync_Test.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = TTSync_Test.1; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		42CFEF16145479A700C59059 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				42CFEF1E145479A700C59059 /* Foundation.framework in Frameworks */,
+				425189E814549B2A0093FE68 /* libicucore.A.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		429CEFCB14547CD20082072D /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				42C2C11A145490980046B2A2 /* RegexKitLite */,
+				429CEFCC14547CD20082072D /* Categories */,
+				429CEFCF14547CD20082072D /* GData */,
+				429CEFD214547CD20082072D /* XMLReader */,
+			);
+			path = libs;
+			sourceTree = "<group>";
+		};
+		429CEFCC14547CD20082072D /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				429CEFCD14547CD20082072D /* JavaStringCat.h */,
+				429CEFCE14547CD20082072D /* JavaStringCat.m */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
+		429CEFCF14547CD20082072D /* GData */ = {
+			isa = PBXGroup;
+			children = (
+				429CEFD014547CD20082072D /* GDataXMLNode.h */,
+				429CEFD114547CD20082072D /* GDataXMLNode.m */,
+			);
+			path = GData;
+			sourceTree = "<group>";
+		};
+		429CEFD214547CD20082072D /* XMLReader */ = {
+			isa = PBXGroup;
+			children = (
+				429CEFD314547CD20082072D /* XMLReader.h */,
+				429CEFD414547CD20082072D /* XMLReader.m */,
+			);
+			path = XMLReader;
+			sourceTree = "<group>";
+		};
+		429CEFD814547CEE0082072D /* core */ = {
+			isa = PBXGroup;
+			children = (
+				429CEFDC14547CEE0082072D /* TT_main_test.m */,
+				429CEFD914547CEE0082072D /* data */,
+				429CEFDD14547CEE0082072D /* util */,
+			);
+			path = core;
+			sourceTree = "<group>";
+		};
+		429CEFD914547CEE0082072D /* data */ = {
+			isa = PBXGroup;
+			children = (
+				429CEFDA14547CEE0082072D /* POIData.h */,
+				429CEFDB14547CEE0082072D /* POIData.m */,
+			);
+			path = data;
+			sourceTree = "<group>";
+		};
+		429CEFDD14547CEE0082072D /* util */ = {
+			isa = PBXGroup;
+			children = (
+				429CEFDE14547CEE0082072D /* KMLReader.h */,
+				429CEFDF14547CEE0082072D /* KMLReader.m */,
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
+		42C2C11A145490980046B2A2 /* RegexKitLite */ = {
+			isa = PBXGroup;
+			children = (
+				42C2C11B145490980046B2A2 /* RegexKitLite-4.0.pdf */,
+				42C2C11C145490980046B2A2 /* RegexKitLite.h */,
+				42C2C11D145490980046B2A2 /* RegexKitLite.m */,
+			);
+			path = RegexKitLite;
+			sourceTree = "<group>";
+		};
+		42CFEF0E145479A700C59059 = {
+			isa = PBXGroup;
+			children = (
+				42CFEF1F145479A700C59059 /* TTSync_Test */,
+				42CFEF1C145479A700C59059 /* Frameworks */,
+				42CFEF1A145479A700C59059 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		42CFEF1A145479A700C59059 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				42CFEF19145479A700C59059 /* TTSync_Test */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		42CFEF1C145479A700C59059 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				425189E714549B2A0093FE68 /* libicucore.A.dylib */,
+				42CFEF1D145479A700C59059 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		42CFEF1F145479A700C59059 /* TTSync_Test */ = {
+			isa = PBXGroup;
+			children = (
+				42CFEF22145479A700C59059 /* Supporting Files */,
+				429CEFD814547CEE0082072D /* core */,
+				429CEFCB14547CD20082072D /* libs */,
+				42CFEF20145479A700C59059 /* main.m */,
+				42CFEF24145479A700C59059 /* TTSync_Test.1 */,
+			);
+			path = TTSync_Test;
+			sourceTree = "<group>";
+		};
+		42CFEF22145479A700C59059 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				42CFEF23145479A700C59059 /* TTSync_Test-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		42CFEF18145479A700C59059 /* TTSync_Test */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 42CFEF27145479A700C59059 /* Build configuration list for PBXNativeTarget "TTSync_Test" */;
+			buildPhases = (
+				42CFEF15145479A700C59059 /* Sources */,
+				42CFEF16145479A700C59059 /* Frameworks */,
+				42CFEF17145479A700C59059 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TTSync_Test;
+			productName = TTSync_Test;
+			productReference = 42CFEF19145479A700C59059 /* TTSync_Test */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		42CFEF10145479A700C59059 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 42CFEF13145479A700C59059 /* Build configuration list for PBXProject "TTSync_Test" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 42CFEF0E145479A700C59059;
+			productRefGroup = 42CFEF1A145479A700C59059 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				42CFEF18145479A700C59059 /* TTSync_Test */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		42CFEF15145479A700C59059 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				42CFEF21145479A700C59059 /* main.m in Sources */,
+				429CEFD514547CD20082072D /* JavaStringCat.m in Sources */,
+				429CEFD614547CD20082072D /* GDataXMLNode.m in Sources */,
+				429CEFD714547CD20082072D /* XMLReader.m in Sources */,
+				429CEFE014547CEE0082072D /* POIData.m in Sources */,
+				429CEFE114547CEE0082072D /* TT_main_test.m in Sources */,
+				429CEFE214547CEE0082072D /* KMLReader.m in Sources */,
+				42C2C11E145490980046B2A2 /* RegexKitLite.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		42CFEF25145479A700C59059 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		42CFEF26145479A700C59059 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		42CFEF28145479A700C59059 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TTSync_Test/TTSync_Test-Prefix.pch";
+				HEADER_SEARCH_PATHS = /usr/include/libxml2;
+				"OTHER_LDFLAGS[arch=*]" = (
+					"-lxml2",
+					"-licucore",
+				);
+				"PRELINK_LIBS[arch=*]" = libicucore.dylib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		42CFEF29145479A700C59059 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TTSync_Test/TTSync_Test-Prefix.pch";
+				HEADER_SEARCH_PATHS = /usr/include/libxml2;
+				"OTHER_LDFLAGS[arch=*]" = (
+					"-lxml2",
+					"-licucore",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		42CFEF13145479A700C59059 /* Build configuration list for PBXProject "TTSync_Test" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				42CFEF25145479A700C59059 /* Debug */,
+				42CFEF26145479A700C59059 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		42CFEF27145479A700C59059 /* Build configuration list for PBXNativeTarget "TTSync_Test" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				42CFEF28145479A700C59059 /* Debug */,
+				42CFEF29145479A700C59059 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 42CFEF10145479A700C59059 /* Project object */;
+}

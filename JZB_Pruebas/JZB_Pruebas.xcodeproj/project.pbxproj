@@ -1,0 +1,224 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		42AEE5EF1454317800EEB886 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42AEE5EE1454317800EEB886 /* Foundation.framework */; };
+		42AEE5F21454317800EEB886 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 42AEE5F11454317800EEB886 /* main.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		42AEE5E81454317800EEB886 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		42AEE5EA1454317800EEB886 /* JZB_Pruebas */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = JZB_Pruebas; sourceTree = BUILT_PRODUCTS_DIR; };
+		42AEE5EE1454317800EEB886 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		42AEE5F11454317800EEB886 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		42AEE5F41454317800EEB886 /* JZB_Pruebas-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JZB_Pruebas-Prefix.pch"; sourceTree = "<group>"; };
+		42AEE5F51454317800EEB886 /* JZB_Pruebas.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = JZB_Pruebas.1; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		42AEE5E71454317800EEB886 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				42AEE5EF1454317800EEB886 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		42AEE5DF1454317800EEB886 = {
+			isa = PBXGroup;
+			children = (
+				42AEE5F01454317800EEB886 /* JZB_Pruebas */,
+				42AEE5ED1454317800EEB886 /* Frameworks */,
+				42AEE5EB1454317800EEB886 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		42AEE5EB1454317800EEB886 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				42AEE5EA1454317800EEB886 /* JZB_Pruebas */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		42AEE5ED1454317800EEB886 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				42AEE5EE1454317800EEB886 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		42AEE5F01454317800EEB886 /* JZB_Pruebas */ = {
+			isa = PBXGroup;
+			children = (
+				42AEE5F11454317800EEB886 /* main.m */,
+				42AEE5F51454317800EEB886 /* JZB_Pruebas.1 */,
+				42AEE5F31454317800EEB886 /* Supporting Files */,
+			);
+			path = JZB_Pruebas;
+			sourceTree = "<group>";
+		};
+		42AEE5F31454317800EEB886 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				42AEE5F41454317800EEB886 /* JZB_Pruebas-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		42AEE5E91454317800EEB886 /* JZB_Pruebas */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 42AEE5F81454317800EEB886 /* Build configuration list for PBXNativeTarget "JZB_Pruebas" */;
+			buildPhases = (
+				42AEE5E61454317800EEB886 /* Sources */,
+				42AEE5E71454317800EEB886 /* Frameworks */,
+				42AEE5E81454317800EEB886 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = JZB_Pruebas;
+			productName = JZB_Pruebas;
+			productReference = 42AEE5EA1454317800EEB886 /* JZB_Pruebas */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		42AEE5E11454317800EEB886 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 42AEE5E41454317800EEB886 /* Build configuration list for PBXProject "JZB_Pruebas" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 42AEE5DF1454317800EEB886;
+			productRefGroup = 42AEE5EB1454317800EEB886 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				42AEE5E91454317800EEB886 /* JZB_Pruebas */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		42AEE5E61454317800EEB886 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				42AEE5F21454317800EEB886 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		42AEE5F61454317800EEB886 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		42AEE5F71454317800EEB886 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		42AEE5F91454317800EEB886 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "JZB_Pruebas/JZB_Pruebas-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		42AEE5FA1454317800EEB886 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "JZB_Pruebas/JZB_Pruebas-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		42AEE5E41454317800EEB886 /* Build configuration list for PBXProject "JZB_Pruebas" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				42AEE5F61454317800EEB886 /* Debug */,
+				42AEE5F71454317800EEB886 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		42AEE5F81454317800EEB886 /* Build configuration list for PBXNativeTarget "JZB_Pruebas" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				42AEE5F91454317800EEB886 /* Debug */,
+				42AEE5FA1454317800EEB886 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 42AEE5E11454317800EEB886 /* Project object */;
+}
