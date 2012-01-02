@@ -48,7 +48,7 @@ void doIt() {
     [poi dump];
 
     
-    [KMLReader readKMLFileFromPath:@"/Users/jzarzuela/Documents/jzb-study-campus/flex/kmls/BT_Boston_2010.kml" allowDuplicated:TRUE];
+    [KMLReader readKMLFileFromPath:@"/Users/jzarzuela/Documents/flex-campus/kmls/BT_Boston_2010.kml" allowDuplicated:TRUE];
     
 }
     
