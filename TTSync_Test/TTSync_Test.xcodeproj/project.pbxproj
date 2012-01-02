@@ -8,18 +8,17 @@
 
 /* Begin PBXBuildFile section */
 		425189E814549B2A0093FE68 /* libicucore.A.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 425189E714549B2A0093FE68 /* libicucore.A.dylib */; };
+		42735C4F14B26624002FFF13 /* GCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 42735C4A14B26624002FFF13 /* GCategory.m */; };
+		42735C5014B26624002FFF13 /* GMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 42735C4C14B26624002FFF13 /* GMap.m */; };
+		42735C5114B26624002FFF13 /* GPOI.m in Sources */ = {isa = PBXBuildFile; fileRef = 42735C4E14B26624002FFF13 /* GPOI.m */; };
 		429CEFD514547CD20082072D /* JavaStringCat.m in Sources */ = {isa = PBXBuildFile; fileRef = 429CEFCE14547CD20082072D /* JavaStringCat.m */; };
 		429CEFD614547CD20082072D /* GDataXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 429CEFD114547CD20082072D /* GDataXMLNode.m */; };
 		429CEFD714547CD20082072D /* XMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 429CEFD414547CD20082072D /* XMLReader.m */; };
-		429CEFE014547CEE0082072D /* POI.m in Sources */ = {isa = PBXBuildFile; fileRef = 429CEFDB14547CEE0082072D /* POI.m */; };
 		429CEFE114547CEE0082072D /* TT_main_test.m in Sources */ = {isa = PBXBuildFile; fileRef = 429CEFDC14547CEE0082072D /* TT_main_test.m */; };
 		429CEFE214547CEE0082072D /* KMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 429CEFDF14547CEE0082072D /* KMLReader.m */; };
 		42C2C11E145490980046B2A2 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 42C2C11D145490980046B2A2 /* RegexKitLite.m */; };
 		42CFEF1E145479A700C59059 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42CFEF1D145479A700C59059 /* Foundation.framework */; };
 		42CFEF21145479A700C59059 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CFEF20145479A700C59059 /* main.m */; };
-		42E2F12C14B23C2D007B9D99 /* Map.m in Sources */ = {isa = PBXBuildFile; fileRef = 42E2F12B14B23C2D007B9D99 /* Map.m */; };
-		42E2F13014B2438E007B9D99 /* Icon.m in Sources */ = {isa = PBXBuildFile; fileRef = 42E2F12F14B2438E007B9D99 /* Icon.m */; };
-		42E2F13314B25001007B9D99 /* Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 42E2F13214B25001007B9D99 /* Category.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -36,14 +35,18 @@
 
 /* Begin PBXFileReference section */
 		425189E714549B2A0093FE68 /* libicucore.A.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.A.dylib; path = usr/lib/libicucore.A.dylib; sourceTree = SDKROOT; };
+		42735C4914B26624002FFF13 /* GCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCategory.h; sourceTree = "<group>"; };
+		42735C4A14B26624002FFF13 /* GCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCategory.m; sourceTree = "<group>"; };
+		42735C4B14B26624002FFF13 /* GMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMap.h; sourceTree = "<group>"; };
+		42735C4C14B26624002FFF13 /* GMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMap.m; sourceTree = "<group>"; };
+		42735C4D14B26624002FFF13 /* GPOI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPOI.h; sourceTree = "<group>"; };
+		42735C4E14B26624002FFF13 /* GPOI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPOI.m; sourceTree = "<group>"; };
 		429CEFCD14547CD20082072D /* JavaStringCat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JavaStringCat.h; sourceTree = "<group>"; };
 		429CEFCE14547CD20082072D /* JavaStringCat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JavaStringCat.m; sourceTree = "<group>"; };
 		429CEFD014547CD20082072D /* GDataXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDataXMLNode.h; sourceTree = "<group>"; };
 		429CEFD114547CD20082072D /* GDataXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDataXMLNode.m; sourceTree = "<group>"; };
 		429CEFD314547CD20082072D /* XMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLReader.h; sourceTree = "<group>"; };
 		429CEFD414547CD20082072D /* XMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMLReader.m; sourceTree = "<group>"; };
-		429CEFDA14547CEE0082072D /* POI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POI.h; sourceTree = "<group>"; };
-		429CEFDB14547CEE0082072D /* POI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = POI.m; sourceTree = "<group>"; };
 		429CEFDC14547CEE0082072D /* TT_main_test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TT_main_test.m; sourceTree = "<group>"; };
 		429CEFDE14547CEE0082072D /* KMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KMLReader.h; sourceTree = "<group>"; };
 		429CEFDF14547CEE0082072D /* KMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KMLReader.m; sourceTree = "<group>"; };
@@ -55,12 +58,6 @@
 		42CFEF20145479A700C59059 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		42CFEF23145479A700C59059 /* TTSync_Test-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TTSync_Test-Prefix.pch"; sourceTree = "<group>"; };
 		42CFEF24145479A700C59059 /* TTSync_Test.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = TTSync_Test.1; sourceTree = "<group>"; };
-		42E2F12A14B23C2D007B9D99 /* Map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Map.h; sourceTree = "<group>"; };
-		42E2F12B14B23C2D007B9D99 /* Map.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Map.m; sourceTree = "<group>"; };
-		42E2F12E14B2438E007B9D99 /* Icon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Icon.h; sourceTree = "<group>"; };
-		42E2F12F14B2438E007B9D99 /* Icon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Icon.m; sourceTree = "<group>"; };
-		42E2F13114B25000007B9D99 /* Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Category.h; sourceTree = "<group>"; };
-		42E2F13214B25001007B9D99 /* Category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Category.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,14 +124,12 @@
 		429CEFD914547CEE0082072D /* data */ = {
 			isa = PBXGroup;
 			children = (
-				429CEFDA14547CEE0082072D /* POI.h */,
-				429CEFDB14547CEE0082072D /* POI.m */,
-				42E2F12A14B23C2D007B9D99 /* Map.h */,
-				42E2F12B14B23C2D007B9D99 /* Map.m */,
-				42E2F12E14B2438E007B9D99 /* Icon.h */,
-				42E2F12F14B2438E007B9D99 /* Icon.m */,
-				42E2F13114B25000007B9D99 /* Category.h */,
-				42E2F13214B25001007B9D99 /* Category.m */,
+				42735C4914B26624002FFF13 /* GCategory.h */,
+				42735C4A14B26624002FFF13 /* GCategory.m */,
+				42735C4B14B26624002FFF13 /* GMap.h */,
+				42735C4C14B26624002FFF13 /* GMap.m */,
+				42735C4D14B26624002FFF13 /* GPOI.h */,
+				42735C4E14B26624002FFF13 /* GPOI.m */,
 			);
 			path = data;
 			sourceTree = "<group>";
@@ -255,13 +250,12 @@
 				429CEFD514547CD20082072D /* JavaStringCat.m in Sources */,
 				429CEFD614547CD20082072D /* GDataXMLNode.m in Sources */,
 				429CEFD714547CD20082072D /* XMLReader.m in Sources */,
-				429CEFE014547CEE0082072D /* POI.m in Sources */,
 				429CEFE114547CEE0082072D /* TT_main_test.m in Sources */,
 				429CEFE214547CEE0082072D /* KMLReader.m in Sources */,
 				42C2C11E145490980046B2A2 /* RegexKitLite.m in Sources */,
-				42E2F12C14B23C2D007B9D99 /* Map.m in Sources */,
-				42E2F13014B2438E007B9D99 /* Icon.m in Sources */,
-				42E2F13314B25001007B9D99 /* Category.m in Sources */,
+				42735C4F14B26624002FFF13 /* GCategory.m in Sources */,
+				42735C5014B26624002FFF13 /* GMap.m in Sources */,
+				42735C5114B26624002FFF13 /* GPOI.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
