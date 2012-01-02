@@ -7,28 +7,26 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "Icon.h"
+#import "GPOI.h"
 
-@interface Map : NSObject {
+@interface GMap : NSObject {
     
 @private
     NSString *guid;
     NSString *name;
-    NSString *desc;
-    Icon     *icon;
-    NSArray *pois;
-    NSString *catPrefix;
+    NSMutableArray *pois;
     NSString *mapURL;
     NSString *lastUpdate;
 }
 
 @property (nonatomic, copy) NSString *guid;
 @property (nonatomic, copy) NSString *name;
-@property (nonatomic, copy) NSString *desc;
-@property (nonatomic, copy) Icon     *icon;
 @property (nonatomic, copy) NSArray *pois;
-@property (nonatomic, copy) NSString *catPrefix;
 @property (nonatomic, copy) NSString *mapURL;
 @property (nonatomic, copy) NSString *lastUpdate;
+
+
+// Añade un nuevo GPOI al mapa. A partir de ese punto el mapa es el dueño del POI
+- (void) addPOI: (GPOI *)apoi;
 
 @end

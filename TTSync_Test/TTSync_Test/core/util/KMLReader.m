@@ -8,9 +8,12 @@
 
 #import "KMLReader.h"
 #import "GDataXMLNode.h"
-#import "POIData.h"
 #import "JavaStringCat.h"
 #import "RegexKitLite.h"
+#import "GPOI.h"
+#import "GMap.h"
+#import "GCategory.h"
+
 
 
 //----------------------------------------------------------------------------
@@ -19,7 +22,7 @@
 @interface KMLReader () 
 
 + (void) parserKMLFile: (NSString *)filePath;
-+ (POIData *) parsePOIFromNode: (GDataXMLNode *)node namespaces:(NSDictionary *)nss error:(NSError*) err;
++ (GPOI *) parsePOIFromNode: (GDataXMLNode *)node namespaces:(NSDictionary *)nss error:(NSError*) err;
 
 @end
 
@@ -85,7 +88,7 @@ NSString * _getNodeStrValue(NSString *xpath, GDataXMLNode *node, NSDictionary *n
     // Iterate all the "Point" placemarks   
     NSArray *children = [doc nodesForXPath: @"/ns1:kml/ns1:Document/ns1:Placemark/ns1:Point/.." namespaces:nss error: &err];
     for(GDataXMLNode *node in children) {
-        POIData *poi = [KMLReader parsePOIFromNode:node namespaces:nss error:err];
+        GPOI *poi = [KMLReader parsePOIFromNode:node namespaces:nss error:err];
         [poi dump];
     }
         
@@ -93,10 +96,10 @@ NSString * _getNodeStrValue(NSString *xpath, GDataXMLNode *node, NSDictionary *n
 
 
 //****************************************************************************
-+ (POIData *) parsePOIFromNode: (GDataXMLNode *)node namespaces:(NSDictionary *)nss error:(NSError*) err {
++ (GPOI *) parsePOIFromNode: (GDataXMLNode *)node namespaces:(NSDictionary *)nss error:(NSError*) err {
     
     // TODO : Se hace aqui el autorelase???
-    POIData *poi = [[POIData new] autorelease];
+    GPOI *poi = [[GPOI new] autorelease];
     
     
     // name
@@ -138,10 +141,6 @@ NSString * _getNodeStrValue(NSString *xpath, GDataXMLNode *node, NSDictionary *n
         
         // IconStyle
         poi.iconStyle = iconHREF;
-        
-        
-        // Category
-        poi.category = [POIData calcCategoryFromIconStyle:iconHREF];
         
     }
     

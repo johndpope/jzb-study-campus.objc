@@ -7,20 +7,24 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "Icon.h"
 
-@interface Category : NSObject {
+#define UNKNOWN_CATEGORY @"UNKNOWN";
+
+
+@interface GCategory : NSObject {
     
 @private
     NSString *name;
-    NSString *desc;
-    Icon *icon;
-    NSArray *pois;
+    NSString *iconName;
+    NSMutableArray *pois;
 }
 
 @property (nonatomic, copy) NSString *name;
-@property (nonatomic, copy) NSString *desc;
-@property (nonatomic) Icon *icon;
-@property (nonatomic) NSArray *pois;
+@property (nonatomic, copy) NSString *iconName;
+@property (nonatomic, copy) NSArray *pois;
+
+
+// Calcula el valor a utilizar como "category" a partir de la cadena iconStyle
++ (NSString *) calcCategoryFromIconStyle: (NSString *)iconStyle;
 
 @end

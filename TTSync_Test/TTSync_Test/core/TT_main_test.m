@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "POIData.h"
+#import "GPOI.h"
 #import "KMLReader.h"
 #import "GDataXMLNode.h"
 #import "XMLReader.h"
@@ -35,18 +35,19 @@ int TT_Main_test (int argc, const char * argv[])
 //**************************************************************************************************************************
 void doIt() {
     
+    /*
     NSString  *iconStyle = @"http://maps.gstatic.com/intl/es_es/mapfiles/ms/micons/earthquake.png";
-    NSString *cat = [POIData calcCategoryFromIconStyle: iconStyle];
+    NSString *cat = [GPOI calcCategoryFromIconStyle: iconStyle];
     NSLog(@"cat = %@", cat);
 
     iconStyle = @"http://maps.google.com/mapfiles/kml/shapes/hiker_maps.png";
     cat = [POIData calcCategoryFromIconStyle: iconStyle];
     NSLog(@"cat = %@", cat);
-
+    
 
     POIData *poi = [POIData new];
     [poi dump];
-
+     */
     
     [KMLReader readKMLFileFromPath:@"/Users/jzarzuela/Documents/flex-campus/kmls/BT_Boston_2010.kml" allowDuplicated:TRUE];
     

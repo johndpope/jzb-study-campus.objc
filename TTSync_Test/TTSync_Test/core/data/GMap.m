@@ -6,13 +6,14 @@
 //  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "Map.h"
+#import "GMap.h"
+#import "GCategory.h"
 
 
-@implementation Map
+@implementation GMap
 
 
-@synthesize guid, name, desc, icon, catPrefix, mapURL, lastUpdate, pois;
+@synthesize guid, name, mapURL, lastUpdate, pois;
 
 //****************************************************************************
 - (id)init
@@ -22,10 +23,7 @@
         // Initialization code here.
         guid = @"";
         name = @"";
-        desc = @"";
-        icon = nil;
-        pois =  [[NSArray alloc] init];
-        catPrefix = @"";
+        pois =  [[NSMutableArray alloc] init];
         mapURL = @"";
         lastUpdate = @"";
     }
@@ -39,13 +37,21 @@
     // @TODO:  ¿Hace falta esto?
     [guid autorelease];
     [name autorelease];
-    [desc autorelease];
-    [icon autorelease];
     [pois autorelease];
-    [catPrefix autorelease];
     [mapURL autorelease];
     [lastUpdate autorelease];
     [super dealloc];
+}
+
+
+//****************************************************************************
+// Añade un nuevo GPOI al mapa. A partir de ese punto el mapa es el dueño del POI
+- (void) addPOI: (GPOI *)apoi {
+
+    // Category
+    NSString *cat = [GCategory calcCategoryFromIconStyle:apoi.iconStyle];
+
+    [pois addObject: apoi];
 }
 
 @end

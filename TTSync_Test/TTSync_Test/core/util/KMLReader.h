@@ -18,15 +18,3 @@
 
 
 @end
-
-
-/**
-private static function _cleanHTML(str:String) : String {
-    
-    var list:Array = str.split(/<[^>]*>/g);
-    str = list.join("");
-    str = str.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&").replace(/&nbsp;/g," ");
-    return str;
-    
-}
-**/
