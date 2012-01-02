@@ -11,12 +11,14 @@
 		429CEFD514547CD20082072D /* JavaStringCat.m in Sources */ = {isa = PBXBuildFile; fileRef = 429CEFCE14547CD20082072D /* JavaStringCat.m */; };
 		429CEFD614547CD20082072D /* GDataXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 429CEFD114547CD20082072D /* GDataXMLNode.m */; };
 		429CEFD714547CD20082072D /* XMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 429CEFD414547CD20082072D /* XMLReader.m */; };
-		429CEFE014547CEE0082072D /* POIData.m in Sources */ = {isa = PBXBuildFile; fileRef = 429CEFDB14547CEE0082072D /* POIData.m */; };
+		429CEFE014547CEE0082072D /* POI.m in Sources */ = {isa = PBXBuildFile; fileRef = 429CEFDB14547CEE0082072D /* POI.m */; };
 		429CEFE114547CEE0082072D /* TT_main_test.m in Sources */ = {isa = PBXBuildFile; fileRef = 429CEFDC14547CEE0082072D /* TT_main_test.m */; };
 		429CEFE214547CEE0082072D /* KMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 429CEFDF14547CEE0082072D /* KMLReader.m */; };
 		42C2C11E145490980046B2A2 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 42C2C11D145490980046B2A2 /* RegexKitLite.m */; };
 		42CFEF1E145479A700C59059 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42CFEF1D145479A700C59059 /* Foundation.framework */; };
 		42CFEF21145479A700C59059 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CFEF20145479A700C59059 /* main.m */; };
+		42E2F12C14B23C2D007B9D99 /* Map.m in Sources */ = {isa = PBXBuildFile; fileRef = 42E2F12B14B23C2D007B9D99 /* Map.m */; };
+		42E2F13014B2438E007B9D99 /* Icon.m in Sources */ = {isa = PBXBuildFile; fileRef = 42E2F12F14B2438E007B9D99 /* Icon.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -39,8 +41,8 @@
 		429CEFD114547CD20082072D /* GDataXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDataXMLNode.m; sourceTree = "<group>"; };
 		429CEFD314547CD20082072D /* XMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLReader.h; sourceTree = "<group>"; };
 		429CEFD414547CD20082072D /* XMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMLReader.m; sourceTree = "<group>"; };
-		429CEFDA14547CEE0082072D /* POIData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POIData.h; sourceTree = "<group>"; };
-		429CEFDB14547CEE0082072D /* POIData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = POIData.m; sourceTree = "<group>"; };
+		429CEFDA14547CEE0082072D /* POI.h */ = {isa = PBXFileReference; fileEncoding = 4; path = POI.h; sourceTree = "<group>"; };
+		429CEFDB14547CEE0082072D /* POI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = POI.m; sourceTree = "<group>"; };
 		429CEFDC14547CEE0082072D /* TT_main_test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TT_main_test.m; sourceTree = "<group>"; };
 		429CEFDE14547CEE0082072D /* KMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KMLReader.h; sourceTree = "<group>"; };
 		429CEFDF14547CEE0082072D /* KMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KMLReader.m; sourceTree = "<group>"; };
@@ -52,6 +54,10 @@
 		42CFEF20145479A700C59059 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		42CFEF23145479A700C59059 /* TTSync_Test-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TTSync_Test-Prefix.pch"; sourceTree = "<group>"; };
 		42CFEF24145479A700C59059 /* TTSync_Test.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = TTSync_Test.1; sourceTree = "<group>"; };
+		42E2F12A14B23C2D007B9D99 /* Map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Map.h; sourceTree = "<group>"; };
+		42E2F12B14B23C2D007B9D99 /* Map.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Map.m; sourceTree = "<group>"; };
+		42E2F12E14B2438E007B9D99 /* Icon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Icon.h; sourceTree = "<group>"; };
+		42E2F12F14B2438E007B9D99 /* Icon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Icon.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,8 +124,12 @@
 		429CEFD914547CEE0082072D /* data */ = {
 			isa = PBXGroup;
 			children = (
-				429CEFDA14547CEE0082072D /* POIData.h */,
-				429CEFDB14547CEE0082072D /* POIData.m */,
+				429CEFDA14547CEE0082072D /* POI.h */,
+				429CEFDB14547CEE0082072D /* POI.m */,
+				42E2F12A14B23C2D007B9D99 /* Map.h */,
+				42E2F12B14B23C2D007B9D99 /* Map.m */,
+				42E2F12E14B2438E007B9D99 /* Icon.h */,
+				42E2F12F14B2438E007B9D99 /* Icon.m */,
 			);
 			path = data;
 			sourceTree = "<group>";
@@ -240,10 +250,12 @@
 				429CEFD514547CD20082072D /* JavaStringCat.m in Sources */,
 				429CEFD614547CD20082072D /* GDataXMLNode.m in Sources */,
 				429CEFD714547CD20082072D /* XMLReader.m in Sources */,
-				429CEFE014547CEE0082072D /* POIData.m in Sources */,
+				429CEFE014547CEE0082072D /* POI.m in Sources */,
 				429CEFE114547CEE0082072D /* TT_main_test.m in Sources */,
 				429CEFE214547CEE0082072D /* KMLReader.m in Sources */,
 				42C2C11E145490980046B2A2 /* RegexKitLite.m in Sources */,
+				42E2F12C14B23C2D007B9D99 /* Map.m in Sources */,
+				42E2F13014B2438E007B9D99 /* Icon.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
