@@ -114,7 +114,6 @@ BOOL _is_TTCategories_POI_OLD(GPOI *poi);
     
 }
 
-
 //****************************************************************************
 + (GPOI *) parsePOIFromNode: (GDataXMLNode *)node namespaces:(NSDictionary *)nss error:(NSError*) err {
     
@@ -167,7 +166,6 @@ BOOL _is_TTCategories_POI_OLD(GPOI *poi);
     
     return poi;
 }
-
 
 //****************************************************************************
 NSString * _cleanHTML(NSString *str) {
