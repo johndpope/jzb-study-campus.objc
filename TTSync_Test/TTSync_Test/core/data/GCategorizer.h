@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 
-@interface KMLCategorizer : NSObject {
+@interface GCategorizer : NSObject {
 @private
     
 }

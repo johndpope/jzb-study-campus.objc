@@ -6,7 +6,7 @@
 //  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "KMLCategorizer.h"
+#import "GCategorizer.h"
 #import "RegexKitLite.h"
 
 
@@ -29,7 +29,7 @@ struct TCatSelector {
 
 
 
-@implementation KMLCategorizer
+@implementation GCategorizer
 
 
 //****************************************************************************

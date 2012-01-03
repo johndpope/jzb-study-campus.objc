@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#define UNKNOWN_CATEGORY @"UNKNOWN";
+#define UNKNOWN_CATEGORY @"UNKNOWN"
 
 
 @interface GCategory : NSObject {

@@ -14,6 +14,10 @@
 #import "GMap.h"
 #import "GCategory.h"
 
+#define TT_CATEGORIES_XML_NODE_NAME_OLD1  @"@TT_CAT"
+#define TT_CATEGORIES_XML_NODE_NAME_OLD2  @"@CAT_TT"
+#define TT_CATEGORIES_XML_NODE_NAME       @"@TT_CATEGORIES"
+
 
 
 //----------------------------------------------------------------------------
@@ -31,6 +35,10 @@
 //----------------------------------------------------------------------------
 NSString * _cleanHTML(NSString *str);
 NSString * _getNodeStrValue(NSString *xpath, GDataXMLNode *node, NSDictionary *nss, NSError *err);
+BOOL _is_TTCategories_POI(GPOI *poi);
+BOOL _is_TTCategories_POI_OLD(GPOI *poi);
+
+
 
 
 
@@ -80,18 +88,30 @@ NSString * _getNodeStrValue(NSString *xpath, GDataXMLNode *node, NSDictionary *n
     if(doc == nil) {
         return;
     }
-
     
     NSDictionary *nss = [NSDictionary dictionaryWithObject:@"http://earth.google.com/kml/2.2" forKey:@"ns1"];
-    GDataXMLElement *root=[doc rootElement];
-
+  
     // Iterate all the "Point" placemarks   
+    NSMutableArray *pois = [NSMutableArray new];
     NSArray *children = [doc nodesForXPath: @"/ns1:kml/ns1:Document/ns1:Placemark/ns1:Point/.." namespaces:nss error: &err];
     for(GDataXMLNode *node in children) {
         GPOI *poi = [KMLReader parsePOIFromNode:node namespaces:nss error:err];
-        [poi dump];
+        [pois addObject:poi];
     }
-        
+
+    for(GPOI *poi in pois) {
+        if(_is_TTCategories_POI(poi)) {
+            //[pois removeObject: poi];
+            [poi dump];
+        }
+    }
+    
+    for(GPOI *poi in pois) {
+        if(_is_TTCategories_POI(poi)) {
+            //[pois removeObject: poi];
+        }
+    }
+    
 }
 
 
@@ -182,6 +202,18 @@ NSString * _getNodeStrValue(NSString *xpath, GDataXMLNode *node, NSDictionary *n
     else {
         return @"";
     }
+}
+
+//****************************************************************************
+BOOL _is_TTCategories_POI(GPOI *poi) {
+    return [poi.name isEqualToString: TT_CATEGORIES_XML_NODE_NAME];
+}
+
+//****************************************************************************
+BOOL _is_TTCategories_POI_OLD(GPOI *poi) {
+    BOOL a=[poi.name isEqualToString: TT_CATEGORIES_XML_NODE_NAME_OLD1];
+    BOOL b=[poi.name isEqualToString: TT_CATEGORIES_XML_NODE_NAME_OLD2];
+    return a || b;
 }
 
 @end
