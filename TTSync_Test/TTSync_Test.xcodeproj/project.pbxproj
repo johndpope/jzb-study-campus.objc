@@ -11,7 +11,8 @@
 		42735C4F14B26624002FFF13 /* GCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 42735C4A14B26624002FFF13 /* GCategory.m */; };
 		42735C5014B26624002FFF13 /* GMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 42735C4C14B26624002FFF13 /* GMap.m */; };
 		42735C5114B26624002FFF13 /* GPOI.m in Sources */ = {isa = PBXBuildFile; fileRef = 42735C4E14B26624002FFF13 /* GPOI.m */; };
-		42735C5814B27DF3002FFF13 /* GCategorizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 42735C5714B27DF3002FFF13 /* GCategorizer.m */; };
+		4286D56F14B30BE600951AE3 /* KMLCategorizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286D56E14B30BE600951AE3 /* KMLCategorizer.m */; };
+		4286D57514B3198D00951AE3 /* XMLUtilDoc.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286D57414B3198D00951AE3 /* XMLUtilDoc.m */; };
 		429CEFD514547CD20082072D /* JavaStringCat.m in Sources */ = {isa = PBXBuildFile; fileRef = 429CEFCE14547CD20082072D /* JavaStringCat.m */; };
 		429CEFD614547CD20082072D /* GDataXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 429CEFD114547CD20082072D /* GDataXMLNode.m */; };
 		429CEFD714547CD20082072D /* XMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 429CEFD414547CD20082072D /* XMLReader.m */; };
@@ -42,8 +43,10 @@
 		42735C4C14B26624002FFF13 /* GMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMap.m; sourceTree = "<group>"; };
 		42735C4D14B26624002FFF13 /* GPOI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPOI.h; sourceTree = "<group>"; };
 		42735C4E14B26624002FFF13 /* GPOI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPOI.m; sourceTree = "<group>"; };
-		42735C5614B27DF3002FFF13 /* GCategorizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCategorizer.h; sourceTree = "<group>"; };
-		42735C5714B27DF3002FFF13 /* GCategorizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCategorizer.m; sourceTree = "<group>"; };
+		4286D56D14B30BE600951AE3 /* KMLCategorizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KMLCategorizer.h; sourceTree = "<group>"; };
+		4286D56E14B30BE600951AE3 /* KMLCategorizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KMLCategorizer.m; sourceTree = "<group>"; };
+		4286D57114B30E3900951AE3 /* XMLUtilDoc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLUtilDoc.h; sourceTree = "<group>"; };
+		4286D57414B3198D00951AE3 /* XMLUtilDoc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMLUtilDoc.m; sourceTree = "<group>"; };
 		429CEFCD14547CD20082072D /* JavaStringCat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JavaStringCat.h; sourceTree = "<group>"; };
 		429CEFCE14547CD20082072D /* JavaStringCat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JavaStringCat.m; sourceTree = "<group>"; };
 		429CEFD014547CD20082072D /* GDataXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDataXMLNode.h; sourceTree = "<group>"; };
@@ -76,9 +79,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4286D57014B30E0F00951AE3 /* JZBUtil */ = {
+			isa = PBXGroup;
+			children = (
+				4286D57414B3198D00951AE3 /* XMLUtilDoc.m */,
+				4286D57114B30E3900951AE3 /* XMLUtilDoc.h */,
+			);
+			name = JZBUtil;
+			sourceTree = "<group>";
+		};
 		429CEFCB14547CD20082072D /* libs */ = {
 			isa = PBXGroup;
 			children = (
+				4286D57014B30E0F00951AE3 /* JZBUtil */,
 				42C2C11A145490980046B2A2 /* RegexKitLite */,
 				429CEFCC14547CD20082072D /* Categories */,
 				429CEFCF14547CD20082072D /* GData */,
@@ -127,8 +140,6 @@
 		429CEFD914547CEE0082072D /* data */ = {
 			isa = PBXGroup;
 			children = (
-				42735C5614B27DF3002FFF13 /* GCategorizer.h */,
-				42735C5714B27DF3002FFF13 /* GCategorizer.m */,
 				42735C4914B26624002FFF13 /* GCategory.h */,
 				42735C4A14B26624002FFF13 /* GCategory.m */,
 				42735C4B14B26624002FFF13 /* GMap.h */,
@@ -142,6 +153,8 @@
 		429CEFDD14547CEE0082072D /* util */ = {
 			isa = PBXGroup;
 			children = (
+				4286D56D14B30BE600951AE3 /* KMLCategorizer.h */,
+				4286D56E14B30BE600951AE3 /* KMLCategorizer.m */,
 				429CEFDE14547CEE0082072D /* KMLReader.h */,
 				429CEFDF14547CEE0082072D /* KMLReader.m */,
 			);
@@ -261,7 +274,8 @@
 				42735C4F14B26624002FFF13 /* GCategory.m in Sources */,
 				42735C5014B26624002FFF13 /* GMap.m in Sources */,
 				42735C5114B26624002FFF13 /* GPOI.m in Sources */,
-				42735C5814B27DF3002FFF13 /* GCategorizer.m in Sources */,
+				4286D56F14B30BE600951AE3 /* KMLCategorizer.m in Sources */,
+				4286D57514B3198D00951AE3 /* XMLUtilDoc.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

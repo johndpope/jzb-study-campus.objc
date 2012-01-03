@@ -11,7 +11,6 @@
 
 @interface KMLReader : NSObject {
 @private
-    
 }
 
 + (void) readKMLFileFromPath: (NSString *)filePath allowDuplicated: (BOOL) allow;	

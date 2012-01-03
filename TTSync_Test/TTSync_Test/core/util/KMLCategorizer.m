@@ -6,30 +6,46 @@
 //  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "GCategorizer.h"
+#import "KMLCategorizer.h"
 #import "RegexKitLite.h"
+#import "XMLUtilDoc.h"
+
+
 
 
 //----------------------------------------------------------------------------
-// PRIVATE CLASSES
+// Internal data structures
 //----------------------------------------------------------------------------
-struct TNameCleaner {
-    NSString *reMatch;
-    NSString *strReplace;
-}; 
+@implementation TNameCleaner
 
-struct TCatSelector {
-    NSString *name;
-    NSString *icon;
-    NSString *reStyle;
-    NSString *reName;
-    NSMutableArray *cleaners;
-}; 
+@synthesize reMatch, strReplace;
+
++ (TNameCleaner *) initWithMatch: (NSString *)reMatch strReplace:(NSString *) strReplace {
+    
+    TNameCleaner *me = [[TNameCleaner alloc] init];
+    me.reMatch = reMatch;
+    me.strReplace = strReplace;
+    return me;
+}
+
+@end
 
 
 
 
-@implementation GCategorizer
+
+
+//----------------------------------------------------------------------------
+// PRIVATE METHODS
+//----------------------------------------------------------------------------
+@interface KMLCategorizer () 
+
+
+@end
+
+
+
+@implementation KMLCategorizer
 
 
 //****************************************************************************
@@ -46,7 +62,22 @@ struct TCatSelector {
 //****************************************************************************
 - (void)dealloc
 {
+    [cats autorelease];
     [super dealloc];
+}
+
+//****************************************************************************
++ (KMLCategorizer *) createFromXMLInfo: (NSString *)xmlStr {
+    
+    TCatSelector *p;
+    [TCatSelector alloc];
+    
+    XMLUtilDoc  *XUDoc = [XMLUtilDoc withXMLStrAndNS:xmlStr ns:@""];
+    
+    NSString *val = [XUDoc nodeStrValue:@"TTInfo/TTAll/@name"];
+    NSLog(@"val = %@",val);
+    
+    return nil;   
 }
 
 @end

@@ -7,12 +7,11 @@
 //
 
 #import "KMLReader.h"
-#import "GDataXMLNode.h"
 #import "JavaStringCat.h"
-#import "RegexKitLite.h"
 #import "GPOI.h"
-#import "GMap.h"
-#import "GCategory.h"
+#import "XMLUtilDoc.h"
+#import "KMLCategorizer.h"
+
 
 #define TT_CATEGORIES_XML_NODE_NAME_OLD1  @"@TT_CAT"
 #define TT_CATEGORIES_XML_NODE_NAME_OLD2  @"@CAT_TT"
@@ -26,15 +25,16 @@
 @interface KMLReader () 
 
 + (void) parserKMLFile: (NSString *)filePath;
-+ (GPOI *) parsePOIFromNode: (GDataXMLNode *)node namespaces:(NSDictionary *)nss error:(NSError*) err;
++ (GPOI *) parsePOIFromNode: (GDataXMLNode *)node XUDoc:(XMLUtilDoc *) XUDoc;
++ (void) parseCategorizer:(XMLUtilDoc *) XUDoc;
 
 @end
+
+
 
 //----------------------------------------------------------------------------
 // UTILITY METHODS
 //----------------------------------------------------------------------------
-NSString * _cleanHTML(NSString *str);
-NSString * _getNodeStrValue(NSString *xpath, GDataXMLNode *node, NSDictionary *nss, NSError *err);
 BOOL _is_TTCategories_POI(GPOI *poi);
 BOOL _is_TTCategories_POI_OLD(GPOI *poi);
 
@@ -83,19 +83,20 @@ BOOL _is_TTCategories_POI_OLD(GPOI *poi);
     NSURL *url = [NSURL fileURLWithPath:filePath];
     NSFileHandle *fh = [NSFileHandle fileHandleForReadingFromURL:url error:&err];
     NSData *data = [fh readDataToEndOfFile];
-    
-    GDataXMLDocument *doc = [[GDataXMLDocument alloc] initWithData:data options:0 error: &err];
-    if(doc == nil) {
+
+    XMLUtilDoc  *XUDoc = [XMLUtilDoc withDataAndNS:data ns:@"http://earth.google.com/kml/2.2"];
+    //@TODO: Como chequeamos que todo fue bien. Que pasa con el autorelease del ".doc"
+    if(XUDoc.doc == nil) {
         return;
     }
+
+    [KMLReader parseCategorizer:XUDoc];
     
-    NSDictionary *nss = [NSDictionary dictionaryWithObject:@"http://earth.google.com/kml/2.2" forKey:@"ns1"];
-  
     // Iterate all the "Point" placemarks   
     NSMutableArray *pois = [NSMutableArray new];
-    NSArray *children = [doc nodesForXPath: @"/ns1:kml/ns1:Document/ns1:Placemark/ns1:Point/.." namespaces:nss error: &err];
+    NSArray *children = [XUDoc nodesForXPath: @"/ns1:kml/ns1:Document/ns1:Placemark/ns1:Point/.."];
     for(GDataXMLNode *node in children) {
-        GPOI *poi = [KMLReader parsePOIFromNode:node namespaces:nss error:err];
+        GPOI *poi = [KMLReader parsePOIFromNode:node XUDoc:XUDoc];
         [pois addObject:poi];
     }
 
@@ -108,29 +109,55 @@ BOOL _is_TTCategories_POI_OLD(GPOI *poi);
     
     for(GPOI *poi in pois) {
         if(_is_TTCategories_POI(poi)) {
-            //[pois removeObject: poi];
+            //[pois removeObject: poi];	
         }
     }
     
 }
 
 //****************************************************************************
-+ (GPOI *) parsePOIFromNode: (GDataXMLNode *)node namespaces:(NSDictionary *)nss error:(NSError*) err {
++ (void) parseCategorizer:(XMLUtilDoc *) XUDoc {
+
+    BOOL old = FALSE;
+    NSString *str;
+    
+    str=[XUDoc nodeStrCleanValue: @"/ns1:kml/ns1:Document/ns1:Placemark[ns1:name='" TT_CATEGORIES_XML_NODE_NAME "']/ns1:description/text()"];
+    if([str length]<=0) {
+        old = TRUE;
+        str=[XUDoc nodeStrCleanValue: @"/ns1:kml/ns1:Document/ns1:Placemark[ns1:name='" TT_CATEGORIES_XML_NODE_NAME_OLD1 "']/ns1:description/text()"];
+        if([str length]<=0) {
+            str=[XUDoc nodeStrCleanValue: @"/ns1:kml/ns1:Document/ns1:Placemark[ns1:name='" TT_CATEGORIES_XML_NODE_NAME_OLD2 "']/ns1:description/text()"];
+            if([str length]<=0) {
+                // No habia un nodo de categorias
+                return;
+            }
+        }
+    }
+    
+    [KMLCategorizer createFromXMLInfo: str];
+    
+    NSLog(@"desc %@",str);
+
+    
+}
+
+//****************************************************************************
++ (GPOI *) parsePOIFromNode: (GDataXMLNode *)node XUDoc:(XMLUtilDoc *) XUDoc {
     
     // TODO : Se hace aqui el autorelase???
     GPOI *poi = [[GPOI new] autorelease];
     
     
     // name
-    poi.name = _getNodeStrValue(@"ns1:name/text()", node, nss, err);
+    poi.name = [XUDoc nodeStrValue:@"ns1:name/text()" node:node];
     
     
     // description | TODO clean HTML
-    poi.desc = _cleanHTML( _getNodeStrValue(@"ns1:description/text()", node, nss, err) );
+    poi.desc = [XUDoc nodeStrCleanValue:@"ns1:description/text()" node:node];
     
     
     // Coordinates
-    NSString *point = _getNodeStrValue(@"ns1:Point/ns1:coordinates", node, nss, err);
+    NSString *point = [XUDoc nodeStrValue:@"ns1:Point/ns1:coordinates" node:node];
     NSUInteger p1=[point indexOf:@","];
     NSString *strLng = [point subStrFrom:0 To:p1];
     NSUInteger p2=[point indexOf:@"," startIndex:p1+1];
@@ -143,7 +170,7 @@ BOOL _is_TTCategories_POI_OLD(GPOI *poi);
     
     
     // IconStyle (resolviendo la indireccion por ID)
-    NSString *styleName = _getNodeStrValue(@"ns1:styleUrl", node, nss, err);
+    NSString *styleName = [XUDoc nodeStrValue:@"ns1:styleUrl" node:node];
     if([styleName length]>0) {
     
         if([styleName characterAtIndex:0]=='#') {
@@ -151,7 +178,7 @@ BOOL _is_TTCategories_POI_OLD(GPOI *poi);
         }
         
         NSString *xpath = [NSString stringWithFormat:@"/ns1:kml/ns1:Document/ns1:Style[@id='%@']/ns1:IconStyle/ns1:Icon/ns1:href",styleName];
-        NSString *iconHREF = _getNodeStrValue(xpath, node, nss, err);
+        NSString *iconHREF = [XUDoc nodeStrValue:xpath node:node];
         // Valor por defecto en los mapas cuando no hay nada
         if([iconHREF length]==0) {
             iconHREF = @"http://maps.gstatic.com/intl/es_es/mapfiles/ms/micons/blue-dot.png";
@@ -165,41 +192,6 @@ BOOL _is_TTCategories_POI_OLD(GPOI *poi);
     
     
     return poi;
-}
-
-//****************************************************************************
-NSString * _cleanHTML(NSString *str) {
-
-    NSMutableString *cleanStr = [NSMutableString new];
-    NSArray  *listItems = [str componentsSeparatedByRegex:@"<[^<>]*>"];    
-    for(int n=1;n<[listItems count];n++) {
-        NSString *item = [listItems objectAtIndex: n];
-        if([item length]>0) {
-            [cleanStr appendString: item];
-        }
-    }
-    
-    [cleanStr replaceOccurrencesOfString:@"&lt;"   withString:@"<" options:0 range:(NSRange){0, [cleanStr length]}];
-    [cleanStr replaceOccurrencesOfString:@"&gt;"   withString:@">" options:0 range:(NSRange){0, [cleanStr length]}];
-    [cleanStr replaceOccurrencesOfString:@"&amp;"  withString:@"&" options:0 range:(NSRange){0, [cleanStr length]}];
-    [cleanStr replaceOccurrencesOfString:@"&nbsp;" withString:@" " options:0 range:(NSRange){0, [cleanStr length]}];
-    
-    NSString *result = [NSString stringWithString:cleanStr];
-
-    return result;
-}
-
-//****************************************************************************
-NSString * _getNodeStrValue(NSString *xpath, GDataXMLNode *node, NSDictionary *nss, NSError *err) {
-
-    
-    NSArray *children = [node nodesForXPath:xpath namespaces:nss error:&err];
-    if([children count]>0) {
-        return [[children objectAtIndex:0] stringValue]; 
-    }
-    else {
-        return @"";
-    }
 }
 
 //****************************************************************************
