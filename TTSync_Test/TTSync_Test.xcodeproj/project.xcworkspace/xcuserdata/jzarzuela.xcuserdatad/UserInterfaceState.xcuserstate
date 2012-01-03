@@ -222,7 +222,7 @@
 		<string>IDEWorkspaceTabController_41982919-1C59-4B8A-9BC7-C1D97BFEA571</string>
 		<string>IDEWindowToolbarIsVisible</string>
 		<string>IDEWorkspaceTabController_F16465A5-7AFE-4AA5-8301-72005FEF9D93</string>
-		<string>{{14, 44}, {1251, 721}}</string>
+		<string>{{6, 44}, {1251, 721}}</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -2262,7 +2262,7 @@
 		<string>PrimaryDocumentVisibleCharacterRange</string>
 		<string>HideAllIssues</string>
 		<string>PrimaryDocumentSelectedCharacterRange</string>
-		<real>347244834.68211901</real>
+		<real>347244865.48190701</real>
 		<string>{0, 914}</string>
 		<string>Xcode.IDEKit.EditorDocument.SourceCode</string>
 		<dict>
@@ -2582,7 +2582,7 @@
 				</dict>
 			</array>
 		</dict>
-		<real>347244834.68193102</real>
+		<real>347244865.481718</real>
 		<string>{8096, 2900}</string>
 		<string>{7276, 32}</string>
 		<string>@interface NSString(RegexKitLiteAdditions)</string>
@@ -3901,7 +3901,7 @@
 				</dict>
 			</array>
 		</dict>
-		<real>347244834.68288702</real>
+		<real>347244865.48272502</real>
 		<string>{2890, 1051}</string>
 		<string>{3176, 0}</string>
 		<string>@implementation KMLReader</string>
@@ -17533,7 +17533,7 @@
 				</dict>
 			</array>
 		</dict>
-		<real>347244834.680525</real>
+		<real>347244865.48079699</real>
 		<string>{8096, 2900}</string>
 		<string>{7276, 32}</string>
 		<dict>
