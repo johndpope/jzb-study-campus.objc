@@ -11,6 +11,7 @@
 int main (int argc, const char * argv[])
 {
 
+    // Un cambio
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 
     // insert code here...
