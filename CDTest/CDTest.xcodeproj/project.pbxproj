@@ -12,6 +12,8 @@
 		CE823E0214DC824100BB21CB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CE823E0114DC824100BB21CB /* main.m */; };
 		CE823E1114DC831D00BB21CB /* CDTest.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CE823E0F14DC831D00BB21CB /* CDTest.xcdatamodeld */; };
 		CE823E1414DC833B00BB21CB /* ModelService.m in Sources */ = {isa = PBXBuildFile; fileRef = CE823E1314DC833B00BB21CB /* ModelService.m */; };
+		CE823E2414DCA49B00BB21CB /* TMap.m in Sources */ = {isa = PBXBuildFile; fileRef = CE823E2314DCA49B00BB21CB /* TMap.m */; };
+		CE823E2714DCA49C00BB21CB /* TBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = CE823E2614DCA49C00BB21CB /* TBaseEntity.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -36,6 +38,10 @@
 		CE823E1014DC831D00BB21CB /* CDTest.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CDTest.xcdatamodel; sourceTree = "<group>"; };
 		CE823E1214DC833B00BB21CB /* ModelService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelService.h; sourceTree = "<group>"; };
 		CE823E1314DC833B00BB21CB /* ModelService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModelService.m; sourceTree = "<group>"; };
+		CE823E2214DCA49A00BB21CB /* TMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMap.h; sourceTree = "<group>"; };
+		CE823E2314DCA49B00BB21CB /* TMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMap.m; sourceTree = "<group>"; };
+		CE823E2514DCA49C00BB21CB /* TBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBaseEntity.h; sourceTree = "<group>"; };
+		CE823E2614DCA49C00BB21CB /* TBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBaseEntity.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,11 +105,23 @@
 		CE823E0E14DC831D00BB21CB /* model */ = {
 			isa = PBXGroup;
 			children = (
+				CE823E1B14DCA43200BB21CB /* types */,
 				CE823E0F14DC831D00BB21CB /* CDTest.xcdatamodeld */,
 				CE823E1214DC833B00BB21CB /* ModelService.h */,
 				CE823E1314DC833B00BB21CB /* ModelService.m */,
 			);
 			path = model;
+			sourceTree = "<group>";
+		};
+		CE823E1B14DCA43200BB21CB /* types */ = {
+			isa = PBXGroup;
+			children = (
+				CE823E2514DCA49C00BB21CB /* TBaseEntity.h */,
+				CE823E2614DCA49C00BB21CB /* TBaseEntity.m */,
+				CE823E2214DCA49A00BB21CB /* TMap.h */,
+				CE823E2314DCA49B00BB21CB /* TMap.m */,
+			);
+			path = types;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -156,6 +174,8 @@
 				CE823E0214DC824100BB21CB /* main.m in Sources */,
 				CE823E1114DC831D00BB21CB /* CDTest.xcdatamodeld in Sources */,
 				CE823E1414DC833B00BB21CB /* ModelService.m in Sources */,
+				CE823E2414DCA49B00BB21CB /* TMap.m in Sources */,
+				CE823E2714DCA49C00BB21CB /* TBaseEntity.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

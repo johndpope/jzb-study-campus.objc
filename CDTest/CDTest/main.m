@@ -7,6 +7,7 @@
 //
 
 #include "ModelService.h"
+#include "TMap.h"
 
 int main (int argc, const char * argv[])
 {
@@ -15,6 +16,31 @@ int main (int argc, const char * argv[])
 
     
     [[ModelService sharedInstance] initCDStack];
+    
+    NSManagedObjectContext * _moContext = [ModelService sharedInstance].moContext;
+    
+    /**/
+     TMap *newMap = [NSEntityDescription insertNewObjectForEntityForName: @"TMap" inManagedObjectContext:_moContext];
+    [newMap setValue:@"mi mapa" forKey:@"name"];
+    [newMap setValue:@"1234" forKey:@"GID"];
+    [[ModelService sharedInstance] saveContext];
+     /**/
+    
+    NSString *aName = @"mapa";
+    NSEntityDescription *mapEntity = [NSEntityDescription entityForName:@"TMap" inManagedObjectContext:_moContext];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name like[cd] %@",aName];
+    NSFetchRequest *busqueda = [[NSFetchRequest alloc] init];
+    [busqueda setEntity:mapEntity];
+    [busqueda setPredicate:predicate];
+    NSError *error = nil;
+    NSArray *authors = [_moContext executeFetchRequest:busqueda error:&error];    
+    for(NSManagedObject *quien in authors){
+        NSLog(@"quien: %@",[quien  valueForKey:@"name"]);
+        
+    }
+    
+    
+    
     [[ModelService sharedInstance] doneCDStack];
     
     [pool drain];
