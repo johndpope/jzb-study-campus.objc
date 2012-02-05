@@ -12,12 +12,28 @@
 
 @class TCategory, TCoordinates, TMap;
 
+
+//*********************************************************************************************************************
+//---------------------------------------------------------------------------------------------------------------------
 @interface TPoint : TBaseEntity {
 @private
 }
+
 @property (nonatomic, retain) NSString * kmlBlob;
 @property (nonatomic, retain) TMap * map;
 @property (nonatomic, retain) NSSet* categories;
-@property (nonatomic, retain) TCoordinates * coordinates;
+@property (nonatomic, assign) double lng;
+@property (nonatomic, assign) double lat;
+
+//---------------------------------------------------------------------------------------------------------------------
++ (TPoint *) newInstanceInMap:(TMap *)ownerMap;
+
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void)addCategory:(TCategory *)value ;    
+- (void)removeCategory:(TCategory *)value ;
+- (void)addCategories:(NSSet *)value ;    
+- (void)removeCategories:(NSSet *)value ;
+
 
 @end

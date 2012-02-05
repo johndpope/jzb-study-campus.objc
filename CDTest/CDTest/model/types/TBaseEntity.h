@@ -9,9 +9,9 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class TIcon;
 
-
+//*********************************************************************************************************************
+//---------------------------------------------------------------------------------------------------------------------
 typedef enum {
     ST_Sync_Create_Local, ST_Sync_Create_Remote, ST_Sync_Delete_Local, ST_Sync_Delete_Remote, 
     ST_Sync_Error, ST_Sync_OK, ST_Sync_Update_Local, ST_Sync_Update_Remote
@@ -19,21 +19,27 @@ typedef enum {
 
 
 
-
+//*********************************************************************************************************************
+//---------------------------------------------------------------------------------------------------------------------
 @interface TBaseEntity : NSManagedObject {
 @private
 }
 
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * desc;
-@property (nonatomic, assign) BOOL deleted;
+@property (nonatomic, assign) BOOL wasDeleted;
 @property (nonatomic, assign) BOOL changed;
 @property (nonatomic, retain) NSNumber * ts_created;
 @property (nonatomic, retain) NSString * syncETag;
 @property (nonatomic, retain) NSString * GID;
 @property (nonatomic, retain) NSNumber * ts_updated;
-@property (nonatomic, retain) TIcon * icon;
+@property (nonatomic, retain) NSString * iconURL;
 @property (nonatomic, assign) SyncStatusType syncStatus;
+@property (readonly, nonatomic, assign) BOOL isLocal;
+
+// ---------------------------------------------------------------------------------
+- (NSString *) toXmlString;
+- (NSString *) toXmlString: (unsigned) ident;
 
 
 @end

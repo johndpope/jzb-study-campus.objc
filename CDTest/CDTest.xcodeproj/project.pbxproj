@@ -12,8 +12,6 @@
 		CE823E0214DC824100BB21CB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CE823E0114DC824100BB21CB /* main.m */; };
 		CE823E1114DC831D00BB21CB /* CDTest.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CE823E0F14DC831D00BB21CB /* CDTest.xcdatamodeld */; };
 		CE823E1414DC833B00BB21CB /* ModelService.m in Sources */ = {isa = PBXBuildFile; fileRef = CE823E1314DC833B00BB21CB /* ModelService.m */; };
-		CED6ADE614DD31AB001D7B6D /* TCoordinates.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6ADE514DD31AB001D7B6D /* TCoordinates.m */; };
-		CED6ADE914DD31AC001D7B6D /* TIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6ADE814DD31AC001D7B6D /* TIcon.m */; };
 		CED6ADEC14DD31AC001D7B6D /* TBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6ADEB14DD31AC001D7B6D /* TBaseEntity.m */; };
 		CED6ADEF14DD31AC001D7B6D /* TPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6ADEE14DD31AC001D7B6D /* TPoint.m */; };
 		CED6ADF214DD31AC001D7B6D /* TMap.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6ADF114DD31AC001D7B6D /* TMap.m */; };
@@ -44,10 +42,6 @@
 		CE823E1014DC831D00BB21CB /* CDTest.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CDTest.xcdatamodel; sourceTree = "<group>"; };
 		CE823E1214DC833B00BB21CB /* ModelService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelService.h; sourceTree = "<group>"; };
 		CE823E1314DC833B00BB21CB /* ModelService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModelService.m; sourceTree = "<group>"; };
-		CED6ADE414DD31AB001D7B6D /* TCoordinates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCoordinates.h; sourceTree = "<group>"; };
-		CED6ADE514DD31AB001D7B6D /* TCoordinates.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCoordinates.m; sourceTree = "<group>"; };
-		CED6ADE714DD31AC001D7B6D /* TIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TIcon.h; sourceTree = "<group>"; };
-		CED6ADE814DD31AC001D7B6D /* TIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TIcon.m; sourceTree = "<group>"; };
 		CED6ADEA14DD31AC001D7B6D /* TBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBaseEntity.h; sourceTree = "<group>"; };
 		CED6ADEB14DD31AC001D7B6D /* TBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBaseEntity.m; sourceTree = "<group>"; };
 		CED6ADED14DD31AC001D7B6D /* TPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPoint.h; sourceTree = "<group>"; };
@@ -137,7 +131,6 @@
 		CE823E1B14DCA43200BB21CB /* types */ = {
 			isa = PBXGroup;
 			children = (
-				CED6ADE714DD31AC001D7B6D /* TIcon.h */,
 				CED6ADF314DD31AC001D7B6D /* TCategory.h */,
 				CED6ADF414DD31AC001D7B6D /* TCategory.m */,
 				CED6ADF014DD31AC001D7B6D /* TMap.h */,
@@ -146,9 +139,6 @@
 				CED6ADEE14DD31AC001D7B6D /* TPoint.m */,
 				CED6ADEA14DD31AC001D7B6D /* TBaseEntity.h */,
 				CED6ADEB14DD31AC001D7B6D /* TBaseEntity.m */,
-				CED6ADE814DD31AC001D7B6D /* TIcon.m */,
-				CED6ADE414DD31AB001D7B6D /* TCoordinates.h */,
-				CED6ADE514DD31AB001D7B6D /* TCoordinates.m */,
 			);
 			path = types;
 			sourceTree = "<group>";
@@ -212,8 +202,6 @@
 				CE823E0214DC824100BB21CB /* main.m in Sources */,
 				CE823E1114DC831D00BB21CB /* CDTest.xcdatamodeld in Sources */,
 				CE823E1414DC833B00BB21CB /* ModelService.m in Sources */,
-				CED6ADE614DD31AB001D7B6D /* TCoordinates.m in Sources */,
-				CED6ADE914DD31AC001D7B6D /* TIcon.m in Sources */,
 				CED6ADEC14DD31AC001D7B6D /* TBaseEntity.m in Sources */,
 				CED6ADEF14DD31AC001D7B6D /* TPoint.m in Sources */,
 				CED6ADF214DD31AC001D7B6D /* TMap.m in Sources */,

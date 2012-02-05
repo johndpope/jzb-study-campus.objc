@@ -31,7 +31,7 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (TMap *) newMapInstance {
++ (TMap *) newInstance {
 
     NSManagedObjectContext * ctx = [ModelService sharedInstance].moContext;
     if(ctx) {
@@ -52,7 +52,43 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void)addPointsObject:(TPoint *)value {    
+- (void) _xmlStringBody: (NSMutableString*) sbuf ident:(NSString *) ident {
+    
+    unsigned nextIdent = (unsigned)[ident length]+2;
+
+    [super _xmlStringBody:sbuf ident:ident];
+    
+
+    //--- Categories ---
+    if([self.categories count] == 0) {
+        [sbuf appendFormat:@"%@<categories/>\n",ident];
+    }else {
+        [sbuf appendFormat:@"%@<categories>\n",ident];
+        for(TCategory* cat in self.categories) {
+            [sbuf appendFormat:@"%@\n",[cat toXmlString:nextIdent]];
+        }
+        [sbuf appendFormat:@"%@</categories>\n",ident];
+    }
+    
+    //--- Points ---
+    if([self.points count] == 0) {
+        [sbuf appendFormat:@"%@<points/>\n",ident];
+    }else {
+        [sbuf appendFormat:@"%@<points>\n",ident];
+        for(TPoint* point in self.points) {
+            [sbuf appendFormat:@"%@\n", [point toXmlString:nextIdent]];
+        }
+        [sbuf appendFormat:@"%@</points>\n",ident];
+    }
+    
+    //--- ExtInfoPoint ---
+    [sbuf appendFormat:@"%@<ext_info_point/>\n",ident];
+    [sbuf appendFormat:@"%@%@\n",ident, [self.ExtInfo toXmlString:nextIdent]];
+    [sbuf appendFormat:@"%@<ext_info_point/>\n",ident];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void)addPoint:(TPoint *)value {    
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
     [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     [[self primitiveValueForKey:@"points"] addObject:value];
@@ -60,7 +96,8 @@
     [changedObjects release];
 }
 
-- (void)removePointsObject:(TPoint *)value {
+//---------------------------------------------------------------------------------------------------------------------
+- (void)removePoint:(TPoint *)value {
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
     [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
     [[self primitiveValueForKey:@"points"] removeObject:value];
@@ -68,12 +105,14 @@
     [changedObjects release];
 }
 
+//---------------------------------------------------------------------------------------------------------------------
 - (void)addPoints:(NSSet *)value {    
     [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
     [[self primitiveValueForKey:@"points"] unionSet:value];
     [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
 }
 
+//---------------------------------------------------------------------------------------------------------------------
 - (void)removePoints:(NSSet *)value {
     [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
     [[self primitiveValueForKey:@"points"] minusSet:value];
@@ -82,7 +121,8 @@
 
 
 
-- (void)addCategoriesObject:(TCategory *)value {    
+//---------------------------------------------------------------------------------------------------------------------
+- (void)addCategory:(TCategory *)value {    
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
     [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     [[self primitiveValueForKey:@"categories"] addObject:value];
@@ -90,7 +130,8 @@
     [changedObjects release];
 }
 
-- (void)removeCategoriesObject:(TCategory *)value {
+//---------------------------------------------------------------------------------------------------------------------
+- (void)removeCategory:(TCategory *)value {
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
     [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
     [[self primitiveValueForKey:@"categories"] removeObject:value];
@@ -98,12 +139,14 @@
     [changedObjects release];
 }
 
+//---------------------------------------------------------------------------------------------------------------------
 - (void)addCategories:(NSSet *)value {    
     [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
     [[self primitiveValueForKey:@"categories"] unionSet:value];
     [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
 }
 
+//---------------------------------------------------------------------------------------------------------------------
 - (void)removeCategories:(NSSet *)value {
     [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
     [[self primitiveValueForKey:@"categories"] minusSet:value];

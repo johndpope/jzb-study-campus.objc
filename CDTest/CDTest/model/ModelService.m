@@ -131,6 +131,7 @@
 
         NSURL *storeURL =  [[self _applicationDocumentsDirectory ] URLByAppendingPathComponent:CD_SLQLITE_FNAME];
         NSLog(@"storeURL = %@",storeURL);
+            
         
         _psCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: model];
         if(_psCoordinator!=nil) {

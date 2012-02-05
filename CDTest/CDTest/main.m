@@ -6,8 +6,10 @@
 //  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
-#include "ModelService.h"
-#include "TMap.h"
+#import "ModelService.h"
+#import "TMap.h"
+#import "TPoint.h"
+#import "TCategory.h"
 
 int main (int argc, const char * argv[])
 {
@@ -16,17 +18,51 @@ int main (int argc, const char * argv[])
 
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
+    /**/
+    NSURL *storeURL = [NSURL fileURLWithPath:@""];
+    NSError *error1;
+    if(![[NSFileManager defaultManager] removeItemAtURL:storeURL error:&error1]) {
+        NSLog(@"Error deleting SQLite file: %@, %@", error1, [error1 userInfo]);
+        abort();
+    }
+    /**/
+
     
     [[ModelService sharedInstance] initCDStack];
-    
     NSManagedObjectContext * _moContext = [ModelService sharedInstance].moContext;
     
-    /**
-    TMap * amap = [TMap newMapInstance];
+    /**/
+    
+    TMap * amap = [TMap newInstance];
     amap.name = @"test";
-    amap.GID = @"1234";
+    
+    TPoint *point1 = [TPoint newInstanceInMap:amap];
+    point1.name = @"p1";
+    TPoint *point2 = [TPoint newInstanceInMap:amap];
+    point2.name = @"p2";
+    TPoint *point3 = [TPoint newInstanceInMap:amap];
+    point3.name = @"p3";
+    TPoint *point4 = [TPoint newInstanceInMap:amap];
+    point4.name = @"p4";
+    
+    TCategory *cat1 = [TCategory newInstanceInMap:amap];
+    cat1.name = @"c1";
+    TCategory *cat2 = [TCategory newInstanceInMap:amap];
+    cat2.name = @"c2";
+    TCategory *cat3 = [TCategory newInstanceInMap:amap];
+    cat3.name = @"c3";
+    
+    [cat2 addPoint:point1];
+    [cat2 addPoint:point2];
+    
+    [point3 addCategory:cat3];
+    [point4 addCategory:cat3];
+    
+    [cat1 addSubcategory: cat2];
+    [cat3 addCategory: cat1];
+    
     [[ModelService sharedInstance] saveContext];
-    **/
+    /**/
         
     NSString *aName = @"test";
     NSEntityDescription *mapEntity = [NSEntityDescription entityForName:@"TMap" inManagedObjectContext:_moContext];
@@ -37,12 +73,11 @@ int main (int argc, const char * argv[])
     NSError *error = nil;
     NSArray *maps = [_moContext executeFetchRequest:busqueda error:&error];    
     for(TMap *quien in maps){
-        NSLog(@"**> quien: %d",quien.changed);
+        NSLog(@"**> isLocal: %d",quien.isLocal);
         quien.changed = true;
         [[ModelService sharedInstance] saveContext];
-        if(quien.changed) {
-            NSLog(@"pepe luis garcia");
-        }
+        NSLog(@"xml =\n%@",[quien toXmlString]);
+        
     }
     
     

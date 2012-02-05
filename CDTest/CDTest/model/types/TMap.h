@@ -12,6 +12,9 @@
 
 @class TCategory, TPoint;
 
+
+//*********************************************************************************************************************
+//---------------------------------------------------------------------------------------------------------------------
 @interface TMap : TBaseEntity {
 }
 
@@ -20,6 +23,18 @@
     @property (nonatomic, retain) NSSet* categories;
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (TMap *) newMapInstance;
++ (TMap *) newInstance;
+
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void)addPoint:(TPoint *)value ;    
+- (void)removePoint:(TPoint *)value ;
+- (void)addPoints:(NSSet *)value ;    
+- (void)removePoints:(NSSet *)value ;
+
+- (void)addCategory:(TCategory *)value ;    
+- (void)removeCategory:(TCategory *)value ;
+- (void)addCategories:(NSSet *)value ;    
+- (void)removeCategories:(NSSet *)value ;
 
 @end
