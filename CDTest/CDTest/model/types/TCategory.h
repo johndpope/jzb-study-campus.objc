@@ -1,5 +1,5 @@
 //
-//  TMap.h
+//  TCategory.h
 //  CDTest
 //
 //  Created by Snow Leopard User on 04/02/12.
@@ -10,13 +10,14 @@
 #import <CoreData/CoreData.h>
 #import "TBaseEntity.h"
 
-@class TCategory, TPoint;
+@class TCategory, TMap;
 
-@interface TMap : TBaseEntity {
+@interface TCategory : TBaseEntity {
 @private
 }
 @property (nonatomic, retain) NSSet* points;
-@property (nonatomic, retain) TPoint * ExtInfo;
+@property (nonatomic, retain) NSSet* subcategories;
 @property (nonatomic, retain) NSSet* categories;
+@property (nonatomic, retain) TMap * map;
 
 @end

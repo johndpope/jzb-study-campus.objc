@@ -1,22 +1,23 @@
 //
-//  TMap.m
+//  TCategory.m
 //  CDTest
 //
 //  Created by Snow Leopard User on 04/02/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "TMap.h"
 #import "TCategory.h"
-#import "TPoint.h"
+#import "TCategory.h"
+#import "TMap.h"
 
 
-@implementation TMap
+@implementation TCategory
 @dynamic points;
-@dynamic ExtInfo;
+@dynamic subcategories;
 @dynamic categories;
+@dynamic map;
 
-- (void)addPointsObject:(TPoint *)value {    
+- (void)addPointsObject:(NSManagedObject *)value {    
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
     [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     [[self primitiveValueForKey:@"points"] addObject:value];
@@ -24,7 +25,7 @@
     [changedObjects release];
 }
 
-- (void)removePointsObject:(TPoint *)value {
+- (void)removePointsObject:(NSManagedObject *)value {
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
     [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
     [[self primitiveValueForKey:@"points"] removeObject:value];
@@ -44,6 +45,34 @@
     [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
 }
 
+
+- (void)addSubcategoriesObject:(TCategory *)value {    
+    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
+    [self willChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    [[self primitiveValueForKey:@"subcategories"] addObject:value];
+    [self didChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+    [changedObjects release];
+}
+
+- (void)removeSubcategoriesObject:(TCategory *)value {
+    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
+    [self willChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    [[self primitiveValueForKey:@"subcategories"] removeObject:value];
+    [self didChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+    [changedObjects release];
+}
+
+- (void)addSubcategories:(NSSet *)value {    
+    [self willChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
+    [[self primitiveValueForKey:@"subcategories"] unionSet:value];
+    [self didChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
+}
+
+- (void)removeSubcategories:(NSSet *)value {
+    [self willChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+    [[self primitiveValueForKey:@"subcategories"] minusSet:value];
+    [self didChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+}
 
 
 - (void)addCategoriesObject:(TCategory *)value {    
@@ -73,6 +102,7 @@
     [[self primitiveValueForKey:@"categories"] minusSet:value];
     [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
 }
+
 
 
 @end

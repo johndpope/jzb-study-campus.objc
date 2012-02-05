@@ -7,10 +7,20 @@
 //
 
 #import "TBaseEntity.h"
+#import "TIcon.h"
 
 
 @implementation TBaseEntity
-@dynamic GID;
 @dynamic name;
+@dynamic desc;
+@dynamic deleted;
+@dynamic changed;
+@dynamic ts_created;
+@dynamic syncETag;
+@dynamic GID;
+@dynamic ts_updated;
+@dynamic NoSe;
+@dynamic icon;
+
 
 @end

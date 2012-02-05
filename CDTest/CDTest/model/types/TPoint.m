@@ -1,49 +1,22 @@
 //
-//  TMap.m
+//  TPoint.m
 //  CDTest
 //
 //  Created by Snow Leopard User on 04/02/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "TMap.h"
-#import "TCategory.h"
 #import "TPoint.h"
+#import "TCategory.h"
+#import "TCoordinates.h"
+#import "TMap.h"
 
 
-@implementation TMap
-@dynamic points;
-@dynamic ExtInfo;
+@implementation TPoint
+@dynamic kmlBlob;
+@dynamic map;
 @dynamic categories;
-
-- (void)addPointsObject:(TPoint *)value {    
-    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"points"] addObject:value];
-    [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-    [changedObjects release];
-}
-
-- (void)removePointsObject:(TPoint *)value {
-    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"points"] removeObject:value];
-    [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-    [changedObjects release];
-}
-
-- (void)addPoints:(NSSet *)value {    
-    [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
-    [[self primitiveValueForKey:@"points"] unionSet:value];
-    [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
-}
-
-- (void)removePoints:(NSSet *)value {
-    [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
-    [[self primitiveValueForKey:@"points"] minusSet:value];
-    [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
-}
-
+@dynamic coordinates;
 
 
 - (void)addCategoriesObject:(TCategory *)value {    
@@ -73,6 +46,7 @@
     [[self primitiveValueForKey:@"categories"] minusSet:value];
     [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
 }
+
 
 
 @end
