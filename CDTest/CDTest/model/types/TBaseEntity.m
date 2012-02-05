@@ -11,6 +11,9 @@
 //#include "stdlib.h"
 
 
+//*********************************************************************************************************************
+//---------------------------------------------------------------------------------------------------------------------
+
 #define LOCAL_ETAG_PREFIX  @"@Local-"
 #define LOCAL_ID_PREFIX    @"@cafe-"
 #define REMOTE_ETAG_PREFIX @"@Sync-"
@@ -20,12 +23,91 @@
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
 
-static long  s_idCounter        = -1;
+//synchronized 
+long _getNextIdCounter();
+NSString* _calcLocalETag();
+NSString* _calcRemoteCategoryETag();
+NSString* _calcLocalGID();
+
+
+
+
+//*********************************************************************************************************************
+//---------------------------------------------------------------------------------------------------------------------
+@interface TBaseEntity() {
+}
+
+@property (nonatomic, retain) NSNumber * _i_deleted;
+@property (nonatomic, retain) NSNumber * _i_changed;
+
+- (void) initEntity;
+
+
+@end
+
+//*********************************************************************************************************************
+//---------------------------------------------------------------------------------------------------------------------
+@implementation TBaseEntity
+
+@dynamic name;
+@dynamic desc;
+@dynamic _i_deleted;
+@dynamic _i_changed;
+@dynamic ts_created;
+@dynamic syncETag;
+@dynamic GID;
+@dynamic ts_updated;
+@dynamic icon;
+@synthesize syncStatus = _syncStatus;
 
 
 //---------------------------------------------------------------------------------------------------------------------
+- (void) initEntity
+{
+    self.GID = _calcLocalGID(); 
+    self.name = @"";
+    self.desc = @"";
+    self.icon = nil; // Hay que crear un icono por defecto ( getDefaultIcon(); )
+    self.changed = false;
+    self.deleted = [NSNumber numberWithBool:false];
+    self.syncETag = _calcLocalETag();
+    self.syncStatus = ST_Sync_OK;
+    self.ts_created = [NSNumber numberWithLong:time(0L)];
+    self.ts_updated = [NSNumber numberWithLong:time(0L)];
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL) changed {
+    return [self._i_changed boolValue];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) setChanged:(BOOL)value {
+    self._i_changed = [NSNumber numberWithBool:value];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL) deleted {
+    return [self._i_deleted boolValue];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) setDeleted:(BOOL)value {
+    self._i_deleted = [NSNumber numberWithBool:value];
+}
+
+@end
+
+
+
+//*********************************************************************************************************************
+//---------------------------------------------------------------------------------------------------------------------
 //synchronized 
 long _getNextIdCounter() {
+
+    static long  s_idCounter        = -1;
+
     if(s_idCounter<0) {
         srand((unsigned)time(0L));
         s_idCounter = 100*rand();
@@ -36,7 +118,7 @@ long _getNextIdCounter() {
 
 //---------------------------------------------------------------------------------------------------------------------
 NSString* _calcLocalETag() {
-
+    
     long nCounter = _getNextIdCounter();
     NSString * lEtag = [NSString stringWithFormat:@"%@-%u-%u", LOCAL_ETAG_PREFIX,time(0L),nCounter];
     return lEtag;
@@ -56,52 +138,3 @@ NSString* _calcLocalGID() {
     NSString * lGID = [NSString stringWithFormat:@"%@-%u-%u", LOCAL_ID_PREFIX,time(0L),nCounter];
     return lGID;
 }
-
-
-
-
-//*********************************************************************************************************************
-//---------------------------------------------------------------------------------------------------------------------
-@interface TBaseEntity() {
-}
-
-@end
-
-//*********************************************************************************************************************
-//---------------------------------------------------------------------------------------------------------------------
-@implementation TBaseEntity
-
-@dynamic name;
-@dynamic desc;
-@dynamic deleted;
-@dynamic changed;
-@dynamic ts_created;
-@dynamic syncETag;
-@dynamic GID;
-@dynamic ts_updated;
-@dynamic NoSe;
-@dynamic icon;
-
-
-
-//---------------------------------------------------------------------------------------------------------------------
-/*
-+ (TBaseEntity *) insertNew {
-    
-    m_type = type;
-    m_id = _calcLocalId();
-    m_name = "";
-    m_shortName = null;
-    m_description = "";
-    m_icon = getDefaultIcon();
-    m_changed = false;
-    m_markedAsDeleted = false;
-    m_syncETag = _calcLocalETag();
-    t_syncStatus = SyncStatusType.Sync_OK;
-    
-    m_ts_created = m_ts_updated = TDateTime.now();
-    
-}
- */
-
-@end

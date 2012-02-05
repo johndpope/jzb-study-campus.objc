@@ -13,10 +13,13 @@
 @class TCategory, TPoint;
 
 @interface TMap : TBaseEntity {
-@private
 }
-@property (nonatomic, retain) NSSet* points;
-@property (nonatomic, retain) TPoint * ExtInfo;
-@property (nonatomic, retain) NSSet* categories;
+
+    @property (nonatomic, retain) NSSet* points;
+    @property (nonatomic, retain) TPoint * ExtInfo;
+    @property (nonatomic, retain) NSSet* categories;
+
+//---------------------------------------------------------------------------------------------------------------------
++ (TMap *) newMapInstance;
 
 @end

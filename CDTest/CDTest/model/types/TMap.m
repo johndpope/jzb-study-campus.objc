@@ -5,7 +5,7 @@
 //  Created by Snow Leopard User on 04/02/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
-
+#import "ModelService.h"
 #import "TMap.h"
 #import "TCategory.h"
 #import "TPoint.h"
@@ -15,6 +15,8 @@
 //---------------------------------------------------------------------------------------------------------------------
 @interface TMap() {
 }
+
+- (void) initEntity;
 
 @end
 
@@ -26,6 +28,28 @@
 @dynamic points;
 @dynamic ExtInfo;
 @dynamic categories;
+
+
+//---------------------------------------------------------------------------------------------------------------------
++ (TMap *) newMapInstance {
+
+    NSManagedObjectContext * ctx = [ModelService sharedInstance].moContext;
+    if(ctx) {
+        TMap *newMap = [NSEntityDescription insertNewObjectForEntityForName: @"TMap" inManagedObjectContext:ctx];
+        [newMap initEntity];
+            return newMap;
+         }
+         else {
+             return nil;
+    }
+}
+         
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) initEntity
+{
+    [super initEntity];
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)addPointsObject:(TPoint *)value {    

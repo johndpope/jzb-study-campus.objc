@@ -13,6 +13,8 @@
 #define CD_SLQLITE_FNAME @"CDTest.sqlite"
 
 
+//*********************************************************************************************************************
+//---------------------------------------------------------------------------------------------------------------------
 @interface ModelService () {
 @private
     NSManagedObjectContext * _moContext;
@@ -24,27 +26,10 @@
 @end
 
 
-@implementation ModelService
 
-
+//*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
-+ (TMap *) newMap {
-    NSManagedObjectContext * ctx = [ModelService sharedInstance].moContext;
-    if(ctx) {
-        TMap *newMap = [NSEntityDescription insertNewObjectForEntityForName: @"TMap" inManagedObjectContext:ctx];
-        return newMap;
-    }
-    else {
-        return nil;
-    }
-}
-
-/*
- TMap *newMap = [NSEntityDescription insertNewObjectForEntityForName: @"TMap" inManagedObjectContext:_moContext];
- [newMap setValue:@"mi mapa" forKey:@"name"];
- [newMap setValue:@"1234" forKey:@"GID"];
- [[ModelService sharedInstance] saveContext];
- */
+@implementation ModelService
 
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -145,6 +130,7 @@
     if(model!=nil) {
 
         NSURL *storeURL =  [[self _applicationDocumentsDirectory ] URLByAppendingPathComponent:CD_SLQLITE_FNAME];
+        NSLog(@"storeURL = %@",storeURL);
         
         _psCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: model];
         if(_psCoordinator!=nil) {
