@@ -1,2 +1,14 @@
 #ficheros ignorados
 .DS_Store
+xcuserdata/
+build/
+*.pbxuser
+*.perspective
+*.perspectivev3
+*.mode1v3
+*.mode2v3
+*.pyc 
+*~.nib/ 
+*.xcworkspace/ 
+*.swp
+
