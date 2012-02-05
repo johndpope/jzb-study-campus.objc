@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#include "TMap.h"
 
 @interface ModelService : NSObject {
 @private
@@ -15,11 +15,18 @@
 
 @property (readonly, nonatomic, retain) NSManagedObjectContext * moContext;
 
+
+//---------------------------------------------------------------------------------------------------------------------
 + (ModelService *)sharedInstance;
 
 
+//---------------------------------------------------------------------------------------------------------------------
 - (void) initCDStack;
 - (void) doneCDStack;
 - (void) saveContext;
+
+//---------------------------------------------------------------------------------------------------------------------
++ (TMap *) newMap;
+
 
 @end

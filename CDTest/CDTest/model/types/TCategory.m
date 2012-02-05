@@ -9,6 +9,7 @@
 #import "TCategory.h"
 #import "TCategory.h"
 #import "TMap.h"
+#import "TPoint.h"
 
 
 @implementation TCategory
@@ -17,7 +18,7 @@
 @dynamic categories;
 @dynamic map;
 
-- (void)addPointsObject:(NSManagedObject *)value {    
+- (void)addPointsObject:(TPoint *)value {    
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
     [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     [[self primitiveValueForKey:@"points"] addObject:value];
@@ -25,7 +26,7 @@
     [changedObjects release];
 }
 
-- (void)removePointsObject:(NSManagedObject *)value {
+- (void)removePointsObject:(TPoint *)value {
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
     [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
     [[self primitiveValueForKey:@"points"] removeObject:value];

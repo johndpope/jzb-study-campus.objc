@@ -12,8 +12,14 @@
 		CE823E0214DC824100BB21CB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CE823E0114DC824100BB21CB /* main.m */; };
 		CE823E1114DC831D00BB21CB /* CDTest.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CE823E0F14DC831D00BB21CB /* CDTest.xcdatamodeld */; };
 		CE823E1414DC833B00BB21CB /* ModelService.m in Sources */ = {isa = PBXBuildFile; fileRef = CE823E1314DC833B00BB21CB /* ModelService.m */; };
-		CE823E2414DCA49B00BB21CB /* TMap.m in Sources */ = {isa = PBXBuildFile; fileRef = CE823E2314DCA49B00BB21CB /* TMap.m */; };
-		CE823E2714DCA49C00BB21CB /* TBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = CE823E2614DCA49C00BB21CB /* TBaseEntity.m */; };
+		CED6ADE614DD31AB001D7B6D /* TCoordinates.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6ADE514DD31AB001D7B6D /* TCoordinates.m */; };
+		CED6ADE914DD31AC001D7B6D /* TIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6ADE814DD31AC001D7B6D /* TIcon.m */; };
+		CED6ADEC14DD31AC001D7B6D /* TBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6ADEB14DD31AC001D7B6D /* TBaseEntity.m */; };
+		CED6ADEF14DD31AC001D7B6D /* TPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6ADEE14DD31AC001D7B6D /* TPoint.m */; };
+		CED6ADF214DD31AC001D7B6D /* TMap.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6ADF114DD31AC001D7B6D /* TMap.m */; };
+		CED6ADF514DD31AC001D7B6D /* TCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6ADF414DD31AC001D7B6D /* TCategory.m */; };
+		CED6ADFC14DD3B51001D7B6D /* JavaStringCat.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6ADFB14DD3B51001D7B6D /* JavaStringCat.m */; };
+		CED6ADFF14DD46A2001D7B6D /* MyClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6ADFE14DD46A0001D7B6D /* MyClass.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -38,10 +44,22 @@
 		CE823E1014DC831D00BB21CB /* CDTest.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CDTest.xcdatamodel; sourceTree = "<group>"; };
 		CE823E1214DC833B00BB21CB /* ModelService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelService.h; sourceTree = "<group>"; };
 		CE823E1314DC833B00BB21CB /* ModelService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModelService.m; sourceTree = "<group>"; };
-		CE823E2214DCA49A00BB21CB /* TMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMap.h; sourceTree = "<group>"; };
-		CE823E2314DCA49B00BB21CB /* TMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMap.m; sourceTree = "<group>"; };
-		CE823E2514DCA49C00BB21CB /* TBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBaseEntity.h; sourceTree = "<group>"; };
-		CE823E2614DCA49C00BB21CB /* TBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBaseEntity.m; sourceTree = "<group>"; };
+		CED6ADE414DD31AB001D7B6D /* TCoordinates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCoordinates.h; sourceTree = "<group>"; };
+		CED6ADE514DD31AB001D7B6D /* TCoordinates.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCoordinates.m; sourceTree = "<group>"; };
+		CED6ADE714DD31AC001D7B6D /* TIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TIcon.h; sourceTree = "<group>"; };
+		CED6ADE814DD31AC001D7B6D /* TIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TIcon.m; sourceTree = "<group>"; };
+		CED6ADEA14DD31AC001D7B6D /* TBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBaseEntity.h; sourceTree = "<group>"; };
+		CED6ADEB14DD31AC001D7B6D /* TBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBaseEntity.m; sourceTree = "<group>"; };
+		CED6ADED14DD31AC001D7B6D /* TPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPoint.h; sourceTree = "<group>"; };
+		CED6ADEE14DD31AC001D7B6D /* TPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPoint.m; sourceTree = "<group>"; };
+		CED6ADF014DD31AC001D7B6D /* TMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMap.h; sourceTree = "<group>"; };
+		CED6ADF114DD31AC001D7B6D /* TMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMap.m; sourceTree = "<group>"; };
+		CED6ADF314DD31AC001D7B6D /* TCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCategory.h; sourceTree = "<group>"; };
+		CED6ADF414DD31AC001D7B6D /* TCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCategory.m; sourceTree = "<group>"; };
+		CED6ADFA14DD3B51001D7B6D /* JavaStringCat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JavaStringCat.h; sourceTree = "<group>"; };
+		CED6ADFB14DD3B51001D7B6D /* JavaStringCat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JavaStringCat.m; sourceTree = "<group>"; };
+		CED6ADFD14DD469F001D7B6D /* MyClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyClass.h; sourceTree = "<group>"; };
+		CED6ADFE14DD46A0001D7B6D /* MyClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyClass.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,8 +104,11 @@
 		CE823E0014DC824100BB21CB /* CDTest */ = {
 			isa = PBXGroup;
 			children = (
+				CED6ADF914DD3B51001D7B6D /* utils */,
 				CE823E0E14DC831D00BB21CB /* model */,
 				CE823E0114DC824100BB21CB /* main.m */,
+				CED6ADFD14DD469F001D7B6D /* MyClass.h */,
+				CED6ADFE14DD46A0001D7B6D /* MyClass.m */,
 				CE823E0814DC824100BB21CB /* CDTest.1 */,
 				CE823E0314DC824100BB21CB /* Supporting Files */,
 			);
@@ -116,12 +137,29 @@
 		CE823E1B14DCA43200BB21CB /* types */ = {
 			isa = PBXGroup;
 			children = (
-				CE823E2514DCA49C00BB21CB /* TBaseEntity.h */,
-				CE823E2614DCA49C00BB21CB /* TBaseEntity.m */,
-				CE823E2214DCA49A00BB21CB /* TMap.h */,
-				CE823E2314DCA49B00BB21CB /* TMap.m */,
+				CED6ADE714DD31AC001D7B6D /* TIcon.h */,
+				CED6ADF314DD31AC001D7B6D /* TCategory.h */,
+				CED6ADF414DD31AC001D7B6D /* TCategory.m */,
+				CED6ADF014DD31AC001D7B6D /* TMap.h */,
+				CED6ADF114DD31AC001D7B6D /* TMap.m */,
+				CED6ADED14DD31AC001D7B6D /* TPoint.h */,
+				CED6ADEE14DD31AC001D7B6D /* TPoint.m */,
+				CED6ADEA14DD31AC001D7B6D /* TBaseEntity.h */,
+				CED6ADEB14DD31AC001D7B6D /* TBaseEntity.m */,
+				CED6ADE814DD31AC001D7B6D /* TIcon.m */,
+				CED6ADE414DD31AB001D7B6D /* TCoordinates.h */,
+				CED6ADE514DD31AB001D7B6D /* TCoordinates.m */,
 			);
 			path = types;
+			sourceTree = "<group>";
+		};
+		CED6ADF914DD3B51001D7B6D /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				CED6ADFA14DD3B51001D7B6D /* JavaStringCat.h */,
+				CED6ADFB14DD3B51001D7B6D /* JavaStringCat.m */,
+			);
+			path = utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -174,8 +212,14 @@
 				CE823E0214DC824100BB21CB /* main.m in Sources */,
 				CE823E1114DC831D00BB21CB /* CDTest.xcdatamodeld in Sources */,
 				CE823E1414DC833B00BB21CB /* ModelService.m in Sources */,
-				CE823E2414DCA49B00BB21CB /* TMap.m in Sources */,
-				CE823E2714DCA49C00BB21CB /* TBaseEntity.m in Sources */,
+				CED6ADE614DD31AB001D7B6D /* TCoordinates.m in Sources */,
+				CED6ADE914DD31AC001D7B6D /* TIcon.m in Sources */,
+				CED6ADEC14DD31AC001D7B6D /* TBaseEntity.m in Sources */,
+				CED6ADEF14DD31AC001D7B6D /* TPoint.m in Sources */,
+				CED6ADF214DD31AC001D7B6D /* TMap.m in Sources */,
+				CED6ADF514DD31AC001D7B6D /* TCategory.m in Sources */,
+				CED6ADFC14DD3B51001D7B6D /* JavaStringCat.m in Sources */,
+				CED6ADFF14DD46A2001D7B6D /* MyClass.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,6 +305,7 @@
 				CE823E0D14DC824100BB21CB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

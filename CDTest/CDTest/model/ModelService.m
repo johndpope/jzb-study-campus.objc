@@ -27,6 +27,25 @@
 @implementation ModelService
 
 
+//---------------------------------------------------------------------------------------------------------------------
++ (TMap *) newMap {
+    NSManagedObjectContext * ctx = [ModelService sharedInstance].moContext;
+    if(ctx) {
+        TMap *newMap = [NSEntityDescription insertNewObjectForEntityForName: @"TMap" inManagedObjectContext:ctx];
+        return newMap;
+    }
+    else {
+        return nil;
+    }
+}
+
+/*
+ TMap *newMap = [NSEntityDescription insertNewObjectForEntityForName: @"TMap" inManagedObjectContext:_moContext];
+ [newMap setValue:@"mi mapa" forKey:@"name"];
+ [newMap setValue:@"1234" forKey:@"GID"];
+ [[ModelService sharedInstance] saveContext];
+ */
+
 
 //---------------------------------------------------------------------------------------------------------------------
 + (ModelService *)sharedInstance {

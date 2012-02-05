@@ -10,7 +10,7 @@
 #import <CoreData/CoreData.h>
 #import "TBaseEntity.h"
 
-@class TCategory, TMap;
+@class TCategory, TMap, TPoint;
 
 @interface TCategory : TBaseEntity {
 @private

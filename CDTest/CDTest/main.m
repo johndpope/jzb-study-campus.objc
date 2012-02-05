@@ -11,6 +11,8 @@
 
 int main (int argc, const char * argv[])
 {
+#define LOCAL_ETAG_PREFIX @"peepluis"
+
 
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
