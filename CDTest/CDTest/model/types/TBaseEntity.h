@@ -25,15 +25,15 @@ typedef enum {
 @private
 }
 
+@property (nonatomic, retain) NSString * GID;
+@property (nonatomic, retain) NSString * syncETag;
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * desc;
 @property (nonatomic, assign) BOOL wasDeleted;
 @property (nonatomic, assign) BOOL changed;
-@property (nonatomic, retain) NSNumber * ts_created;
-@property (nonatomic, retain) NSString * syncETag;
-@property (nonatomic, retain) NSString * GID;
-@property (nonatomic, retain) NSNumber * ts_updated;
 @property (nonatomic, retain) NSString * iconURL;
+@property (nonatomic, retain) NSNumber * ts_created;
+@property (nonatomic, retain) NSNumber * ts_updated;
 @property (nonatomic, assign) SyncStatusType syncStatus;
 @property (readonly, nonatomic, assign) BOOL isLocal;
 

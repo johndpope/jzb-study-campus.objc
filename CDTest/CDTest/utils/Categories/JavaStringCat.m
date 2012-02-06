@@ -47,7 +47,7 @@
     
     NSMutableString *ms = [NSMutableString stringWithString:self];
     [ms replaceOccurrencesOfString: str1 withString: str2 options:0 range: (NSRange){0,[ms length]}];
-    return [ms copy];
+    return [[ms copy] autorelease];
 }
 
 

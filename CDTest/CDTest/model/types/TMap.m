@@ -31,7 +31,7 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (TMap *) newInstance {
++ (TMap *) insertEntity {
 
     NSManagedObjectContext * ctx = [ModelService sharedInstance].moContext;
     if(ctx) {
@@ -46,13 +46,19 @@
          
 
 //---------------------------------------------------------------------------------------------------------------------
+- (void)dealloc
+{
+    [super dealloc];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 - (void) initEntity
 {
     [super initEntity];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) markAsSynchonized {
+- (void) markAsSynchronized {
     
     self.changed = false;
     self.syncStatus = ST_Sync_OK;
@@ -69,6 +75,9 @@
         cat.changed = false;
         cat.syncStatus = ST_Sync_OK;
     }
+    
+    // borrado definitivo de elementos previamente marcados para borrar
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -139,6 +148,23 @@
     [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (void)removeAllPoints {
+    [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
+    [[self primitiveValueForKey:@"points"] removeAllObjects];
+    [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (TPoint *) pointByGID:(NSString *)gid {
+    for(TPoint *point in self.points) {
+        if([gid isEqualToString: point.GID]) {
+            return point;
+        }
+    }
+    return nil;
+}
+
 
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -171,6 +197,23 @@
     [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
     [[self primitiveValueForKey:@"categories"] minusSet:value];
     [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void)removeAllCategories {
+    [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
+    [[self primitiveValueForKey:@"categories"] removeAllObjects];
+    [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (TCategory *) categoryByGID:(NSString *)gid {
+    for(TCategory *cat in self.categories) {
+        if([gid isEqualToString: cat.GID]) {
+            return cat;
+        }
+    }
+    return nil;
 }
 
 

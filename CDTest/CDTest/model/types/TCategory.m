@@ -32,7 +32,7 @@
 @dynamic map;
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (TCategory *) newInstanceInMap:(TMap *)ownerMap {
++ (TCategory *) insertEntityInMap:(TMap *)ownerMap {
     
     NSManagedObjectContext * ctx = [ModelService sharedInstance].moContext;
     if(ctx) {
@@ -44,6 +44,12 @@
     else {
         return nil;
     }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void)dealloc
+{
+    [super dealloc];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -145,6 +151,25 @@
     [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (void)removeAllPoints {
+    [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
+    [[self primitiveValueForKey:@"points"] removeAllObjects];
+    [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (TPoint *) pointByGID:(NSString *)gid {
+    for(TPoint *point in self.points) {
+        if([gid isEqualToString: point.GID]) {
+            return point;
+        }
+    }
+    return nil;
+}
+
+
+
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)addSubcategory:(TCategory *)value {    
@@ -178,6 +203,25 @@
     [self didChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (void)removeAllSubcategories {
+    [self willChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
+    [[self primitiveValueForKey:@"subcategories"] removeAllObjects];
+    [self didChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (TCategory *) subcategoryByGID:(NSString *)gid {
+    for(TCategory *cat in self.subcategories) {
+        if([gid isEqualToString: cat.GID]) {
+            return cat;
+        }
+    }
+    return nil;
+}
+
+
+
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)addCategory:(TCategory *)value {    
@@ -209,6 +253,23 @@
     [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
     [[self primitiveValueForKey:@"categories"] minusSet:value];
     [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void)removeAllCategories {
+    [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
+    [[self primitiveValueForKey:@"categories"] removeAllObjects];
+    [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (TCategory *) categoryByGID:(NSString *)gid {
+    for(TCategory *cat in self.categories) {
+        if([gid isEqualToString: cat.GID]) {
+            return cat;
+        }
+    }
+    return nil;
 }
 
 

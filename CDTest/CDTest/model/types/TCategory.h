@@ -24,25 +24,34 @@
 @property (nonatomic, retain) TMap * map;
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (TCategory *) newInstanceInMap:(TMap *)ownerMap;
++ (TCategory *) insertEntityInMap:(TMap *)ownerMap;
 - (void) updateToRemoteETag;
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void)addPoint:(TPoint *)value ;    
-- (void)removePoint:(TPoint *)value ;
-- (void)addPoints:(NSSet *)value ;    
-- (void)removePoints:(NSSet *)value ;
+- (void)addPoint:(TPoint *)value;    
+- (void)removePoint:(TPoint *)value;
+- (void)addPoints:(NSSet *)value;    
+- (void)removePoints:(NSSet *)value;
+- (void)removeAllPoints;
+- (TPoint *) pointByGID:(NSString *)gid;
 
-- (void)addSubcategory:(TCategory *)value ;    
-- (void)removeSubcategory:(TCategory *)value ;
-- (void)addSubcategories:(NSSet *)value ;    
-- (void)removeSubcategories:(NSSet *)value ;
 
-- (void)addCategory:(TCategory *)value ;    
-- (void)removeCategory:(TCategory *)value ;
-- (void)addCategories:(NSSet *)value ;    
-- (void)removeCategories:(NSSet *)value ;
+- (void)addSubcategory:(TCategory *)value;    
+- (void)removeSubcategory:(TCategory *)value;
+- (void)addSubcategories:(NSSet *)value;    
+- (void)removeSubcategories:(NSSet *)value;
+- (void)removeAllSubcategories;
+- (TCategory *) subcategoryByGID:(NSString *)gid;
+
+
+- (void)addCategory:(TCategory *)value;    
+- (void)removeCategory:(TCategory *)value;
+- (void)addCategories:(NSSet *)value;    
+- (void)removeCategories:(NSSet *)value;
+- (void)removeAllCategories;
+- (TCategory *) categoryByGID:(NSString *)gid;
+
 
 
 @end

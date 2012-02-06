@@ -7,17 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		426491CC14E06D1900B8E0C2 /* ModelService.m in Sources */ = {isa = PBXBuildFile; fileRef = 426491C914E06D1900B8E0C2 /* ModelService.m */; };
+		426491CD14E06D1900B8E0C2 /* PointXmlCat.m in Sources */ = {isa = PBXBuildFile; fileRef = 426491CB14E06D1900B8E0C2 /* PointXmlCat.m */; };
+		428A3E6514E085B4005909D2 /* MergeEntityCat.m in Sources */ = {isa = PBXBuildFile; fileRef = 428A3E6414E085B4005909D2 /* MergeEntityCat.m */; };
 		429FB5CE14DF50760055A7FA /* JavaStringCat.m in Sources */ = {isa = PBXBuildFile; fileRef = 429FB5C114DF50760055A7FA /* JavaStringCat.m */; };
 		429FB5CF14DF50760055A7FA /* GDataXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 429FB5C414DF50760055A7FA /* GDataXMLNode.m */; };
 		429FB5D014DF50760055A7FA /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 429FB5C814DF50760055A7FA /* RegexKitLite.m */; };
 		429FB5D114DF50760055A7FA /* XMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 429FB5CB14DF50760055A7FA /* XMLReader.m */; };
 		429FB5D214DF50760055A7FA /* XMLUtilDoc.m in Sources */ = {isa = PBXBuildFile; fileRef = 429FB5CD14DF50760055A7FA /* XMLUtilDoc.m */; };
-		429FB5D814DF51890055A7FA /* PointXmlCat.m in Sources */ = {isa = PBXBuildFile; fileRef = 429FB5D714DF51890055A7FA /* PointXmlCat.m */; };
 		CE823DFD14DC824100BB21CB /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE823DFC14DC824100BB21CB /* CoreData.framework */; };
 		CE823DFF14DC824100BB21CB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE823DFE14DC824100BB21CB /* Foundation.framework */; };
 		CE823E0214DC824100BB21CB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CE823E0114DC824100BB21CB /* main.m */; };
 		CE823E1114DC831D00BB21CB /* CDTest.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CE823E0F14DC831D00BB21CB /* CDTest.xcdatamodeld */; };
-		CE823E1414DC833B00BB21CB /* ModelService.m in Sources */ = {isa = PBXBuildFile; fileRef = CE823E1314DC833B00BB21CB /* ModelService.m */; };
 		CED6ADEC14DD31AC001D7B6D /* TBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6ADEB14DD31AC001D7B6D /* TBaseEntity.m */; };
 		CED6ADEF14DD31AC001D7B6D /* TPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6ADEE14DD31AC001D7B6D /* TPoint.m */; };
 		CED6ADF214DD31AC001D7B6D /* TMap.m in Sources */ = {isa = PBXBuildFile; fileRef = CED6ADF114DD31AC001D7B6D /* TMap.m */; };
@@ -38,6 +39,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		426491C814E06D1900B8E0C2 /* ModelService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelService.h; sourceTree = "<group>"; };
+		426491C914E06D1900B8E0C2 /* ModelService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModelService.m; sourceTree = "<group>"; };
+		426491CA14E06D1900B8E0C2 /* PointXmlCat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointXmlCat.h; sourceTree = "<group>"; };
+		426491CB14E06D1900B8E0C2 /* PointXmlCat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointXmlCat.m; sourceTree = "<group>"; };
+		428A3E6314E085B3005909D2 /* MergeEntityCat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MergeEntityCat.h; sourceTree = "<group>"; };
+		428A3E6414E085B4005909D2 /* MergeEntityCat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MergeEntityCat.m; sourceTree = "<group>"; };
 		429FB5C014DF50760055A7FA /* JavaStringCat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JavaStringCat.h; sourceTree = "<group>"; };
 		429FB5C114DF50760055A7FA /* JavaStringCat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JavaStringCat.m; sourceTree = "<group>"; };
 		429FB5C314DF50760055A7FA /* GDataXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDataXMLNode.h; sourceTree = "<group>"; };
@@ -49,8 +56,6 @@
 		429FB5CB14DF50760055A7FA /* XMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMLReader.m; sourceTree = "<group>"; };
 		429FB5CC14DF50760055A7FA /* XMLUtilDoc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLUtilDoc.h; sourceTree = "<group>"; };
 		429FB5CD14DF50760055A7FA /* XMLUtilDoc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMLUtilDoc.m; sourceTree = "<group>"; };
-		429FB5D414DF50CF0055A7FA /* PointXmlCat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointXmlCat.h; sourceTree = "<group>"; };
-		429FB5D714DF51890055A7FA /* PointXmlCat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointXmlCat.m; sourceTree = "<group>"; };
 		CE823DF814DC824100BB21CB /* CDTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CDTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE823DFC14DC824100BB21CB /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		CE823DFE14DC824100BB21CB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -58,8 +63,6 @@
 		CE823E0414DC824100BB21CB /* CDTest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CDTest-Prefix.pch"; sourceTree = "<group>"; };
 		CE823E0814DC824100BB21CB /* CDTest.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = CDTest.1; sourceTree = "<group>"; };
 		CE823E1014DC831D00BB21CB /* CDTest.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CDTest.xcdatamodel; sourceTree = "<group>"; };
-		CE823E1214DC833B00BB21CB /* ModelService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelService.h; sourceTree = "<group>"; };
-		CE823E1314DC833B00BB21CB /* ModelService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModelService.m; sourceTree = "<group>"; };
 		CED6ADEA14DD31AC001D7B6D /* TBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBaseEntity.h; sourceTree = "<group>"; };
 		CED6ADEB14DD31AC001D7B6D /* TBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBaseEntity.m; sourceTree = "<group>"; };
 		CED6ADED14DD31AC001D7B6D /* TPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPoint.h; sourceTree = "<group>"; };
@@ -85,6 +88,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		426491C714E06D1900B8E0C2 /* services */ = {
+			isa = PBXGroup;
+			children = (
+				426491C814E06D1900B8E0C2 /* ModelService.h */,
+				426491C914E06D1900B8E0C2 /* ModelService.m */,
+				426491CA14E06D1900B8E0C2 /* PointXmlCat.h */,
+				426491CB14E06D1900B8E0C2 /* PointXmlCat.m */,
+				428A3E6314E085B3005909D2 /* MergeEntityCat.h */,
+				428A3E6414E085B4005909D2 /* MergeEntityCat.m */,
+			);
+			path = services;
+			sourceTree = "<group>";
+		};
 		429FB5BF14DF50760055A7FA /* Categories */ = {
 			isa = PBXGroup;
 			children = (
@@ -151,6 +167,7 @@
 		CE823E0014DC824100BB21CB /* CDTest */ = {
 			isa = PBXGroup;
 			children = (
+				426491C714E06D1900B8E0C2 /* services */,
 				CED6ADF914DD3B51001D7B6D /* utils */,
 				CE823E0E14DC831D00BB21CB /* model */,
 				CE823E0114DC824100BB21CB /* main.m */,
@@ -173,10 +190,8 @@
 		CE823E0E14DC831D00BB21CB /* model */ = {
 			isa = PBXGroup;
 			children = (
-				CE823E1B14DCA43200BB21CB /* types */,
 				CE823E0F14DC831D00BB21CB /* CDTest.xcdatamodeld */,
-				CE823E1214DC833B00BB21CB /* ModelService.h */,
-				CE823E1314DC833B00BB21CB /* ModelService.m */,
+				CE823E1B14DCA43200BB21CB /* types */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -192,8 +207,6 @@
 				CED6ADEE14DD31AC001D7B6D /* TPoint.m */,
 				CED6ADEA14DD31AC001D7B6D /* TBaseEntity.h */,
 				CED6ADEB14DD31AC001D7B6D /* TBaseEntity.m */,
-				429FB5D414DF50CF0055A7FA /* PointXmlCat.h */,
-				429FB5D714DF51890055A7FA /* PointXmlCat.m */,
 			);
 			path = types;
 			sourceTree = "<group>";
@@ -260,7 +273,6 @@
 			files = (
 				CE823E0214DC824100BB21CB /* main.m in Sources */,
 				CE823E1114DC831D00BB21CB /* CDTest.xcdatamodeld in Sources */,
-				CE823E1414DC833B00BB21CB /* ModelService.m in Sources */,
 				CED6ADEC14DD31AC001D7B6D /* TBaseEntity.m in Sources */,
 				CED6ADEF14DD31AC001D7B6D /* TPoint.m in Sources */,
 				CED6ADF214DD31AC001D7B6D /* TMap.m in Sources */,
@@ -271,7 +283,9 @@
 				429FB5D014DF50760055A7FA /* RegexKitLite.m in Sources */,
 				429FB5D114DF50760055A7FA /* XMLReader.m in Sources */,
 				429FB5D214DF50760055A7FA /* XMLUtilDoc.m in Sources */,
-				429FB5D814DF51890055A7FA /* PointXmlCat.m in Sources */,
+				426491CC14E06D1900B8E0C2 /* ModelService.m in Sources */,
+				426491CD14E06D1900B8E0C2 /* PointXmlCat.m in Sources */,
+				428A3E6514E085B4005909D2 /* MergeEntityCat.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
