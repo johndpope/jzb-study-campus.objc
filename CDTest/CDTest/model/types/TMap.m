@@ -26,7 +26,7 @@
 @implementation TMap
 
 @dynamic points;
-@dynamic ExtInfo;
+@dynamic extInfo;
 @dynamic categories;
 
 
@@ -49,6 +49,26 @@
 - (void) initEntity
 {
     [super initEntity];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) markAsSynchonized {
+    
+    self.changed = false;
+    self.syncStatus = ST_Sync_OK;
+    
+    self.extInfo.changed = false;
+    self.extInfo.syncStatus = ST_Sync_OK;
+    
+    for(TPoint* point in self.points) {
+        point.changed = false;
+        point.syncStatus = ST_Sync_OK;
+    }
+    
+    for(TCategory* cat in self.categories) {
+        cat.changed = false;
+        cat.syncStatus = ST_Sync_OK;
+    }
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -83,7 +103,7 @@
     
     //--- ExtInfoPoint ---
     [sbuf appendFormat:@"%@<ext_info_point/>\n",ident];
-    [sbuf appendFormat:@"%@%@\n",ident, [self.ExtInfo toXmlString:nextIdent]];
+    [sbuf appendFormat:@"%@%@\n",ident, [self.extInfo toXmlString:nextIdent]];
     [sbuf appendFormat:@"%@<ext_info_point/>\n",ident];
 }
 

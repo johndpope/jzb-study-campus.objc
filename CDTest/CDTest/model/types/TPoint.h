@@ -19,7 +19,6 @@
 @private
 }
 
-@property (nonatomic, retain) NSString * kmlBlob;
 @property (nonatomic, retain) TMap * map;
 @property (nonatomic, retain) NSSet* categories;
 @property (nonatomic, assign) double lng;

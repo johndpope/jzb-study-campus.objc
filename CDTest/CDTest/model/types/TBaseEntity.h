@@ -38,6 +38,8 @@ typedef enum {
 @property (readonly, nonatomic, assign) BOOL isLocal;
 
 // ---------------------------------------------------------------------------------
++ (NSString *) calcRemoteCategotyETag;
+
 - (NSString *) toXmlString;
 - (NSString *) toXmlString: (unsigned) ident;
 

@@ -30,7 +30,6 @@
 //---------------------------------------------------------------------------------------------------------------------
 @implementation TPoint
 
-@dynamic kmlBlob;
 @dynamic map;
 @dynamic categories;
 @dynamic _i_lng;

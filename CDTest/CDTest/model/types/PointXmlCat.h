@@ -7,10 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TPoint.h"
 
 
-@interface PointXmlUtil : NSObject {
-    
+//*********************************************************************************************************************
+//---------------------------------------------------------------------------------------------------------------------
+@interface TPoint (PointXmlCat) {
 }
+
+@property (nonatomic, assign) NSString * kmlBlob;
 
 @end

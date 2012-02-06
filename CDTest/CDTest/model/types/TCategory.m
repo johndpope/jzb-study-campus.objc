@@ -53,6 +53,11 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+- (void) updateToRemoteETag {
+    self.syncETag = [TBaseEntity calcRemoteCategotyETag];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 - (void) _xmlStringBody: (NSMutableString*) sbuf ident:(NSString *) ident {
     
     [super _xmlStringBody:sbuf ident:ident];

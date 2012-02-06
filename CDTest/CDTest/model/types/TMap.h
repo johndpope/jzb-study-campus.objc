@@ -19,12 +19,13 @@
 }
 
     @property (nonatomic, retain) NSSet* points;
-    @property (nonatomic, retain) TPoint * ExtInfo;
+    @property (nonatomic, retain) TPoint * extInfo;
     @property (nonatomic, retain) NSSet* categories;
 
 //---------------------------------------------------------------------------------------------------------------------
 + (TMap *) newInstance;
 
+- (void) markAsSynchonized;
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)addPoint:(TPoint *)value ;    
