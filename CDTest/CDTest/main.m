@@ -9,19 +9,18 @@
 #import "ModelService.h"
 #import "TMap.h"
 #import "TPoint.h"
+#import "PointXmlCat.h"
 #import "TCategory.h"
 
 int main (int argc, const char * argv[])
 {
-#define LOCAL_ETAG_PREFIX @"peepluis"
-
 
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
     /**/
-    NSURL *storeURL = [NSURL fileURLWithPath:@""];
+    NSString *storeFile = @"/Users/jzarzuela/Documents/CDTest.sqlite";
     NSError *error1;
-    if(![[NSFileManager defaultManager] removeItemAtURL:storeURL error:&error1]) {
+    if(![[NSFileManager defaultManager] removeItemAtPath:storeFile error:&error1]) {
         NSLog(@"Error deleting SQLite file: %@, %@", error1, [error1 userInfo]);
         abort();
     }
@@ -63,7 +62,13 @@ int main (int argc, const char * argv[])
     
     [[ModelService sharedInstance] saveContext];
     /**/
-        
+    
+    NSString *kml = point1.kmlBlob;
+    NSLog(@"kml =\n%@",kml);
+    point2.kmlBlob = kml;
+    NSLog(@"kml =\n%@",point2.kmlBlob);
+    
+    
     NSString *aName = @"test";
     NSEntityDescription *mapEntity = [NSEntityDescription entityForName:@"TMap" inManagedObjectContext:_moContext];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name like[cd] %@",aName];
