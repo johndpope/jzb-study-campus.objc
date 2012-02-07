@@ -21,7 +21,14 @@ int main (int argc, const char * argv[])
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     
-    doIt(argc, argv);
+    //doIt(argc, argv);
+    
+    
+    [[ModelService sharedInstance] initCDStack];
+    NSManagedObjectContext * _moContext = [ModelService sharedInstance].moContext;
+    TMap *map = [TMap insertEntity];
+    map.name=@"hola";
+    [[ModelService sharedInstance] doneCDStack];
     
     [pool drain];
     return 0;
@@ -48,23 +55,23 @@ void doIt (int argc, const char * argv[])
     
     /**/
     
-    TMap * amap = [TMap newInstance];
+    TMap * amap = [TMap insertEntity];
     amap.name = @"test";
     
-    TPoint *point1 = [TPoint newInstanceInMap:amap];
+    TPoint *point1 = [TPoint insertEntityInMap:amap];
     point1.name = @"p1";
-    TPoint *point2 = [TPoint newInstanceInMap:amap];
+    TPoint *point2 = [TPoint insertEntityInMap:amap];
     point2.name = @"p2";
-    TPoint *point3 = [TPoint newInstanceInMap:amap];
+    TPoint *point3 = [TPoint insertEntityInMap:amap];
     point3.name = @"p3";
-    TPoint *point4 = [TPoint newInstanceInMap:amap];
+    TPoint *point4 = [TPoint insertEntityInMap:amap];
     point4.name = @"p4";
     
-    TCategory *cat1 = [TCategory newInstanceInMap:amap];
+    TCategory *cat1 = [TCategory insertEntityInMap:amap];
     cat1.name = @"c1";
-    TCategory *cat2 = [TCategory newInstanceInMap:amap];
+    TCategory *cat2 = [TCategory insertEntityInMap:amap];
     cat2.name = @"c2";
-    TCategory *cat3 = [TCategory newInstanceInMap:amap];
+    TCategory *cat3 = [TCategory insertEntityInMap:amap];
     cat3.name = @"c3";
     
     [cat2 addPoint:point1];
