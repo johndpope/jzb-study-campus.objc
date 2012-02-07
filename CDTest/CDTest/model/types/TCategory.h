@@ -24,7 +24,9 @@
 @property (nonatomic, retain) TMap * map;
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (TCategory *) insertEntityInMap:(TMap *)ownerMap;
++ (TCategory *) insertNewInMap:(TMap *)ownerMap;
++ (TCategory *) insertNewTmpInMap:(TMap *)ownerMap;
+
 - (void) updateToRemoteETag;
 
 

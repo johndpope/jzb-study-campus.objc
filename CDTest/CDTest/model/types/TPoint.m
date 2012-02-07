@@ -37,19 +37,39 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (TPoint *) insertEntityInMap:(TMap *)ownerMap {
-    
-    NSManagedObjectContext * ctx = [ModelService sharedInstance].moContext;
-    if(ctx) {
-        TPoint *newPoint = [NSEntityDescription insertNewObjectForEntityForName: @"TPoint" inManagedObjectContext:ctx];
++ (TPoint *) insertInCtx: (NSManagedObjectContext *) ctx withMap:(TMap *)ownerMap{
+
+    NSManagedObjectContext * ctx2 = [ModelService sharedInstance].moContext;
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"TPoint" inManagedObjectContext:ctx2];
+    //if(ctx) 
+    {
+        TPoint *newPoint = [[NSManagedObject alloc] initWithEntity:entity insertIntoManagedObjectContext:ctx];
         [newPoint initEntity];
         newPoint.map = ownerMap;
+        [ownerMap addPoint:newPoint];
         return newPoint;
     }
-    else {
-        return nil;
-    }
+    //else {
+    //    return nil;
+    //}
 }
+
+//---------------------------------------------------------------------------------------------------------------------
++ (TPoint *) insertNewInMap:(TMap *)ownerMap {
+    
+    NSManagedObjectContext * ctx = [ModelService sharedInstance].moContext;
+    return [TPoint insertInCtx:ctx withMap:ownerMap];
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------
++ (TPoint *) insertNewTmpInMap:(TMap *)ownerMap {
+    
+    //NSManagedObjectContext * ctx = [ModelService sharedInstance].moTmpContext;
+    NSManagedObjectContext * ctx = nil;
+    return [TPoint insertInCtx:ctx withMap:ownerMap];
+}
+
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)dealloc

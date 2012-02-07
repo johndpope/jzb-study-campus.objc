@@ -23,7 +23,8 @@
     @property (nonatomic, retain) NSSet* categories;
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (TMap *) insertEntity;
++ (TMap *) insertNew;
++ (TMap *) insertNewTmp;
 
 - (void) markAsSynchronized;
 

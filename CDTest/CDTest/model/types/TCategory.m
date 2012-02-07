@@ -31,19 +31,39 @@
 @dynamic categories;
 @dynamic map;
 
+
 //---------------------------------------------------------------------------------------------------------------------
-+ (TCategory *) insertEntityInMap:(TMap *)ownerMap {
++ (TCategory *) insertInCtx: (NSManagedObjectContext *) ctx withMap:(TMap *)ownerMap{
     
-    NSManagedObjectContext * ctx = [ModelService sharedInstance].moContext;
-    if(ctx) {
-        TCategory *newCat = [NSEntityDescription insertNewObjectForEntityForName: @"TCategory" inManagedObjectContext:ctx];
+    NSManagedObjectContext * ctx2 = [ModelService sharedInstance].moContext;
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"TCategory" inManagedObjectContext:ctx2];
+    //if(ctx) 
+    {
+        TCategory *newCat = [[NSManagedObject alloc] initWithEntity:entity insertIntoManagedObjectContext:ctx];
         [newCat initEntity];
         newCat.map = ownerMap;
+        [ownerMap addCategory:newCat];
         return newCat;
     }
-    else {
-        return nil;
-    }
+//    else {
+//        return nil;
+//    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
++ (TCategory *) insertNewInMap:(TMap *)ownerMap {
+    
+    NSManagedObjectContext * ctx = [ModelService sharedInstance].moContext;
+    return [TCategory insertInCtx:ctx withMap:ownerMap];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
++ (TCategory *) insertNewTmpInMap:(TMap *)ownerMap {
+    
+//    NSManagedObjectContext * ctx = [ModelService sharedInstance].moTmpContext;
+    NSManagedObjectContext * ctx = nil;
+    
+    return [TCategory insertInCtx:ctx withMap:ownerMap];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -120,12 +140,14 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void)addPoint:(TPoint *)value {    
+- (void)addPoint:(TPoint *)value {
+    NSLog(@"---- addPoint ----");
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
     [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     [[self primitiveValueForKey:@"points"] addObject:value];
     [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     [changedObjects release];
+    [value addCategory: self];
 }
 
 //---------------------------------------------------------------------------------------------------------------------

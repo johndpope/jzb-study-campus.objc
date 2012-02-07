@@ -18,6 +18,7 @@
 @interface ModelService () {
 @private
     NSManagedObjectContext * _moContext;
+    NSManagedObjectContext * _moTmpContext;
     NSPersistentStoreCoordinator * _psCoordinator;
     NSManagedObjectModel * _moModel;
 }
@@ -59,6 +60,7 @@
     NSLog(@"initCDStack");
 
     [self moContext];
+    [self moTmpContext];
 }
 
 
@@ -68,6 +70,7 @@
     NSLog(@"doneCDStack");
 
     [_moContext release];
+    [_moTmpContext release];
     [_moModel release];
     [_psCoordinator release];
     _moContext = nil;
@@ -110,6 +113,27 @@
         _moContext = [[NSManagedObjectContext alloc] init];
         [_moContext setPersistentStoreCoordinator:coor];
         return _moContext;
+    } else {
+        return nil;
+    }
+    
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSManagedObjectContext *) moTmpContext {
+    
+    if(_moTmpContext!=nil) {
+        return _moTmpContext;
+    }
+    
+    NSLog(@"Creating moTmpContext");
+    
+    NSPersistentStoreCoordinator *coor = self.psCoordinator;
+    if(coor!=nil) {
+        _moTmpContext = [[NSManagedObjectContext alloc] init];
+        [_moTmpContext setPersistentStoreCoordinator:coor];
+        return _moTmpContext;
     } else {
         return nil;
     }

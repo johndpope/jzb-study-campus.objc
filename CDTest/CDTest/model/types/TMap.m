@@ -31,19 +31,36 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (TMap *) insertEntity {
++ (TMap *) insertInCtx: (NSManagedObjectContext *) ctx {
+
+    NSManagedObjectContext * ctx2 = [ModelService sharedInstance].moContext;
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"TMap" inManagedObjectContext:ctx2];
+    //if(ctx) 
+    {
+        TMap *newMap = [[NSManagedObject alloc] initWithEntity:entity insertIntoManagedObjectContext:ctx];
+        [newMap initEntity];
+        return newMap;
+    }
+    //else {
+    //    return nil;
+    //}
+}
+
+//---------------------------------------------------------------------------------------------------------------------
++ (TMap *) insertNew {
 
     NSManagedObjectContext * ctx = [ModelService sharedInstance].moContext;
-    if(ctx) {
-        TMap *newMap = [NSEntityDescription insertNewObjectForEntityForName: @"TMap" inManagedObjectContext:ctx];
-        [newMap initEntity];
-            return newMap;
-         }
-         else {
-             return nil;
-    }
 }
          
+
+//---------------------------------------------------------------------------------------------------------------------
++ (TMap *) insertNewTmp {
+    
+    //NSManagedObjectContext * ctx = [ModelService sharedInstance].moTmpContext;
+    NSManagedObjectContext * ctx = nil;
+    return [TMap insertInCtx:ctx];
+}
+
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)dealloc

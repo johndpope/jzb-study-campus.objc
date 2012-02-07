@@ -25,7 +25,8 @@
 @property (nonatomic, assign) double lat;
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (TPoint *) insertEntityInMap:(TMap *)ownerMap;
++ (TPoint *) insertNewInMap:(TMap *)ownerMap;
++ (TPoint *) insertNewTmpInMap:(TMap *)ownerMap;
 
 
 //---------------------------------------------------------------------------------------------------------------------
