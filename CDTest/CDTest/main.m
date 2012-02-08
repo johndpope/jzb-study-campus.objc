@@ -12,6 +12,7 @@
 #import "PointXmlCat.h"
 #import "TCategory.h"
 
+#import "GData/GDataMaps.h"
 
 void doIt(int argc, const char * argv[]);
 

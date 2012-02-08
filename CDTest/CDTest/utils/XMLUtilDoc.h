@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GDataXMLNode.h"
+#import "GData/GDataXMLNode.h"
 
 @interface XMLUtilDoc : NSObject {
     
