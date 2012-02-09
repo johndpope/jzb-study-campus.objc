@@ -146,6 +146,8 @@
     [[self primitiveValueForKey:@"categories"] addObject:value];
     [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     [changedObjects release];
+
+    if(self.isTemp && ![value.points containsObject:self]) [value addPoint: self];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -155,6 +157,8 @@
     [[self primitiveValueForKey:@"categories"] removeObject:value];
     [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
     [changedObjects release];
+
+    if(self.isTemp && [value.points containsObject:self]) [value removePoint: self];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -162,6 +166,15 @@
     [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
     [[self primitiveValueForKey:@"categories"] unionSet:value];
     [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
+    
+    if(self.isTemp) {
+        for(TCategory *entity in value) {
+            if(![entity.points containsObject:self]) {
+                [entity addPoint: self];
+            }
+        }
+    }
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -169,6 +182,32 @@
     [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
     [[self primitiveValueForKey:@"categories"] minusSet:value];
     [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+    
+    if(self.isTemp) {
+        for(TCategory *entity in value) {
+            if([entity.points containsObject:self]) {
+                [entity removePoint: self];
+            }
+        }
+    }
+    
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void)removeAllCategories {
+    
+    if(self.isTemp) {
+        for(TCategory *entity in self.categories) {
+            if([entity.points containsObject:self]) {
+                [entity removePoint: self];
+            }
+        }
+    }
+
+    [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
+    [[self primitiveValueForKey:@"categories"] removeAllObjects];
+    [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
 }
 
 

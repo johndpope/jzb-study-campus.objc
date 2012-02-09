@@ -34,6 +34,7 @@
 - (void)removeCategory:(TCategory *)value ;
 - (void)addCategories:(NSSet *)value ;    
 - (void)removeCategories:(NSSet *)value ;
+- (void)removeAllCategories;
 
 
 @end

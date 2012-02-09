@@ -152,6 +152,8 @@
     [[self primitiveValueForKey:@"points"] addObject:value];
     [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     [changedObjects release];
+    
+    if(self.isTemp) value.map=self;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -161,6 +163,8 @@
     [[self primitiveValueForKey:@"points"] removeObject:value];
     [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
     [changedObjects release];
+    
+    if(self.isTemp) value.map=nil;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -168,6 +172,12 @@
     [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
     [[self primitiveValueForKey:@"points"] unionSet:value];
     [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
+    
+    if(self.isTemp) {
+        for(TPoint *entity in value) {
+            entity.map = self;
+        }
+    }
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -175,10 +185,23 @@
     [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
     [[self primitiveValueForKey:@"points"] minusSet:value];
     [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+    
+    if(self.isTemp) {
+        for(TPoint *entity in value) {
+            entity.map = nil;
+        }
+    }
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removeAllPoints {
+    
+    if(self.isTemp) {
+        for(TPoint *entity in self.points) {
+            entity.map = nil;
+        }
+    }
+    
     [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
     [[self primitiveValueForKey:@"points"] removeAllObjects];
     [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
@@ -203,6 +226,8 @@
     [[self primitiveValueForKey:@"categories"] addObject:value];
     [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     [changedObjects release];
+    
+    if(self.isTemp) value.map=self;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -212,6 +237,8 @@
     [[self primitiveValueForKey:@"categories"] removeObject:value];
     [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
     [changedObjects release];
+    
+    if(self.isTemp) value.map=nil;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -219,6 +246,13 @@
     [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
     [[self primitiveValueForKey:@"categories"] unionSet:value];
     [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
+    
+    if(self.isTemp) {
+        for(TCategory *entity in self.categories) {
+            entity.map = self;
+        }
+    }
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -226,10 +260,24 @@
     [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
     [[self primitiveValueForKey:@"categories"] minusSet:value];
     [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+    
+    if(self.isTemp) {
+        for(TCategory *entity in self.categories) {
+            entity.map = nil;
+        }
+    }
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removeAllCategories {
+    
+    if(self.isTemp) {
+        for(TPoint *entity in self.categories) {
+            entity.map = nil;
+        }
+    }
+    
     [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
     [[self primitiveValueForKey:@"categories"] removeAllObjects];
     [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
