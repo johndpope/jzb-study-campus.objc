@@ -8,7 +8,7 @@
 
 #import "MyClass.h"
 
-#import "GData/GDataMaps.h"
+#import "GData.h"
 
 
 @implementation MyClass 
