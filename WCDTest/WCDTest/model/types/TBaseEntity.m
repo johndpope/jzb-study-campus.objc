@@ -77,7 +77,7 @@ NSString* _typeToString(id element);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) initEntity
+- (void) resetEntity
 {
     self.GID = _calcLocalGID(); 
     self.name = @"";

@@ -17,7 +17,9 @@
 @interface TCategory() {
 }
 
-- (void) initEntity;
+@property (nonatomic, assign) BOOL isTemp;
+
+- (void) resetEntity;
 
 @end
 
@@ -31,39 +33,48 @@
 @dynamic categories;
 @dynamic map;
 
+@synthesize isTemp;
+
+
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (TCategory *) insertInCtx: (NSManagedObjectContext *) ctx withMap:(TMap *)ownerMap{
++ (NSEntityDescription *) entity {
+    static NSEntityDescription *entity = nil;
     
-    NSManagedObjectContext * ctx2 = [ModelService sharedInstance].moContext;
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"TCategory" inManagedObjectContext:ctx2];
-    //if(ctx) 
-    {
-        TCategory *newCat = [[NSManagedObject alloc] initWithEntity:entity insertIntoManagedObjectContext:ctx];
-        [newCat initEntity];
-        newCat.map = ownerMap;
-        [ownerMap addCategory:newCat];
-        return newCat;
+    if(!entity) {
+        NSManagedObjectContext * ctx = [ModelService sharedInstance].moContext;
+        entity = [NSEntityDescription entityForName:@"TCategory" inManagedObjectContext:ctx];
     }
-//    else {
-//        return nil;
-//    }
+    return entity;
 }
+
 
 //---------------------------------------------------------------------------------------------------------------------
 + (TCategory *) insertNewInMap:(TMap *)ownerMap {
     
     NSManagedObjectContext * ctx = [ModelService sharedInstance].moContext;
-    return [TCategory insertInCtx:ctx withMap:ownerMap];
+    if(ctx) 
+    {
+        TCategory *newCat = [[NSManagedObject alloc] initWithEntity:[TCategory entity] insertIntoManagedObjectContext:ctx];
+        newCat.isTemp = false;
+        [newCat resetEntity];
+        newCat.map = ownerMap;
+        return newCat;
+    }
+    else {
+        return nil;
+    }
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (TCategory *) insertNewTmpInMap:(TMap *)ownerMap {
++ (TCategory *) insertTmpNewInMap:(TMap *)ownerMap {
     
-//    NSManagedObjectContext * ctx = [ModelService sharedInstance].moTmpContext;
-    NSManagedObjectContext * ctx = nil;
-    
-    return [TCategory insertInCtx:ctx withMap:ownerMap];
+    TCategory *newCat = [[NSManagedObject alloc] initWithEntity:[TCategory entity] insertIntoManagedObjectContext:nil];
+    newCat.isTemp = true;
+    [newCat resetEntity];
+    newCat.map = ownerMap;
+    return [newCat autorelease];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -73,9 +84,9 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) initEntity {
+- (void) resetEntity {
     
-    [super initEntity];
+    [super resetEntity];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -141,12 +152,12 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)addPoint:(TPoint *)value {
-    NSLog(@"---- addPoint ----");
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
     [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     [[self primitiveValueForKey:@"points"] addObject:value];
     [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     [changedObjects release];
+    
     [value addCategory: self];
 }
 

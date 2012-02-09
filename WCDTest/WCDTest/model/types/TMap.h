@@ -24,7 +24,7 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 + (TMap *) insertNew;
-+ (TMap *) insertNewTmp;
++ (TMap *) insertTmpNew;
 
 - (void) markAsSynchronized;
 

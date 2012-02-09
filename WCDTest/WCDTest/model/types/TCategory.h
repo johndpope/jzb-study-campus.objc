@@ -25,7 +25,7 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 + (TCategory *) insertNewInMap:(TMap *)ownerMap;
-+ (TCategory *) insertNewTmpInMap:(TMap *)ownerMap;
++ (TCategory *) insertTmpNewInMap:(TMap *)ownerMap;
 
 - (void) updateToRemoteETag;
 

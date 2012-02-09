@@ -16,7 +16,9 @@
 @interface TMap() {
 }
 
-- (void) initEntity;
+@property (nonatomic, assign) BOOL isTemp;
+
+- (void) resetEntity;
 
 @end
 
@@ -29,36 +31,46 @@
 @dynamic extInfo;
 @dynamic categories;
 
+@synthesize isTemp;
+
+
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (TMap *) insertInCtx: (NSManagedObjectContext *) ctx {
-
-    NSManagedObjectContext * ctx2 = [ModelService sharedInstance].moContext;
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"TMap" inManagedObjectContext:ctx2];
-    //if(ctx) 
-    {
-        TMap *newMap = [[NSManagedObject alloc] initWithEntity:entity insertIntoManagedObjectContext:ctx];
-        [newMap initEntity];
-        return newMap;
++ (NSEntityDescription *) entity {
+    static NSEntityDescription *entity = nil;
+    
+    if(!entity) {
+        NSManagedObjectContext * ctx = [ModelService sharedInstance].moContext;
+        entity = [NSEntityDescription entityForName:@"TMap" inManagedObjectContext:ctx];
     }
-    //else {
-    //    return nil;
-    //}
+    return entity;
 }
+
 
 //---------------------------------------------------------------------------------------------------------------------
 + (TMap *) insertNew {
-
+    
     NSManagedObjectContext * ctx = [ModelService sharedInstance].moContext;
+    if(ctx) 
+    {
+        TMap *newMap = [[NSManagedObject alloc] initWithEntity:[TMap entity] insertIntoManagedObjectContext:ctx];
+        newMap.isTemp = false;
+        [newMap resetEntity];
+        return newMap;
+    }
+    else {
+        return nil;
+    }
 }
-         
+
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (TMap *) insertNewTmp {
++ (TMap *) insertTmpNew {
     
-    //NSManagedObjectContext * ctx = [ModelService sharedInstance].moTmpContext;
-    NSManagedObjectContext * ctx = nil;
-    return [TMap insertInCtx:ctx];
+    TMap *newMap = [[NSManagedObject alloc] initWithEntity:[TMap entity] insertIntoManagedObjectContext:nil];
+    newMap.isTemp = true;
+    [newMap resetEntity];
+    return [newMap autorelease];
 }
 
 
@@ -69,9 +81,9 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) initEntity
+- (void) resetEntity
 {
-    [super initEntity];
+    [super resetEntity];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -101,10 +113,10 @@
 - (void) _xmlStringBody: (NSMutableString*) sbuf ident:(NSString *) ident {
     
     unsigned nextIdent = (unsigned)[ident length]+2;
-
+    
     [super _xmlStringBody:sbuf ident:ident];
     
-
+    
     //--- Categories ---
     if([self.categories count] == 0) {
         [sbuf appendFormat:@"%@<categories/>\n",ident];

@@ -18,10 +18,12 @@
 @interface TPoint() {
 }
 
+@property (nonatomic, assign) BOOL isTemp;
+
 @property (nonatomic, retain) NSNumber* _i_lng;
 @property (nonatomic, retain) NSNumber* _i_lat;
 
-- (void) initEntity;
+- (void) resetEntity;
 
 @end
 
@@ -35,39 +37,47 @@
 @dynamic _i_lng;
 @dynamic _i_lat;
 
+@synthesize isTemp;
+
+
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (TPoint *) insertInCtx: (NSManagedObjectContext *) ctx withMap:(TMap *)ownerMap{
-
-    NSManagedObjectContext * ctx2 = [ModelService sharedInstance].moContext;
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"TPoint" inManagedObjectContext:ctx2];
-    //if(ctx) 
-    {
-        TPoint *newPoint = [[NSManagedObject alloc] initWithEntity:entity insertIntoManagedObjectContext:ctx];
-        [newPoint initEntity];
-        newPoint.map = ownerMap;
-        [ownerMap addPoint:newPoint];
-        return newPoint;
++ (NSEntityDescription *) entity {
+    static NSEntityDescription *entity = nil;
+    
+    if(!entity) {
+        NSManagedObjectContext * ctx = [ModelService sharedInstance].moContext;
+        entity = [NSEntityDescription entityForName:@"TPoint" inManagedObjectContext:ctx];
     }
-    //else {
-    //    return nil;
-    //}
+    return entity;
 }
+
 
 //---------------------------------------------------------------------------------------------------------------------
 + (TPoint *) insertNewInMap:(TMap *)ownerMap {
     
     NSManagedObjectContext * ctx = [ModelService sharedInstance].moContext;
-    return [TPoint insertInCtx:ctx withMap:ownerMap];
+    if(ctx) 
+    {
+        TPoint *newPoint = [[NSManagedObject alloc] initWithEntity:[TPoint entity] insertIntoManagedObjectContext:ctx];
+        newPoint.isTemp = false;
+        [newPoint resetEntity];
+        newPoint.map = ownerMap;
+        return newPoint;
+    }
+    else {
+        return nil;
+    }
 }
-
 
 //---------------------------------------------------------------------------------------------------------------------
 + (TPoint *) insertNewTmpInMap:(TMap *)ownerMap {
     
-    //NSManagedObjectContext * ctx = [ModelService sharedInstance].moTmpContext;
-    NSManagedObjectContext * ctx = nil;
-    return [TPoint insertInCtx:ctx withMap:ownerMap];
+    TPoint *newPoint = [[NSManagedObject alloc] initWithEntity:[TPoint entity] insertIntoManagedObjectContext:nil];
+    newPoint.isTemp = true;
+    [newPoint resetEntity];
+    newPoint.map = ownerMap;
+    return [newPoint autorelease];
 }
 
 
@@ -78,9 +88,9 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) initEntity {
+- (void) resetEntity {
 
-    [super initEntity];
+    [super resetEntity];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
