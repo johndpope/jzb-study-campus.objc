@@ -9,9 +9,9 @@
 #import <Foundation/Foundation.h>
 
 
-@interface MyClass : NSObject {
-@private
-    
-}
+@interface MyClass : NSObject 
+
+
+- (void) doIt;
 
 @end

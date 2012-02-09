@@ -12,7 +12,7 @@
 #import "PointXmlCat.h"
 #import "TCategory.h"
 
-#import "GData/GDataMaps.h"
+#import "MyClass.h"
 
 void doIt(int argc, const char * argv[]);
 
@@ -22,9 +22,23 @@ int main (int argc, const char * argv[])
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     
-    //doIt(argc, argv);
+    doIt(argc, argv);
     
-    
+    [pool drain];
+    return 0;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+void doIt (int argc, const char * argv[])
+{
+    MyClass *m = [[MyClass alloc] init];
+    [m doIt];
+    [m release];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+void doIt2 (int argc, const char * argv[])
+{
     [[ModelService sharedInstance] initCDStack];
     NSManagedObjectContext * _moContext = [ModelService sharedInstance].moContext;
     
@@ -41,20 +55,17 @@ int main (int argc, const char * argv[])
     [cat addPoint: point];
     [cat addPoint: point];
     [cat addPoint: point];
-
+    
     for(TPoint *p in cat.points) {
         NSLog(@"point name = %@",p.name);
     }
     
     
     [[ModelService sharedInstance] doneCDStack];
-    
-    [pool drain];
-    return 0;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void doIt (int argc, const char * argv[])
+void doIt3 (int argc, const char * argv[])
 {
     
     /**/
