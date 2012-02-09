@@ -158,7 +158,7 @@
     [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     [changedObjects release];
     
-    [value addCategory: self];
+    if(self.isTemp && ![value.categories containsObject:self]) [value addCategory: self];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -168,6 +168,8 @@
     [[self primitiveValueForKey:@"points"] removeObject:value];
     [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
     [changedObjects release];
+    
+    if(self.isTemp && [value.categories containsObject:self]) [value removeCategory: self];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -175,6 +177,15 @@
     [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
     [[self primitiveValueForKey:@"points"] unionSet:value];
     [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
+    
+    if(self.isTemp) {
+        for(TPoint *entity in value) {
+            if(![entity.categories containsObject:self]) {
+                [entity addCategory: self];
+            }
+        }
+    }
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -182,10 +193,28 @@
     [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
     [[self primitiveValueForKey:@"points"] minusSet:value];
     [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+    
+    if(self.isTemp) {
+        for(TPoint *entity in value) {
+            if([entity.categories containsObject:self]) {
+                [entity removeCategory: self];
+            }
+        }
+    }
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removeAllPoints {
+
+    if(self.isTemp) {
+        for(TPoint *entity in self.points) {
+            if([entity.categories containsObject:self]) {
+                [entity removeCategory: self];
+            }
+        }
+    }
+
     [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
     [[self primitiveValueForKey:@"points"] removeAllObjects];
     [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
@@ -211,6 +240,8 @@
     [[self primitiveValueForKey:@"subcategories"] addObject:value];
     [self didChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     [changedObjects release];
+    
+    if(self.isTemp && ![value.categories containsObject:self]) [value addCategory: self];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -220,6 +251,8 @@
     [[self primitiveValueForKey:@"subcategories"] removeObject:value];
     [self didChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
     [changedObjects release];
+    
+    if(self.isTemp && [value.categories containsObject:self]) [value removeCategory: self];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -227,6 +260,15 @@
     [self willChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
     [[self primitiveValueForKey:@"subcategories"] unionSet:value];
     [self didChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
+    
+    if(self.isTemp) {
+        for(TCategory *entity in value) {
+            if(![entity.categories containsObject:self]) {
+                [entity addCategory: self];
+            }
+        }
+    }
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -234,10 +276,28 @@
     [self willChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
     [[self primitiveValueForKey:@"subcategories"] minusSet:value];
     [self didChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+    
+    if(self.isTemp) {
+        for(TCategory *entity in value) {
+            if([entity.categories containsObject:self]) {
+                [entity removeCategory: self];
+            }
+        }
+    }
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removeAllSubcategories {
+    
+    if(self.isTemp) {
+        for(TCategory *entity in self.subcategories) {
+            if([entity.categories containsObject:self]) {
+                [entity removeCategory: self];
+            }
+        }
+    }
+    
     [self willChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
     [[self primitiveValueForKey:@"subcategories"] removeAllObjects];
     [self didChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
@@ -263,6 +323,8 @@
     [[self primitiveValueForKey:@"categories"] addObject:value];
     [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     [changedObjects release];
+    
+    if(self.isTemp && ![value.subcategories containsObject:self]) [value addSubcategory: self];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -272,6 +334,8 @@
     [[self primitiveValueForKey:@"categories"] removeObject:value];
     [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
     [changedObjects release];
+    
+    if(self.isTemp && [value.subcategories containsObject:self]) [value removeSubcategory: self];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -279,6 +343,15 @@
     [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
     [[self primitiveValueForKey:@"categories"] unionSet:value];
     [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
+    
+    if(self.isTemp) {
+        for(TCategory *entity in value) {
+            if(![entity.subcategories containsObject:self]) {
+                [entity addSubcategory: self];
+            }
+        }
+    }
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -286,10 +359,28 @@
     [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
     [[self primitiveValueForKey:@"categories"] minusSet:value];
     [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
+    
+    if(self.isTemp) {
+        for(TCategory *entity in value) {
+            if([entity.subcategories containsObject:self]) {
+                [entity removeSubcategory: self];
+            }
+        }
+    }
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removeAllCategories {
+    
+    if(self.isTemp) {
+        for(TCategory *entity in self.categories) {
+            if([entity.subcategories containsObject:self]) {
+                [entity removeSubcategory: self];
+            }
+        }
+    }
+    
     [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
     [[self primitiveValueForKey:@"categories"] removeAllObjects];
     [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
