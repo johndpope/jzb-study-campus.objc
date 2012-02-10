@@ -11,6 +11,8 @@
 
 @interface MyClass : NSObject 
 
+@property (nonatomic,assign) id owner;
+
 - (void) createCDataInfo;
 - (void) doIt;
 

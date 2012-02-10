@@ -15,7 +15,34 @@
 MyClass *myClass;
 
 @synthesize myButton = _myButton;
+@synthesize myTable = _myTable;
 @synthesize window;
+@synthesize maps = _maps;
+
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) setMaps:(NSArray *)aMaps {
+    if(_maps) {
+        [_maps release];
+    }
+    _maps = [aMaps retain];
+    [self.myTable reloadData];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (int)numberOfRowsInTableView:(NSTableView *)tableView {
+    
+    return (int)[self.maps count];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (id)tableView:(NSTableView *)tableView
+objectValueForTableColumn:(NSTableColumn *)tableColumn
+            row:(int)row {
+       
+    return [self.maps objectAtIndex:row];
+}
+
 
 
 
@@ -24,7 +51,8 @@ MyClass *myClass;
     
     NSLog(@"hello");
     
-    [myClass createCDataInfo];
+    //[myClass createCDataInfo];
+    [myClass doIt];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -32,6 +60,7 @@ MyClass *myClass;
 {
     // Insert code here to initialize your application
     myClass = [[MyClass alloc] init];
+    myClass.owner = self;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -45,6 +74,8 @@ MyClass *myClass;
 - (void)dealloc
 {
     [myClass release];
+    [_maps release];
+    
     //    [__managedObjectContext release];
     //    [__persistentStoreCoordinator release];
     //    [__managedObjectModel release];

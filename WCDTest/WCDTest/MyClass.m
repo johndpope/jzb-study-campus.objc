@@ -15,6 +15,8 @@
 
 @implementation MyClass 
 
+@synthesize owner;
+
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) createCDataInfo {
@@ -107,6 +109,23 @@
     NSLog(@"error %@ - %@",error, [error userInfo]);
     NSLog(@"ticket - %@", ticket);
     NSLog(@"feed - %@", feed);
+    
+    
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+    
+    for(GDataEntryBase *entry in [feed entries]) {
+        NSString *title = [[entry title] stringValue];
+        if ([entry isKindOfClass:[GDataEntryMap class]]) {
+            BOOL isAPIVisible = [(GDataEntryMap *)entry isAPIVisible];
+            if (!isAPIVisible) {
+                title = [title stringByAppendingString:@" (not API visible)"];
+            }
+        }
+        [array addObject:title];
+    }
+    
+    [owner setMaps:[array autorelease]];
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
