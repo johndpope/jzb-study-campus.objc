@@ -40,7 +40,7 @@ NSString* _typeToString(id element);
 @property (nonatomic, retain) NSNumber * _i_wasDeleted;
 @property (nonatomic, retain) NSNumber * _i_changed;
 
-- (void) initEntity;
+- (void) resetEntity;
 
 - (void) _xmlStringBody: (NSMutableString*) sb ident:(NSString *) ident;
 - (void) _xmlStringBTag: (NSMutableString*) sb ident:(NSString *) ident;
@@ -53,15 +53,15 @@ NSString* _typeToString(id element);
 //---------------------------------------------------------------------------------------------------------------------
 @implementation TBaseEntity
 
+@dynamic GID;
+@dynamic syncETag;
 @dynamic name;
 @dynamic desc;
 @dynamic _i_wasDeleted;
 @dynamic _i_changed;
-@dynamic ts_created;
-@dynamic syncETag;
-@dynamic GID;
-@dynamic ts_updated;
 @dynamic iconURL;
+@dynamic ts_created;
+@dynamic ts_updated;
 @synthesize syncStatus = _syncStatus;
 
 

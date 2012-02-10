@@ -58,7 +58,7 @@
         TCategory *newCat = [[NSManagedObject alloc] initWithEntity:[TCategory entity] insertIntoManagedObjectContext:ctx];
         newCat.isTemp = false;
         [newCat resetEntity];
-        newCat.map = ownerMap;
+        [ownerMap addCategory:newCat];
         return newCat;
     }
     else {
@@ -73,7 +73,7 @@
     TCategory *newCat = [[NSManagedObject alloc] initWithEntity:[TCategory entity] insertIntoManagedObjectContext:nil];
     newCat.isTemp = true;
     [newCat resetEntity];
-    newCat.map = ownerMap;
+    [ownerMap addCategory:newCat];
     return [newCat autorelease];
 }
 
@@ -99,6 +99,9 @@
     
     [super _xmlStringBody:sbuf ident:ident];
     
+    // --- Map name ---
+    [sbuf appendFormat:@"%@<map>%@</map>\n",ident, self.map.name];
+
     //--- Points ---
     if([self.points count] == 0) {
         [sbuf appendFormat:@"%@<points/>\n",ident];
@@ -207,17 +210,21 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removeAllPoints {
 
+    NSSet *allPoints = [[NSSet alloc] initWithSet:self.points];
+    [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:allPoints];
+    [[self primitiveValueForKey:@"points"] minusSet:allPoints];
+    [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:allPoints];
+    
     if(self.isTemp) {
-        for(TPoint *entity in self.points) {
+        for(TPoint *entity in allPoints) {
             if([entity.categories containsObject:self]) {
                 [entity removeCategory: self];
             }
         }
     }
-
-    [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
-    [[self primitiveValueForKey:@"points"] removeAllObjects];
-    [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
+    
+    [allPoints release];
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -290,17 +297,21 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removeAllSubcategories {
     
+    NSSet *allSubcategories = [[NSSet alloc] initWithSet:self.subcategories];
+    [self willChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:allSubcategories];
+    [[self primitiveValueForKey:@"subcategories"] minusSet:allSubcategories];
+    [self didChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:allSubcategories];
+    
     if(self.isTemp) {
-        for(TCategory *entity in self.subcategories) {
+        for(TCategory *entity in allSubcategories) {
             if([entity.categories containsObject:self]) {
                 [entity removeCategory: self];
             }
         }
     }
     
-    [self willChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
-    [[self primitiveValueForKey:@"subcategories"] removeAllObjects];
-    [self didChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
+    [allSubcategories release];
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -372,18 +383,21 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removeAllCategories {
+
+    NSSet *allCategories = [[NSSet alloc] initWithSet:self.categories];
+    [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:allCategories];
+    [[self primitiveValueForKey:@"categories"] minusSet:allCategories];
+    [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:allCategories];
     
     if(self.isTemp) {
-        for(TCategory *entity in self.categories) {
+        for(TCategory *entity in allCategories) {
             if([entity.subcategories containsObject:self]) {
                 [entity removeSubcategory: self];
             }
         }
     }
     
-    [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
-    [[self primitiveValueForKey:@"categories"] removeAllObjects];
-    [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
+    [allCategories release];
 }
 
 //---------------------------------------------------------------------------------------------------------------------

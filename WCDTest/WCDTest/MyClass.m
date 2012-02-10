@@ -22,25 +22,52 @@
     [[ModelService sharedInstance] initCDStack];
     NSManagedObjectContext * _moContext = [ModelService sharedInstance].moContext;
     
-    TMap *map = [TMap insertNewTmp];
+    TMap *map = [TMap insertTmpNew];
     map.name=@"hola";
     
-    TPoint *point = [TPoint insertNewTmpInMap: map];
-    point.name = @"adios";
+    TPoint *point1 = [TPoint insertTmpNewInMap: map];
+    point1.name = @"P1";
+    TPoint *point2 = [TPoint insertTmpNewInMap: map];
+    point2.name = @"P2";
+    TPoint *point3 = [TPoint insertTmpNewInMap: map];
+    point3.name = @"P3";
     
-    TCategory *cat = [TCategory insertNewTmpInMap: map];
-    cat.name = @"cat";
+    TCategory *cat0 = [TCategory insertTmpNewInMap: map];
+    cat0.name = @"cat0";
+    TCategory *cat1 = [TCategory insertTmpNewInMap: map];
+    cat1.name = @"cat1";
+    TCategory *cat2 = [TCategory insertTmpNewInMap: map];
+    cat2.name = @"cat2";
     
-    [cat addPoint: point];
-    [cat addPoint: point];
-    [cat addPoint: point];
-    [cat addPoint: point];
     
-    for(TPoint *p in cat.points) {
-        NSLog(@"point name = %@",p.name);
+    [cat1 addPoint: point1];
+    [cat1 addPoint: point2];
+    [point2 addCategory: cat2];
+    [point3 addCategory: cat2];
+    
+    [cat1 addCategory:cat0];
+    [cat0 addSubcategory:cat2];
+    
+    [cat1 removePoint:point3];
+    [cat2 removePoint:point3];
+    [point1 removeCategory:cat1];
+    [point1 removeCategory:cat2];
+       
+    [map removePoint: point2];
+    NSLog(@"%@",point2);
+
+    [map removeCategory: cat0];
+    NSLog(@"%@",cat0);
+ 
+    
+    for(TCategory *c in map.categories) {
+        NSLog(@"%@",c);
     }
     
-    
+    for(TPoint *p in map.points) {
+        NSLog(@"%@",p);
+    }
+        
     [[ModelService sharedInstance] doneCDStack];
 }
 

@@ -21,8 +21,7 @@ typedef enum {
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
-@interface TBaseEntity : NSManagedObject {
-}
+@interface TBaseEntity : NSManagedObject
 
 @property (nonatomic, retain) NSString * GID;
 @property (nonatomic, retain) NSString * syncETag;

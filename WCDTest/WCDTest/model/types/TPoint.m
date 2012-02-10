@@ -62,7 +62,7 @@
         TPoint *newPoint = [[NSManagedObject alloc] initWithEntity:[TPoint entity] insertIntoManagedObjectContext:ctx];
         newPoint.isTemp = false;
         [newPoint resetEntity];
-        newPoint.map = ownerMap;
+        [ownerMap addPoint:newPoint];
         return newPoint;
     }
     else {
@@ -71,12 +71,12 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (TPoint *) insertNewTmpInMap:(TMap *)ownerMap {
++ (TPoint *) insertTmpNewInMap:(TMap *)ownerMap {
     
     TPoint *newPoint = [[NSManagedObject alloc] initWithEntity:[TPoint entity] insertIntoManagedObjectContext:nil];
     newPoint.isTemp = true;
     [newPoint resetEntity];
-    newPoint.map = ownerMap;
+    [ownerMap addPoint:newPoint];
     return [newPoint autorelease];
 }
 
@@ -118,8 +118,11 @@
     
     [super _xmlStringBody:sbuf ident:ident];
     
+    // --- Map name ---
+    [sbuf appendFormat:@"%@<map>%@</map>\n",ident, self.map.name];
+
     // --- Coordinates ---
-    [sbuf appendFormat:@"%@<coordinates>%d, %d, 0<coordinates/>\n",ident, self.lng, self.lat];
+    [sbuf appendFormat:@"%@<coordinates>%d, %d, 0</coordinates>\n",ident, self.lng, self.lat];
     
     //--- Categories ---
     if([self.categories count] == 0) {
@@ -197,17 +200,21 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removeAllCategories {
     
+    NSSet *allCategories = [[NSSet alloc] initWithSet:self.categories];
+    [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:allCategories];
+    [[self primitiveValueForKey:@"categories"] minusSet:allCategories];
+    [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:allCategories];
+    
     if(self.isTemp) {
-        for(TCategory *entity in self.categories) {
+        for(TCategory *entity in allCategories) {
             if([entity.points containsObject:self]) {
                 [entity removePoint: self];
             }
         }
     }
+    
+    [allCategories release];
 
-    [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
-    [[self primitiveValueForKey:@"categories"] removeAllObjects];
-    [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:nil];
 }
 
 
