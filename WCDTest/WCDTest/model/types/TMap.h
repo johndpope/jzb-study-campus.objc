@@ -26,6 +26,7 @@
 + (TMap *) insertNew;
 + (TMap *) insertTmpNew;
 
+- (void) clearAllData;
 - (void) markAsSynchronized;
 
 //---------------------------------------------------------------------------------------------------------------------

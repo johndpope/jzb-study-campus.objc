@@ -43,7 +43,7 @@
 }
 
 //****************************************************************************
-- (NSString *) replaceStr: (NSString *)str1 Width:(NSString *)str2 {
+- (NSString *) replaceStr: (NSString *)str1 With:(NSString *)str2 {
     
     NSMutableString *ms = [NSMutableString stringWithString:self];
     [ms replaceOccurrencesOfString: str1 withString: str2 options:0 range: (NSRange){0,[ms length]}];
