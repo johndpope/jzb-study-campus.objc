@@ -14,17 +14,29 @@
 
 //****************************************************************************
 - (NSUInteger) indexOf: (NSString *)str {
-    return [self rangeOfString:str options:0].location;
+    NSRange r = [self rangeOfString:str options:0];
+    if(r.length>0) 
+        return r.location;
+    else
+        return -1;
 }
 
 //****************************************************************************
 - (NSUInteger) indexOf: (NSString *)str startIndex: (NSUInteger) p1 {
-    return [self rangeOfString:str options:0 range: (NSRange){p1, [self length]-p1}].location;
+    NSRange r = [self rangeOfString:str options:0 range: (NSRange){p1, [self length]-p1}];
+    if(r.length>0) 
+        return r.location;
+    else
+        return -1;
 }
 
 //****************************************************************************
 - (NSUInteger) lastIndexOf: (NSString *)str {
-    return [self rangeOfString:str options:NSBackwardsSearch].location;
+    NSRange r = [self rangeOfString:str options:NSBackwardsSearch];
+    if(r.length>0) 
+        return r.location;
+    else
+        return -1;
 }
 
 //****************************************************************************

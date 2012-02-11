@@ -119,6 +119,11 @@
         if(error==nil) {
             self.syncMaps = maps;
             [self.bi_syncTable reloadData];
+            
+            TMap *map = [maps objectAtIndex:0];
+            [[GMapService sharedInstance] fetchMapData:map callback:^(TMap *map, NSError *error) {
+                NSLog(@"puntos");
+            }];
         }
     }];
     

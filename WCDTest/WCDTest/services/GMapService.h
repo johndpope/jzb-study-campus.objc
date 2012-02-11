@@ -13,6 +13,7 @@
 
 #define ASYNCHRONOUS void
 typedef void (^TBlock_FetchUserMapListFinished)(NSArray *maps, NSError *error);
+typedef void (^TBlock_FetchMapDataFinished)(TMap *map, NSError *error);
 
 
 
@@ -41,5 +42,6 @@ typedef void (^TBlock_FetchUserMapListFinished)(NSArray *maps, NSError *error);
 - (BOOL) isLoggedIn;
 
 - (ASYNCHRONOUS) fetchUserMapList:(TBlock_FetchUserMapListFinished)callbackBlock;
+- (ASYNCHRONOUS) fetchMapData:(TMap *)map callback:(TBlock_FetchMapDataFinished)callbackBlock;
 
 @end

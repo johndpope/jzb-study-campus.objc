@@ -111,8 +111,7 @@ NSString* _typeToString(id element);
 
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL) isLocal {
-    NSUInteger pos = [self.syncETag indexOf:LOCAL_ETAG_PREFIX];
-    return pos!=-1;
+    return [self.syncETag hasPrefix:LOCAL_ETAG_PREFIX];
 }
 
 //---------------------------------------------------------------------------------------------------------------------

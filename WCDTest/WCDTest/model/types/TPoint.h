@@ -23,6 +23,7 @@
 @property (nonatomic, retain) NSSet* categories;
 @property (nonatomic, assign) double lng;
 @property (nonatomic, assign) double lat;
+@property (readonly, nonatomic, assign) BOOL isExtInfo;
 
 //---------------------------------------------------------------------------------------------------------------------
 + (TPoint *) insertNewInMap:(TMap *)ownerMap;
@@ -30,6 +31,8 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
+- (void) parseFromKML: (NSString *) kml;
+
 - (void)addCategory:(TCategory *)value ;    
 - (void)removeCategory:(TCategory *)value ;
 - (void)addCategories:(NSSet *)value ;    
