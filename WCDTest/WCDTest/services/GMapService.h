@@ -12,7 +12,7 @@
 #import "TPoint.h"
 
 #define ASYNCHRONOUS void
-typedef void (^TBlock_FetchUserMapListFinished)(NSArray *maps);
+typedef void (^TBlock_FetchUserMapListFinished)(NSArray *maps, NSError *error);
 
 
 

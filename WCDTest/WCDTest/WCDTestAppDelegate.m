@@ -11,6 +11,10 @@
 #import "GMapService.h"
 
 
+#define USER_PREFS_EMAIL    @"userEMail"
+#define USER_PREFS_PASSWORD @"userPassword"
+
+
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
@@ -20,6 +24,7 @@
 
 @property (nonatomic, retain) NSString * userEMail;
 @property (nonatomic, retain) NSString * userPassword;
+@property (nonatomic, retain) NSArray *syncMaps;
 
 @end
 
@@ -29,22 +34,19 @@
 //---------------------------------------------------------------------------------------------------------------------
 @implementation WCDTestAppDelegate
 
-#define USER_PREFS_EMAIL    @"userEMail"
-#define USER_PREFS_PASSWORD @"userPassword"
-
-
 
 // ----- OUTLETs -----
 @synthesize bi_window = _bi_window;
 @synthesize bi_tabs = _bi_tabs;
 @synthesize bi_email = _bi_email;
 @synthesize bi_password = _bi_password;
+@synthesize bi_syncTable = _bi_syncTable;
 
 
 // ----- Properties -----
 @synthesize userEMail = _userEMail;
 @synthesize userPassword = _userPassword;
-
+@synthesize syncMaps = _syncMaps;
 
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -57,14 +59,22 @@
     [[ModelService sharedInstance] doneCDStack];
     [self.userEMail release];
     [self.userPassword release];
+    [self.syncMaps release];
+    
     [super dealloc];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)awakeFromNib
 {
+    self.userEMail = [[NSUserDefaults standardUserDefaults] objectForKey:USER_PREFS_EMAIL];
+    self.userPassword = [[NSUserDefaults standardUserDefaults] objectForKey:USER_PREFS_PASSWORD];
+    
+    [[ModelService sharedInstance] initCDStack];
+
     [self.bi_email setDelegate:self];
     [self.bi_password setDelegate:self];
+    [self.bi_syncTable setDataSource:self];
     
     if(self.userEMail)
         [self.bi_email setStringValue: self.userEMail];
@@ -76,10 +86,6 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     // Insert code here to initialize your application
-    self.userEMail = [[NSUserDefaults standardUserDefaults] objectForKey:USER_PREFS_EMAIL];
-    self.userPassword = [[NSUserDefaults standardUserDefaults] objectForKey:USER_PREFS_PASSWORD];
-    
-    [[ModelService sharedInstance] initCDStack];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -89,12 +95,6 @@
 }
 
 
-
-//---------------------------------------------------------------------------------------------------------------------
-- (IBAction)synchronizeMaps:(id)sender {
-    
-    [[GMapService sharedInstance] loginWithUser:self.userEMail password:self.userPassword];
-}
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)controlTextDidEndEditing:(NSNotification *)notification {
@@ -107,6 +107,33 @@
         self.userPassword = [self.bi_password stringValue];
         [[NSUserDefaults standardUserDefaults] setObject:self.userPassword forKey:USER_PREFS_PASSWORD];
     }
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (IBAction)synchronizeMaps:(id)sender {
+    
+    [[GMapService sharedInstance] loginWithUser:self.userEMail password:self.userPassword];
+    [[GMapService sharedInstance] fetchUserMapList:^(NSArray *maps, NSError *error) {
+        
+        if(error==nil) {
+            self.syncMaps = maps;
+            [self.bi_syncTable reloadData];
+        }
+    }];
+    
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView {
+    return [self.syncMaps count];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex {
+    
+    TMap *map=[self.syncMaps objectAtIndex:rowIndex];
+    return map.name;
 }
 
 

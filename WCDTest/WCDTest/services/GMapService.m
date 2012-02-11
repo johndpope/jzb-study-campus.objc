@@ -18,6 +18,7 @@
 @interface GMapService () {
 @private
     BOOL _isLoggedIn;
+    dispatch_queue_t _GMapServiceQueue;
 }
 
 @property (nonatomic,retain) GDataServiceGoogleMaps *service;
@@ -57,9 +58,13 @@
 {
     self = [super init];
     if (self) {
+        
         self.service = [[GDataServiceGoogleMaps alloc] init];
         [self.service setShouldCacheDatedData:YES];
         [self.service setServiceShouldFollowNextLinks:YES];
+        
+        _GMapServiceQueue = dispatch_queue_create("GMapServiceQueue", NULL);
+        
     }
     
     return self;
@@ -69,6 +74,8 @@
 - (void)dealloc
 {
     [self.service release];
+    dispatch_release(_GMapServiceQueue);
+    
     [super dealloc];
 }
 
@@ -99,47 +106,58 @@
 // Los mapas estan vacios (sin puntos)
 - (ASYNCHRONOUS) fetchUserMapList:(TBlock_FetchUserMapListFinished)callbackBlock {
     
+    
     NSLog(@"GMapService - fetchUserMapList");
-    
-    NSURL *feedURL = [GDataServiceGoogleMaps mapsFeedURLForUserID:kGDataServiceDefaultUser
-                                                       projection:kGDataMapsProjectionOwned];
-    
-    GDataServiceTicket *ticket;
-    ticket = [self.service fetchFeedWithURL:feedURL completionHandler:^(GDataServiceTicket *ticket, GDataFeedBase *feed, NSError *error) {
-        
-        NSLog(@"GMapService - fetchUserMapList - completionHandler");
-        
-        NSLog(@"error %@ - %@",error, [error userInfo]);
-        NSLog(@"ticket - %@", ticket);
-        NSLog(@"feed - %@", feed);
-        
-        
-        NSMutableArray *mapList = [[NSMutableArray alloc] init];
 
+    // Si no hay nadie esperando no hacemos nada
+    if(callbackBlock==nil) {
+        return;
+    }
+    
+    
+    dispatch_queue_t caller_queue = dispatch_get_current_queue();
+    
+    NSURL *feedURL = [GDataServiceGoogleMaps mapsFeedURLForUserID:kGDataServiceDefaultUser projection:kGDataMapsProjectionOwned];
+    
+    [self.service fetchFeedWithURL:feedURL completionHandler:^(GDataServiceTicket *ticket, GDataFeedBase *feed, NSError *error) {
         
-        // Iteramos por la lista de mapas que se han retornado en el feed
-        for(GDataEntryMap *mapEntry in [feed entries]) {
+        // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
+        dispatch_async(_GMapServiceQueue,^(void){
             
-            // ************************************************************************************
-            // MIENTRAS ESTEMOS EN PRUEBAS!!!!!!!
-            NSString *entryName = [[mapEntry title] stringValue];
-            if([entryName hasPrefix:@"@"]) {
-                continue;
+            NSLog(@"GMapService - fetchUserMapList - completionHandler");
+
+            // Iteramos por la lista de mapas que se han retornado en el feed
+            NSMutableArray *mapList = [[[NSMutableArray alloc] init] autorelease];
+            for(GDataEntryMap *mapEntry in [feed entries]) {
+                
+                // ************************************************************************************
+                // MIENTRAS ESTEMOS EN PRUEBAS!!!!!!!
+                NSString *entryName = [[mapEntry title] stringValue];
+                if(![entryName hasPrefix:@"@"]) {
+                    NSLog(@"Skipping map named: '%@'",entryName);
+                    //continue;
+                }
+                // ************************************************************************************
+                
+                
+                TMap *map = [TMap insertTmpNew];
+                [GMapService _fill_TMap:map withFeedMapEntry: mapEntry];
+                
+                [mapList addObject:map];
             }
-            // ************************************************************************************
             
+            // Avisamos al llamante de que ya tenemos la lista con los mapas
+            NSArray *maps = [[mapList copy] autorelease];
+            dispatch_async(caller_queue, ^(void){
+                callbackBlock(maps, error);
+            });
             
-            TMap *map = [TMap insertTmpNew];
-            [GMapService _fill_TMap:map withFeedMapEntry: mapEntry];
-            
-            [mapList addObject:map];
-        }
-        
-        // Avisamos de que ya tenemos la lista con los mapas
-        callbackBlock([[mapList copy] autorelease]);
+        });
         
         
-      }];
+        
+        
+    }];
     
 }
 
@@ -148,7 +166,7 @@
 + (NSString *) _extract_TMapID_fromEntry:(GDataEntryMap*) entry {
     
     // La URL tiene el formato: http://maps.google.com/maps/feeds/features/<<user_id>>/<<map_id>>/full
-
+    
     NSString *str = [[entry featuresFeedURL] absoluteString];
     
     NSUInteger p1 = 10 + [str indexOf:@"/features/"];
@@ -163,7 +181,7 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 + (void) _fill_TMap:(TMap *)map withFeedMapEntry:(GDataEntryMap*) entry {
-
+    
     map.GID = [GMapService _extract_TMapID_fromEntry:entry];
     map.name = [[entry title] stringValue];
     map.syncETag = [entry ETag];

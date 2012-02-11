@@ -11,7 +11,7 @@
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
-@interface WCDTestAppDelegate : NSObject <NSApplicationDelegate, NSTextFieldDelegate> {
+@interface WCDTestAppDelegate : NSObject <NSApplicationDelegate, NSTextFieldDelegate, NSTableViewDataSource> {
 }
  
 
@@ -20,5 +20,6 @@
 @property (assign) IBOutlet NSTabView *bi_tabs;
 @property (assign) IBOutlet NSTextField *bi_email;
 @property (assign) IBOutlet NSSecureTextField *bi_password;
+@property (assign) IBOutlet NSTableView *bi_syncTable;
 
 @end
