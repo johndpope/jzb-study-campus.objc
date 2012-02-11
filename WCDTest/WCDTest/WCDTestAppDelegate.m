@@ -7,60 +7,79 @@
 //
 
 #import "WCDTestAppDelegate.h"
-#import "MyClass.h"
+#import "ModelService.h"
+#import "GMapService.h"
 
+
+
+//*********************************************************************************************************************
+//---------------------------------------------------------------------------------------------------------------------
+@interface  WCDTestAppDelegate() {
+@private
+}
+
+@property (nonatomic, retain) NSString * userEMail;
+@property (nonatomic, retain) NSString * userPassword;
+
+@end
+
+
+
+//*********************************************************************************************************************
+//---------------------------------------------------------------------------------------------------------------------
 @implementation WCDTestAppDelegate
 
+#define USER_PREFS_EMAIL    @"userEMail"
+#define USER_PREFS_PASSWORD @"userPassword"
 
-MyClass *myClass;
 
-@synthesize myButton = _myButton;
-@synthesize myTable = _myTable;
-@synthesize window;
-@synthesize maps = _maps;
+
+// ----- OUTLETs -----
+@synthesize bi_window = _bi_window;
+@synthesize bi_tabs = _bi_tabs;
+@synthesize bi_email = _bi_email;
+@synthesize bi_password = _bi_password;
+
+
+// ----- Properties -----
+@synthesize userEMail = _userEMail;
+@synthesize userPassword = _userPassword;
+
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) setMaps:(NSArray *)aMaps {
-    if(_maps) {
-        [_maps release];
-    }
-    _maps = [aMaps retain];
-    [self.myTable reloadData];
+- (void)dealloc
+{
+    //    [__managedObjectContext release];
+    //    [__persistentStoreCoordinator release];
+    //    [__managedObjectModel release];
+    
+    [[ModelService sharedInstance] doneCDStack];
+    [self.userEMail release];
+    [self.userPassword release];
+    [super dealloc];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (int)numberOfRowsInTableView:(NSTableView *)tableView {
+- (void)awakeFromNib
+{
+    [self.bi_email setDelegate:self];
+    [self.bi_password setDelegate:self];
     
-    return (int)[self.maps count];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (id)tableView:(NSTableView *)tableView
-objectValueForTableColumn:(NSTableColumn *)tableColumn
-            row:(int)row {
-       
-    return [self.maps objectAtIndex:row];
-}
-
-
-
-
-//---------------------------------------------------------------------------------------------------------------------
-- (IBAction)myButtonPressed:(id)sender {
-    
-    NSLog(@"hello");
-    
-    //[myClass createCDataInfo];
-    [myClass doIt];
+    if(self.userEMail)
+        [self.bi_email setStringValue: self.userEMail];
+    if(self.userPassword)
+        [self.bi_password setStringValue:self.userPassword];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     // Insert code here to initialize your application
-    myClass = [[MyClass alloc] init];
-    myClass.owner = self;
+    self.userEMail = [[NSUserDefaults standardUserDefaults] objectForKey:USER_PREFS_EMAIL];
+    self.userPassword = [[NSUserDefaults standardUserDefaults] objectForKey:USER_PREFS_PASSWORD];
+    
+    [[ModelService sharedInstance] initCDStack];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -70,17 +89,28 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 }
 
 
+
 //---------------------------------------------------------------------------------------------------------------------
-- (void)dealloc
-{
-    [myClass release];
-    [_maps release];
+- (IBAction)synchronizeMaps:(id)sender {
     
-    //    [__managedObjectContext release];
-    //    [__persistentStoreCoordinator release];
-    //    [__managedObjectModel release];
-    [super dealloc];
+    [[GMapService sharedInstance] loginWithUser:self.userEMail password:self.userPassword];
 }
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void)controlTextDidEndEditing:(NSNotification *)notification {
+    if([notification object] == self.bi_email)
+    {
+        self.userEMail = [self.bi_email stringValue];
+        [[NSUserDefaults standardUserDefaults] setObject:self.userEMail forKey:USER_PREFS_EMAIL];
+    }
+    else {
+        self.userPassword = [self.bi_password stringValue];
+        [[NSUserDefaults standardUserDefaults] setObject:self.userPassword forKey:USER_PREFS_PASSWORD];
+    }
+}
+
+
+
 
 @end
 

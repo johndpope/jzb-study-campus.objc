@@ -341,6 +341,7 @@
 		42A5DFAE14E472B5009DAEBB /* XMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A5DFA414E472B5009DAEBB /* XMLReader.m */; };
 		42A5DFAF14E472B5009DAEBB /* XMLUtilDoc.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A5DFA614E472B5009DAEBB /* XMLUtilDoc.m */; };
 		42A5DFB114E47360009DAEBB /* main2.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A5DFB014E47360009DAEBB /* main2.m */; };
+		42FF214814E67A8D00B5CDFF /* GMapService.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FF214714E67A8D00B5CDFF /* GMapService.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1028,6 +1029,9 @@
 		42A5DFA514E472B5009DAEBB /* XMLUtilDoc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLUtilDoc.h; sourceTree = "<group>"; };
 		42A5DFA614E472B5009DAEBB /* XMLUtilDoc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMLUtilDoc.m; sourceTree = "<group>"; };
 		42A5DFB014E47360009DAEBB /* main2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main2.m; sourceTree = "<group>"; };
+		42FF214614E67A8D00B5CDFF /* GMapService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMapService.h; sourceTree = "<group>"; };
+		42FF214714E67A8D00B5CDFF /* GMapService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapService.m; sourceTree = "<group>"; };
+		42FF214A14E69C3F00B5CDFF /* TBaseEntity_Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBaseEntity_Protected.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1091,12 +1095,7 @@
 				42A5DF9014E472B5009DAEBB /* services */,
 				42A5DF9714E472B5009DAEBB /* utils */,
 				42A5DF7F14E4729C009DAEBB /* model */,
-				42A5DFB014E47360009DAEBB /* main2.m */,
-				42A5DF5B14E46E95009DAEBB /* MyClass.h */,
-				42A5DF5C14E46E95009DAEBB /* MyClass.m */,
-				42A5DB5714E46B5D009DAEBB /* WCDTestAppDelegate.h */,
-				42A5DB5814E46B5D009DAEBB /* WCDTestAppDelegate.m */,
-				42A5DB5A14E46B5E009DAEBB /* MainMenu.xib */,
+				42AE0FD014E6605500ACED32 /* main */,
 				42A5DB4C14E46B5D009DAEBB /* Supporting Files */,
 			);
 			path = WCDTest;
@@ -1986,6 +1985,7 @@
 		42A5DF8214E4729C009DAEBB /* types */ = {
 			isa = PBXGroup;
 			children = (
+				42FF214A14E69C3F00B5CDFF /* TBaseEntity_Protected.h */,
 				42A5DF8314E4729C009DAEBB /* TBaseEntity.h */,
 				42A5DF8414E4729C009DAEBB /* TBaseEntity.m */,
 				42A5DF8514E4729C009DAEBB /* TCategory.h */,
@@ -2007,6 +2007,8 @@
 				42A5DF9414E472B5009DAEBB /* ModelService.m */,
 				42A5DF9514E472B5009DAEBB /* PointXmlCat.h */,
 				42A5DF9614E472B5009DAEBB /* PointXmlCat.m */,
+				42FF214614E67A8D00B5CDFF /* GMapService.h */,
+				42FF214714E67A8D00B5CDFF /* GMapService.m */,
 			);
 			path = services;
 			sourceTree = "<group>";
@@ -2049,6 +2051,19 @@
 				42A5DFA414E472B5009DAEBB /* XMLReader.m */,
 			);
 			path = XMLReader;
+			sourceTree = "<group>";
+		};
+		42AE0FD014E6605500ACED32 /* main */ = {
+			isa = PBXGroup;
+			children = (
+				42A5DF5B14E46E95009DAEBB /* MyClass.h */,
+				42A5DF5C14E46E95009DAEBB /* MyClass.m */,
+				42A5DB5714E46B5D009DAEBB /* WCDTestAppDelegate.h */,
+				42A5DB5814E46B5D009DAEBB /* WCDTestAppDelegate.m */,
+				42A5DB5A14E46B5E009DAEBB /* MainMenu.xib */,
+				42A5DFB014E47360009DAEBB /* main2.m */,
+			);
+			name = main;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2438,6 +2453,7 @@
 				42A5DFAE14E472B5009DAEBB /* XMLReader.m in Sources */,
 				42A5DFAF14E472B5009DAEBB /* XMLUtilDoc.m in Sources */,
 				42A5DFB114E47360009DAEBB /* main2.m in Sources */,
+				42FF214814E67A8D00B5CDFF /* GMapService.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2562,6 +2578,7 @@
 				42A5DB6414E46B5E009DAEBB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

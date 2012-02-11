@@ -17,7 +17,6 @@
 }
 
 @property (readonly, nonatomic, retain) NSManagedObjectContext * moContext;
-@property (readonly, nonatomic, retain) NSManagedObjectContext * moTmpContext;
 
 
 //---------------------------------------------------------------------------------------------------------------------

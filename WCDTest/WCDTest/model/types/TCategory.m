@@ -10,6 +10,7 @@
 #import "TCategory.h"
 #import "TMap.h"
 #import "TPoint.h"
+#import "TBaseEntity_Protected.h"
 
 
 //*********************************************************************************************************************

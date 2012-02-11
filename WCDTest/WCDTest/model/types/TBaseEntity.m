@@ -8,6 +8,7 @@
 
 #import "JavaStringCat.h"
 #import "TBaseEntity.h"
+#import "TBaseEntity_Protected.h"
 
 
 //*********************************************************************************************************************
@@ -39,13 +40,6 @@ NSString* _typeToString(id element);
 
 @property (nonatomic, retain) NSNumber * _i_wasDeleted;
 @property (nonatomic, retain) NSNumber * _i_changed;
-
-- (void) resetEntity;
-
-- (void) _xmlStringBody: (NSMutableString*) sb ident:(NSString *) ident;
-- (void) _xmlStringBTag: (NSMutableString*) sb ident:(NSString *) ident;
-- (void) _xmlStringETag: (NSMutableString*) sb ident:(NSString *) ident;
-
 
 @end
 
@@ -87,8 +81,8 @@ NSString* _typeToString(id element);
     self.wasDeleted = false;
     self.syncETag = _calcLocalETag();
     self.syncStatus = ST_Sync_OK;
-    self.ts_created = [NSNumber numberWithLong:time(0L)];
-    self.ts_updated = [NSNumber numberWithLong:time(0L)];
+    self.ts_created = [NSDate date];
+    self.ts_updated = [NSDate date];
 }
 
 
@@ -100,7 +94,7 @@ NSString* _typeToString(id element);
 //---------------------------------------------------------------------------------------------------------------------
 - (void) setChanged:(BOOL)value {
     
-    self.ts_updated = [NSNumber numberWithLong:time(0L)];
+    self.ts_updated = [NSDate date];
     self._i_changed = [NSNumber numberWithBool:value];
 }
 
