@@ -54,7 +54,7 @@
     
 	static dispatch_once_t _predicate;
 	dispatch_once(&_predicate, ^{
-        NSLog(@"Creating sharedInstance");
+        NSLog(@"GMapService - Creating sharedInstance");
         _globalGMapInstance = [[self alloc] init];
     });
 	return _globalGMapInstance;
@@ -141,7 +141,7 @@
                 // MIENTRAS ESTEMOS EN PRUEBAS!!!!!!!
                 NSString *entryName = [[mapEntry title] stringValue];
                 if(![entryName hasPrefix:@"@"]) {
-                    NSLog(@"Skipping map named: '%@'",entryName);
+                    NSLog(@"GMapService - Skipping map named: '%@'",entryName);
                     //continue;
                 }
                 // ************************************************************************************

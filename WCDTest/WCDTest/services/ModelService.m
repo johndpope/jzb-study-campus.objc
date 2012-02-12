@@ -40,7 +40,7 @@
 	static ModelService *_globalModelInstance = nil;
 	static dispatch_once_t _predicate;
 	dispatch_once(&_predicate, ^{
-        NSLog(@"Creating sharedInstance");
+        NSLog(@"ModelService - Creating sharedInstance");
         _globalModelInstance = [[self alloc] init];
     });
 	return _globalModelInstance;
