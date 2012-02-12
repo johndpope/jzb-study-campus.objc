@@ -13,7 +13,7 @@
 #import "NSDataExtensions.h"
 
 
-#define EXT_INFO_PREFIX @"@ext_info="
+#define EXT_INFO_PREFIX @"extended_Info:"
 
 
 //*********************************************************************************************************************

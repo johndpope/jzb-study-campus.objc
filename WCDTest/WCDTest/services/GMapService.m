@@ -231,7 +231,7 @@
             }
             
             // Añade la informacion extendida del mapa y las categorias
-            [map.extInfo updateExtInfoFromMap];
+            [map.extInfo parseExtInfoFromString: map.extInfo.desc];
             
             // Avisamos al llamante de que ya tenemos la lista con los mapas
             dispatch_async(caller_queue, ^(void){
