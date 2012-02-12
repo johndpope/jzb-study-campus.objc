@@ -11,6 +11,7 @@
 #import "TCategory.h"
 #import "TMap.h"
 #import "TBaseEntity_Protected.h"
+#import "XMLUtilDoc.h"
 
 
 
@@ -120,9 +121,6 @@
     return [self.name isEqualToString:@"@EXT_INFO"];
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-- (void) parseFromKML: (NSString *) kml {
-}
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) _xmlStringBody: (NSMutableString*) sbuf ident:(NSString *) ident {
@@ -133,7 +131,7 @@
     [sbuf appendFormat:@"%@<map>%@</map>\n",ident, self.map.name];
 
     // --- Coordinates ---
-    [sbuf appendFormat:@"%@<coordinates>%d, %d, 0</coordinates>\n",ident, self.lng, self.lat];
+    [sbuf appendFormat:@"%@<coordinates>%lf, %lf, 0</coordinates>\n",ident, self.lng, self.lat];
     
     //--- Categories ---
     if([self.categories count] == 0) {

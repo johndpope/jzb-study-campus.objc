@@ -327,7 +327,6 @@
 		42A5DF5614E46DF7009DAEBB /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42A5DF5514E46DF7009DAEBB /* SystemConfiguration.framework */; };
 		42A5DF5814E46E00009DAEBB /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42A5DF5714E46DFF009DAEBB /* Security.framework */; };
 		42A5DF5A14E46E19009DAEBB /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42A5DF5914E46E19009DAEBB /* ApplicationServices.framework */; };
-		42A5DF5D14E46E95009DAEBB /* MyClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A5DF5C14E46E95009DAEBB /* MyClass.m */; };
 		42A5DF8C14E4729C009DAEBB /* TBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A5DF8414E4729C009DAEBB /* TBaseEntity.m */; };
 		42A5DF8D14E4729C009DAEBB /* TCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A5DF8614E4729C009DAEBB /* TCategory.m */; };
 		42A5DF8E14E4729C009DAEBB /* TMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A5DF8814E4729C009DAEBB /* TMap.m */; };
@@ -338,8 +337,6 @@
 		42A5DFAA14E472B5009DAEBB /* JavaStringCat.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A5DF9A14E472B5009DAEBB /* JavaStringCat.m */; };
 		42A5DFAC14E472B5009DAEBB /* RegexKitLite-4.0.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 42A5DF9F14E472B5009DAEBB /* RegexKitLite-4.0.pdf */; };
 		42A5DFAD14E472B5009DAEBB /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A5DFA114E472B5009DAEBB /* RegexKitLite.m */; };
-		42A5DFAE14E472B5009DAEBB /* XMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A5DFA414E472B5009DAEBB /* XMLReader.m */; };
-		42A5DFAF14E472B5009DAEBB /* XMLUtilDoc.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A5DFA614E472B5009DAEBB /* XMLUtilDoc.m */; };
 		42A5DFB114E47360009DAEBB /* main2.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A5DFB014E47360009DAEBB /* main2.m */; };
 		42FF214814E67A8D00B5CDFF /* GMapService.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FF214714E67A8D00B5CDFF /* GMapService.m */; };
 /* End PBXBuildFile section */
@@ -1003,8 +1000,6 @@
 		42A5DF5514E46DF7009DAEBB /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		42A5DF5714E46DFF009DAEBB /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		42A5DF5914E46E19009DAEBB /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
-		42A5DF5B14E46E95009DAEBB /* MyClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyClass.h; sourceTree = "<group>"; };
-		42A5DF5C14E46E95009DAEBB /* MyClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyClass.m; sourceTree = "<group>"; };
 		42A5DF8314E4729C009DAEBB /* TBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBaseEntity.h; sourceTree = "<group>"; };
 		42A5DF8414E4729C009DAEBB /* TBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBaseEntity.m; sourceTree = "<group>"; };
 		42A5DF8514E4729C009DAEBB /* TCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCategory.h; sourceTree = "<group>"; };
@@ -1024,10 +1019,6 @@
 		42A5DF9F14E472B5009DAEBB /* RegexKitLite-4.0.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "RegexKitLite-4.0.pdf"; sourceTree = "<group>"; };
 		42A5DFA014E472B5009DAEBB /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
 		42A5DFA114E472B5009DAEBB /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
-		42A5DFA314E472B5009DAEBB /* XMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLReader.h; sourceTree = "<group>"; };
-		42A5DFA414E472B5009DAEBB /* XMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMLReader.m; sourceTree = "<group>"; };
-		42A5DFA514E472B5009DAEBB /* XMLUtilDoc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLUtilDoc.h; sourceTree = "<group>"; };
-		42A5DFA614E472B5009DAEBB /* XMLUtilDoc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMLUtilDoc.m; sourceTree = "<group>"; };
 		42A5DFB014E47360009DAEBB /* main2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main2.m; sourceTree = "<group>"; };
 		42FF214614E67A8D00B5CDFF /* GMapService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMapService.h; sourceTree = "<group>"; };
 		42FF214714E67A8D00B5CDFF /* GMapService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapService.m; sourceTree = "<group>"; };
@@ -2018,9 +2009,6 @@
 			children = (
 				42A5DF9814E472B5009DAEBB /* Categories */,
 				42A5DF9E14E472B5009DAEBB /* RegexKitLite */,
-				42A5DFA214E472B5009DAEBB /* XMLReader */,
-				42A5DFA514E472B5009DAEBB /* XMLUtilDoc.h */,
-				42A5DFA614E472B5009DAEBB /* XMLUtilDoc.m */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -2044,20 +2032,9 @@
 			path = RegexKitLite;
 			sourceTree = "<group>";
 		};
-		42A5DFA214E472B5009DAEBB /* XMLReader */ = {
-			isa = PBXGroup;
-			children = (
-				42A5DFA314E472B5009DAEBB /* XMLReader.h */,
-				42A5DFA414E472B5009DAEBB /* XMLReader.m */,
-			);
-			path = XMLReader;
-			sourceTree = "<group>";
-		};
 		42AE0FD014E6605500ACED32 /* main */ = {
 			isa = PBXGroup;
 			children = (
-				42A5DF5B14E46E95009DAEBB /* MyClass.h */,
-				42A5DF5C14E46E95009DAEBB /* MyClass.m */,
 				42A5DB5714E46B5D009DAEBB /* WCDTestAppDelegate.h */,
 				42A5DB5814E46B5D009DAEBB /* WCDTestAppDelegate.m */,
 				42A5DB5A14E46B5E009DAEBB /* MainMenu.xib */,
@@ -2440,7 +2417,6 @@
 				42A5DF5214E46CF4009DAEBB /* GDataYouTubeStatistics.m in Sources */,
 				42A5DF5314E46CF4009DAEBB /* GDataQueryYouTube.m in Sources */,
 				42A5DF5414E46CF4009DAEBB /* GDataServiceGoogleYouTube.m in Sources */,
-				42A5DF5D14E46E95009DAEBB /* MyClass.m in Sources */,
 				42A5DF8C14E4729C009DAEBB /* TBaseEntity.m in Sources */,
 				42A5DF8D14E4729C009DAEBB /* TCategory.m in Sources */,
 				42A5DF8E14E4729C009DAEBB /* TMap.m in Sources */,
@@ -2450,8 +2426,6 @@
 				42A5DFA914E472B5009DAEBB /* PointXmlCat.m in Sources */,
 				42A5DFAA14E472B5009DAEBB /* JavaStringCat.m in Sources */,
 				42A5DFAD14E472B5009DAEBB /* RegexKitLite.m in Sources */,
-				42A5DFAE14E472B5009DAEBB /* XMLReader.m in Sources */,
-				42A5DFAF14E472B5009DAEBB /* XMLUtilDoc.m in Sources */,
 				42A5DFB114E47360009DAEBB /* main2.m in Sources */,
 				42FF214814E67A8D00B5CDFF /* GMapService.m in Sources */,
 			);

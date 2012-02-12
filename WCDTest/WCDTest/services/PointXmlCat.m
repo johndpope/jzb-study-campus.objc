@@ -20,9 +20,9 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (NSString *) cleanHTML: (NSString *)str {
+NSString* _cleanHTML(NSString *str) {
     
-    NSMutableString *cleanStr = [NSMutableString string];
+    NSMutableString *cleanStr = [[NSMutableString string] autorelease];
     NSArray  *listItems = [str componentsSeparatedByRegex:@"<[^<>]*>"];    
     for(int n=0;n<[listItems count];n++) {
         NSString *item = [listItems objectAtIndex: n];
@@ -31,24 +31,18 @@
         }
     }
     
-    [cleanStr replaceOccurrencesOfString:@"&lt;"   withString:@"<" options:0 range:(NSRange){0, [cleanStr length]}];
-    [cleanStr replaceOccurrencesOfString:@"&gt;"   withString:@">" options:0 range:(NSRange){0, [cleanStr length]}];
-    [cleanStr replaceOccurrencesOfString:@"&amp;"  withString:@"&" options:0 range:(NSRange){0, [cleanStr length]}];
-    [cleanStr replaceOccurrencesOfString:@"&nbsp;" withString:@" " options:0 range:(NSRange){0, [cleanStr length]}];
-    
-    NSString *result = [NSString stringWithString:cleanStr];
-    
-    return result;
+    return [[cleanStr copy] autorelease];
     
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------
-- (NSString *) nodeStrCleanValue: (NSString *)xpath node:(GDataXMLNode*)node defValue:(NSString *)defValue {
+- (NSString *) nodeStringValue: (NSString *)xpath fromNode:(GDataXMLNode*)node defValue:(NSString *)defValue {
     
     NSArray *children = [node nodesForXPath:xpath namespaces:nil error:nil];
     if([children count]>0) {
         NSString *val = [[children objectAtIndex:0] stringValue]; 
-        return [self cleanHTML: val];
+        return val;
     }
     else {
         return defValue;
@@ -58,10 +52,18 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
+- (NSString *) nodeStringCleanValue: (NSString *)xpath fromNode:(GDataXMLNode*)node defValue:(NSString *)defValue {
+    
+    return _cleanHTML([self nodeStringValue:xpath fromNode:node defValue:defValue]);
+    
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------
 - (NSString *) kmlBlob {
-
+    
     static NSUInteger s_idCounter = 1;
-
+    
     NSMutableString *kmlStr = [NSMutableString string];
     
     [kmlStr appendString:@"<Placemark><name>"];
@@ -71,7 +73,7 @@
         [kmlStr appendString:self.desc];
     }
     [kmlStr appendString:@"</description>"];
-
+    
     s_idCounter++;
     NSString *styleID = [NSString stringWithFormat:@"Style-%u-%u",time(0L), s_idCounter];
     [kmlStr appendFormat:@"<Style id=\"%@\"><IconStyle><Icon><href>", styleID];
@@ -79,7 +81,7 @@
         [kmlStr appendString:self.iconURL];
     }
     [kmlStr appendString:@"</href></Icon></IconStyle></Style>"];
-
+    
     [kmlStr appendString:@"<Point><coordinates>"];
     [kmlStr appendFormat:@"%lf, %lf, 0.0",self.lng, self.lat];
     [kmlStr appendString:@"</coordinates></Point></Placemark>"];
@@ -91,40 +93,44 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) setKmlBlob:(NSString *) value {
-
+    
     if(value==nil) {
         return;
     }
     
-    GDataXMLNode *doc;
     NSError *error;
-    
-    doc = [[[GDataXMLDocument alloc] initWithXMLString:value options:0 error: &error] autorelease];
+    GDataXMLNode *doc = [[[GDataXMLDocument alloc] initWithXMLString:value options:0 error: &error] autorelease];
     if(doc==nil) {
         // Un error en el XML
-        NSLog(@"Error parsing KML content: %@, %@", error, [error userInfo]);
+        NSLog(@"PointXmlCat - setKmlBlob - Error parsing KML content: %@, %@", error, [error userInfo]);
         return;
     }
     
     NSString *str;
     
-    str=[self nodeStrCleanValue: @"/Placemark/name/text()" node:doc defValue:@""];
+    str=[self nodeStringValue: @"/Placemark/name/text()" fromNode:doc defValue:@""];
     self.name = str;
-
-    str=[self nodeStrCleanValue: @"/Placemark/description/text()" node:doc defValue:@""];
+    
+    str=[self nodeStringCleanValue: @"/Placemark/description/text()" fromNode:doc defValue:@""];
     self.desc = str;
-
-    str=[self nodeStrCleanValue: @"/Placemark/Style/IconStyle/Icon/href/text()" node:doc defValue:nil];
+    
+    str=[self nodeStringValue: @"/Placemark/Style/IconStyle/Icon/href/text()" fromNode:doc defValue:nil];
     if(str){
         self.iconURL = str;
     } else {
         self.iconURL = @"el icono por defecto";
     }
-
-    str=[self nodeStrCleanValue: @"/Placemark/Point/coordinates/text()" node:doc defValue:@""];
-    // Parse lat y lng
-    self.lng = 0.0;
-    self.lat = 0.0;
+    
+    str=[self nodeStringValue: @"/Placemark/Point/coordinates/text()" fromNode:doc defValue:@""];
+    if(!str || [str length] == 0) {
+        self.lng = 0.0; // Valores por defecto???
+        self.lat = 0.0;
+    } else {
+        NSArray *comps = [str componentsSeparatedByString:@","];
+        self.lng = [[comps objectAtIndex:0] doubleValue];
+        self.lat = [[comps objectAtIndex:1] doubleValue];
+    }
+    
 }
 
 @end

@@ -10,6 +10,7 @@
 #import "ModelService.h"
 #import "GData.h"
 #import "JavaStringCat.h"
+#import "PointXmlCat.h"
 
 
 
@@ -303,7 +304,7 @@
     point.syncStatus = ST_Sync_OK;
     
     NSString *kml = [GMapService _get_KML_fromEntry:entry];
-    [point parseFromKML:kml];
+    point.kmlBlob = kml;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
