@@ -230,15 +230,8 @@
                 }
             }
             
-            // Añade las categorias
-            /************
-             try {
-             ExtendedInfo.parseMapExtInfo(map);
-             } catch (Throwable th) {
-             Tracer._error("Error parsin extended info: ", th);
-             }
-             ************/
-            
+            // Añade la informacion extendida del mapa y las categorias
+            [map.extInfo updateExtInfoFromMap];
             
             // Avisamos al llamante de que ya tenemos la lista con los mapas
             dispatch_async(caller_queue, ^(void){

@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TMap.h"
+#import "TCategory.h"
 #import "TPoint.h"
 
 
@@ -16,5 +18,8 @@
 }
 
 @property (nonatomic, assign) NSString * kmlBlob;
+
+- (void) updateExtInfoFromMap;
+- (void) parseExtInfoFromString:(NSString*) value;
 
 @end
