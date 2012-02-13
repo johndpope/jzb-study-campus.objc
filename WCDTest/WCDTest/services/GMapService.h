@@ -14,6 +14,8 @@
 #define ASYNCHRONOUS void
 typedef void (^TBlock_FetchUserMapListFinished)(NSArray *maps, NSError *error);
 typedef void (^TBlock_FetchMapDataFinished)(TMap *map, NSError *error);
+typedef void (^TBlock_CreateMapDataFinished)(TMap *map, NSError *error);
+typedef void (^TBlock_DeleteMapDataFinished)(TMap *map, NSError *error);
 
 
 
