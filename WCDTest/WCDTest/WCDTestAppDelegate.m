@@ -8,7 +8,7 @@
 
 #import "WCDTestAppDelegate.h"
 #import "ModelService.h"
-#import "GMapService.h"
+#import "GMapServiceAsync.h"
 
 
 #define USER_PREFS_EMAIL    @"userEMail"
@@ -113,15 +113,15 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)synchronizeMaps:(id)sender {
     
-    [[GMapService sharedInstance] loginWithUser:self.userEMail password:self.userPassword];
-    [[GMapService sharedInstance] fetchUserMapList:^(NSArray *maps, NSError *error) {
+    [[GMapServiceAsync sharedInstance] loginWithUser:self.userEMail password:self.userPassword];
+    [[GMapServiceAsync sharedInstance] fetchUserMapList:^(NSArray *maps, NSError *error) {
         
         if(error==nil) {
             self.syncMaps = maps;
             [self.bi_syncTable reloadData];
             
             TMap *map = [maps objectAtIndex:0];
-            [[GMapService sharedInstance] fetchMapData:map callback:^(TMap *map, NSError *error) {
+            [[GMapServiceAsync sharedInstance] fetchMapData:map callback:^(TMap *map, NSError *error) {
                 NSLog(@"puntos");
             }];
         }

@@ -9,8 +9,9 @@
 #import "GMapService.h"
 #import "ModelService.h"
 #import "GData.h"
-#import "JavaStringCat.h"
+#import "GMapServiceWrapper.h"
 #import "PointXmlCat.h"
+#import "JavaStringCat.h"
 
 
 
@@ -18,11 +19,10 @@
 //---------------------------------------------------------------------------------------------------------------------
 @interface GMapService () {
 @private
-    dispatch_queue_t _GMapServiceQueue;
     BOOL _isLoggedIn;
 }
 
-@property (nonatomic,retain) GDataServiceGoogleMaps *service;
+@property (nonatomic,retain) GMapServiceWrapper *service;
 @property (nonatomic,retain) NSString *loggedUser_ID;
 
 
@@ -68,13 +68,7 @@
 {
     self = [super init];
     if (self) {
-        
-        self.service = [[GDataServiceGoogleMaps alloc] init];
-        [self.service setShouldCacheDatedData:YES];
-        [self.service setServiceShouldFollowNextLinks:YES];
-        
-        _GMapServiceQueue = dispatch_queue_create("GMapServiceQueue", NULL);
-        
+        self.service = [[GMapServiceWrapper alloc] init];
     }
     
     return self;
@@ -85,7 +79,6 @@
 {
     [self.service release];
     [self.loggedUser_ID release];
-    dispatch_release(_GMapServiceQueue);
     
     [super dealloc];
 }
@@ -117,257 +110,185 @@
 //---------------------------------------------------------------------------------------------------------------------
 // Consigue la lista de mapas de los que el usuario logado es dueño.
 // Los mapas estan vacios (sin puntos)
-- (ASYNCHRONOUS) fetchUserMapList:(TBlock_FetchUserMapListFinished)callbackBlock {
-    
+- (NSArray *) fetchUserMapList:(NSError **)error {
     
     NSLog(@"GMapService - fetchUserMapList");
     
-    // Si no hay nadie esperando no hacemos nada
-    if(callbackBlock==nil) {
-        return;
+    // Se pide la lista de mapas del usuario
+    GDataFeedBase *feed = [self.service fetchUserMapList:error];
+    if(*error) {
+        return nil;
     }
     
-    // Se apunta la cola en la que deberá dar la respuesta de callback
-    dispatch_queue_t caller_queue = dispatch_get_current_queue();
+    // Gets UserID for the logged user that requested the list
+    self.loggedUser_ID = [GMapService _extract_Logged_UserID_fromFeed:feed];
     
-    // Se pide la lista de mapas del usuario
-    NSURL *feedURL = [GDataServiceGoogleMaps mapsFeedURLForUserID:kGDataServiceDefaultUser projection:kGDataMapsProjectionOwned];
-    [self.service fetchFeedWithURL:feedURL completionHandler:^(GDataServiceTicket *ticket, GDataFeedBase *feed, NSError *error) {
+    // Iteramos por la lista de mapas que se han retornado en el feed
+    NSMutableArray *mapList = [[[NSMutableArray alloc] init] autorelease];
+    for(GDataEntryMap *mapEntry in [feed entries]) {
         
-        // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
-        dispatch_async(_GMapServiceQueue,^(void){
-            
-            NSLog(@"GMapService - fetchUserMapList - completionHandler");
-            
-            // Gets UserID for the logged user that requested the list
-            self.loggedUser_ID = [GMapService _extract_Logged_UserID_fromFeed:feed];
-            
-            // Iteramos por la lista de mapas que se han retornado en el feed
-            NSMutableArray *mapList = [[[NSMutableArray alloc] init] autorelease];
-            for(GDataEntryMap *mapEntry in [feed entries]) {
-                
-                // ************************************************************************************
-                // MIENTRAS ESTEMOS EN PRUEBAS!!!!!!!
-                NSString *entryName = [[mapEntry title] stringValue];
-                if(![entryName hasPrefix:@"@"]) {
-                    NSLog(@"GMapService - fetchUserMapList - Skipping map named: '%@'",entryName);
-                    //continue;
-                }
-                // ************************************************************************************
-                
-                
-                TMap *map = [TMap insertTmpNew];
-                [GMapService _fill_TMap:map withFeedMapEntry: mapEntry];
-                
-                [mapList addObject:map];
-            }
-            
-            // Avisamos al llamante de que ya tenemos la lista con los mapas
-            NSArray *maps = [[mapList copy] autorelease];
-            dispatch_async(caller_queue, ^(void){
-                callbackBlock(maps, error);
-            });
-            
-        });
-    }];
+        // ************************************************************************************
+        // MIENTRAS ESTEMOS EN PRUEBAS!!!!!!!
+        NSString *entryName = [[mapEntry title] stringValue];
+        if(![entryName hasPrefix:@"@"]) {
+            NSLog(@"GMapService - fetchUserMapList - Skipping map named without @ for testing: '%@'",entryName);
+            //continue;
+        }
+        // ************************************************************************************
+        
+        
+        TMap *map = [TMap insertTmpNew];
+        [GMapService _fill_TMap:map withFeedMapEntry: mapEntry];
+        
+        [mapList addObject:map];
+    }
     
+    // Retornamos el resultado
+    return [[mapList copy] autorelease];
 }
+
 
 //---------------------------------------------------------------------------------------------------------------------
 // Consigue la información, puntos y demas, del mapa pasado como parametro.
-- (ASYNCHRONOUS) fetchMapData:(TMap *)map callback:(TBlock_FetchMapDataFinished)callbackBlock {
-    
+- (TMap *) fetchMapData:(TMap *)map error:(NSError **)error {
     
     NSLog(@"GMapService - fetchMapData (%@-%@)",map.name,map.GID);
-    
-    // Si no hay nadie esperando no hacemos nada
-    if(callbackBlock==nil) {
-        return;
-    }
-    
-    // NO SE PUEDE PEDIR INFORMACION SOBRE UN MAPA LOCAL
-    if (map.isLocal) {
-        return;
-    }
-    
-    // Se apunta la cola en la que deberá dar la respuesta de callback
-    dispatch_queue_t caller_queue = dispatch_get_current_queue();
     
     // Borra info para leerla desde GMap
     [map clearAllData];
     
     // Lee las "map features" del GMap
-    NSString *urlStr = [[[NSString alloc] initWithFormat:@"http://maps.google.com/maps/feeds/features/%@/full", [map.GID replaceStr:@"#" With:@"/"]] autorelease];
-    NSURL *feedURL = [NSURL URLWithString:urlStr];
-    GDataQueryMaps *query = [GDataQueryMaps mapsQueryWithFeedURL:feedURL];
-    [self.service fetchFeedWithQuery:query completionHandler:^(GDataServiceTicket *ticket, GDataFeedBase *feed, NSError *error) {
-        
-        // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
-        dispatch_async(_GMapServiceQueue,^(void){
-            
-            NSLog(@"GMapService - fetchMapData - completionHandler (%@-%@)",map.name,map.GID);
-            
-            for(GDataEntryMapFeature *featureEntry in [feed entries]) {
-                
-                // filtrar lo que no sea un punto
-                NSString *kml = [GMapService _get_KML_fromEntry:featureEntry];
-                if([kml indexOf:@"<Point"]==-1) {
-                    continue;
-                }
-                
-                // Creamos y parseamos la informacion del punto
-                TPoint *point = [TPoint insertTmpNewInMap:map];
-                [GMapService _fill_TPoint:point withFeedFeatureEntry:featureEntry];
-                
-                // Si no es extinfo lo añade
-                if(point.isExtInfo) {
-                    map.extInfo = point;
-                }else {
-                    [map addPoint:point];
-                }
-            }
-            
-            // Añade la informacion extendida del mapa y las categorias
-            [map.extInfo parseExtInfoFromString: map.extInfo.desc];
-            
-            // Avisamos al llamante de que ya tenemos la lista con los mapas
-            dispatch_async(caller_queue, ^(void){
-                callbackBlock(map, error);
-            });
-            
-        });
-    }];
+    GDataFeedBase *feed = [self.service fetchMapDataWithGID:map.GID error:error];
+    if(*error) {
+        return nil;
+    }
     
+    // Itera las features creando los TPoint equivalentes
+    for(GDataEntryMapFeature *featureEntry in [feed entries]) {
+        
+        // filtrar lo que no sea un punto
+        NSString *kml = [GMapService _get_KML_fromEntry:featureEntry];
+        if([kml indexOf:@"<Point"]==-1) {
+            continue;
+        }
+        
+        // Creamos y parseamos la informacion del punto
+        TPoint *point = [TPoint insertTmpNewInMap:map];
+        [GMapService _fill_TPoint:point withFeedFeatureEntry:featureEntry];
+        
+        // Si no es extinfo lo añade
+        if(point.isExtInfo) {
+            map.extInfo = point;
+        }else {
+            [map addPoint:point];
+        }
+    }
+    
+    // Añade la informacion extendida del mapa y las categorias
+    [map.extInfo parseExtInfoFromString: map.extInfo.desc];
+    
+    // Retorna el mapa actualizado
+    return map;    
 }
 
 
 //---------------------------------------------------------------------------------------------------------------------
-// COMO HACE FALTA EL ID DEL USUARIO LOGADO PARA PODER CREAR MAPAS, ES OBLIGATORIO QUE ANTES DE AÑADIR UN MAPA SE PIDA
-// EL LISTADO DE MAPAS DE ESE USARIO PARA CONSEGUIR ESE ID (NO HAY OTRA FORMA)
-//
 // OJO: El ID del mapa, puesto que es nuevo, se debe actualizar de la creación para que se pueda actualizar luego
 // Lo mismo pasa con los tiempos de creación y actualización
-- (ASYNCHRONOUS) createNewGMap:(TMap *)map callback:(TBlock_CreateMapDataFinished)callbackBlock {
+- (TMap *) createNewGMap:(TMap *)map error:(NSError **)error {
     
-    
-    NSLog(@"GMapService - createNewGMap (%@-%@)",map.name,map.GID);
-    
-    // Si no hay nadie esperando no hacemos nada
-    if(callbackBlock==nil) {
-        return;
-    }
+    NSLog(@"GMapService - createNewGMap (%@-%@)", map.name, map.GID);
     
     // NO SE PUEDE CREAR UN MAPA QUE NO SEA LOCAL
     if (!map.isLocal) {
-        return;
+        NSLog(@"GMapService - createNewGMap - Maps must be local to be created on server");
+        NSDictionary* details = [NSDictionary dictionaryWithObject:@"Maps must be local to be created on server" forKey:NSLocalizedDescriptionKey];
+        *error = [NSError errorWithDomain:@"AppDomain" code:100 userInfo:details];
+        return nil;
     }
     
     // Si no tenemos el ID del usuario no podemos crear el mapa
     if(self.loggedUser_ID == nil) {
-        NSLog(@"GMapService - createNewGMap - No se puede crear sin ID de usuario");
-        return;
+        NSArray * maps=[self fetchUserMapList:error];
+        if(!maps) {
+            NSLog(@"GMapService - createNewGMap - Maps cannot be created without a User ID");
+            NSDictionary* details = [NSDictionary dictionaryWithObject:@"Maps cannot be created without a User ID" forKey:NSLocalizedDescriptionKey];
+            *error = [NSError errorWithDomain:@"AppDomain" code:200 userInfo:details];
+            return nil;
+        }
     }
     
     
     // ************************************************************************************
     // MIENTRAS ESTEMOS EN PRUEBAS!!!!!!!
     if(![map.name hasPrefix:@"@"]) {
-        NSLog(@"GMapService - createNewGMap - Skipping map named: '%@'",map.name);
-        return;
+        NSLog(@"GMapService - createNewGMap - Skipping map named without @ for testing: '%@'",map.name);
+        NSDictionary* details = [NSDictionary dictionaryWithObject:@"Skipping map named without @ for testing" forKey:NSLocalizedDescriptionKey];
+        *error = [NSError errorWithDomain:@"AppDomain" code:200 userInfo:details];
+        return nil;
     }
     // ************************************************************************************
     
-    
-    // Se apunta la cola en la que deberá dar la respuesta de callback
-    dispatch_queue_t caller_queue = dispatch_get_current_queue();
     
     // Crea un feed entry desde los datos del mapa y lo da de alta en el servidor
     GDataEntryMap *gmapEntry = [GMapService _create_FeedMapEntry_fromTMap: map];
     
-    NSString *urlStr = [[[NSString alloc] initWithFormat:@"http://maps.google.com/maps/feeds/maps/%@/full", self.loggedUser_ID] autorelease];
-    NSURL *feedURL = [NSURL URLWithString:urlStr];
-    [self.service fetchEntryByInsertingEntry:gmapEntry forFeedURL:feedURL completionHandler:^(GDataServiceTicket *ticket, GDataEntryBase *createdEntry, NSError *error) {
-        
-        // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
-        dispatch_async(_GMapServiceQueue,^(void){
-            
-            NSLog(@"GMapService - createNewGMap - completionHandler (%@-%@)",map.name,map.GID);
-            
-            // Actualiza el mapa con la informacion que se ha recibido de GMap
-            [GMapService _fill_TMap:map withFeedMapEntry:(GDataEntryMap *)createdEntry];
-            
-            // Avisamos al llamante de que ya tenemos la lista con los mapas
-            dispatch_async(caller_queue, ^(void){
-                callbackBlock(map, error);
-            });
-            
-        });
-    }];
+    // Añade la nueva entrada en el servidor
+    GDataEntryBase *createdEntry = [self.service insertMapEntry:gmapEntry userID:self.loggedUser_ID error:error];
+    if(*error) {
+        return nil;
+    }
     
+    // Actualiza el mapa con la informacion que se ha recibido de GMap
+    [GMapService _fill_TMap:map withFeedMapEntry:(GDataEntryMap *)createdEntry];
+    
+    // Retorna el mapa actualizado
+    return map;    
 }
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (ASYNCHRONOUS) deleteGMap:(TMap *)map callback:(TBlock_DeleteMapDataFinished)callbackBlock {
-    
+- (TMap *) deleteGMap: (TMap *)map error:(NSError **)error {
     
     NSLog(@"GMapService - deleteGMap (%@-%@)",map.name,map.GID);
     
-    // Si no hay nadie esperando no hacemos nada
-    if(callbackBlock==nil) {
-        return;
-    }
-    
-    // NO SE PUEDE BORRAR UN MAPA QUE NO SEA LOCAL
+    // NO SE PUEDE BORRAR UN MAPA SI ES LOCAL
     if (!map.isLocal) {
-        return;
+        NSLog(@"GMapService - deleteGMap - Maps cannot be local to be deleted on server");
+        NSDictionary* details = [NSDictionary dictionaryWithObject:@"Maps cannot be local to be deleted on server" forKey:NSLocalizedDescriptionKey];
+        *error = [NSError errorWithDomain:@"AppDomain" code:300 userInfo:details];
+        return nil;
     }
-    
-    // Si no tenemos el ID del usuario no podemos crear el mapa
-    if(self.loggedUser_ID == nil) {
-        NSLog(@"GMapService - createNewGMap - No se puede crear sin ID de usuario");
-        return;
-    }
-    
+        
     
     // ************************************************************************************
     // MIENTRAS ESTEMOS EN PRUEBAS!!!!!!!
     if(![map.name hasPrefix:@"@"]) {
-        NSLog(@"GMapService - deleteGMap - Skipping map named: '%@'",map.name);
-        return;
+        NSLog(@"GMapService - deleteGMap - Skipping map named without @ for testing: '%@'",map.name);
+        NSDictionary* details = [NSDictionary dictionaryWithObject:@"Skipping map named without @ for testing" forKey:NSLocalizedDescriptionKey];
+        *error = [NSError errorWithDomain:@"AppDomain" code:200 userInfo:details];
+        return nil;
     }
     // ************************************************************************************
     
     
-    // Se apunta la cola en la que deberá dar la respuesta de callback
-    dispatch_queue_t caller_queue = dispatch_get_current_queue();
-    
     // Crea un feed entry desde los datos del mapa y lo da de alta en el 
-    NSString *urlStr = [[[NSString alloc] initWithFormat:@"http://maps.google.com/maps/feeds/features/%@/full", [map.GID replaceStr:@"#" With:@"/"]] autorelease];
-    NSURL *feedURL = [NSURL URLWithString:urlStr];
-
-    [self.service deleteResourceURL:feedURL ETag:nil completionHandler:^(GDataServiceTicket *ticket, GDataEntryBase *deletedEntry, NSError *error) {
-        
-        // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
-        dispatch_async(_GMapServiceQueue,^(void){
-            
-            NSLog(@"GMapService - deleteGMap - completionHandler (%@-%@)",map.name,map.GID);
-            
-            NSLog(@"entry %@",deletedEntry);
-            
-            // Avisamos al llamante de que ya tenemos la lista con los mapas
-            dispatch_async(caller_queue, ^(void){
-                callbackBlock(map, error);
-            });
-            
-        });
-    }];
+    GDataFeedBase * deletedEntry = [self.service deleteMapDataWithGID:map.GID error:error];
+    if(*error) {
+        return nil;
+    }
     
+    // Actualiza el mapa con la informacion que se ha recibido de GMap
+    //[GMapService _fill_TMap:map withFeedMapEntry:(GDataEntryMap *)deletedEntry];
+    //¿¿¿ HAY QUE HACER ALGO AQUI ???
+    
+    // Retorna el mapa elimindado
+    return map;    
 }
 
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (NSString *)      _extract_Logged_UserID_fromFeed:(GDataFeedBase *) feed {
++ (NSString *) _extract_Logged_UserID_fromFeed:(GDataFeedBase *) feed {
     
     // La URL tiene el formato:  http://maps.google.com/maps/feeds/maps/<<user_id>>/full
     

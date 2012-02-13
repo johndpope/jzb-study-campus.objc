@@ -340,6 +340,8 @@
 		42A5DFAC14E472B5009DAEBB /* RegexKitLite-4.0.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 42A5DF9F14E472B5009DAEBB /* RegexKitLite-4.0.pdf */; };
 		42A5DFAD14E472B5009DAEBB /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A5DFA114E472B5009DAEBB /* RegexKitLite.m */; };
 		42A5DFB114E47360009DAEBB /* main2.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A5DFB014E47360009DAEBB /* main2.m */; };
+		42A6EA6414E9A595007F5BF2 /* GMapServiceAsync.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A6EA6314E9A595007F5BF2 /* GMapServiceAsync.m */; };
+		42A6EA6814E9AF88007F5BF2 /* GMapServiceWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A6EA6714E9AF87007F5BF2 /* GMapServiceWrapper.m */; };
 		42FF214814E67A8D00B5CDFF /* GMapService.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FF214714E67A8D00B5CDFF /* GMapService.m */; };
 /* End PBXBuildFile section */
 
@@ -1025,6 +1027,10 @@
 		42A5DFA014E472B5009DAEBB /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
 		42A5DFA114E472B5009DAEBB /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
 		42A5DFB014E47360009DAEBB /* main2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main2.m; sourceTree = "<group>"; };
+		42A6EA6214E9A595007F5BF2 /* GMapServiceAsync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMapServiceAsync.h; sourceTree = "<group>"; };
+		42A6EA6314E9A595007F5BF2 /* GMapServiceAsync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapServiceAsync.m; sourceTree = "<group>"; };
+		42A6EA6614E9AF87007F5BF2 /* GMapServiceWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMapServiceWrapper.h; sourceTree = "<group>"; };
+		42A6EA6714E9AF87007F5BF2 /* GMapServiceWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapServiceWrapper.m; sourceTree = "<group>"; };
 		42FF214614E67A8D00B5CDFF /* GMapService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMapService.h; sourceTree = "<group>"; };
 		42FF214714E67A8D00B5CDFF /* GMapService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapService.m; sourceTree = "<group>"; };
 		42FF214A14E69C3F00B5CDFF /* TBaseEntity_Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBaseEntity_Protected.h; sourceTree = "<group>"; };
@@ -2007,6 +2013,10 @@
 				42A5DF9614E472B5009DAEBB /* PointXmlCat.m */,
 				42FF214614E67A8D00B5CDFF /* GMapService.h */,
 				42FF214714E67A8D00B5CDFF /* GMapService.m */,
+				42A6EA6214E9A595007F5BF2 /* GMapServiceAsync.h */,
+				42A6EA6314E9A595007F5BF2 /* GMapServiceAsync.m */,
+				42A6EA6614E9AF87007F5BF2 /* GMapServiceWrapper.h */,
+				42A6EA6714E9AF87007F5BF2 /* GMapServiceWrapper.m */,
 			);
 			path = services;
 			sourceTree = "<group>";
@@ -2438,6 +2448,8 @@
 				42A5DFB114E47360009DAEBB /* main2.m in Sources */,
 				42FF214814E67A8D00B5CDFF /* GMapService.m in Sources */,
 				423DFBEA14E758F000E1C43A /* NSDataExtensions.m in Sources */,
+				42A6EA6414E9A595007F5BF2 /* GMapServiceAsync.m in Sources */,
+				42A6EA6814E9AF88007F5BF2 /* GMapServiceWrapper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
