@@ -56,22 +56,29 @@
     [self.service setUserCredentialsWithUsername:email password:password];
 }
 
+
 //---------------------------------------------------------------------------------------------------------------------
 - (GDataFeedBase *) fetchUserMapList:(NSError **)err {
     
     // Variables a ser establecidas por el block
     __block GDataFeedBase *feed = nil;
-    __block  NSError *error = nil;
+    __block NSError *error = [[NSError alloc] initWithDomain:@"domain" code:100 userInfo:nil];
     __block BOOL endLoop = false;
     
     // Hace la llamada asincrona
-    NSLog(@"service = %@",self.service);
     NSURL *feedURL = [GDataServiceGoogleMaps mapsFeedURLForUserID:kGDataServiceDefaultUser projection:kGDataMapsProjectionOwned];
     GDataServiceTicket *ticket = [self.service fetchFeedWithURL:feedURL completionHandler:^(GDataServiceTicket *_ticket, GDataFeedBase *_feed, NSError *_error) {
         feed = _feed;
-        error = _error;
+        //error = _error;
         endLoop = true;
     }];
+    
+    /**
+    [[ticket currentFetcher] setReceivedDataBlock:^(NSData *info) {
+        NSLog(@"aqui estamos...");
+    }];
+    **/
+    
     
     //¿¿¿HAY QUE PONER UN TIMEOUT???
     // Bloqueamos el Thread actual iterando en el NSRunLoop hasta que se complete la peticion
@@ -80,7 +87,7 @@
         couldRun = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
     } while(couldRun && ! endLoop);
     
-    *err=error;
+    err=&error;
     return feed;
 }
 
