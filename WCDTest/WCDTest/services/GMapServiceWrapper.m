@@ -60,21 +60,18 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (GDataFeedBase *) fetchUserMapList:(NSError **)err {
     
-    // Variables a ser establecidas por el block
-    __block GDataFeedBase *feed = nil;
-    __block NSError *error = [[NSError alloc] initWithDomain:@"domain" code:100 userInfo:nil];
+    // Variable de salida del block
     __block BOOL endLoop = false;
     
     // Hace la llamada asincrona
     NSURL *feedURL = [GDataServiceGoogleMaps mapsFeedURLForUserID:kGDataServiceDefaultUser projection:kGDataMapsProjectionOwned];
     GDataServiceTicket *ticket = [self.service fetchFeedWithURL:feedURL completionHandler:^(GDataServiceTicket *_ticket, GDataFeedBase *_feed, NSError *_error) {
-        feed = _feed;
-        //error = _error;
         endLoop = true;
     }];
     
     /**
     [[ticket currentFetcher] setReceivedDataBlock:^(NSData *info) {
+     // un aviso de progreso
         NSLog(@"aqui estamos...");
     }];
     **/
@@ -87,17 +84,16 @@
         couldRun = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
     } while(couldRun && ! endLoop);
     
-    err=&error;
-    return feed;
+    
+    *err = [ticket fetchError];
+    return (GDataFeedBase *)[ticket fetchedObject];
 }
 
 
 //---------------------------------------------------------------------------------------------------------------------
 - (GDataFeedBase *) fetchMapDataWithGID:(NSString *)mapGID error:(NSError **)err {
     
-    // Variables a ser establecidas por el block
-    __block GDataFeedBase *feed = nil;
-    __block  NSError *error = nil;
+    // Variable de salida del block
     __block BOOL endLoop = false;
     
     // Hace la llamada asincrona
@@ -105,8 +101,6 @@
     NSURL *feedURL = [NSURL URLWithString:urlStr];
     GDataQueryMaps *query = [GDataQueryMaps mapsQueryWithFeedURL:feedURL];
     GDataServiceTicket *ticket = [self.service fetchFeedWithQuery:query completionHandler:^(GDataServiceTicket *_ticket, GDataFeedBase *_feed, NSError *_error) {
-        feed = _feed;
-        error = _error;
         endLoop = true;
     }];
     
@@ -117,24 +111,20 @@
         couldRun = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
     } while(couldRun && ! endLoop);
     
-    *err=error;
-    return feed;
+    *err = [ticket fetchError];
+    return (GDataFeedBase *)[ticket fetchedObject];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (GDataEntryBase *) insertMapEntry:(GDataEntryMap *)gmapEntry userID:(NSString *)loggedID error:(NSError **)err {
     
-    // Variables a ser establecidas por el block
-    __block GDataEntryBase *entry = nil;
-    __block  NSError *error = nil;
+    // Variable de salida del block
     __block BOOL endLoop = false;
     
     // Hace la llamada asincrona
     NSString *urlStr = [[[NSString alloc] initWithFormat:@"http://maps.google.com/maps/feeds/maps/%@/full", loggedID] autorelease];
     NSURL *feedURL = [NSURL URLWithString:urlStr];
     GDataServiceTicket *ticket = [self.service fetchEntryByInsertingEntry:gmapEntry forFeedURL:feedURL completionHandler:^(GDataServiceTicket *_ticket, GDataEntryBase *_entry, NSError *_error) {
-        entry = _entry;
-        error = _error;
         endLoop = true;
     }];
     
@@ -145,24 +135,20 @@
         couldRun = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
     } while(couldRun && ! endLoop);
     
-    *err=error;
-    return entry;
+    *err = [ticket fetchError];
+    return (GDataEntryBase *)[ticket fetchedObject];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (GDataEntryBase *)  deleteMapDataWithGID:(NSString *)mapGID error:(NSError **)err {
     
-    // Variables a ser establecidas por el block
-    __block GDataEntryBase *entry = nil;
-    __block  NSError *error = nil;
+    // Variable de salida del block
     __block BOOL endLoop = false;
     
     // Hace la llamada asincrona
     NSString *urlStr = [[[NSString alloc] initWithFormat:@"http://maps.google.com/maps/feeds/features/%@/full", [mapGID replaceStr:@"#" With:@"/"]] autorelease];
     NSURL *feedURL = [NSURL URLWithString:urlStr];
     GDataServiceTicket *ticket = [self.service deleteResourceURL:feedURL ETag:nil completionHandler:^(GDataServiceTicket *_ticket, GDataEntryBase *_entry, NSError *_error) {
-        entry = _entry;
-        error = _error;
         endLoop = true;
     }];
     
@@ -173,8 +159,8 @@
         couldRun = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
     } while(couldRun && ! endLoop);
     
-    *err=error;
-    return entry;
+    *err = [ticket fetchError];
+    return (GDataEntryBase *)[ticket fetchedObject];
 }
 
 @end

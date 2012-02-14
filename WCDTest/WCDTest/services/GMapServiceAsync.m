@@ -92,7 +92,6 @@
         NSError *error;
         NSArray *maps = [[GMapService sharedInstance] fetchUserMapList:&error];
         
-        NSLog(@"%@",error);
         // Avisamos al llamante de que ya tenemos la lista con los mapas
         dispatch_async(caller_queue, ^(void){
             callbackBlock(maps, error);
