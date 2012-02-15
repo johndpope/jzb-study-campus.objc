@@ -29,5 +29,6 @@
 - (TMap *)    fetchMapData:(TMap *)map error:(NSError **)error;
 - (TMap *)    createNewGMap: (TMap *)map error:(NSError **)error;
 - (TMap *)    deleteGMap: (TMap *)map error:(NSError **)error;
+- (TMap *) updateGMap: (TMap *)map error:(NSError **)error;
 
 @end

@@ -71,7 +71,7 @@
     self.userPassword = [[NSUserDefaults standardUserDefaults] objectForKey:USER_PREFS_PASSWORD];
     
     [[ModelService sharedInstance] initCDStack];
-
+    
     [self.bi_email setDelegate:self];
     [self.bi_password setDelegate:self];
     [self.bi_syncTable setDataSource:self];
@@ -120,10 +120,12 @@
             self.syncMaps = maps;
             [self.bi_syncTable reloadData];
             
-            TMap *map = [maps objectAtIndex:0];
-            [[GMapServiceAsync sharedInstance] fetchMapData:map callback:^(TMap *map, NSError *error) {
-                NSLog(@"puntos");
-            }];
+            if(maps) {
+                TMap *map = [maps objectAtIndex:0];
+                [[GMapServiceAsync sharedInstance] fetchMapData:map callback:^(TMap *map, NSError *error) {
+                    NSLog(@"puntos");
+                }];
+            }
         }
     }];
     

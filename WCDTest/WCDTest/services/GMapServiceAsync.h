@@ -15,6 +15,7 @@ typedef void (^TBlock_FetchUserMapListFinished)(NSArray *maps, NSError *error);
 typedef void (^TBlock_FetchMapDataFinished)(TMap *map, NSError *error);
 typedef void (^TBlock_CreateMapDataFinished)(TMap *map, NSError *error);
 typedef void (^TBlock_DeleteMapDataFinished)(TMap *map, NSError *error);
+typedef void (^TBlock_UpdateMapDataFinished)(TMap *map, NSError *error);
 
 
 
@@ -34,5 +35,9 @@ typedef void (^TBlock_DeleteMapDataFinished)(TMap *map, NSError *error);
 
 - (ASYNCHRONOUS) fetchUserMapList:(TBlock_FetchUserMapListFinished)callbackBlock;
 - (ASYNCHRONOUS) fetchMapData:(TMap *)map callback:(TBlock_FetchMapDataFinished)callbackBlock;
+- (ASYNCHRONOUS) createNewGMap:(TMap *)map callback:(TBlock_CreateMapDataFinished)callbackBlock;
+- (ASYNCHRONOUS) deleteGMap:(TMap *)map callback:(TBlock_DeleteMapDataFinished)callbackBlock;
+- (ASYNCHRONOUS) updateGMap:(TMap *)map callback:(TBlock_UpdateMapDataFinished)callbackBlock;
+
 
 @end

@@ -35,7 +35,9 @@
 + (void)            _fill_TMap:(TMap *)map withFeedMapEntry:(GDataEntryMap *) entry;
 + (GDataEntryMap*)  _create_FeedMapEntry_fromTMap:(TMap *) map;
 + (void)            _fill_TPoint:(TPoint *)point withFeedFeatureEntry:(GDataEntryMapFeature *) entry;
++ (GDataEntryMapFeature*) _create_FeedFeatureEntry_fromTPoint:(TPoint *)point;
 
+- (BOOL) _processPoint:(TPoint *) point inMap:(TMap *) map;
 
 @end
 
@@ -91,6 +93,7 @@
     NSLog(@"GMapService - loginWithUser");
     _isLoggedIn = true;
     self.loggedUser_ID = nil;
+    [self.service setUserCredentialsWithUsername:nil password:nil];
     [self.service setUserCredentialsWithUsername:email password:password];
 }
 
@@ -117,6 +120,7 @@
     // Se pide la lista de mapas del usuario
     GDataFeedBase *feed = [self.service fetchUserMapList:error];
     if(*error) {
+        NSLog(@"GMapService - fetchUserMapList - error: %@ / %@", *error, [*error userInfo]);
         return nil;
     }
     
@@ -144,6 +148,7 @@
     }
     
     // Retornamos el resultado
+    NSLog(@"GMapService - fetchUserMapList - exit");
     return [[mapList copy] autorelease];
 }
 
@@ -160,6 +165,7 @@
     // Lee las "map features" del GMap
     GDataFeedBase *feed = [self.service fetchMapDataWithGID:map.GID error:error];
     if(*error) {
+        NSLog(@"GMapService - fetchMapData - error: %@ / %@", *error, [*error userInfo]);
         return nil;
     }
     
@@ -188,6 +194,7 @@
     [map.extInfo parseExtInfoFromString: map.extInfo.desc];
     
     // Retorna el mapa actualizado
+    NSLog(@"GMapService - fetchMapData - exit");
     return map;    
 }
 
@@ -234,15 +241,17 @@
     GDataEntryMap *gmapEntry = [GMapService _create_FeedMapEntry_fromTMap: map];
     
     // Añade la nueva entrada en el servidor
-    GDataEntryBase *createdEntry = [self.service insertMapEntry:gmapEntry userID:self.loggedUser_ID error:error];
+    GDataEntryMap *createdEntry = [self.service insertMapEntry:gmapEntry userID:self.loggedUser_ID error:error];
     if(*error) {
+        NSLog(@"GMapService - createNewGMap - error: %@ / %@", *error, [*error userInfo]);
         return nil;
     }
     
     // Actualiza el mapa con la informacion que se ha recibido de GMap
-    [GMapService _fill_TMap:map withFeedMapEntry:(GDataEntryMap *)createdEntry];
+    [GMapService _fill_TMap:map withFeedMapEntry:createdEntry];
     
     // Retorna el mapa actualizado
+    NSLog(@"GMapService - createNewGMap - exit");
     return map;    
 }
 
@@ -259,7 +268,7 @@
         *error = [NSError errorWithDomain:@"AppDomain" code:300 userInfo:details];
         return nil;
     }
-        
+    
     
     // ************************************************************************************
     // MIENTRAS ESTEMOS EN PRUEBAS!!!!!!!
@@ -273,8 +282,10 @@
     
     
     // Crea un feed entry desde los datos del mapa y lo da de alta en el 
-    GDataFeedBase * deletedEntry = [self.service deleteMapDataWithGID:map.GID error:error];
+    //GDataFeedBase * deletedEntry = 
+    [self.service deleteMapDataWithGID:map.GID error:error];
     if(*error) {
+        NSLog(@"GMapService - deleteGMap - error: %@ / %@", *error, [*error userInfo]);
         return nil;
     }
     
@@ -283,9 +294,143 @@
     //¿¿¿ HAY QUE HACER ALGO AQUI ???
     
     // Retorna el mapa elimindado
+    NSLog(@"GMapService - deleteGMap - exit");
     return map;    
 }
 
+
+//---------------------------------------------------------------------------------------------------------------------
+- (TMap *) updateGMap: (TMap *)map error:(NSError **)error {
+    
+    NSLog(@"GMapService - updateGMap (%@-%@)",map.name,map.GID);
+    
+    // NO SE PUEDE ACTUALIZAR UN MAPA SI ES LOCAL
+    if (!map.isLocal) {
+        NSLog(@"GMapService - updateGMap - Maps cannot be local to be deleted on server");
+        NSDictionary* details = [NSDictionary dictionaryWithObject:@"Maps cannot be local to be deleted on server" forKey:NSLocalizedDescriptionKey];
+        *error = [NSError errorWithDomain:@"AppDomain" code:300 userInfo:details];
+        return nil;
+    }
+    
+    
+    // ************************************************************************************
+    // MIENTRAS ESTEMOS EN PRUEBAS!!!!!!!
+    if(![map.name hasPrefix:@"@"]) {
+        NSLog(@"GMapService - updateGMap - Skipping map named without @ for testing: '%@'",map.name);
+        NSDictionary* details = [NSDictionary dictionaryWithObject:@"Skipping map named without @ for testing" forKey:NSLocalizedDescriptionKey];
+        *error = [NSError errorWithDomain:@"AppDomain" code:200 userInfo:details];
+        return nil;
+    }
+    // ************************************************************************************
+    
+    
+    
+    // -----------------------------------------------------------------------------------
+    // Primero todas las categorias
+    for(TCategory *cat in map.categories) {
+        NSLog(@"  ---> Sync Category: %@ - %@",cat.name, cat.syncStatus);
+        switch (cat.syncStatus) {
+                
+            case ST_Sync_Create_Remote:
+            case ST_Sync_Update_Remote:
+                [cat updateToRemoteETag];
+                break;
+                
+            case ST_Sync_Delete_Remote:
+                cat.wasDeleted = true;
+                break;
+                
+            default:
+                // No se hace nada con el resto de estados
+                break;
+        }
+    }
+    
+    
+    // -----------------------------------------------------------------------------------
+    // Luego todos los puntos
+    BOOL allOK = true;
+    for(TPoint *point in map.points) {
+        allOK &= [self _processPoint:point inMap: map];
+    }
+    
+    
+    // -----------------------------------------------------------------------------------
+    // Actualiza el punto de informacion extendida y lo graba
+    [map.extInfo updateExtInfoFromMap];
+    if (map.extInfo.isLocal) {
+        map.extInfo.syncStatus = ST_Sync_Create_Remote;
+        allOK &= [self _processPoint:map.extInfo inMap: map];
+    } else {
+        map.extInfo.syncStatus = ST_Sync_Update_Remote;
+        allOK &= [self _processPoint:map.extInfo inMap: map];
+    }
+    
+    
+    // -----------------------------------------------------------------------------------
+    // Solo si actualizo bien todos los puntos actualiza el ETAG mapa.
+    // En otro caso lo deja el ETag antiguo para forzar una resincronizacion la proxima vezs
+    if (allOK) {
+        GDataEntryBase *updatedEntry = [self.service fetchUpdatedMapDataWithGID:map.GID error:error];
+        if(*error) {
+            NSLog(@"GMapService - updateGMap - error: %@ / %@", *error, [*error userInfo]);
+            return nil;
+        } else {
+            // Actualiza ETAG y UpdateTime del mapa
+            [GMapService _fill_TMap:map withFeedMapEntry:(GDataEntryMap *)updatedEntry];
+        }
+    }
+    
+    // Retorna el mapa actualizado
+    NSLog(@"GMapService - createNewGMap - exit");
+    return map;    
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL) _processPoint:(TPoint *) point inMap:(TMap *) map {
+    
+    GDataEntryMapFeature *featureEntryOrig;
+    GDataEntryMapFeature *featureEntryUptd;
+    NSError *error;
+    
+    NSLog(@"  ---> Sync Point: %@ - %@",point.name, point.syncStatus);
+    featureEntryOrig = [GMapService _create_FeedFeatureEntry_fromTPoint:point];
+    if(!featureEntryOrig) {
+        return false;
+    }
+    
+    switch (point.syncStatus) {
+            
+        case ST_Sync_Create_Remote:
+            featureEntryUptd = [self.service insertMapFeatureEntry:featureEntryOrig inMapWithGID:map.GID error:&error];
+            break;
+            
+        case ST_Sync_Delete_Remote:
+            featureEntryUptd = [self.service insertMapFeatureEntry:featureEntryOrig inMapWithGID:map.GID error:&error];
+            if(!error) {
+                point.wasDeleted = true;
+            }
+            break;
+            
+        case ST_Sync_Update_Remote:
+            featureEntryUptd = [self.service updateMapFeatureEntry:featureEntryOrig withGID:point.GID inMapWithGID:map.GID error:&error];
+            break;
+            
+        default:
+            // No se hace nada con el resto de estados
+            break;
+    }
+    
+    if(!error) {
+        [GMapService _fill_TPoint:point withFeedFeatureEntry:featureEntryUptd];
+        return true;
+    } else {
+        NSLog(@"  >> Sync Error: %@ / %@", error, [error userInfo]);
+        return false;
+    }
+    
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 + (NSString *) _extract_Logged_UserID_fromFeed:(GDataFeedBase *) feed {
@@ -381,6 +526,22 @@
     return newEntry;
 }
 
+//---------------------------------------------------------------------------------------------------------------------
++ (GDataEntryMapFeature*) _create_FeedFeatureEntry_fromTPoint:(TPoint *)point {
+    
+    GDataEntryMapFeature *newEntry = [GDataEntryMapFeature featureEntryWithTitle:point.name];
+    
+    NSError *error;
+    NSString *kmlStr = point.kmlBlob;
+    NSXMLElement *kmlElem = [[[NSXMLElement alloc] initWithXMLString:kmlStr error:&error] autorelease];
+    if (kmlElem) {
+        [newEntry addKMLValue:kmlElem];
+        return newEntry;
+    } else {
+        NSLog(@"_create_FeedFeatureEntry_fromTPoint - cannot make kml element, %@", error);
+        return nil;
+    }
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 + (NSString *) _get_KML_fromEntry:(GDataEntryMapFeature*) entry {
