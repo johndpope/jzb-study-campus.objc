@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		423DFBEA14E758F000E1C43A /* NSDataExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 423DFBE914E758F000E1C43A /* NSDataExtensions.m */; };
 		423DFBEC14E75AAD00E1C43A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 423DFBEB14E75AAD00E1C43A /* libz.dylib */; };
+		427CC55A14EC400000F381A4 /* MyClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 427CC55914EC400000F381A4 /* MyClass.m */; };
 		42A5DB4614E46B5D009DAEBB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42A5DB4514E46B5D009DAEBB /* Cocoa.framework */; };
 		42A5DB5014E46B5D009DAEBB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 42A5DB4E14E46B5D009DAEBB /* InfoPlist.strings */; };
 		42A5DB5314E46B5D009DAEBB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A5DB5214E46B5D009DAEBB /* main.m */; };
@@ -349,6 +350,8 @@
 		423DFBE814E758F000E1C43A /* NSDataExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDataExtensions.h; path = ../NSDataExtensions.h; sourceTree = "<group>"; };
 		423DFBE914E758F000E1C43A /* NSDataExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDataExtensions.m; path = ../NSDataExtensions.m; sourceTree = "<group>"; };
 		423DFBEB14E75AAD00E1C43A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		427CC55814EC400000F381A4 /* MyClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyClass.h; sourceTree = "<group>"; };
+		427CC55914EC400000F381A4 /* MyClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyClass.m; sourceTree = "<group>"; };
 		42A5DB4114E46B5D009DAEBB /* WCDTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WCDTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		42A5DB4514E46B5D009DAEBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		42A5DB4814E46B5D009DAEBB /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -2058,6 +2061,8 @@
 				42A5DB5814E46B5D009DAEBB /* WCDTestAppDelegate.m */,
 				42A5DB5A14E46B5E009DAEBB /* MainMenu.xib */,
 				42A5DFB014E47360009DAEBB /* main2.m */,
+				427CC55814EC400000F381A4 /* MyClass.h */,
+				427CC55914EC400000F381A4 /* MyClass.m */,
 			);
 			name = main;
 			sourceTree = "<group>";
@@ -2450,6 +2455,7 @@
 				423DFBEA14E758F000E1C43A /* NSDataExtensions.m in Sources */,
 				42A6EA6414E9A595007F5BF2 /* GMapServiceAsync.m in Sources */,
 				42A6EA6814E9AF88007F5BF2 /* GMapServiceWrapper.m in Sources */,
+				427CC55A14EC400000F381A4 /* MyClass.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

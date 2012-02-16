@@ -9,6 +9,7 @@
 #import "WCDTestAppDelegate.h"
 #import "ModelService.h"
 #import "GMapServiceAsync.h"
+#import "MyClass.h"
 
 
 #define USER_PREFS_EMAIL    @"userEMail"
@@ -113,6 +114,9 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)synchronizeMaps:(id)sender {
     
+    [MyClass doIt:self.userEMail password:self.userPassword];
+
+    /*
     [[GMapServiceAsync sharedInstance] loginWithUser:self.userEMail password:self.userPassword];
     [[GMapServiceAsync sharedInstance] fetchUserMapList:^(NSArray *maps, NSError *error) {
         
@@ -128,7 +132,7 @@
             }
         }
     }];
-    
+    */
 }
 
 //---------------------------------------------------------------------------------------------------------------------

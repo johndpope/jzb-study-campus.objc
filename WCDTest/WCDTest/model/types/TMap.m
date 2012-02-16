@@ -48,6 +48,7 @@
 }
 
 
+
 //---------------------------------------------------------------------------------------------------------------------
 + (TMap *) insertNew {
     
@@ -57,6 +58,7 @@
         TMap *newMap = [[NSManagedObject alloc] initWithEntity:[TMap entity] insertIntoManagedObjectContext:ctx];
         newMap.isTemp = false;
         [newMap resetEntity];
+        [TPoint insertEmptyExtInfoInMap:newMap];
         return newMap;
     }
     else {
@@ -71,6 +73,7 @@
     TMap *newMap = [[NSManagedObject alloc] initWithEntity:[TMap entity] insertIntoManagedObjectContext:nil];
     newMap.isTemp = true;
     [newMap resetEntity];
+    [TPoint insertTmpEmptyExtInfoInMap:newMap];
     return [newMap autorelease];
 }
 

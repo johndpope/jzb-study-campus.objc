@@ -179,15 +179,13 @@
         }
         
         // Creamos y parseamos la informacion del punto
-        TPoint *point = [TPoint insertTmpNewInMap:map];
-        [GMapService _fill_TPoint:point withFeedFeatureEntry:featureEntry];
-        
-        // Si no es extinfo lo añade
-        if(point.isExtInfo) {
-            map.extInfo = point;
+        TPoint *point;
+        if([TPoint isExtInfoName:[[featureEntry title] stringValue]]){
+            point = [TPoint insertTmpEmptyExtInfoInMap:map];
         }else {
-            [map addPoint:point];
+            point = [TPoint insertTmpNewInMap:map];
         }
+        [GMapService _fill_TPoint:point withFeedFeatureEntry:featureEntry];
     }
     
     // Añade la informacion extendida del mapa y las categorias
@@ -262,7 +260,7 @@
     NSLog(@"GMapService - deleteGMap (%@-%@)",map.name,map.GID);
     
     // NO SE PUEDE BORRAR UN MAPA SI ES LOCAL
-    if (!map.isLocal) {
+    if (map.isLocal) {
         NSLog(@"GMapService - deleteGMap - Maps cannot be local to be deleted on server");
         NSDictionary* details = [NSDictionary dictionaryWithObject:@"Maps cannot be local to be deleted on server" forKey:NSLocalizedDescriptionKey];
         *error = [NSError errorWithDomain:@"AppDomain" code:300 userInfo:details];
@@ -295,6 +293,7 @@
     
     // Retorna el mapa elimindado
     NSLog(@"GMapService - deleteGMap - exit");
+    map.wasDeleted = true;
     return map;    
 }
 
@@ -305,7 +304,7 @@
     NSLog(@"GMapService - updateGMap (%@-%@)",map.name,map.GID);
     
     // NO SE PUEDE ACTUALIZAR UN MAPA SI ES LOCAL
-    if (!map.isLocal) {
+    if (map.isLocal) {
         NSLog(@"GMapService - updateGMap - Maps cannot be local to be deleted on server");
         NSDictionary* details = [NSDictionary dictionaryWithObject:@"Maps cannot be local to be deleted on server" forKey:NSLocalizedDescriptionKey];
         *error = [NSError errorWithDomain:@"AppDomain" code:300 userInfo:details];
@@ -328,7 +327,7 @@
     // -----------------------------------------------------------------------------------
     // Primero todas las categorias
     for(TCategory *cat in map.categories) {
-        NSLog(@"  ---> Sync Category: %@ - %@",cat.name, cat.syncStatus);
+        NSLog(@"  ---> Sync Category: %@ - %@",cat.name, SyncStatusType_Names[cat.syncStatus]);
         switch (cat.syncStatus) {
                 
             case ST_Sync_Create_Remote:
@@ -394,7 +393,7 @@
     GDataEntryMapFeature *featureEntryUptd;
     NSError *error;
     
-    NSLog(@"  ---> Sync Point: %@ - %@",point.name, point.syncStatus);
+    NSLog(@"  ---> Sync Point: %@ - %@",point.name, SyncStatusType_Names[point.syncStatus]);
     featureEntryOrig = [GMapService _create_FeedFeatureEntry_fromTPoint:point];
     if(!featureEntryOrig) {
         return false;
@@ -407,7 +406,7 @@
             break;
             
         case ST_Sync_Delete_Remote:
-            featureEntryUptd = [self.service insertMapFeatureEntry:featureEntryOrig inMapWithGID:map.GID error:&error];
+            featureEntryUptd = [self.service deleteMapFeatureEntryWithGID:point.GID inMapWithGID:map.GID error:&error];
             if(!error) {
                 point.wasDeleted = true;
             }
@@ -423,7 +422,9 @@
     }
     
     if(!error) {
-        [GMapService _fill_TPoint:point withFeedFeatureEntry:featureEntryUptd];
+        if(!point.wasDeleted) {
+            [GMapService _fill_TPoint:point withFeedFeatureEntry:featureEntryUptd];
+        }
         return true;
     } else {
         NSLog(@"  >> Sync Error: %@ / %@", error, [error userInfo]);

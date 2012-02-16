@@ -79,10 +79,9 @@
     
     //¿¿¿HAY QUE PONER UN TIMEOUT???
     // Bloqueamos el Thread actual iterando en el NSRunLoop hasta que se complete la peticion
-    BOOL couldRun;
     do {
-        couldRun = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
-    } while(couldRun && ! endLoop);
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+    } while(!endLoop);
     
     
     *err = [ticket fetchError];
@@ -106,10 +105,9 @@
     
     //¿¿¿HAY QUE PONER UN TIMEOUT???
     // Bloqueamos el Thread actual iterando en el NSRunLoop hasta que se complete la peticion
-    BOOL couldRun;
     do {
-        couldRun = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
-    } while(couldRun && ! endLoop);
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+    } while(!endLoop);
     
     *err = [ticket fetchError];
     return (GDataFeedBase *)[ticket fetchedObject];
@@ -130,10 +128,9 @@
     
     //¿¿¿HAY QUE PONER UN TIMEOUT???
     // Bloqueamos el Thread actual iterando en el NSRunLoop hasta que se complete la peticion
-    BOOL couldRun;
     do {
-        couldRun = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
-    } while(couldRun && ! endLoop);
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+    } while(!endLoop);
     
     *err = [ticket fetchError];
     return (GDataEntryMap *)[ticket fetchedObject];
@@ -146,7 +143,7 @@
     __block BOOL endLoop = false;
     
     // Hace la llamada asincrona
-    NSString *urlStr = [[[NSString alloc] initWithFormat:@"http://maps.google.com/maps/feeds/features/%@/full", [mapGID replaceStr:@"#" With:@"/"]] autorelease];
+    NSString *urlStr = [[[NSString alloc] initWithFormat:@"http://maps.google.com/maps/feeds/maps/%@", [mapGID replaceStr:@"#" With:@"/full/"]] autorelease];
     NSURL *feedURL = [NSURL URLWithString:urlStr];
     GDataServiceTicket *ticket = [self.service deleteResourceURL:feedURL ETag:nil completionHandler:^(GDataServiceTicket *_ticket, GDataEntryBase *_entry, NSError *_error) {
         endLoop = true;
@@ -154,10 +151,9 @@
     
     //¿¿¿HAY QUE PONER UN TIMEOUT???
     // Bloqueamos el Thread actual iterando en el NSRunLoop hasta que se complete la peticion
-    BOOL couldRun;
     do {
-        couldRun = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
-    } while(couldRun && ! endLoop);
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+    } while(!endLoop);
     
     *err = [ticket fetchError];
     return (GDataEntryMap *)[ticket fetchedObject];
@@ -170,7 +166,7 @@
     __block BOOL endLoop = false;
     
     // Hace la llamada asincrona
-    NSString *urlStr = [[[NSString alloc] initWithFormat:@"http://maps.google.com/maps/feeds/features/%@/full", [mapGID replaceStr:@"#" With:@"/"]] autorelease];
+    NSString *urlStr = [[[NSString alloc] initWithFormat:@"http://maps.google.com/maps/feeds/maps/%@", [mapGID replaceStr:@"#" With:@"/full/"]] autorelease];
     NSURL *feedURL = [NSURL URLWithString:urlStr];
     GDataServiceTicket *ticket = [self.service fetchEntryWithURL:feedURL completionHandler:^(GDataServiceTicket *_ticket, GDataEntryBase *_entry, NSError *_error) {
         endLoop = true;
@@ -178,10 +174,9 @@
     
     //¿¿¿HAY QUE PONER UN TIMEOUT???
     // Bloqueamos el Thread actual iterando en el NSRunLoop hasta que se complete la peticion
-    BOOL couldRun;
     do {
-        couldRun = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
-    } while(couldRun && ! endLoop);
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+    } while(!endLoop);
     
     *err = [ticket fetchError];
     return (GDataEntryMap *)[ticket fetchedObject];
@@ -205,10 +200,9 @@
     
     //¿¿¿HAY QUE PONER UN TIMEOUT???
     // Bloqueamos el Thread actual iterando en el NSRunLoop hasta que se complete la peticion
-    BOOL couldRun;
     do {
-        couldRun = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
-    } while(couldRun && ! endLoop);
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+    } while(!endLoop);
     
     *err = [ticket fetchError];
     return (GDataEntryMapFeature *)[ticket fetchedObject];
@@ -229,10 +223,9 @@
     
     //¿¿¿HAY QUE PONER UN TIMEOUT???
     // Bloqueamos el Thread actual iterando en el NSRunLoop hasta que se complete la peticion
-    BOOL couldRun;
     do {
-        couldRun = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
-    } while(couldRun && ! endLoop);
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+    } while(!endLoop);
     
     *err = [ticket fetchError];
     return (GDataEntryMapFeature *)[ticket fetchedObject];
@@ -246,17 +239,17 @@
     
     // Hace la llamada asincrona
     NSString *urlStr = [[[NSString alloc] initWithFormat:@"http://maps.google.com/maps/feeds/features/%@/full/%@", [mapGID replaceStr:@"#" With:@"/"], featureGID] autorelease];
-    [[featureEntry editLink] setHref: urlStr];
+    GDataLink * glink = [GDataLink linkWithRel:@"edit" type:nil href:urlStr];
+    [featureEntry addObject:glink forExtensionClass:[GDataLink class]];
     GDataServiceTicket *ticket = [self.service fetchEntryByUpdatingEntry:featureEntry completionHandler:^(GDataServiceTicket *_ticket, GDataEntryBase *_entry, NSError *_error) {
         endLoop = true;
     }];
     
     //¿¿¿HAY QUE PONER UN TIMEOUT???
     // Bloqueamos el Thread actual iterando en el NSRunLoop hasta que se complete la peticion
-    BOOL couldRun;
     do {
-        couldRun = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
-    } while(couldRun && ! endLoop);
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+    } while(!endLoop);
     
     *err = [ticket fetchError];
     return (GDataEntryMapFeature *)[ticket fetchedObject];

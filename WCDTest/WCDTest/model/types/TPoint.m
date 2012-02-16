@@ -13,6 +13,11 @@
 #import "TBaseEntity_Protected.h"
 
 
+#define EXT_INFO_POINT_NAME     @"@EXT_INFO"
+#define EXT_INFO_POINT_ICON_URL @"http://maps.gstatic.com/mapfiles/ms2/micons/earthquake.png"
+#define EXT_INFO_POINT_LNG      -101.804811
+#define EXT_INFO_POINT_LAT      40.736959
+
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
@@ -81,7 +86,51 @@
     return [newPoint autorelease];
 }
 
+//---------------------------------------------------------------------------------------------------------------------
++ (void) resetExtInfo:(TPoint *) extInfo {
+    
+    extInfo.name = EXT_INFO_POINT_NAME;
+    extInfo.iconURL = EXT_INFO_POINT_ICON_URL;
+    extInfo.lng = EXT_INFO_POINT_LNG;
+    extInfo.lat = EXT_INFO_POINT_LAT;
+}
 
+//---------------------------------------------------------------------------------------------------------------------
++ (TPoint *) insertEmptyExtInfoInMap:(TMap *)ownerMap {
+    
+    NSManagedObjectContext * ctx = [ModelService sharedInstance].moContext;
+    if(ctx) 
+    {
+        TPoint *extInfo = [[NSManagedObject alloc] initWithEntity:[TPoint entity] insertIntoManagedObjectContext:ctx];
+        extInfo.isTemp = false;
+        [extInfo resetEntity];
+        [TPoint resetExtInfo:extInfo];
+        ownerMap.extInfo= extInfo;
+        extInfo.map = ownerMap;
+        return extInfo;
+    }
+    else {
+        return nil;
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
++ (TPoint *) insertTmpEmptyExtInfoInMap:(TMap *)ownerMap {
+    
+    TPoint *extInfo = [[NSManagedObject alloc] initWithEntity:[TPoint entity] insertIntoManagedObjectContext:nil];
+    extInfo.isTemp = true;
+    [extInfo resetEntity];
+    [TPoint resetExtInfo:extInfo];
+    ownerMap.extInfo = extInfo;
+    extInfo.map = ownerMap;
+    return [extInfo autorelease];
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------
++ (BOOL) isExtInfoName:(NSString *) aName {
+    return [aName isEqualToString:EXT_INFO_POINT_NAME];
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)dealloc
@@ -117,7 +166,7 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL) isExtInfo {
-    return [self.name isEqualToString:@"@EXT_INFO"];
+    return [self.name isEqualToString:EXT_INFO_POINT_NAME];
 }
 
 

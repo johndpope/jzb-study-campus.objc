@@ -76,7 +76,7 @@ NSString* _typeToString(id element);
     self.GID = _calcLocalGID(); 
     self.name = @"";
     self.desc = @"";
-    self.iconURL = @"http://icon"; // Hay que crear un icono por defecto ( getDefaultIcon(); )
+    self.iconURL = @"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png"; // Hay que crear un icono por defecto ( getDefaultIcon(); )
     self.changed = false;
     self.wasDeleted = false;
     self.syncETag = _calcLocalETag();

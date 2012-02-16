@@ -13,13 +13,20 @@
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
 typedef enum {
-    ST_Sync_OK = 0, ST_Sync_Error = -99, 
+    ST_Sync_OK = 0, 
     ST_Sync_Create_Local = 1, ST_Sync_Create_Remote = 2, 
     ST_Sync_Delete_Local = 3, ST_Sync_Delete_Remote = 4, 
-    ST_Sync_Update_Local = 5, ST_Sync_Update_Remote = 6
+    ST_Sync_Update_Local = 5, ST_Sync_Update_Remote = 6,
+    ST_Sync_Error = 7, 
 } SyncStatusType;
 
-
+static const NSString *SyncStatusType_Names[]={
+    @"ST_Sync_OK", 
+    @"ST_Sync_Create_Local", @"ST_Sync_Create_Remote", 
+    @"ST_Sync_Delete_Local", @"ST_Sync_Delete_Remote", 
+    @"ST_Sync_Update_Local", @"ST_Sync_Update_Remote",
+    @"ST_Sync_Error"
+};
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------

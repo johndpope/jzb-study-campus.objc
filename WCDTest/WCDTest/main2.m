@@ -11,6 +11,8 @@
 #import "TPoint.h"
 #import "PointXmlCat.h"
 #import "TCategory.h"
+#import "GMapServiceAsync.h"
+#import "GMapService.h"
 
 void doIt(int argc, const char * argv[]);
 
@@ -27,8 +29,8 @@ int main2 (int argc, const char * argv[])
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void doIt (int argc, const char * argv[])
-{
+void doIt (int argc, const char * argv[]) {
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------

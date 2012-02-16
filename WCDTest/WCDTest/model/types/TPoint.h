@@ -29,6 +29,11 @@
 + (TPoint *) insertNewInMap:(TMap *)ownerMap;
 + (TPoint *) insertTmpNewInMap:(TMap *)ownerMap;
 
++ (TPoint *) insertEmptyExtInfoInMap:(TMap *)map;
++ (TPoint *) insertTmpEmptyExtInfoInMap:(TMap *)map;
+
++ (BOOL) isExtInfoName:(NSString *) aName;
+
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)addCategory:(TCategory *)value ;    
