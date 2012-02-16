@@ -9,6 +9,7 @@
 #import "JavaStringCat.h"
 #import "TBaseEntity.h"
 #import "TBaseEntity_Protected.h"
+#import "ModelService.h"
 
 
 //*********************************************************************************************************************
@@ -71,6 +72,19 @@ NSString* _typeToString(id element);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
++ (id) searchByGID:(NSString *)gid inArray:(NSArray *)collection {
+
+    for(TBaseEntity *entity in collection) {
+        if([entity.GID isEqualToString:gid]) {
+            return entity;
+        }
+    }
+    return nil;
+}
+
+
+
+//---------------------------------------------------------------------------------------------------------------------
 - (void) resetEntity
 {
     self.GID = _calcLocalGID(); 
@@ -85,6 +99,11 @@ NSString* _typeToString(id element);
     self.ts_updated = [NSDate date];
 }
 
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) deleteFromModel {
+    [[ModelService sharedInstance].moContext deleteObject:self];
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL) changed {

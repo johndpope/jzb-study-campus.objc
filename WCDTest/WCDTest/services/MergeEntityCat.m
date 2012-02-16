@@ -122,6 +122,7 @@
 - (void) mergeFrom:(TMap *) other withConflit:(BOOL) thereWasConflit {
     
     [super mergeFrom:other withConflit:thereWasConflit];
+    
 }
 
 

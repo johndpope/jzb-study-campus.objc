@@ -100,6 +100,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void) markAsSynchronized {
     
+    // Limpia el estado despues de sincronizar
     self.changed = false;
     self.syncStatus = ST_Sync_OK;
     
@@ -116,7 +117,20 @@
         cat.syncStatus = ST_Sync_OK;
     }
     
-    // borrado definitivo de elementos previamente marcados para borrar
+    // Borra definitivamente los elementos marcados
+    for(TPoint* point in [NSArray arrayWithArray:[self.points allObjects]]) {
+        if(point.wasDeleted) {
+            [self removePoint:point];
+            [point deleteFromModel];
+        }
+    }
+    
+    for(TCategory* cat in [NSArray arrayWithArray:[self.categories allObjects]]) {
+        if(cat.wasDeleted) {
+            [self removeCategory:cat];
+            [cat deleteFromModel];
+        }
+    }
     
 }
 
@@ -220,7 +234,7 @@
             entity.map = nil;
         }
     }
-
+    
     [allPoints release];
     
 }

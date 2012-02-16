@@ -79,6 +79,41 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+// Ordena la lista de categorias poniendo primero a quien es subcategoria de otro y deja al final a las "padre"
++ (NSArray *)sortCategorized:(NSSet *)categories {
+    
+    NSMutableArray *sortedList = [NSMutableArray array];
+    NSMutableArray *originalList = [NSMutableArray arrayWithArray:[categories allObjects]];
+    
+    while([originalList count] > 0) {
+        
+        TCategory *cat1 = [originalList objectAtIndex:0];
+        [originalList removeObjectAtIndex:0];
+        
+        BOOL addThisCat = true;
+        for(TCategory *cat2 in originalList) {
+            if([cat1 recursiveContainsSubCategory:cat2]) {
+                addThisCat = false;
+                break;
+            }
+        }
+        
+        if (addThisCat) {
+            // La saca y la da por ordenada
+            [sortedList addObject:cat1];
+        } else {
+            // La retorna para procesarla de nuevo contra el resto de categorias
+            [originalList addObject:cat1];
+        }
+        
+    }
+    
+    // Retorna la lista ordenada por categorizacion
+    return [[sortedList copy] autorelease];
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------
 - (void)dealloc
 {
     [super dealloc];
@@ -102,7 +137,7 @@
     
     // --- Map name ---
     [sbuf appendFormat:@"%@<map>%@</map>\n",ident, self.map.name];
-
+    
     //--- Points ---
     if([self.points count] == 0) {
         [sbuf appendFormat:@"%@<points/>\n",ident];
@@ -152,6 +187,23 @@
     }
     
 }
+
+
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL) recursiveContainsSubCategory:(TCategory *)subCat {
+    
+    if([self.subcategories containsObject: subCat]) {
+        return true;
+    } else {
+        for(TCategory *cat in self.subcategories) {
+            if([cat recursiveContainsSubCategory:subCat]) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -210,7 +262,7 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removeAllPoints {
-
+    
     NSSet *allPoints = [[NSSet alloc] initWithSet:self.points];
     [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:allPoints];
     [[self primitiveValueForKey:@"points"] minusSet:allPoints];
@@ -384,7 +436,7 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removeAllCategories {
-
+    
     NSSet *allCategories = [[NSSet alloc] initWithSet:self.categories];
     [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:allCategories];
     [[self primitiveValueForKey:@"categories"] minusSet:allCategories];

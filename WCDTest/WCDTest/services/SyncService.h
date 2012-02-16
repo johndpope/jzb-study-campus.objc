@@ -1,8 +1,8 @@
 //
-//  GMapService.h
-//  WCDTest
+//  ModelService.h
+//  CDTest
 //
-//  Created by jzarzuela on 11/02/12.
+//  Created by Snow Leopard User on 03/02/12.
 //  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
@@ -11,24 +11,17 @@
 #import "TCategory.h"
 #import "TPoint.h"
 
-
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
-@interface GMapService : NSObject
+@interface SyncService : NSObject 
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (GMapService *)sharedInstance;
++ (SyncService *)sharedInstance;
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) loginWithUser:(NSString *)email password:(NSString *)password;
-- (void) logout;
-- (BOOL) isLoggedIn;
+- (void) syncLocalMap:(TMap *) localMap withRemote:(TMap *)remoteMap;
+- (void) syncLocalMaps:(NSArray *)localMaps withRemotes:(NSArray *)remoteMaps;
 
-- (NSArray *) fetchUserMapList: (NSError **)error;
-- (TMap *)    fetchMapData:(TMap *)map error:(NSError **)error;
-- (TMap *)    createNewEmptyGMap: (TMap *)map error:(NSError **)error;
-- (TMap *)    deleteGMap: (TMap *)map error:(NSError **)error;
-- (TMap *)    updateGMap: (TMap *)map error:(NSError **)error;
 
 @end

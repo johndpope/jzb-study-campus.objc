@@ -136,7 +136,7 @@
         NSString *entryName = [[mapEntry title] stringValue];
         if(![entryName hasPrefix:@"@"]) {
             NSLog(@"GMapService - fetchUserMapList - Skipping map named without @ for testing: '%@'",entryName);
-            //continue;
+            continue;
         }
         // ************************************************************************************
         
@@ -200,7 +200,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 // OJO: El ID del mapa, puesto que es nuevo, se debe actualizar de la creación para que se pueda actualizar luego
 // Lo mismo pasa con los tiempos de creación y actualización
-- (TMap *) createNewGMap:(TMap *)map error:(NSError **)error {
+- (TMap *) createNewEmptyGMap:(TMap *)map error:(NSError **)error {
     
     NSLog(@"GMapService - createNewGMap (%@-%@)", map.name, map.GID);
     

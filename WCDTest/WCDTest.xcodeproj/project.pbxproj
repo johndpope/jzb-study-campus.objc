@@ -10,6 +10,7 @@
 		423DFBEA14E758F000E1C43A /* NSDataExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 423DFBE914E758F000E1C43A /* NSDataExtensions.m */; };
 		423DFBEC14E75AAD00E1C43A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 423DFBEB14E75AAD00E1C43A /* libz.dylib */; };
 		427CC55A14EC400000F381A4 /* MyClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 427CC55914EC400000F381A4 /* MyClass.m */; };
+		42A426CF14EDC0CE0066CBF1 /* SyncServiceAsync.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A426CE14EDC0CE0066CBF1 /* SyncServiceAsync.m */; };
 		42A5DB4614E46B5D009DAEBB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42A5DB4514E46B5D009DAEBB /* Cocoa.framework */; };
 		42A5DB5014E46B5D009DAEBB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 42A5DB4E14E46B5D009DAEBB /* InfoPlist.strings */; };
 		42A5DB5314E46B5D009DAEBB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A5DB5214E46B5D009DAEBB /* main.m */; };
@@ -343,6 +344,8 @@
 		42A5DFB114E47360009DAEBB /* main2.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A5DFB014E47360009DAEBB /* main2.m */; };
 		42A6EA6414E9A595007F5BF2 /* GMapServiceAsync.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A6EA6314E9A595007F5BF2 /* GMapServiceAsync.m */; };
 		42A6EA6814E9AF88007F5BF2 /* GMapServiceWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A6EA6714E9AF87007F5BF2 /* GMapServiceWrapper.m */; };
+		42B7093E14ED6E9A0054884A /* SyncService.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B7093D14ED6E9A0054884A /* SyncService.m */; };
+		42B7094114ED71A30054884A /* CollectionMerger.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B7094014ED71A30054884A /* CollectionMerger.m */; };
 		42FF214814E67A8D00B5CDFF /* GMapService.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FF214714E67A8D00B5CDFF /* GMapService.m */; };
 /* End PBXBuildFile section */
 
@@ -352,6 +355,8 @@
 		423DFBEB14E75AAD00E1C43A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		427CC55814EC400000F381A4 /* MyClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyClass.h; sourceTree = "<group>"; };
 		427CC55914EC400000F381A4 /* MyClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyClass.m; sourceTree = "<group>"; };
+		42A426CD14EDC0CD0066CBF1 /* SyncServiceAsync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyncServiceAsync.h; sourceTree = "<group>"; };
+		42A426CE14EDC0CE0066CBF1 /* SyncServiceAsync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyncServiceAsync.m; sourceTree = "<group>"; };
 		42A5DB4114E46B5D009DAEBB /* WCDTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WCDTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		42A5DB4514E46B5D009DAEBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		42A5DB4814E46B5D009DAEBB /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -1034,6 +1039,10 @@
 		42A6EA6314E9A595007F5BF2 /* GMapServiceAsync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapServiceAsync.m; sourceTree = "<group>"; };
 		42A6EA6614E9AF87007F5BF2 /* GMapServiceWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMapServiceWrapper.h; sourceTree = "<group>"; };
 		42A6EA6714E9AF87007F5BF2 /* GMapServiceWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapServiceWrapper.m; sourceTree = "<group>"; };
+		42B7093C14ED6E9A0054884A /* SyncService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyncService.h; sourceTree = "<group>"; };
+		42B7093D14ED6E9A0054884A /* SyncService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyncService.m; sourceTree = "<group>"; };
+		42B7093F14ED71A30054884A /* CollectionMerger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionMerger.h; sourceTree = "<group>"; };
+		42B7094014ED71A30054884A /* CollectionMerger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionMerger.m; sourceTree = "<group>"; };
 		42FF214614E67A8D00B5CDFF /* GMapService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMapService.h; sourceTree = "<group>"; };
 		42FF214714E67A8D00B5CDFF /* GMapService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapService.m; sourceTree = "<group>"; };
 		42FF214A14E69C3F00B5CDFF /* TBaseEntity_Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBaseEntity_Protected.h; sourceTree = "<group>"; };
@@ -2008,18 +2017,9 @@
 		42A5DF9014E472B5009DAEBB /* services */ = {
 			isa = PBXGroup;
 			children = (
-				42A5DF9114E472B5009DAEBB /* MergeEntityCat.h */,
-				42A5DF9214E472B5009DAEBB /* MergeEntityCat.m */,
-				42A5DF9314E472B5009DAEBB /* ModelService.h */,
-				42A5DF9414E472B5009DAEBB /* ModelService.m */,
-				42A5DF9514E472B5009DAEBB /* PointXmlCat.h */,
-				42A5DF9614E472B5009DAEBB /* PointXmlCat.m */,
-				42FF214614E67A8D00B5CDFF /* GMapService.h */,
-				42FF214714E67A8D00B5CDFF /* GMapService.m */,
-				42A6EA6214E9A595007F5BF2 /* GMapServiceAsync.h */,
-				42A6EA6314E9A595007F5BF2 /* GMapServiceAsync.m */,
-				42A6EA6614E9AF87007F5BF2 /* GMapServiceWrapper.h */,
-				42A6EA6714E9AF87007F5BF2 /* GMapServiceWrapper.m */,
+				42B7093814ED6D4B0054884A /* Merge */,
+				42B7093714ED6D410054884A /* GMap */,
+				42B7093514ED6D360054884A /* Model */,
 			);
 			path = services;
 			sourceTree = "<group>";
@@ -2065,6 +2065,45 @@
 				427CC55914EC400000F381A4 /* MyClass.m */,
 			);
 			name = main;
+			sourceTree = "<group>";
+		};
+		42B7093514ED6D360054884A /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				42A5DF9314E472B5009DAEBB /* ModelService.h */,
+				42A5DF9414E472B5009DAEBB /* ModelService.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		42B7093714ED6D410054884A /* GMap */ = {
+			isa = PBXGroup;
+			children = (
+				42A5DF9514E472B5009DAEBB /* PointXmlCat.h */,
+				42A5DF9614E472B5009DAEBB /* PointXmlCat.m */,
+				42FF214614E67A8D00B5CDFF /* GMapService.h */,
+				42FF214714E67A8D00B5CDFF /* GMapService.m */,
+				42A6EA6214E9A595007F5BF2 /* GMapServiceAsync.h */,
+				42A6EA6314E9A595007F5BF2 /* GMapServiceAsync.m */,
+				42A6EA6614E9AF87007F5BF2 /* GMapServiceWrapper.h */,
+				42A6EA6714E9AF87007F5BF2 /* GMapServiceWrapper.m */,
+			);
+			name = GMap;
+			sourceTree = "<group>";
+		};
+		42B7093814ED6D4B0054884A /* Merge */ = {
+			isa = PBXGroup;
+			children = (
+				42B7093C14ED6E9A0054884A /* SyncService.h */,
+				42B7093D14ED6E9A0054884A /* SyncService.m */,
+				42A5DF9114E472B5009DAEBB /* MergeEntityCat.h */,
+				42A5DF9214E472B5009DAEBB /* MergeEntityCat.m */,
+				42B7093F14ED71A30054884A /* CollectionMerger.h */,
+				42B7094014ED71A30054884A /* CollectionMerger.m */,
+				42A426CD14EDC0CD0066CBF1 /* SyncServiceAsync.h */,
+				42A426CE14EDC0CE0066CBF1 /* SyncServiceAsync.m */,
+			);
+			name = Merge;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2456,6 +2495,9 @@
 				42A6EA6414E9A595007F5BF2 /* GMapServiceAsync.m in Sources */,
 				42A6EA6814E9AF88007F5BF2 /* GMapServiceWrapper.m in Sources */,
 				427CC55A14EC400000F381A4 /* MyClass.m in Sources */,
+				42B7093E14ED6E9A0054884A /* SyncService.m in Sources */,
+				42B7094114ED71A30054884A /* CollectionMerger.m in Sources */,
+				42A426CF14EDC0CE0066CBF1 /* SyncServiceAsync.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,34 +1,31 @@
 //
-//  GMapService.h
+//  SyncServiceAsync.h
 //  WCDTest
 //
-//  Created by jzarzuela on 11/02/12.
+//  Created by jzarzuela on 16/02/12.
 //  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import "TMap.h"
-#import "TCategory.h"
-#import "TPoint.h"
+
+
+#define ASYNCHRONOUS void
+typedef void (^TBlock_SyncFinished)();
+
 
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
-@interface GMapService : NSObject
+@interface SyncServiceAsync : NSObject {
+}
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (GMapService *)sharedInstance;
++ (SyncServiceAsync *)sharedInstance;
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) loginWithUser:(NSString *)email password:(NSString *)password;
-- (void) logout;
-- (BOOL) isLoggedIn;
-
-- (NSArray *) fetchUserMapList: (NSError **)error;
-- (TMap *)    fetchMapData:(TMap *)map error:(NSError **)error;
-- (TMap *)    createNewEmptyGMap: (TMap *)map error:(NSError **)error;
-- (TMap *)    deleteGMap: (TMap *)map error:(NSError **)error;
-- (TMap *)    updateGMap: (TMap *)map error:(NSError **)error;
+- (ASYNCHRONOUS) syncLocalMap:(TMap *) localMap withRemote:(TMap *)remoteMap callback:(TBlock_SyncFinished)callbackBlock;
+- (ASYNCHRONOUS) syncLocalMaps:(NSArray *)localMaps withRemotes:(NSArray *)remoteMaps callback:(TBlock_SyncFinished)callbackBlock;
 
 @end

@@ -46,6 +46,9 @@ static const NSString *SyncStatusType_Names[]={
 
 // ---------------------------------------------------------------------------------
 + (NSString *) calcRemoteCategotyETag;
++ (id) searchByGID:(NSString *)gid inArray:(NSArray *)collection;
+
+- (void) deleteFromModel;
 
 - (NSString *) toXmlString;
 - (NSString *) toXmlString: (unsigned) ident;

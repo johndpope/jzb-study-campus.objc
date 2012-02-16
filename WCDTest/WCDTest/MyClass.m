@@ -8,6 +8,7 @@
 
 #import "MyClass.h"
 #import "GMapServiceAsync.h"
+#import "SyncServiceAsync.h"
 
 
 //*********************************************************************************************************************
@@ -79,7 +80,7 @@
     [cat addPoint: point1];
     [cat addPoint: point2];
     
-    [[GMapServiceAsync sharedInstance] createNewGMap:map callback:^(TMap *newMap, NSError *error) {
+    [[GMapServiceAsync sharedInstance] createNewEmptyGMap:map callback:^(TMap *newMap, NSError *error) {
         NSLog(@"map %@ - %@",newMap.name , newMap.GID);
         if(!error) {
             [MyClass updateMap1:map];
@@ -125,15 +126,24 @@
     
     [[GMapServiceAsync sharedInstance] loginWithUser:userEMail password:userPassword];
     
+    [[GMapServiceAsync sharedInstance] fetchUserMapList:^(NSArray *remoteMaps, NSError *error) {
+        if(!error) {
+            NSArray *localMaps = [NSArray array];
+            [[SyncServiceAsync sharedInstance] syncLocalMaps:localMaps withRemotes:remoteMaps callback:^(void) {
+                NSLog(@"*** DONE!: map sync");
+            }];
+        }
+    }];
+    
     //[MyClass listMapsExecutingOnMap:@"@test" callback:^(TMap *map) {
     //    [MyClass deleteMap:map];
     //}];
     
     //[MyClass createMap];
     
-    [MyClass listMapsExecutingOnMap:@"@test" callback:^(TMap *map) {
-        [MyClass updateMap3:map];
-    }];
+    //[MyClass listMapsExecutingOnMap:@"@test" callback:^(TMap *map) {
+    //    [MyClass updateMap3:map];
+    //}];
     
 }
 
