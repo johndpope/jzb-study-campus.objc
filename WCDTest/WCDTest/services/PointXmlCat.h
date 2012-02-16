@@ -20,6 +20,6 @@
 @property (nonatomic, assign) NSString * kmlBlob;
 
 - (void) updateExtInfoFromMap;
-- (void) parseExtInfoFromString:(NSString*) value;
+- (BOOL) parseExtInfoFromString:(NSString*) value;
 
 @end

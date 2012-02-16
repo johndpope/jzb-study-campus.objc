@@ -204,7 +204,6 @@ NSString* _cleanHTML(NSString *str) {
     
     // ********* Escribe informacion del mapa *********
     NSMutableArray *mapData = [[[NSMutableArray alloc] init] autorelease];
-    [mapData addObject: self.map.name];
     [mapData addObject: self.map.iconURL];
     [data addObject:[[mapData copy] autorelease]];
     
@@ -263,16 +262,16 @@ NSString* _cleanHTML(NSString *str) {
 //---------------------------------------------------------------------------------------------------------------------
 // AVISO: PARA PODER SER COMPATIBLES CON EXTERNALIZACIONES DE VERSIONES ANTERIORES NO SE PUEDE ELIMAR O CAMBIAR
 // ELEMENTOS DEL ARRAY. HABRA QUE SEGUIR PONIENDO ALGO QUE TENGA SENTIDO CON COMPATIBILIDAD HACIA ATRAS
-- (void) parseExtInfoFromString:(NSString*) value {
+- (BOOL) parseExtInfoFromString:(NSString*) value {
     
     // Si no es un punto con informacion extendida no hace nada
     if(!self.isExtInfo) {
-        return;
+        return false;
     }
 
     // Si el texto no tiene el formato adecuado no hace nada
     if(![value hasPrefix:EXT_INFO_PREFIX]) {
-        return;
+        return false;
     }
     
     
@@ -289,6 +288,12 @@ NSString* _cleanHTML(NSString *str) {
     
     
     
+    // Si los datos estan mal aborta el parseo
+    if(error) {
+        NSLog(@"parseExtInfoFromString - error: %@ / %@",error, [error userInfo]);
+        return false;
+    }
+    
     
     // Para las categorias se calculo y uso su INDEX en vez del GID para ahorrar espacio
     NSMutableArray *catsByIndexArray = [[[NSMutableArray alloc] init] autorelease];
@@ -296,7 +301,6 @@ NSString* _cleanHTML(NSString *str) {
     
     // ********* Lee informacion del mapa *********
     NSArray *mapData = [data objectAtIndex:0];
-    self.map.name = [mapData objectAtIndex:0];
     self.map.iconURL = [mapData objectAtIndex:1];
     
     
@@ -337,6 +341,9 @@ NSString* _cleanHTML(NSString *str) {
         }
         
     }
+    
+    // Todo parseado
+    return true;
     
 }
 

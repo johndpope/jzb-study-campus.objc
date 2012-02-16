@@ -106,7 +106,7 @@
         [extInfo resetEntity];
         [TPoint resetExtInfo:extInfo];
         ownerMap.extInfo= extInfo;
-        extInfo.map = ownerMap;
+        //extInfo.map = ownerMap; No se puede porque lo añade al conjunto de puntos
         return extInfo;
     }
     else {
@@ -122,7 +122,7 @@
     [extInfo resetEntity];
     [TPoint resetExtInfo:extInfo];
     ownerMap.extInfo = extInfo;
-    extInfo.map = ownerMap;
+    //extInfo.map = ownerMap; No se puede porque lo añade al conjunto de puntos
     return [extInfo autorelease];
 }
 

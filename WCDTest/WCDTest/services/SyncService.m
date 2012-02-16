@@ -145,6 +145,9 @@
         }
     }
     
+    // Salva el contexto del modelo local para persistir los cambios de la sincronización
+    [[ModelService sharedInstance] saveContext];
+    
 }
 
 
