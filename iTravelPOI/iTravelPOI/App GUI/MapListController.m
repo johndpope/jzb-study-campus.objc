@@ -7,8 +7,8 @@
 //
 
 #import "MapListController.h"
-#import "SVProgressHUD.h"
 #import "ModelServiceAsync.h"
+#import "SVProgressHUD.h"
 
 
 //*********************************************************************************************************************
@@ -104,12 +104,13 @@
     [super viewWillAppear:animated];
     
     // Lanzamos la busqueda de los mapas y los mostramos
-    [SVProgressHUD showWithStatus:@"Doing Stuff"];
+    [SVProgressHUD showWithStatus:@"Loading local maps"];
     
     [[ModelServiceAsync sharedInstance] getUserMapList:^(NSArray *maps, NSError *error) {
         if(error) {
-            [SVProgressHUD dismiss];
+            [SVProgressHUD dismissWithError:@"Error loading local maps" afterDelay:2];
         } else {
+            [SVProgressHUD dismiss];
             self.maps = maps;
             [self.tableView reloadData];
         }
@@ -140,6 +141,7 @@
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    
 }
 
 
@@ -154,9 +156,31 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)createNewMapAction:(id)sender {
     
+    MapEditorController *mapEditor = [[MapEditorController alloc] initWithNibName:@"MapEditorController" bundle:nil];
+    mapEditor.delegate = self;
+    //    [self.navigationController pushViewController:mapEditor animated:YES];
+    [self.navigationController presentModalViewController:mapEditor animated:YES];
+    [mapEditor release];
+    
     
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (void) mapEditorSave:(MapEditorController *)sender name:(NSString *)name desc:(NSString *) desc {
+    
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+    
+    TMap *newMap = [TMap insertNew];
+    newMap.name = name;
+    newMap.desc = desc;
+    [[ModelService sharedInstance] saveContext];
+    [self.tableView reloadData];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) mapEditorCancel:(MapEditorController *)sender {
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+}
 
 
 

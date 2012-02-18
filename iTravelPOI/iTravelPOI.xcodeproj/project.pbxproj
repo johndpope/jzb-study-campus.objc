@@ -10,6 +10,8 @@
 		421A338C14F01F6400968EB6 /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 421A338714F01F6400968EB6 /* SVProgressHUD.bundle */; };
 		421A338D14F01F6400968EB6 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 421A338914F01F6400968EB6 /* SVProgressHUD.m */; };
 		421A338E14F01F6400968EB6 /* TDBadgedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 421A338B14F01F6400968EB6 /* TDBadgedCell.m */; };
+		421A339C14F035FB00968EB6 /* MapEditorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 421A339A14F035FA00968EB6 /* MapEditorController.m */; };
+		421A339D14F035FB00968EB6 /* MapEditorController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 421A339B14F035FA00968EB6 /* MapEditorController.xib */; };
 		42BFAAA914EFE32000604B90 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BFAAA814EFE32000604B90 /* UIKit.framework */; };
 		42BFAAAB14EFE32000604B90 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BFAAAA14EFE32000604B90 /* Foundation.framework */; };
 		42BFAAAD14EFE32000604B90 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BFAAAC14EFE32000604B90 /* CoreGraphics.framework */; };
@@ -364,6 +366,9 @@
 		421A338914F01F6400968EB6 /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
 		421A338A14F01F6400968EB6 /* TDBadgedCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDBadgedCell.h; sourceTree = "<group>"; };
 		421A338B14F01F6400968EB6 /* TDBadgedCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDBadgedCell.m; sourceTree = "<group>"; };
+		421A339914F035FA00968EB6 /* MapEditorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapEditorController.h; sourceTree = "<group>"; };
+		421A339A14F035FA00968EB6 /* MapEditorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapEditorController.m; sourceTree = "<group>"; };
+		421A339B14F035FA00968EB6 /* MapEditorController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MapEditorController.xib; sourceTree = "<group>"; };
 		42BFAAA414EFE32000604B90 /* iTravelPOI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iTravelPOI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		42BFAAA814EFE32000604B90 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		42BFAAAA14EFE32000604B90 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1303,6 +1308,9 @@
 		42BFABF714EFE73F00604B90 /* App GUI */ = {
 			isa = PBXGroup;
 			children = (
+				421A339914F035FA00968EB6 /* MapEditorController.h */,
+				421A339A14F035FA00968EB6 /* MapEditorController.m */,
+				421A339B14F035FA00968EB6 /* MapEditorController.xib */,
 				42BFABF814EFE75E00604B90 /* MapListController.h */,
 				42BFABF914EFE75E00604B90 /* MapListController.m */,
 				42BFABFA14EFE75E00604B90 /* MapListController.xib */,
@@ -2225,6 +2233,7 @@
 				42BFB3AF14EFEFCC00604B90 /* GDataOAuthViewTouch.xib in Resources */,
 				42BFB3B114EFEFCC00604B90 /* GDataOAuthWindow.xib in Resources */,
 				421A338C14F01F6400968EB6 /* SVProgressHUD.bundle in Resources */,
+				421A339D14F035FB00968EB6 /* MapEditorController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2569,6 +2578,7 @@
 				42BFB4A314EFEFCC00604B90 /* GDataServiceGoogleYouTube.m in Sources */,
 				421A338D14F01F6400968EB6 /* SVProgressHUD.m in Sources */,
 				421A338E14F01F6400968EB6 /* TDBadgedCell.m in Sources */,
+				421A339C14F035FB00968EB6 /* MapEditorController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2597,6 +2607,7 @@
 		42BFAAC814EFE32000604B90 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -2615,6 +2626,7 @@
 		42BFAAC914EFE32000604B90 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = gnu99;

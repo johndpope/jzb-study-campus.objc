@@ -10,11 +10,14 @@
 #import "SVProgressHUD.h"
 #import <QuartzCore/QuartzCore.h>
 
+/*
 #ifdef SVPROGRESSHUD_DISABLE_NETWORK_INDICATOR
 #define SVProgressHUDShowNetworkIndicator 0
 #else
 #define SVProgressHUDShowNetworkIndicator 1
 #endif
+*/
+#define SVProgressHUDShowNetworkIndicator NO
 
 @interface SVProgressHUD ()
 

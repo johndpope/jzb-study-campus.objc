@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "MapEditorController.h"
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
-@interface MapListController : UITableViewController {
+@interface MapListController : UITableViewController <MapEditorDelegate> {
     
 }
 
