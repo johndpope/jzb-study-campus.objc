@@ -9,6 +9,7 @@
 #import "MapListController.h"
 #import "ModelServiceAsync.h"
 #import "SVProgressHUD.h"
+#import "TDBadgedCell.h"
 
 
 //*********************************************************************************************************************
@@ -75,7 +76,7 @@
     // self.clearsSelectionOnViewWillAppear = NO;
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    self.navigationItem.leftBarButtonItem = self.editButtonItem;
     
     
     // Inicializa el resto de la vista
@@ -87,7 +88,6 @@
                                                                                    action:@selector(createNewMapAction:)];
     self.navigationItem.rightBarButtonItem=createMapBtn;
     [createMapBtn release];
-    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -103,18 +103,20 @@
 {
     [super viewWillAppear:animated];
     
-    // Lanzamos la busqueda de los mapas y los mostramos
-    [SVProgressHUD showWithStatus:@"Loading local maps"];
-    
-    [[ModelServiceAsync sharedInstance] getUserMapList:^(NSArray *maps, NSError *error) {
-        if(error) {
-            [SVProgressHUD dismissWithError:@"Error loading local maps" afterDelay:2];
-        } else {
-            [SVProgressHUD dismiss];
-            self.maps = maps;
-            [self.tableView reloadData];
-        }
-    }];
+    if(!self.maps) {
+        // Lanzamos la busqueda de los mapas y los mostramos
+        [SVProgressHUD showWithStatus:@"Loading local maps"];
+        
+        [[ModelServiceAsync sharedInstance] getUserMapList:^(NSArray *maps, NSError *error) {
+            if(error) {
+                [SVProgressHUD dismissWithError:@"Error loading local maps" afterDelay:2];
+            } else {
+                [SVProgressHUD dismiss];
+                self.maps = maps;
+                [self.tableView reloadData];
+            }
+        }];
+    }
     
 }
 
@@ -157,28 +159,56 @@
 - (IBAction)createNewMapAction:(id)sender {
     
     MapEditorController *mapEditor = [[MapEditorController alloc] initWithNibName:@"MapEditorController" bundle:nil];
+    
+    mapEditor.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    
     mapEditor.delegate = self;
     //    [self.navigationController pushViewController:mapEditor animated:YES];
     [self.navigationController presentModalViewController:mapEditor animated:YES];
     [mapEditor release];
-    
-    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) mapEditorSave:(MapEditorController *)sender name:(NSString *)name desc:(NSString *) desc {
     
+    NSLog(@"mapEditorSave");
+    
+    
     [self.navigationController dismissModalViewControllerAnimated:YES];
     
-    TMap *newMap = [TMap insertNew];
-    newMap.name = name;
-    newMap.desc = desc;
-    [[ModelService sharedInstance] saveContext];
-    [self.tableView reloadData];
+    
+    if(sender.map) {
+        sender.map.name = name;
+        sender.map.desc = desc;
+    } else {
+        TMap *newMap = [TMap insertNew];
+        newMap.name = name;
+        newMap.desc = desc;
+    }
+    
+    
+    [[ModelServiceAsync sharedInstance] saveContext:^(NSError *error) {
+        if(error) {
+            [SVProgressHUD showWithStatus:@"Loading local maps"];
+            [SVProgressHUD dismissWithError:@"Error loading local maps" afterDelay:2];
+        } else {
+            [[ModelServiceAsync sharedInstance] getUserMapList:^(NSArray *maps, NSError *error) {
+                if(error) {
+                    [SVProgressHUD showWithStatus:@"Loading local maps"];
+                    [SVProgressHUD dismissWithError:@"Error loading local maps" afterDelay:2];
+                } else {
+                    self.maps = maps;
+                    [self.tableView reloadData];
+                }
+            }];
+        }
+    }];
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) mapEditorCancel:(MapEditorController *)sender {
+    NSLog(@"mapEditorCancel");
     [self.navigationController dismissModalViewControllerAnimated:YES];
 }
 
@@ -190,34 +220,94 @@
 //=====================================================================================================================
 
 
+//---------------------------------------------------------------------------------------------------------------------
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+    
+    MapEditorController *mapEditor = [[MapEditorController alloc] initWithNibName:@"MapEditorController" bundle:nil];
+    
+    //mapEditor.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    
+    mapEditor.delegate = self;
+    mapEditor.map = [self.maps objectAtIndex:indexPath.row];
+    
+    //    [self.navigationController pushViewController:mapEditor animated:YES];
+    [self.navigationController presentModalViewController:mapEditor animated:YES];
+    [mapEditor release];
+    
+}
+
 
 //---------------------------------------------------------------------------------------------------------------------
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return 0;
+    return [self.maps count];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+    static UIImage * myPngs[5] = {nil, nil, nil, nil, nil};
+    if(myPngs[0]==nil) {
+        for(int n=0;n<5;n++) {
+            NSString *iconName = [NSString stringWithFormat:@"icon%u",(n+1)];
+            NSString *path = [[NSBundle mainBundle] pathForResource:iconName ofType:@"png"];
+            myPngs[n] = [[UIImage imageWithContentsOfFile:path] retain];
+        }
     }
     
-    // Configure the cell...
+    
+    
+    static NSString *mapViewIdentifier = @"MapCellView";
+    
+    TMap *map = [self.maps objectAtIndex:indexPath.row];
+    
+    TDBadgedCell *cell = (TDBadgedCell *)[tableView dequeueReusableCellWithIdentifier:mapViewIdentifier];
+    if (cell == nil) {
+        cell = [[TDBadgedCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:mapViewIdentifier];
+        cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+    }
+    cell.textLabel.text = map.name;
+    cell.detailTextLabel.text = map.desc;
+    cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;	
+    cell.badgeString = [NSString stringWithFormat:@"%03u", [map.points count]];
+    //cell.badgeColor = [UIColor colorWithRed:0.792 green:0.197 blue:0.219 alpha:1.000];
+    cell.badgeColor = [UIColor colorWithRed:0.197 green:0.592 blue:0.219 alpha:1.000];
+    cell.badge.radius = 9;
+    
+    cell.imageView.image = myPngs[[map.points count] % 5];
     
     return cell;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        // Delete the row from the data source
+        TMap *map = [self.maps objectAtIndex:indexPath.row];
+        map.wasDeleted = true;
+        NSMutableArray *marray = [NSMutableArray arrayWithArray:self.maps];
+        [marray removeObjectAtIndex:indexPath.row];
+        self.maps = [[marray copy] autorelease];
+        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [[ModelServiceAsync sharedInstance] saveContext:^(NSError *error) {
+            if(error) {
+                NSLog(@"Error saving context when deleting an item: %@ / %@", error, [error userInfo]);
+            }
+        }];
+    }   
+    else if (editingStyle == UITableViewCellEditingStyleInsert) {
+        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+    }   
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -227,21 +317,6 @@
  {
  // Return NO if you do not want the specified item to be editable.
  return YES;
- }
- */
-
-//---------------------------------------------------------------------------------------------------------------------
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
- }   
- else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }   
  }
  */
 

@@ -11,6 +11,7 @@
 
 
 #define ASYNCHRONOUS void
+typedef void (^TBlock_saveContextFinished)(NSError *error);
 typedef void (^TBlock_getUserMapListFinished)(NSArray *maps, NSError *error);
 
 
@@ -25,6 +26,7 @@ typedef void (^TBlock_getUserMapListFinished)(NSArray *maps, NSError *error);
 
 
 //---------------------------------------------------------------------------------------------------------------------
+- (ASYNCHRONOUS) saveContext:(TBlock_saveContextFinished)callbackBlock;
 - (ASYNCHRONOUS) getUserMapList:(TBlock_getUserMapListFinished)callbackBlock;
 
 

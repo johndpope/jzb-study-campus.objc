@@ -9,6 +9,20 @@
 #import "MapEditorController.h"
 #import <QuartzCore/QuartzCore.h>
 
+
+
+//*********************************************************************************************************************
+//---------------------------------------------------------------------------------------------------------------------
+@interface MapEditorController()
+
+@property (nonatomic, retain) IBOutlet UIButton *saveButton;
+@property (nonatomic, retain) IBOutlet UITextField *mapName;
+@property (nonatomic, retain) IBOutlet UITextView *mapDescription;
+
+@end
+
+
+
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
 @implementation MapEditorController
@@ -17,6 +31,7 @@
 @synthesize mapName = _mapName;
 @synthesize mapDescription = _mapDescription;
 @synthesize delegate = _delegate;
+@synthesize map = _map;
 
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -34,6 +49,11 @@
     
     self.mapDescription.layer.cornerRadius = 5.0;
     self.mapDescription.clipsToBounds = YES;
+    
+    if(self.map) {
+        self.mapName.text = self.map.name;
+        self.mapDescription.text = self.map.desc;
+    }
 }
 
 

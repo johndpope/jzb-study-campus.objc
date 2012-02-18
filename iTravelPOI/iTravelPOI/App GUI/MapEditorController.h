@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TMap.h"
+
 
 
 @class MapEditorController;
@@ -22,14 +24,13 @@
 @end
 
 
+
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
 @interface MapEditorController : UIViewController {
 }
 
-@property (nonatomic, retain) IBOutlet UIButton *saveButton;
-@property (nonatomic, retain) IBOutlet UITextField *mapName;
-@property (nonatomic, retain) IBOutlet UITextView *mapDescription;
 @property (nonatomic, assign) id <MapEditorDelegate> delegate;
+@property (nonatomic, assign) TMap *map;
 
 @end

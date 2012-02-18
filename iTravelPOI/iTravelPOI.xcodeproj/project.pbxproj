@@ -12,6 +12,12 @@
 		421A338E14F01F6400968EB6 /* TDBadgedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 421A338B14F01F6400968EB6 /* TDBadgedCell.m */; };
 		421A339C14F035FB00968EB6 /* MapEditorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 421A339A14F035FA00968EB6 /* MapEditorController.m */; };
 		421A339D14F035FB00968EB6 /* MapEditorController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 421A339B14F035FA00968EB6 /* MapEditorController.xib */; };
+		421A33A514F0512600968EB6 /* icon1.png in Resources */ = {isa = PBXBuildFile; fileRef = 421A339F14F0512600968EB6 /* icon1.png */; };
+		421A33A614F0512600968EB6 /* icon2.png in Resources */ = {isa = PBXBuildFile; fileRef = 421A33A014F0512600968EB6 /* icon2.png */; };
+		421A33A714F0512600968EB6 /* icon3.png in Resources */ = {isa = PBXBuildFile; fileRef = 421A33A114F0512600968EB6 /* icon3.png */; };
+		421A33A814F0512600968EB6 /* icon4.png in Resources */ = {isa = PBXBuildFile; fileRef = 421A33A214F0512600968EB6 /* icon4.png */; };
+		421A33A914F0512600968EB6 /* icon5.png in Resources */ = {isa = PBXBuildFile; fileRef = 421A33A314F0512600968EB6 /* icon5.png */; };
+		421A33AA14F0512600968EB6 /* pencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 421A33A414F0512600968EB6 /* pencil.png */; };
 		42BFAAA914EFE32000604B90 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BFAAA814EFE32000604B90 /* UIKit.framework */; };
 		42BFAAAB14EFE32000604B90 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BFAAAA14EFE32000604B90 /* Foundation.framework */; };
 		42BFAAAD14EFE32000604B90 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BFAAAC14EFE32000604B90 /* CoreGraphics.framework */; };
@@ -369,6 +375,12 @@
 		421A339914F035FA00968EB6 /* MapEditorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapEditorController.h; sourceTree = "<group>"; };
 		421A339A14F035FA00968EB6 /* MapEditorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapEditorController.m; sourceTree = "<group>"; };
 		421A339B14F035FA00968EB6 /* MapEditorController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MapEditorController.xib; sourceTree = "<group>"; };
+		421A339F14F0512600968EB6 /* icon1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon1.png; sourceTree = "<group>"; };
+		421A33A014F0512600968EB6 /* icon2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon2.png; sourceTree = "<group>"; };
+		421A33A114F0512600968EB6 /* icon3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon3.png; sourceTree = "<group>"; };
+		421A33A214F0512600968EB6 /* icon4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon4.png; sourceTree = "<group>"; };
+		421A33A314F0512600968EB6 /* icon5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon5.png; sourceTree = "<group>"; };
+		421A33A414F0512600968EB6 /* pencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pencil.png; sourceTree = "<group>"; };
 		42BFAAA414EFE32000604B90 /* iTravelPOI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iTravelPOI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		42BFAAA814EFE32000604B90 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		42BFAAAA14EFE32000604B90 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1095,6 +1107,7 @@
 		421A338514F01F1B00968EB6 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				421A339E14F0512600968EB6 /* icons */,
 			);
 			name = Resources;
 			path = iTravelPOI/Resources;
@@ -1111,6 +1124,19 @@
 			);
 			name = "Utils GUI";
 			path = utils/GUI;
+			sourceTree = "<group>";
+		};
+		421A339E14F0512600968EB6 /* icons */ = {
+			isa = PBXGroup;
+			children = (
+				421A339F14F0512600968EB6 /* icon1.png */,
+				421A33A014F0512600968EB6 /* icon2.png */,
+				421A33A114F0512600968EB6 /* icon3.png */,
+				421A33A214F0512600968EB6 /* icon4.png */,
+				421A33A314F0512600968EB6 /* icon5.png */,
+				421A33A414F0512600968EB6 /* pencil.png */,
+			);
+			path = icons;
 			sourceTree = "<group>";
 		};
 		42BFAA9914EFE31F00604B90 = {
@@ -2234,6 +2260,12 @@
 				42BFB3B114EFEFCC00604B90 /* GDataOAuthWindow.xib in Resources */,
 				421A338C14F01F6400968EB6 /* SVProgressHUD.bundle in Resources */,
 				421A339D14F035FB00968EB6 /* MapEditorController.xib in Resources */,
+				421A33A514F0512600968EB6 /* icon1.png in Resources */,
+				421A33A614F0512600968EB6 /* icon2.png in Resources */,
+				421A33A714F0512600968EB6 /* icon3.png in Resources */,
+				421A33A814F0512600968EB6 /* icon4.png in Resources */,
+				421A33A914F0512600968EB6 /* icon5.png in Resources */,
+				421A33AA14F0512600968EB6 /* pencil.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

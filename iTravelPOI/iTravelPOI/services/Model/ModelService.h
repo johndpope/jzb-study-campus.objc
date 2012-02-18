@@ -33,7 +33,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void) initCDStack;
 - (void) doneCDStack;
-- (void) saveContext;
+- (NSError *) saveContext;
 
 
 - (NSArray *)getUserMapList:(NSError **)error;

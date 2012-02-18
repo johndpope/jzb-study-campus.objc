@@ -93,14 +93,19 @@ NSEntityDescription *_mapEntityDescription;
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) saveContext {
+- (NSError *) saveContext {
+    
+    NSLog(@"ModelService - saveContext");
     
     NSError *error = nil;
-    if(self.moContext!=nil) {
-        if([self.moContext hasChanges] && ![self.moContext save:&error]){
+    if(self.moContext!=nil && [self.moContext hasChanges]) {
+        if(![self.moContext save:&error]){
             NSLog(@"ModelService - Error saving NSManagedContext: %@, %@", error, [error userInfo]);
-        }
+            return error;
+        } 
     }
+    
+    return nil;
     
 }
 
