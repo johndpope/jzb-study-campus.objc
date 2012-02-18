@@ -346,6 +346,7 @@
 		42A6EA6814E9AF88007F5BF2 /* GMapServiceWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A6EA6714E9AF87007F5BF2 /* GMapServiceWrapper.m */; };
 		42B7093E14ED6E9A0054884A /* SyncService.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B7093D14ED6E9A0054884A /* SyncService.m */; };
 		42B7094114ED71A30054884A /* CollectionMerger.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B7094014ED71A30054884A /* CollectionMerger.m */; };
+		42E0442C14EEDCAA00294F44 /* ModelServiceAsync.m in Sources */ = {isa = PBXBuildFile; fileRef = 42E0442B14EEDCAA00294F44 /* ModelServiceAsync.m */; };
 		42FF214814E67A8D00B5CDFF /* GMapService.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FF214714E67A8D00B5CDFF /* GMapService.m */; };
 /* End PBXBuildFile section */
 
@@ -1043,6 +1044,8 @@
 		42B7093D14ED6E9A0054884A /* SyncService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyncService.m; sourceTree = "<group>"; };
 		42B7093F14ED71A30054884A /* CollectionMerger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionMerger.h; sourceTree = "<group>"; };
 		42B7094014ED71A30054884A /* CollectionMerger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionMerger.m; sourceTree = "<group>"; };
+		42E0442A14EEDCAA00294F44 /* ModelServiceAsync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelServiceAsync.h; sourceTree = "<group>"; };
+		42E0442B14EEDCAA00294F44 /* ModelServiceAsync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModelServiceAsync.m; sourceTree = "<group>"; };
 		42FF214614E67A8D00B5CDFF /* GMapService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMapService.h; sourceTree = "<group>"; };
 		42FF214714E67A8D00B5CDFF /* GMapService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapService.m; sourceTree = "<group>"; };
 		42FF214A14E69C3F00B5CDFF /* TBaseEntity_Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBaseEntity_Protected.h; sourceTree = "<group>"; };
@@ -1067,7 +1070,6 @@
 		42A5DB3614E46B5D009DAEBB = {
 			isa = PBXGroup;
 			children = (
-				423DFBEB14E75AAD00E1C43A /* libz.dylib */,
 				42A5DB8314E46CEC009DAEBB /* GData Sources */,
 				42A5DB4B14E46B5D009DAEBB /* WCDTest */,
 				42A5DB4414E46B5D009DAEBB /* Frameworks */,
@@ -1086,6 +1088,7 @@
 		42A5DB4414E46B5D009DAEBB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				423DFBEB14E75AAD00E1C43A /* libz.dylib */,
 				42A5DF5914E46E19009DAEBB /* ApplicationServices.framework */,
 				42A5DF5714E46DFF009DAEBB /* Security.framework */,
 				42A5DF5514E46DF7009DAEBB /* SystemConfiguration.framework */,
@@ -2072,6 +2075,8 @@
 			children = (
 				42A5DF9314E472B5009DAEBB /* ModelService.h */,
 				42A5DF9414E472B5009DAEBB /* ModelService.m */,
+				42E0442A14EEDCAA00294F44 /* ModelServiceAsync.h */,
+				42E0442B14EEDCAA00294F44 /* ModelServiceAsync.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -2498,6 +2503,7 @@
 				42B7093E14ED6E9A0054884A /* SyncService.m in Sources */,
 				42B7094114ED71A30054884A /* CollectionMerger.m in Sources */,
 				42A426CF14EDC0CE0066CBF1 /* SyncServiceAsync.m in Sources */,
+				42E0442C14EEDCAA00294F44 /* ModelServiceAsync.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

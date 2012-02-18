@@ -6,6 +6,8 @@
 //  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
+/*
+
 #import "WCDTestAppDelegate.h"
 #import "ModelService.h"
 #import "GMapServiceAsync.h"
@@ -20,9 +22,7 @@
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
-@interface  WCDTestAppDelegate() {
-@private
-}
+@interface  WCDTestAppDelegate()
 
 @property (nonatomic, retain) NSString * userEMail;
 @property (nonatomic, retain) NSString * userPassword;
@@ -126,7 +126,7 @@
         }
     }];
     
-    /*
+    ---*
     [[GMapServiceAsync sharedInstance] loginWithUser:self.userEMail password:self.userPassword];
     [[GMapServiceAsync sharedInstance] fetchUserMapList:^(NSArray *maps, NSError *error) {
         
@@ -142,7 +142,7 @@
             }
         }
     }];
-    */
+    ---*
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -162,7 +162,7 @@
 
 @end
 
-
+*/
 
 
 /****************************************************************************************************************

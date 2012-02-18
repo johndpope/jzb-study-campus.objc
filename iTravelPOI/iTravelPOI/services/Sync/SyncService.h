@@ -13,22 +13,15 @@
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
-@interface ModelService : NSObject {
-}
+@interface SyncService : NSObject 
 
-@property (readonly, nonatomic, retain) NSManagedObjectContext * moContext;
+//---------------------------------------------------------------------------------------------------------------------
++ (SyncService *)sharedInstance;
 
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (ModelService *)sharedInstance;
+- (void) syncLocalMap:(TMap *) localMap withRemote:(TMap *)remoteMap;
+- (void) syncLocalMaps:(NSArray *)localMaps withRemotes:(NSArray *)remoteMaps;
 
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) initCDStack;
-- (void) doneCDStack;
-- (void) saveContext;
-
-
-- (NSArray *)getUserMapList:(NSError **)error;
 
 @end

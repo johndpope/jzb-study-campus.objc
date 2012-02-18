@@ -9,20 +9,11 @@
 #import "ModelService.h"
 
 
-#define CD_MODEL_NAME @"WCDTest"
-#define CD_SLQLITE_FNAME @"WCDTest.sqlite"
 
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
-@interface ModelService () {
-@private
-    NSManagedObjectContext * _moContext;
-    NSPersistentStoreCoordinator * _psCoordinator;
-    NSManagedObjectModel * _moModel;
-    NSEntityDescription *_mapEntityDescription;
-    
-}
+@interface ModelService () 
 
 @property (readonly, nonatomic, retain) NSEntityDescription * mapEntityDescription;
 @property (readonly, nonatomic, retain) NSManagedObjectModel * moModel;
@@ -35,6 +26,17 @@
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
 @implementation ModelService
+
+NSManagedObjectContext * _moContext;
+NSPersistentStoreCoordinator * _psCoordinator;
+NSManagedObjectModel * _moModel;
+NSEntityDescription *_mapEntityDescription;
+
+
+
+//=====================================================================================================================
+#pragma mark - Inicizacion de la clase
+//=====================================================================================================================
 
 
 
@@ -58,6 +60,12 @@
     [self doneCDStack];
     [super dealloc];
 }
+
+
+
+//=====================================================================================================================
+#pragma mark - API publico de la clase
+//=====================================================================================================================
 
 
 
@@ -96,13 +104,31 @@
     
 }
 
-
+//---------------------------------------------------------------------------------------------------------------------
+- (NSManagedObjectContext *) moContext {
+    
+    if(_moContext!=nil) {
+        return _moContext;
+    }
+    
+    NSLog(@"ModelService - Creating moContext");
+    
+    NSPersistentStoreCoordinator *coor = self.psCoordinator;
+    if(coor!=nil) {
+        _moContext = [[NSManagedObjectContext alloc] init];
+        [_moContext setPersistentStoreCoordinator:coor];
+        return _moContext;
+    } else {
+        return nil;
+    }
+    
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 - (NSArray *)getUserMapList:(NSError **)error {
     
     NSLog(@"ModelService - getUserMapList");
-
+    
     // Crea la peticion
     NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
     [request setEntity:self.mapEntityDescription];
@@ -116,7 +142,7 @@
                                         initWithKey:@"name" ascending:YES];
     [request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
     [sortDescriptor release];
-
+    
     // Realiza la busqueda
     NSError *_err = nil;
     NSArray *mapList = [self.moContext executeFetchRequest:request error:&_err];
@@ -143,8 +169,16 @@
  
  NSError *error = nil;
  NSArray *array = [moc executeFetchRequest:request error:&error];
-
+ 
  ***/
+
+
+
+//=====================================================================================================================
+#pragma mark - Metodos privados de la clase
+//=====================================================================================================================
+
+
 
 //---------------------------------------------------------------------------------------------------------------------
 - (NSEntityDescription *) mapEntityDescription {
@@ -158,32 +192,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (NSURL *) _applicationDocumentsDirectory {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-    
 }
-
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSManagedObjectContext *) moContext {
-    
-    if(_moContext!=nil) {
-        return _moContext;
-    }
-    
-    NSLog(@"ModelService - Creating moContext");
-    
-    NSPersistentStoreCoordinator *coor = self.psCoordinator;
-    if(coor!=nil) {
-        _moContext = [[NSManagedObjectContext alloc] init];
-        [_moContext setPersistentStoreCoordinator:coor];
-        return _moContext;
-    } else {
-        return nil;
-    }
-    
-}
-
-
-
 
 //---------------------------------------------------------------------------------------------------------------------
 - (NSPersistentStoreCoordinator *) psCoordinator {

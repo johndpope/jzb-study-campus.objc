@@ -1,8 +1,8 @@
 //
-//  ModelService.h
-//  CDTest
+//  GMapService.h
+//  WCDTest
 //
-//  Created by Snow Leopard User on 03/02/12.
+//  Created by jzarzuela on 11/02/12.
 //  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
@@ -11,24 +11,24 @@
 #import "TCategory.h"
 #import "TPoint.h"
 
+
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
-@interface ModelService : NSObject {
-}
+@interface GMapService : NSObject
 
-@property (readonly, nonatomic, retain) NSManagedObjectContext * moContext;
+//---------------------------------------------------------------------------------------------------------------------
++ (GMapService *)sharedInstance;
 
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (ModelService *)sharedInstance;
+- (void) loginWithUser:(NSString *)email password:(NSString *)password;
+- (void) logout;
+- (BOOL) isLoggedIn;
 
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) initCDStack;
-- (void) doneCDStack;
-- (void) saveContext;
-
-
-- (NSArray *)getUserMapList:(NSError **)error;
+- (NSArray *) fetchUserMapList: (NSError **)error;
+- (TMap *)    fetchMapData:(TMap *)map error:(NSError **)error;
+- (TMap *)    createNewEmptyGMap: (TMap *)map error:(NSError **)error;
+- (TMap *)    deleteGMap: (TMap *)map error:(NSError **)error;
+- (TMap *)    updateGMap: (TMap *)map error:(NSError **)error;
 
 @end
