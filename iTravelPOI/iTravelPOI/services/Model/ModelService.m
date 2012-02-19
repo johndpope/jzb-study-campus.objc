@@ -169,9 +169,39 @@ NSEntityDescription *_pointEntityDescription;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+- (NSArray *)getAllCategoriesInMap:(TMap *)map error:(NSError **)error {
+    
+    NSLog(@"ModelService - getAllCategoriesInMap");
+    
+    
+    // Establece el predicado de busqueda para las entidades
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(map.GID = %@) AND (_i_wasDeleted = 0)", map.GID];
+    
+    // Estable el orden del resultado
+    NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc]
+                                         initWithKey:@"name" ascending:YES] autorelease];
+    
+    // Crea la peticion para categorias
+    NSFetchRequest *requestCat = [[[NSFetchRequest alloc] init] autorelease];
+    [requestCat setEntity:self.categoryEntityDescription];
+    [requestCat setPredicate:predicate];
+    [requestCat setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+    
+    // Realiza la busqueda de las categorias
+    NSError *_err = nil;
+    NSArray *cats = [self.moContext executeFetchRequest:requestCat error:&_err];
+    *error = _err;
+    if(_err) {
+        return nil;
+    }
+    
+    return cats;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 - (NSArray *)getAllElemensInMap:(TMap *)map error:(NSError **)error {
     
-    NSLog(@"ModelService - getContentInMap");
+    NSLog(@"ModelService - getAllElemensInMap");
     
     
     NSError *_err = nil;

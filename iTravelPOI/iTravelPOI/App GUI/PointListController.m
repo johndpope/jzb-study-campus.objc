@@ -74,13 +74,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     self.navigationItem.backBarButtonItem = self.editButtonItem;
-//    leftBarButtonItem = self.editButtonItem;
+    //    leftBarButtonItem = self.editButtonItem;
     
     
     // Inicializa el resto de la vista
@@ -107,17 +107,19 @@
 {
     [super viewWillAppear:animated];
     
-    // Lanzamos la busqueda de los mapas y los mostramos
-    [SVProgressHUD showWithStatus:@"Loading elements info"];
-    [[ModelServiceAsync sharedInstance] getAllElemensInMap:self.map callback:^(NSArray *elements, NSError *error) {
-        if(error) {
-            [SVProgressHUD dismissWithError:@"Error loading elements info" afterDelay:2];
-        } else {
-            [SVProgressHUD dismiss];
-            self.elements = elements;
-            [self.tableView reloadData];
-        }
-    }];
+    if(!self.elements) {
+        // Lanzamos la busqueda de los mapas y los mostramos
+        [SVProgressHUD showWithStatus:@"Loading elements info"];
+        [[ModelServiceAsync sharedInstance] getAllElemensInMap:self.map callback:^(NSArray *elements, NSError *error) {
+            if(error) {
+                [SVProgressHUD dismissWithError:@"Error loading elements info" afterDelay:2];
+            } else {
+                [SVProgressHUD dismiss];
+                self.elements = elements;
+                [self.tableView reloadData];
+            }
+        }];
+    }
     
 }
 
@@ -198,7 +200,7 @@
         }
     }];
     
-
+    
 }
 
 
@@ -253,7 +255,7 @@
     cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
     if([entity isKindOfClass:[TCategory class]]) {
         TCategory *cat = (TCategory *)entity;
-        cell.badgeString = [NSString stringWithFormat:@"%03u", [cat.points count]];
+        cell.badgeString = [NSString stringWithFormat:@"%03u", cat.t_displayCount];
     } else {
         cell.badgeString = nil;
     }
@@ -268,46 +270,46 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 /*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
+ // Override to support conditional editing of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ // Return NO if you do not want the specified item to be editable.
+ return YES;
+ }
+ */
 
 //---------------------------------------------------------------------------------------------------------------------
 /*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
+ // Override to support editing the table view.
+ - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ if (editingStyle == UITableViewCellEditingStyleDelete) {
+ // Delete the row from the data source
+ [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+ }   
+ else if (editingStyle == UITableViewCellEditingStyleInsert) {
+ // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+ }   
+ }
+ */
 
 //---------------------------------------------------------------------------------------------------------------------
 /*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
+ // Override to support rearranging the table view.
+ - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+ {
+ }
+ */
 
 //---------------------------------------------------------------------------------------------------------------------
 /*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
+ // Override to support conditional rearranging of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ // Return NO if you do not want the item to be re-orderable.
+ return YES;
+ }
+ */
 
 
 
@@ -318,16 +320,31 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+    
+    PointCatEditorController *pointCatEditor = [[PointCatEditorController alloc] initWithNibName:@"PointCatEditorController" bundle:nil];
+    
+    pointCatEditor.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    
+    pointCatEditor.delegate = self;
+    pointCatEditor.map = self.map;
+    pointCatEditor.entity = [self.elements objectAtIndex:indexPath.row];
+    
+    //    [self.navigationController pushViewController:mapEditor animated:YES];
+    [self.navigationController presentModalViewController:pointCatEditor animated:YES];
+    [pointCatEditor release];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
     /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     [detailViewController release];
+     PointListController *pointListController = [[PointListController alloc] initWithNibName:@"PointListController" bundle:nil];
+     pointListController.map = [self.maps objectAtIndex:indexPath.row];
+     [self.navigationController pushViewController:pointListController animated:YES];
+     [pointListController release];
      */
 }
+
 
 @end

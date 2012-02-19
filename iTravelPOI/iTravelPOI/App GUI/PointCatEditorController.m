@@ -8,6 +8,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import "PointCatEditorController.h"
+#import "ModelService.h"
 #import "TMap.h"
 #import "TCategory.h"
 #import "TPoint.h"
@@ -118,12 +119,18 @@ NSString * _getIconURLFromIndex(int n) {
 //---------------------------------------------------------------------------------------------------------------------
 - (void) _getCategoriesListInfo {
     
-    NSMutableArray *cats = [NSMutableArray array];
-    for(TCategory *cat in self.map.categories) {
-        TCatListItemInfo *itemInfo = [[TCatListItemInfo alloc] initWithCategory:cat forEntity:self.entity];
-        [cats addObject:itemInfo];
+    NSError *error = nil;
+    NSArray *allCats = [[ModelService sharedInstance] getAllCategoriesInMap:self.map error:&error];
+    if(!error) {
+        NSMutableArray *cats = [NSMutableArray array];
+        for(TCategory *cat in allCats) {
+            TCatListItemInfo *itemInfo = [[TCatListItemInfo alloc] initWithCategory:cat forEntity:self.entity];
+            [cats addObject:itemInfo];
+        }
+        self.catListInfo = [[cats copy] autorelease];
+    } else {
+        NSLog(@"Error reading map's categories info: %@ / %@", error, [error userInfo]);
     }
-    self.catListInfo = [[cats copy] autorelease];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -159,7 +166,7 @@ NSString * _getIconURLFromIndex(int n) {
         [self _getCategoriesListInfo];
         [self.categories reloadData];
     }
-
+    
     // Es necesario establecer el tamaño de la tabla para que se vean todos los elementos
     CGRect r = self.categories.frame;
     CGSize s = self.categories.contentSize;
@@ -167,10 +174,10 @@ NSString * _getIconURLFromIndex(int n) {
     self.categories.frame = r;
     r.origin.x = r.origin.y = 0;
     self.categories.bounds = r;
-
+    
     // Establecemos el tamaño maximo para que funcione el scroll bien y se vea la tabla
     self.scrollView.contentSize = CGSizeMake(320,680+s.height); //¿¿¿porque 680 ???!!!!
-
+    
     
 }
 
