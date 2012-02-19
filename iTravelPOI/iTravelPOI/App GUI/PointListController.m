@@ -161,6 +161,7 @@
     entityEditor.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
     
     entityEditor.delegate = self;
+    entityEditor.map = self.map;
     
     //    [self.navigationController pushViewController:mapEditor animated:YES];
     [self.navigationController presentModalViewController:entityEditor animated:YES];

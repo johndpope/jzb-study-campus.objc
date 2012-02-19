@@ -197,7 +197,7 @@ NSString * _getIconURLFromIndex(int n) {
 - (IBAction)saveAction:(id)sender {
     
     if(self.entity==nil) {
-        if(self.isPoint.selected) {
+        if(self.isPoint.on) {
             self.entity = [TPoint insertNewInMap:self.map];
         } else {
             self.entity = [TCategory insertNewInMap:self.map];
