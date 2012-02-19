@@ -1,25 +1,21 @@
 //
-//  MapListController.m
+//  PointListController.m
 //  iTravelPOI
 //
-//  Created by jzarzuela on 18/02/12.
+//  Created by jzarzuela on 19/02/12.
 //  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "MapListController.h"
-#import "ModelServiceAsync.h"
 #import "PointListController.h"
-#import "SVProgressHUD.h"
-#import "TDBadgedCell.h"
+#import "PointCatEditorController.h"
+
 
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
-@interface MapListController()
+@interface PointListController ()
 
-@property (nonatomic, retain) NSArray *maps;
-
-- (IBAction)createNewMapAction:(id)sender;
+- (IBAction)createNewEntityAction:(id)sender;
 
 @end
 
@@ -27,12 +23,10 @@
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
-@implementation MapListController
+@implementation PointListController
 
 
-@synthesize maps = _maps;
-
-
+@synthesize map = _map;
 
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -48,6 +42,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void)dealloc
 {
+    [_map release];
     [super dealloc];
 }
 
@@ -72,21 +67,22 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    self.navigationItem.leftBarButtonItem = self.editButtonItem;
+    self.navigationItem.backBarButtonItem = self.editButtonItem;
+//    leftBarButtonItem = self.editButtonItem;
     
     
     // Inicializa el resto de la vista
-    self.title = @"Maps";
+    self.title = self.map.name;
     
     // Creamos el boton de crear nuevos mapas
     UIBarButtonItem *createMapBtn = [[UIBarButtonItem alloc]  initWithBarButtonSystemItem:UIBarButtonSystemItemCompose 
                                                                                    target:self 
-                                                                                   action:@selector(createNewMapAction:)];
+                                                                                   action:@selector(createNewEntityAction:)];
     self.navigationItem.rightBarButtonItem=createMapBtn;
     [createMapBtn release];
 }
@@ -104,6 +100,7 @@
 {
     [super viewWillAppear:animated];
     
+    /*
     if(!self.maps) {
         // Lanzamos la busqueda de los mapas y los mostramos
         [SVProgressHUD showWithStatus:@"Loading local maps"];
@@ -118,7 +115,8 @@
             }
         }];
     }
-    
+     */
+
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -144,9 +142,7 @@
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
-    
 }
-
 
 
 //=====================================================================================================================
@@ -157,60 +153,16 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (IBAction)createNewMapAction:(id)sender {
+- (IBAction)createNewEntityAction:(id)sender {
     
-    MapEditorController *mapEditor = [[MapEditorController alloc] initWithNibName:@"MapEditorController" bundle:nil];
+    PointCatEditorController *entityEditor = [[PointCatEditorController alloc] initWithNibName:@"PointCatEditorController" bundle:nil];
     
-    mapEditor.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    entityEditor.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
     
-    mapEditor.delegate = self;
+    //entityEditor.delegate = self;
     //    [self.navigationController pushViewController:mapEditor animated:YES];
-    [self.navigationController presentModalViewController:mapEditor animated:YES];
-    [mapEditor release];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) mapEditorSave:(MapEditorController *)sender name:(NSString *)name desc:(NSString *) desc {
-    
-    NSLog(@"mapEditorSave");
-    
-    
-    [self.navigationController dismissModalViewControllerAnimated:YES];
-    
-    
-    if(sender.map) {
-        sender.map.name = name;
-        sender.map.desc = desc;
-    } else {
-        TMap *newMap = [TMap insertNew];
-        newMap.name = name;
-        newMap.desc = desc;
-    }
-    
-    
-    [[ModelServiceAsync sharedInstance] saveContext:^(NSError *error) {
-        if(error) {
-            [SVProgressHUD showWithStatus:@"Loading local maps"];
-            [SVProgressHUD dismissWithError:@"Error loading local maps" afterDelay:2];
-        } else {
-            [[ModelServiceAsync sharedInstance] getUserMapList:^(NSArray *maps, NSError *error) {
-                if(error) {
-                    [SVProgressHUD showWithStatus:@"Loading local maps"];
-                    [SVProgressHUD dismissWithError:@"Error loading local maps" afterDelay:2];
-                } else {
-                    self.maps = maps;
-                    [self.tableView reloadData];
-                }
-            }];
-        }
-    }];
-    
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) mapEditorCancel:(MapEditorController *)sender {
-    NSLog(@"mapEditorCancel");
-    [self.navigationController dismissModalViewControllerAnimated:YES];
+    [self.navigationController presentModalViewController:entityEditor animated:YES];
+    [entityEditor release];
 }
 
 
@@ -232,95 +184,66 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [self.maps count];
+    return 0;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    static NSString *CellIdentifier = @"Cell";
     
-    static UIImage * myPngs[5] = {nil, nil, nil, nil, nil};
-    if(myPngs[0]==nil) {
-        for(int n=0;n<5;n++) {
-            NSString *iconName = [NSString stringWithFormat:@"icon%u",(n+1)];
-            NSString *path = [[NSBundle mainBundle] pathForResource:iconName ofType:@"png"];
-            myPngs[n] = [[UIImage imageWithContentsOfFile:path] retain];
-        }
-    }
-    
-    
-    
-    static NSString *mapViewIdentifier = @"MapCellView";
-    
-    TMap *map = [self.maps objectAtIndex:indexPath.row];
-    
-    TDBadgedCell *cell = (TDBadgedCell *)[tableView dequeueReusableCellWithIdentifier:mapViewIdentifier];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[TDBadgedCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:mapViewIdentifier];
-        cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
-    cell.textLabel.text = map.name;
-    cell.detailTextLabel.text = map.desc;
-    cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;	
-    cell.badgeString = [NSString stringWithFormat:@"%03u", [map.points count]];
-    //cell.badgeColor = [UIColor colorWithRed:0.792 green:0.197 blue:0.219 alpha:1.000];
-    cell.badgeColor = [UIColor colorWithRed:0.197 green:0.592 blue:0.219 alpha:1.000];
-    cell.badge.radius = 9;
     
-    cell.imageView.image = myPngs[[map.points count] % 5];
+    // Configure the cell...
     
     return cell;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+/*
+// Override to support conditional editing of the table view.
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Return NO if you do not want the specified item to be editable.
+    return YES;
+}
+*/
+
+//---------------------------------------------------------------------------------------------------------------------
+/*
+// Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the row from the data source
-        TMap *map = [self.maps objectAtIndex:indexPath.row];
-        map.wasDeleted = true;
-        NSMutableArray *marray = [NSMutableArray arrayWithArray:self.maps];
-        [marray removeObjectAtIndex:indexPath.row];
-        self.maps = [[marray copy] autorelease];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-        [[ModelServiceAsync sharedInstance] saveContext:^(NSError *error) {
-            if(error) {
-                NSLog(@"Error saving context when deleting an item: %@ / %@", error, [error userInfo]);
-            }
-        }];
     }   
     else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }   
 }
+*/
 
 //---------------------------------------------------------------------------------------------------------------------
 /*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
+// Override to support rearranging the table view.
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+{
+}
+*/
 
 //---------------------------------------------------------------------------------------------------------------------
 /*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
-
-//---------------------------------------------------------------------------------------------------------------------
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
+// Override to support conditional rearranging of the table view.
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Return NO if you do not want the item to be re-orderable.
+    return YES;
+}
+*/
 
 
 
@@ -331,28 +254,16 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-    
-    MapEditorController *mapEditor = [[MapEditorController alloc] initWithNibName:@"MapEditorController" bundle:nil];
-    
-    mapEditor.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-    
-    mapEditor.delegate = self;
-    mapEditor.map = [self.maps objectAtIndex:indexPath.row];
-    
-    //    [self.navigationController pushViewController:mapEditor animated:YES];
-    [self.navigationController presentModalViewController:mapEditor animated:YES];
-    [mapEditor release];
-    
-}
-
-//---------------------------------------------------------------------------------------------------------------------
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    PointListController *pointListController = [[PointListController alloc] initWithNibName:@"PointListController" bundle:nil];
-    pointListController.map = [self.maps objectAtIndex:indexPath.row];
-    [self.navigationController pushViewController:pointListController animated:YES];
-    [pointListController release];
+    // Navigation logic may go here. Create and push another view controller.
+    /*
+     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
+     // ...
+     // Pass the selected object to the new view controller.
+     [self.navigationController pushViewController:detailViewController animated:YES];
+     [detailViewController release];
+     */
 }
 
 @end

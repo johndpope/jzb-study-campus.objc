@@ -18,6 +18,10 @@
 		421A33A814F0512600968EB6 /* icon4.png in Resources */ = {isa = PBXBuildFile; fileRef = 421A33A214F0512600968EB6 /* icon4.png */; };
 		421A33A914F0512600968EB6 /* icon5.png in Resources */ = {isa = PBXBuildFile; fileRef = 421A33A314F0512600968EB6 /* icon5.png */; };
 		421A33AA14F0512600968EB6 /* pencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 421A33A414F0512600968EB6 /* pencil.png */; };
+		42B9DCDD14F06E8C00848A5B /* PointListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B9DCDB14F06E8C00848A5B /* PointListController.m */; };
+		42B9DCDE14F06E8C00848A5B /* PointListController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 42B9DCDC14F06E8C00848A5B /* PointListController.xib */; };
+		42B9DCE314F0739900848A5B /* PointCatEditorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B9DCE114F0739800848A5B /* PointCatEditorController.m */; };
+		42B9DCE414F0739900848A5B /* PointCatEditorController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 42B9DCE214F0739900848A5B /* PointCatEditorController.xib */; };
 		42BFAAA914EFE32000604B90 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BFAAA814EFE32000604B90 /* UIKit.framework */; };
 		42BFAAAB14EFE32000604B90 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BFAAAA14EFE32000604B90 /* Foundation.framework */; };
 		42BFAAAD14EFE32000604B90 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BFAAAC14EFE32000604B90 /* CoreGraphics.framework */; };
@@ -381,6 +385,12 @@
 		421A33A214F0512600968EB6 /* icon4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon4.png; sourceTree = "<group>"; };
 		421A33A314F0512600968EB6 /* icon5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon5.png; sourceTree = "<group>"; };
 		421A33A414F0512600968EB6 /* pencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pencil.png; sourceTree = "<group>"; };
+		42B9DCDA14F06E8C00848A5B /* PointListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointListController.h; sourceTree = "<group>"; };
+		42B9DCDB14F06E8C00848A5B /* PointListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointListController.m; sourceTree = "<group>"; };
+		42B9DCDC14F06E8C00848A5B /* PointListController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PointListController.xib; sourceTree = "<group>"; };
+		42B9DCE014F0739800848A5B /* PointCatEditorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointCatEditorController.h; sourceTree = "<group>"; };
+		42B9DCE114F0739800848A5B /* PointCatEditorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointCatEditorController.m; sourceTree = "<group>"; };
+		42B9DCE214F0739900848A5B /* PointCatEditorController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PointCatEditorController.xib; sourceTree = "<group>"; };
 		42BFAAA414EFE32000604B90 /* iTravelPOI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iTravelPOI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		42BFAAA814EFE32000604B90 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		42BFAAAA14EFE32000604B90 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1139,6 +1149,19 @@
 			path = icons;
 			sourceTree = "<group>";
 		};
+		42B9DCE514F078EA00848A5B /* editors */ = {
+			isa = PBXGroup;
+			children = (
+				421A339914F035FA00968EB6 /* MapEditorController.h */,
+				421A339A14F035FA00968EB6 /* MapEditorController.m */,
+				421A339B14F035FA00968EB6 /* MapEditorController.xib */,
+				42B9DCE014F0739800848A5B /* PointCatEditorController.h */,
+				42B9DCE114F0739800848A5B /* PointCatEditorController.m */,
+				42B9DCE214F0739900848A5B /* PointCatEditorController.xib */,
+			);
+			name = editors;
+			sourceTree = "<group>";
+		};
 		42BFAA9914EFE31F00604B90 = {
 			isa = PBXGroup;
 			children = (
@@ -1334,12 +1357,13 @@
 		42BFABF714EFE73F00604B90 /* App GUI */ = {
 			isa = PBXGroup;
 			children = (
-				421A339914F035FA00968EB6 /* MapEditorController.h */,
-				421A339A14F035FA00968EB6 /* MapEditorController.m */,
-				421A339B14F035FA00968EB6 /* MapEditorController.xib */,
+				42B9DCE514F078EA00848A5B /* editors */,
 				42BFABF814EFE75E00604B90 /* MapListController.h */,
 				42BFABF914EFE75E00604B90 /* MapListController.m */,
 				42BFABFA14EFE75E00604B90 /* MapListController.xib */,
+				42B9DCDA14F06E8C00848A5B /* PointListController.h */,
+				42B9DCDB14F06E8C00848A5B /* PointListController.m */,
+				42B9DCDC14F06E8C00848A5B /* PointListController.xib */,
 			);
 			path = "App GUI";
 			sourceTree = "<group>";
@@ -2266,6 +2290,8 @@
 				421A33A814F0512600968EB6 /* icon4.png in Resources */,
 				421A33A914F0512600968EB6 /* icon5.png in Resources */,
 				421A33AA14F0512600968EB6 /* pencil.png in Resources */,
+				42B9DCDE14F06E8C00848A5B /* PointListController.xib in Resources */,
+				42B9DCE414F0739900848A5B /* PointCatEditorController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2611,6 +2637,8 @@
 				421A338D14F01F6400968EB6 /* SVProgressHUD.m in Sources */,
 				421A338E14F01F6400968EB6 /* TDBadgedCell.m in Sources */,
 				421A339C14F035FB00968EB6 /* MapEditorController.m in Sources */,
+				42B9DCDD14F06E8C00848A5B /* PointListController.m in Sources */,
+				42B9DCE314F0739900848A5B /* PointCatEditorController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
