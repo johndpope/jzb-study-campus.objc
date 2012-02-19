@@ -30,6 +30,7 @@
 @implementation MapListController
 
 
+
 @synthesize maps = _maps;
 
 
@@ -190,8 +191,8 @@
     
     [[ModelServiceAsync sharedInstance] saveContext:^(NSError *error) {
         if(error) {
-            [SVProgressHUD showWithStatus:@"Loading local maps"];
-            [SVProgressHUD dismissWithError:@"Error loading local maps" afterDelay:2];
+            [SVProgressHUD showWithStatus:@"Saving local maps"];
+            [SVProgressHUD dismissWithError:@"Error saving local maps" afterDelay:2];
         } else {
             [[ModelServiceAsync sharedInstance] getUserMapList:^(NSArray *maps, NSError *error) {
                 if(error) {

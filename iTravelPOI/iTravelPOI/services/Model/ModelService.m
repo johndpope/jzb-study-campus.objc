@@ -16,6 +16,9 @@
 @interface ModelService () 
 
 @property (readonly, nonatomic, retain) NSEntityDescription * mapEntityDescription;
+@property (readonly, nonatomic, retain) NSEntityDescription * categoryEntityDescription;
+@property (readonly, nonatomic, retain) NSEntityDescription * pointEntityDescription;
+
 @property (readonly, nonatomic, retain) NSManagedObjectModel * moModel;
 @property (readonly, nonatomic, retain) NSPersistentStoreCoordinator * psCoordinator;
 
@@ -31,6 +34,8 @@ NSManagedObjectContext * _moContext;
 NSPersistentStoreCoordinator * _psCoordinator;
 NSManagedObjectModel * _moModel;
 NSEntityDescription *_mapEntityDescription;
+NSEntityDescription *_categoryEntityDescription;
+NSEntityDescription *_pointEntityDescription;
 
 
 
@@ -86,9 +91,16 @@ NSEntityDescription *_mapEntityDescription;
     [_moContext release];
     [_moModel release];
     [_psCoordinator release];
+    [_mapEntityDescription release];
+    [_categoryEntityDescription release];
+    [_pointEntityDescription release];
+    
     _moContext = nil;
     _moModel = nil;
     _psCoordinator = nil;
+    _mapEntityDescription = nil;
+    _categoryEntityDescription = nil;
+    _pointEntityDescription = nil;
 }
 
 
@@ -156,6 +168,58 @@ NSEntityDescription *_mapEntityDescription;
     return mapList;
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (NSArray *)getAllElemensInMap:(TMap *)map error:(NSError **)error {
+    
+    NSLog(@"ModelService - getContentInMap");
+    
+    
+    NSError *_err = nil;
+    NSMutableArray *allElements = [NSMutableArray array];
+    
+
+    
+    // Establece el predicado de busqueda para las entidades
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(map.GID = %@) AND (_i_wasDeleted = 0)", map.GID];
+
+    // Estable el orden del resultado
+    NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc]
+                                        initWithKey:@"name" ascending:YES] autorelease];
+
+    // Crea la peticion para categorias
+    NSFetchRequest *requestCat = [[[NSFetchRequest alloc] init] autorelease];
+    [requestCat setEntity:self.categoryEntityDescription];
+    [requestCat setPredicate:predicate];
+    [requestCat setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+
+    // Crea la peticion para puntos
+    NSFetchRequest *requestPoint = [[[NSFetchRequest alloc] init] autorelease];
+    [requestPoint setEntity:self.pointEntityDescription];
+    [requestPoint setPredicate:predicate];
+    [requestPoint setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+    
+    
+    // Realiza la busqueda de las categorias
+    NSArray *cats = [self.moContext executeFetchRequest:requestCat error:&_err];
+    *error = _err;
+    if(_err) {
+        return nil;
+    }
+    [allElements addObjectsFromArray:cats];
+    
+    
+    // Realiza la busqueda de los puntos
+    NSArray *points = [self.moContext executeFetchRequest:requestPoint error:&_err];
+    *error = _err;
+    if(_err) {
+        return nil;
+    }
+    [allElements addObjectsFromArray:points];
+    
+    
+    return allElements;
+}
+
 
 /***
  NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
@@ -192,6 +256,24 @@ NSEntityDescription *_mapEntityDescription;
                                  entityForName:@"TMap" inManagedObjectContext:self.moContext];
     }
     return _mapEntityDescription;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSEntityDescription *) categoryEntityDescription {
+    if(_categoryEntityDescription==nil) {
+        _categoryEntityDescription = [NSEntityDescription
+                                 entityForName:@"TCategory" inManagedObjectContext:self.moContext];
+    }
+    return _categoryEntityDescription;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSEntityDescription *) pointEntityDescription {
+    if(_pointEntityDescription==nil) {
+        _pointEntityDescription = [NSEntityDescription
+                                 entityForName:@"TPoint" inManagedObjectContext:self.moContext];
+    }
+    return _pointEntityDescription;
 }
 
 //---------------------------------------------------------------------------------------------------------------------

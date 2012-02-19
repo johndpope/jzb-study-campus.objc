@@ -37,5 +37,6 @@
 
 
 - (NSArray *)getUserMapList:(NSError **)error;
+- (NSArray *)getAllElemensInMap:(TMap *)map error:(NSError **)error;
 
 @end

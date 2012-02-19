@@ -18,8 +18,8 @@
 //---------------------------------------------------------------------------------------------------------------------
 @protocol MapEditorDelegate 
 
-- (void) mapEditorSave:(MapEditorController *)sender name:(NSString *)name desc:(NSString *) desc;
 - (void) mapEditorCancel:(MapEditorController *)sender;
+- (void) mapEditorSave:(MapEditorController *)sender name:(NSString *)name desc:(NSString *) desc;
 
 @end
 

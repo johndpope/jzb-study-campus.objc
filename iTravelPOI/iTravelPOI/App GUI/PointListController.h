@@ -7,11 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PointCatEditorController.h"
 #import "TMap.h"
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
-@interface PointListController : UITableViewController {
+@interface PointListController : UITableViewController <PointCatEditorDelegate> {
     
 }
 

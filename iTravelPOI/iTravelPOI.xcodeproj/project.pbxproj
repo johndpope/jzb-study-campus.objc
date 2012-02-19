@@ -30,9 +30,6 @@
 		42BFAAB814EFE32000604B90 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFAAB714EFE32000604B90 /* main.m */; };
 		42BFAABB14EFE32000604B90 /* iTravelPOIAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFAABA14EFE32000604B90 /* iTravelPOIAppDelegate.m */; };
 		42BFAAC114EFE32000604B90 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 42BFAABF14EFE32000604B90 /* MainWindow.xib */; };
-		42BFABB814EFE4AD00604B90 /* main2.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFAB8314EFE4AD00604B90 /* main2.m */; };
-		42BFABB914EFE4AD00604B90 /* MyClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFAB8514EFE4AD00604B90 /* MyClass.m */; };
-		42BFABBB14EFE4AD00604B90 /* WCDTestAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFAB8914EFE4AD00604B90 /* WCDTestAppDelegate.m */; };
 		42BFABBD14EFE4AD00604B90 /* TBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFAB8E14EFE4AD00604B90 /* TBaseEntity.m */; };
 		42BFABBE14EFE4AD00604B90 /* TCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFAB9114EFE4AD00604B90 /* TCategory.m */; };
 		42BFABBF14EFE4AD00604B90 /* TMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFAB9314EFE4AD00604B90 /* TMap.m */; };
@@ -403,11 +400,6 @@
 		42BFAAB914EFE32000604B90 /* iTravelPOIAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iTravelPOIAppDelegate.h; sourceTree = "<group>"; };
 		42BFAABA14EFE32000604B90 /* iTravelPOIAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iTravelPOIAppDelegate.m; sourceTree = "<group>"; };
 		42BFAAC014EFE32000604B90 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
-		42BFAB8314EFE4AD00604B90 /* main2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main2.m; sourceTree = "<group>"; };
-		42BFAB8414EFE4AD00604B90 /* MyClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyClass.h; sourceTree = "<group>"; };
-		42BFAB8514EFE4AD00604B90 /* MyClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyClass.m; sourceTree = "<group>"; };
-		42BFAB8814EFE4AD00604B90 /* WCDTestAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCDTestAppDelegate.h; sourceTree = "<group>"; };
-		42BFAB8914EFE4AD00604B90 /* WCDTestAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCDTestAppDelegate.m; sourceTree = "<group>"; };
 		42BFAB8D14EFE4AD00604B90 /* TBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBaseEntity.h; sourceTree = "<group>"; };
 		42BFAB8E14EFE4AD00604B90 /* TBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBaseEntity.m; sourceTree = "<group>"; };
 		42BFAB8F14EFE4AD00604B90 /* TBaseEntity_Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBaseEntity_Protected.h; sourceTree = "<group>"; };
@@ -1224,25 +1216,11 @@
 		42BFAB3414EFE40D00604B90 /* HeadLess Code */ = {
 			isa = PBXGroup;
 			children = (
-				42BFAB8214EFE4AD00604B90 /* kk */,
 				42BFAB8A14EFE4AD00604B90 /* model */,
 				42BFAB9614EFE4AD00604B90 /* services */,
 				42BFABAB14EFE4AD00604B90 /* utils */,
 			);
 			name = "HeadLess Code";
-			sourceTree = "<group>";
-		};
-		42BFAB8214EFE4AD00604B90 /* kk */ = {
-			isa = PBXGroup;
-			children = (
-				42BFAB8314EFE4AD00604B90 /* main2.m */,
-				42BFAB8414EFE4AD00604B90 /* MyClass.h */,
-				42BFAB8514EFE4AD00604B90 /* MyClass.m */,
-				42BFAB8814EFE4AD00604B90 /* WCDTestAppDelegate.h */,
-				42BFAB8914EFE4AD00604B90 /* WCDTestAppDelegate.m */,
-			);
-			name = kk;
-			path = iTravelPOI/kk;
 			sourceTree = "<group>";
 		};
 		42BFAB8A14EFE4AD00604B90 /* model */ = {
@@ -2304,9 +2282,6 @@
 			files = (
 				42BFAAB814EFE32000604B90 /* main.m in Sources */,
 				42BFAABB14EFE32000604B90 /* iTravelPOIAppDelegate.m in Sources */,
-				42BFABB814EFE4AD00604B90 /* main2.m in Sources */,
-				42BFABB914EFE4AD00604B90 /* MyClass.m in Sources */,
-				42BFABBB14EFE4AD00604B90 /* WCDTestAppDelegate.m in Sources */,
 				42BFABBD14EFE4AD00604B90 /* TBaseEntity.m in Sources */,
 				42BFABBE14EFE4AD00604B90 /* TCategory.m in Sources */,
 				42BFABBF14EFE4AD00604B90 /* TMap.m in Sources */,

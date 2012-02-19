@@ -8,11 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import "ModelService.h"
+#import "TMap.h"
 
 
 #define ASYNCHRONOUS void
 typedef void (^TBlock_saveContextFinished)(NSError *error);
 typedef void (^TBlock_getUserMapListFinished)(NSArray *maps, NSError *error);
+typedef void (^TBlock_getAllElemensInMapFinished)(NSArray *elements, NSError *error);
 
 
 
@@ -28,6 +30,7 @@ typedef void (^TBlock_getUserMapListFinished)(NSArray *maps, NSError *error);
 //---------------------------------------------------------------------------------------------------------------------
 - (ASYNCHRONOUS) saveContext:(TBlock_saveContextFinished)callbackBlock;
 - (ASYNCHRONOUS) getUserMapList:(TBlock_getUserMapListFinished)callbackBlock;
+- (ASYNCHRONOUS) getAllElemensInMap:(TMap *)map callback:(TBlock_getAllElemensInMapFinished)callbackBlock;
 
 
 @end

@@ -8,12 +8,17 @@
 
 #import "PointListController.h"
 #import "PointCatEditorController.h"
+#import "ModelServiceAsync.h"
+#import "TDBadgedCell.h"
+#import "SVProgressHUD.h"
 
 
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
 @interface PointListController ()
+
+@property (nonatomic, retain) NSArray * elements;
 
 - (IBAction)createNewEntityAction:(id)sender;
 
@@ -27,6 +32,8 @@
 
 
 @synthesize map = _map;
+@synthesize elements = _elements;
+
 
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -100,23 +107,18 @@
 {
     [super viewWillAppear:animated];
     
-    /*
-    if(!self.maps) {
-        // Lanzamos la busqueda de los mapas y los mostramos
-        [SVProgressHUD showWithStatus:@"Loading local maps"];
-        
-        [[ModelServiceAsync sharedInstance] getUserMapList:^(NSArray *maps, NSError *error) {
-            if(error) {
-                [SVProgressHUD dismissWithError:@"Error loading local maps" afterDelay:2];
-            } else {
-                [SVProgressHUD dismiss];
-                self.maps = maps;
-                [self.tableView reloadData];
-            }
-        }];
-    }
-     */
-
+    // Lanzamos la busqueda de los mapas y los mostramos
+    [SVProgressHUD showWithStatus:@"Loading elements info"];
+    [[ModelServiceAsync sharedInstance] getAllElemensInMap:self.map callback:^(NSArray *elements, NSError *error) {
+        if(error) {
+            [SVProgressHUD dismissWithError:@"Error loading elements info" afterDelay:2];
+        } else {
+            [SVProgressHUD dismiss];
+            self.elements = elements;
+            [self.tableView reloadData];
+        }
+    }];
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -151,7 +153,6 @@
 
 
 
-
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)createNewEntityAction:(id)sender {
     
@@ -159,11 +160,46 @@
     
     entityEditor.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
     
-    //entityEditor.delegate = self;
+    entityEditor.delegate = self;
+    
     //    [self.navigationController pushViewController:mapEditor animated:YES];
     [self.navigationController presentModalViewController:entityEditor animated:YES];
     [entityEditor release];
 }
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) pointCatEditCancel:(PointCatEditorController *)sender {
+    NSLog(@"pointCatEditCancel");
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) pointCatEditSave:(PointCatEditorController *)sender entity:TBaseEntity {
+    
+    NSLog(@"pointCatEditSave");
+    
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+    
+    [[ModelServiceAsync sharedInstance] saveContext:^(NSError *error) {
+        if(error) {
+            [SVProgressHUD showWithStatus:@"Loading local entities"];
+            [SVProgressHUD dismissWithError:@"Error saving local entities" afterDelay:2];
+        } else {
+            [[ModelServiceAsync sharedInstance] getAllElemensInMap:self.map callback:^(NSArray *elements, NSError *error) {
+                if(error) {
+                    [SVProgressHUD showWithStatus:@"Loading local entities"];
+                    [SVProgressHUD dismissWithError:@"Error loading local entities" afterDelay:2];
+                } else {
+                    self.elements = elements;
+                    [self.tableView reloadData];
+                }
+            }];
+        }
+    }];
+    
+
+}
+
 
 
 
@@ -184,20 +220,47 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return 0;
+    return [self.elements count];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+    static UIImage * myPngs[5] = {nil, nil, nil, nil, nil};
+    if(myPngs[0]==nil) {
+        for(int n=0;n<5;n++) {
+            NSString *iconName = [NSString stringWithFormat:@"icon%u",(n+1)];
+            NSString *path = [[NSBundle mainBundle] pathForResource:iconName ofType:@"png"];
+            myPngs[n] = [[UIImage imageWithContentsOfFile:path] retain];
+        }
     }
     
-    // Configure the cell...
+    
+    
+    static NSString *mapViewIdentifier = @"PointCatCellView";
+    
+    TBaseEntity *entity = [self.elements objectAtIndex:indexPath.row];
+    
+    TDBadgedCell *cell = (TDBadgedCell *)[tableView dequeueReusableCellWithIdentifier:mapViewIdentifier];
+    if (cell == nil) {
+        cell = [[TDBadgedCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:mapViewIdentifier];
+        cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+    }
+    cell.textLabel.text = entity.name;
+    cell.detailTextLabel.text = entity.desc;
+    cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+    if([entity isKindOfClass:[TCategory class]]) {
+        TCategory *cat = (TCategory *)entity;
+        cell.badgeString = [NSString stringWithFormat:@"%03u", [cat.points count]];
+    } else {
+        cell.badgeString = nil;
+    }
+    //cell.badgeColor = [UIColor colorWithRed:0.792 green:0.197 blue:0.219 alpha:1.000];
+    cell.badgeColor = [UIColor colorWithRed:0.197 green:0.592 blue:0.219 alpha:1.000];
+    cell.badge.radius = 9;
+    
+    cell.imageView.image = myPngs[indexPath.row % 5];
     
     return cell;
 }

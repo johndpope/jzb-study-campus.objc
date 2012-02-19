@@ -107,5 +107,29 @@ dispatch_queue_t _ModelServiceQueue;
     });
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (ASYNCHRONOUS) getAllElemensInMap:(TMap *)map callback:(TBlock_getAllElemensInMapFinished)callbackBlock {
+    
+    NSLog(@"ModelServiceAsync - getAllElemensInMap");
+    
+    // Si no hay nadie esperando no hacemos nada
+    if(callbackBlock==nil) {
+        return;
+    }
+    
+    // Se apunta la cola en la que deberá dar la respuesta de callback
+    dispatch_queue_t caller_queue = dispatch_get_current_queue();
+    
+    // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
+    dispatch_async(_ModelServiceQueue,^(void){
+        NSError *error;
+        NSArray *elements = [[ModelService sharedInstance] getAllElemensInMap:map error:&error];
+        
+        // Avisamos al llamante de que ya se ha actualizado el mapa solicitado
+        dispatch_async(caller_queue, ^(void){
+            callbackBlock(elements, error);
+        });
+    });
+}
 
 @end
