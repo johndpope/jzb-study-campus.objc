@@ -33,7 +33,9 @@
 @dynamic categories;
 @dynamic map;
 
-@synthesize isTemp;
+@synthesize isTemp = _isTemp;
+@synthesize t_displayCount = _t_displayCount;
+
 
 
 

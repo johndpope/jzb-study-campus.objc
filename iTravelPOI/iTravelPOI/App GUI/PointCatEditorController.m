@@ -16,8 +16,42 @@
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
+@interface TCatListItemInfo : NSObject {
+@public
+    BOOL wasSelected;
+    BOOL isSelected;
+    NSString *name;
+}
+
+- (id) initWithCategory:(TCategory *)cat forEntity:(TBaseEntity *)entity;
+
+@end
+
+@implementation TCatListItemInfo
+
+//---------------------------------------------------------------------------------------------------------------------
+- (id) initWithCategory:(TCategory *)cat forEntity:(TBaseEntity *)entity {
+    
+    self = [super init];
+    if (self) {
+        self->name = cat.name;
+        SEL categoryByGID = @selector(categoryByGID:);
+        TCategory *categorizingCat = [entity performSelector:categoryByGID withObject:cat.GID];
+        self->wasSelected = self->isSelected = (categorizingCat != nil);
+    }
+    return self;
+}
+
+@end
+
+
+
+
+//*********************************************************************************************************************
+//---------------------------------------------------------------------------------------------------------------------
 @interface PointCatEditorController ()
 
+@property (nonatomic, retain) NSArray *catListInfo;
 
 @property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
 @property (nonatomic, retain) IBOutlet UINavigationItem *itemTitle;
@@ -38,6 +72,9 @@
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
 @implementation PointCatEditorController
+
+
+@synthesize catListInfo = _catListInfo;
 
 
 @synthesize scrollView = _scrollView;
@@ -79,6 +116,17 @@ NSString * _getIconURLFromIndex(int n) {
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+- (void) _getCategoriesListInfo {
+    
+    NSMutableArray *cats = [NSMutableArray array];
+    for(TCategory *cat in self.map.categories) {
+        TCatListItemInfo *itemInfo = [[TCatListItemInfo alloc] initWithCategory:cat forEntity:self.entity];
+        [cats addObject:itemInfo];
+    }
+    self.catListInfo = [[cats copy] autorelease];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -101,22 +149,36 @@ NSString * _getIconURLFromIndex(int n) {
         self.isPointLabel.hidden = YES;
         self.itemTitle.title = @"edit";
         self.name.text = self.entity.name;
+        if([self.name.text length]>1 && [self.name.text hasPrefix:@"@"]) {
+            self.saveBtn.enabled = true;
+        } else {
+            self.saveBtn.enabled = false;
+        }
         self.desc.text = self.entity.desc;
         self.icons.selectedSegmentIndex = _getIndexFromIconURL(self.entity.iconURL);
+        [self _getCategoriesListInfo];
+        [self.categories reloadData];
     }
+
+    // Es necesario establecer el tamaño de la tabla para que se vean todos los elementos
+    CGRect r = self.categories.frame;
+    CGSize s = self.categories.contentSize;
+    r.size.height =  s.height;
+    self.categories.frame = r;
+    r.origin.x = r.origin.y = 0;
+    self.categories.bounds = r;
+
+    // Establecemos el tamaño maximo para que funcione el scroll bien y se vea la tabla
+    self.scrollView.contentSize = CGSizeMake(320,680+s.height); //¿¿¿porque 680 ???!!!!
+
     
-    // Establecemos el tamaño maximo para que funcione el scroll
-    self.scrollView.contentSize = CGSizeMake(320,1100);
-    CGRect r = self.view.bounds;
-    NSLog(@"frame x = %f, y = %f, w = %f, h = %f", r.origin.x, r.origin.y, r.size.width, r.size.height);
-    r = self.view.frame;
-    NSLog(@"frame x = %f, y = %f, w = %f, h = %f", r.origin.x, r.origin.y, r.size.width, r.size.height);
-    //self.scrollView.contentSize = r.size;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)dealloc
 {
+    [_catListInfo release];
+    
     [_name release];
     [_desc release];
     [_itemTitle release];
@@ -196,6 +258,14 @@ NSString * _getIconURLFromIndex(int n) {
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)saveAction:(id)sender {
     
+    CGRect r = self.categories.bounds;
+    NSLog(@"bounds x = %f, y = %f, w = %f, h = %f", r.origin.x, r.origin.y, r.size.width, r.size.height);
+    r = self.categories.frame;
+    NSLog(@"frame x = %f, y = %f, w = %f, h = %f", r.origin.x, r.origin.y, r.size.width, r.size.height);
+    //self.scrollView.contentSize = r.size;
+    CGSize s = self.categories.contentSize;
+    NSLog(@"contentSize w = %f, h = %f", s.width, s.height);
+    
     if(self.entity==nil) {
         if(self.isPoint.on) {
             self.entity = [TPoint insertNewInMap:self.map];
@@ -213,7 +283,7 @@ NSString * _getIconURLFromIndex(int n) {
 
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)nameChanged:(id)sender {
-    if([self.name.text length]>0 && [self.name.text hasPrefix:@"@"]) {
+    if([self.name.text length]>1 && [self.name.text hasPrefix:@"@"]) {
         self.saveBtn.enabled = true;
     } else {
         self.saveBtn.enabled = false;
@@ -238,20 +308,38 @@ NSString * _getIconURLFromIndex(int n) {
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [self.map.categories count];
+    return [self.catListInfo count];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    TCatListItemInfo *item = [self.catListInfo objectAtIndex:indexPath.row];
+    item->isSelected = !item->isSelected;
+    [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    return nil;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *catCellIdentifier = @"catCellIdentifier";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:catCellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:catCellIdentifier] autorelease];
+        cell.selectionStyle=UITableViewCellSelectionStyleNone;
     }
     
-    // Configure the cell...
+    // Configure the cell
+    TCatListItemInfo *item = [self.catListInfo objectAtIndex:indexPath.row];
+    cell.textLabel.text = item->name;
+    if(item->isSelected) {
+        cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    } else {
+        cell.accessoryType = UITableViewCellAccessoryNone;
+    }
+    
     
     return cell;
 }

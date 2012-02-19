@@ -38,7 +38,6 @@
 - (TPoint *) pointByGID:(NSString *)gid;
 
 
-
 - (void)addCategory:(TCategory *)value ;    
 - (void)removeCategory:(TCategory *)value ;
 - (void)addCategories:(NSSet *)value ;    

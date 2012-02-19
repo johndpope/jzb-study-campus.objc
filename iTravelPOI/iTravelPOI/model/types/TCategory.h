@@ -22,6 +22,8 @@
 @property (nonatomic, retain) NSSet* subcategories;
 @property (nonatomic, retain) NSSet* categories;
 @property (nonatomic, retain) TMap * map;
+@property (nonatomic, assign) NSUInteger t_displayCount;
+
 
 //---------------------------------------------------------------------------------------------------------------------
 + (TCategory *) insertNewInMap:(TMap *)ownerMap;

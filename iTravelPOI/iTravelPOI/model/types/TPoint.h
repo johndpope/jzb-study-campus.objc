@@ -41,6 +41,7 @@
 - (void)addCategories:(NSSet *)value ;    
 - (void)removeCategories:(NSSet *)value ;
 - (void)removeAllCategories;
+- (TCategory *) categoryByGID:(NSString *)gid;
 
 
 @end

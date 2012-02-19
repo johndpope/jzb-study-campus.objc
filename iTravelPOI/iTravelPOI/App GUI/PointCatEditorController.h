@@ -25,7 +25,7 @@
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
-@interface PointCatEditorController : UIViewController <UITableViewDelegate> {
+@interface PointCatEditorController : UIViewController <UITableViewDelegate, UITableViewDataSource> {
 }
 
 @property (nonatomic, assign) TBaseEntity * entity;

@@ -272,6 +272,15 @@
 
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (TCategory *) categoryByGID:(NSString *)gid {
+    for(TCategory *cat in self.categories) {
+        if([gid isEqualToString: cat.GID]) {
+            return cat;
+        }
+    }
+    return nil;
+}
 
 
 @end
