@@ -21,7 +21,7 @@
 @public
     BOOL wasSelected;
     BOOL isSelected;
-    NSString *name;
+    TCategory *category;
 }
 
 - (id) initWithCategory:(TCategory *)cat forEntity:(TBaseEntity *)entity;
@@ -35,7 +35,7 @@
     
     self = [super init];
     if (self) {
-        self->name = cat.name;
+        self->category = cat;
         SEL categoryByGID = @selector(categoryByGID:);
         TCategory *categorizingCat = [entity performSelector:categoryByGID withObject:cat.GID];
         self->wasSelected = self->isSelected = (categorizingCat != nil);
@@ -177,8 +177,7 @@ NSString * _getIconURLFromIndex(int n) {
     
     // Establecemos el tamaño maximo para que funcione el scroll bien y se vea la tabla
     self.scrollView.contentSize = CGSizeMake(320,680+s.height); //¿¿¿porque 680 ???!!!!
-    
-    
+        
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -264,15 +263,8 @@ NSString * _getIconURLFromIndex(int n) {
 
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)saveAction:(id)sender {
-    
-    CGRect r = self.categories.bounds;
-    NSLog(@"bounds x = %f, y = %f, w = %f, h = %f", r.origin.x, r.origin.y, r.size.width, r.size.height);
-    r = self.categories.frame;
-    NSLog(@"frame x = %f, y = %f, w = %f, h = %f", r.origin.x, r.origin.y, r.size.width, r.size.height);
-    //self.scrollView.contentSize = r.size;
-    CGSize s = self.categories.contentSize;
-    NSLog(@"contentSize w = %f, h = %f", s.width, s.height);
-    
+
+    // Si es una entidad nueva hay que crearla. Aquí deberíamos tener un DataSource hacia "atras"
     if(self.entity==nil) {
         if(self.isPoint.on) {
             self.entity = [TPoint insertNewInMap:self.map];
@@ -281,10 +273,26 @@ NSString * _getIconURLFromIndex(int n) {
         }
     }
     
+    // Se actualiza la entidad con la informacion de la pantalla
     self.entity.name = self.name.text;
     self.entity.desc = self.desc.text;
     self.entity.iconURL = _getIconURLFromIndex(self.icons.selectedSegmentIndex);
     
+    SEL addCategory = @selector(addCategory:);
+    SEL removeCategory = @selector(removeCategory:);
+    for(TCatListItemInfo *catInfoElement in self.catListInfo) {
+        // Solo actuamos en caso de cambio
+        if(catInfoElement->isSelected != catInfoElement->wasSelected) {
+            if(catInfoElement->isSelected) {
+                [self.entity performSelector:addCategory withObject:catInfoElement->category];
+            } else {
+                [self.entity performSelector:removeCategory withObject:catInfoElement->category];
+            }
+               
+        }
+    }
+    
+    // Avisa a su delegate de que se debe salvar la entidad actualizada
     [self.delegate pointCatEditSave:self entity:self.entity];
 }
 
@@ -340,7 +348,7 @@ NSString * _getIconURLFromIndex(int n) {
     
     // Configure the cell
     TCatListItemInfo *item = [self.catListInfo objectAtIndex:indexPath.row];
-    cell.textLabel.text = item->name;
+    cell.textLabel.text = item->category.name;
     if(item->isSelected) {
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
     } else {
