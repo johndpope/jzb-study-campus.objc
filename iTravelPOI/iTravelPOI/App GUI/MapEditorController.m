@@ -102,10 +102,14 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)saveAction:(id)sender {
+    
     if(self.delegate) {
-        NSString *name = self.mapName.text;
-        NSString *desc = self.mapDescription.text;
-        [self.delegate mapEditorSave:self name:name desc:desc];
+        if(!self.map) {
+            self.map = [self.delegate createNewInstance];
+        }
+        self.map.name = self.mapName.text;
+        self.map.desc = self.mapDescription.text;
+        [self.delegate mapEditorSave:self map:self.map];
     }
 }
 

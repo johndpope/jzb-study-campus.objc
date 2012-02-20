@@ -22,7 +22,11 @@
     self.syncETag = other.syncETag;
     self.name = other.name;
     self.desc = other.desc;
-    self.wasDeleted = other.wasDeleted;
+    if(other.wasDeleted) {
+        [self markAsDeleted];
+    } else {
+        [self unmarkAsDeleted];
+    }
     self.changed = other.changed;
     self.iconURL = other.iconURL;
     self.ts_created = other.ts_created;

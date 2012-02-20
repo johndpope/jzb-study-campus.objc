@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "PointCatEditorController.h"
 #import "TMap.h"
+#import "TCategory.h"
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
@@ -17,5 +18,6 @@
 }
 
 @property (nonatomic, retain) TMap *map;
+@property (nonatomic, retain) NSArray *filteringCategories;
 
 @end

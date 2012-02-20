@@ -19,8 +19,6 @@
 //---------------------------------------------------------------------------------------------------------------------
 @interface GMapService ()
 
-    BOOL _isLoggedIn;
-
 
 @property (nonatomic,retain) GMapServiceWrapper *service;
 @property (nonatomic,retain) NSString *loggedUser_ID;
@@ -50,6 +48,7 @@
 @synthesize service = _service;
 @synthesize loggedUser_ID = _loggedUser_ID;
 
+BOOL _isLoggedIn;
 
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -293,7 +292,7 @@
     
     // Retorna el mapa elimindado
     NSLog(@"GMapService - deleteGMap - exit");
-    map.wasDeleted = true;
+    [map markAsDeleted];
     return map;    
 }
 
@@ -336,7 +335,7 @@
                 break;
                 
             case ST_Sync_Delete_Remote:
-                cat.wasDeleted = true;
+                [cat markAsDeleted];
                 break;
                 
             default:
@@ -408,7 +407,7 @@
         case ST_Sync_Delete_Remote:
             featureEntryUptd = [self.service deleteMapFeatureEntryWithGID:point.GID inMapWithGID:map.GID error:&error];
             if(!error) {
-                point.wasDeleted = true;
+                [point markAsDeleted];
             }
             break;
             

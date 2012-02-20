@@ -168,6 +168,11 @@
     return [self.name isEqualToString:EXT_INFO_POINT_NAME];
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (void) markAsDeleted {
+    [super markAsDeleted];
+    [self removeAllCategories];
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) _xmlStringBody: (NSMutableString*) sbuf ident:(NSString *) ident {

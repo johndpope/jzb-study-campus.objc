@@ -18,8 +18,9 @@
 //---------------------------------------------------------------------------------------------------------------------
 @protocol MapEditorDelegate 
 
+- (TMap *) createNewInstance;
 - (void) mapEditorCancel:(MapEditorController *)sender;
-- (void) mapEditorSave:(MapEditorController *)sender name:(NSString *)name desc:(NSString *) desc;
+- (void) mapEditorSave:(MapEditorController *)sender map:(TMap *)map;
 
 @end
 

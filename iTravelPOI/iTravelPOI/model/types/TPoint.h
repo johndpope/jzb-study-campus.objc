@@ -32,6 +32,7 @@
 + (TPoint *) insertEmptyExtInfoInMap:(TMap *)map;
 + (TPoint *) insertTmpEmptyExtInfoInMap:(TMap *)map;
 
+- (void) markAsDeleted;
 + (BOOL) isExtInfoName:(NSString *) aName;
 
 

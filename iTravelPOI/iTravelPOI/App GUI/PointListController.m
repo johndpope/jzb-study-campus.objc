@@ -21,6 +21,8 @@
 @property (nonatomic, retain) NSArray * elements;
 
 - (IBAction)createNewEntityAction:(id)sender;
+- (void) saveAndReloadElements;
+
 
 @end
 
@@ -32,6 +34,7 @@
 
 
 @synthesize map = _map;
+@synthesize filteringCategories = _filteringCategories;
 @synthesize elements = _elements;
 
 
@@ -110,15 +113,18 @@
     if(!self.elements) {
         // Lanzamos la busqueda de los mapas y los mostramos
         [SVProgressHUD showWithStatus:@"Loading elements info"];
-        [[ModelServiceAsync sharedInstance] getAllElemensInMap:self.map callback:^(NSArray *elements, NSError *error) {
-            if(error) {
-                [SVProgressHUD dismissWithError:@"Error loading elements info" afterDelay:2];
-            } else {
-                [SVProgressHUD dismiss];
-                self.elements = elements;
-                [self.tableView reloadData];
-            }
-        }];
+        [[ModelServiceAsync sharedInstance] getFlatElemensInMap:self.map 
+                                                    forCategory:[self.filteringCategories lastObject]
+                                                        orderBy:SORT_BY_NAME 
+                                                       callback:^(NSArray *elements, NSError *error) {
+                                                           if(error) {
+                                                               [SVProgressHUD dismissWithError:@"Error loading elements info" afterDelay:2];
+                                                           } else {
+                                                               [SVProgressHUD dismiss];
+                                                               self.elements = elements;
+                                                               [self.tableView reloadData];
+                                                           }
+                                                       }];
     }
     
 }
@@ -154,6 +160,29 @@
 //=====================================================================================================================
 
 
+//---------------------------------------------------------------------------------------------------------------------
+- (void) saveAndReloadElements {
+    
+    [[ModelServiceAsync sharedInstance] saveContext:^(NSError *error) {
+        if(error) {
+            [SVProgressHUD showWithStatus:@"Loading local entities"];
+            [SVProgressHUD dismissWithError:@"Error saving local entities" afterDelay:2];
+        } else {
+            [[ModelServiceAsync sharedInstance] getFlatElemensInMap:self.map 
+                                                        forCategory:[self.filteringCategories lastObject]
+                                                            orderBy:SORT_BY_NAME 
+                                                           callback:^(NSArray *elements, NSError *error) {
+                                                               if(error) {
+                                                                   [SVProgressHUD showWithStatus:@"Loading local entities"];
+                                                                   [SVProgressHUD dismissWithError:@"Error loading local entities" afterDelay:2];
+                                                               } else {
+                                                                   self.elements = elements;
+                                                                   [self.tableView reloadData];
+                                                               }
+                                                           }];
+        }
+    }];
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)createNewEntityAction:(id)sender {
@@ -171,36 +200,30 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+- (TBaseEntity *) createNewInstanceForMap:(TMap *)map isPoint:(BOOL)isPoint {
+    if(isPoint) {
+        return [TPoint insertNewInMap:map];
+    } else {
+        return [TCategory insertNewInMap:map];
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 - (void) pointCatEditCancel:(PointCatEditorController *)sender {
     NSLog(@"pointCatEditCancel");
     [self.navigationController dismissModalViewControllerAnimated:YES];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) pointCatEditSave:(PointCatEditorController *)sender entity:TBaseEntity {
+- (void) pointCatEditSave:(PointCatEditorController *)sender entity:(TBaseEntity *)entity {
     
     NSLog(@"pointCatEditSave");
     
     [self.navigationController dismissModalViewControllerAnimated:YES];
     
-    [[ModelServiceAsync sharedInstance] saveContext:^(NSError *error) {
-        if(error) {
-            [SVProgressHUD showWithStatus:@"Loading local entities"];
-            [SVProgressHUD dismissWithError:@"Error saving local entities" afterDelay:2];
-        } else {
-            [[ModelServiceAsync sharedInstance] getAllElemensInMap:self.map callback:^(NSArray *elements, NSError *error) {
-                if(error) {
-                    [SVProgressHUD showWithStatus:@"Loading local entities"];
-                    [SVProgressHUD dismissWithError:@"Error loading local entities" afterDelay:2];
-                } else {
-                    self.elements = elements;
-                    [self.tableView reloadData];
-                }
-            }];
-        }
-    }];
+    entity.changed = true;
     
-    
+    [self saveAndReloadElements];
 }
 
 
@@ -279,19 +302,20 @@
  */
 
 //---------------------------------------------------------------------------------------------------------------------
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
- }   
- else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }   
- }
- */
+//---------------------------------------------------------------------------------------------------------------------
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        // Delete the row from the data source
+        TBaseEntity *entity = [self.elements objectAtIndex:indexPath.row];
+        [entity markAsDeleted];
+        // No se puede hacer "facil" por el tema de la categorizacion
+        [self saveAndReloadElements];
+    }   
+    else if (editingStyle == UITableViewCellEditingStyleInsert) {
+        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+    }   
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 /*
@@ -338,12 +362,22 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    /*
-     PointListController *pointListController = [[PointListController alloc] initWithNibName:@"PointListController" bundle:nil];
-     pointListController.map = [self.maps objectAtIndex:indexPath.row];
-     [self.navigationController pushViewController:pointListController animated:YES];
-     [pointListController release];
-     */
+    
+    TBaseEntity *entity = [self.elements objectAtIndex:indexPath.row];
+    
+    if([entity isKindOfClass:[TCategory class]]) {
+        PointListController *pointListController = [[PointListController alloc] initWithNibName:@"PointListController" bundle:nil];
+        pointListController.map = self.map;
+        if(self.filteringCategories) {
+            NSMutableArray *fcats = [NSMutableArray arrayWithArray:self.filteringCategories];
+            [fcats addObject:entity];
+            pointListController.filteringCategories = [[fcats copy] autorelease];
+        } else {
+            pointListController.filteringCategories = [NSArray arrayWithObject:entity];
+        }
+        [self.navigationController pushViewController:pointListController animated:YES];
+        [pointListController release];
+    }
 }
 
 

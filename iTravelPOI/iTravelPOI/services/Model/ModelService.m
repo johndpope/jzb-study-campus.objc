@@ -169,6 +169,41 @@ NSEntityDescription *_pointEntityDescription;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+// Ordena la lista de categorias poniendo primero a quien es subcategoria de otro y deja al final a las "padre"
+- (NSArray *)sortCategoriesCategorized:(NSSet *)categories {
+    
+    NSMutableArray *sortedList = [NSMutableArray array];
+    NSMutableArray *originalList = [NSMutableArray arrayWithArray:[categories allObjects]];
+    
+    while([originalList count] > 0) {
+        
+        TCategory *cat1 = [originalList objectAtIndex:0];
+        [originalList removeObjectAtIndex:0];
+        
+        BOOL addThisCat = true;
+        for(TCategory *cat2 in originalList) {
+            if([cat1 recursiveContainsSubCategory:cat2]) {
+                addThisCat = false;
+                break;
+            }
+        }
+        
+        if (addThisCat) {
+            // La saca y la da por ordenada
+            [sortedList addObject:cat1];
+        } else {
+            // La retorna para procesarla de nuevo contra el resto de categorias
+            [originalList addObject:cat1];
+        }
+        
+    }
+    
+    // Retorna la lista ordenada por categorizacion
+    return [[sortedList copy] autorelease];
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------
 - (NSArray *)getAllCategoriesInMap:(TMap *)map error:(NSError **)error {
     
     NSLog(@"ModelService - getAllCategoriesInMap");
@@ -199,55 +234,99 @@ NSEntityDescription *_pointEntityDescription;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (NSArray *)getAllElemensInMap:(TMap *)map error:(NSError **)error {
+- (NSArray *)getFlatElemensInMap:(TMap *)map forCategory:(TCategory *)cat orderBy:(SORTING_METHOD)orderBy error:(NSError **)error {
     
-    NSLog(@"ModelService - getAllElemensInMap");
+    NSLog(@"ModelService - getFlatElemensInMap");
     
     
-    NSError *_err = nil;
-    NSMutableArray *allElements = [NSMutableArray array];
-    
+    if(cat!=nil) {
+        
+        NSComparator comparator = ^NSComparisonResult(id obj1, id obj2) {
+            TBaseEntity *e1 = obj1;
+            TBaseEntity *e2 = obj2;
+            switch (orderBy) {
+                case SORT_BY_CREATING_DATE:
+                    return [e1.ts_created compare:e2.ts_created];
+                    
+                case SORT_BY_UPDATING_DATE:
+                    return [e1.ts_updated compare:e2.ts_updated];
+                    
+                default:
+                    return [e1.name compare:e2.name];
+            }
+        };
+        
+        NSArray *scats = [[cat.subcategories allObjects] sortedArrayUsingComparator:comparator];
+        NSArray *points = [[cat.points allObjects] sortedArrayUsingComparator:comparator];
 
-    
-    // Establece el predicado de busqueda para las entidades
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(map.GID = %@) AND (_i_wasDeleted = 0)", map.GID];
+        NSMutableArray *allElements = [NSMutableArray array];
+        [allElements addObjectsFromArray:scats];
+        [allElements addObjectsFromArray:points];
+        
+        return [[allElements copy] autorelease];
+        
+    } else {
+        
+        NSError *_err = nil;
+        
+        
+        
+        // Establece el predicado de busqueda para las entidades
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(map.GID = %@) AND (_i_wasDeleted = 0)", map.GID];
+        
+        // Estable el orden del resultado
+        NSSortDescriptor *sortDescriptor;
+        switch (orderBy) {
+            case SORT_BY_CREATING_DATE:
+                sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"ts_created" ascending:YES] autorelease];
+                break;
+                
+            case SORT_BY_UPDATING_DATE:
+                sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"ts_updated" ascending:YES] autorelease];
+                break;
 
-    // Estable el orden del resultado
-    NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc]
-                                        initWithKey:@"name" ascending:YES] autorelease];
-
-    // Crea la peticion para categorias
-    NSFetchRequest *requestCat = [[[NSFetchRequest alloc] init] autorelease];
-    [requestCat setEntity:self.categoryEntityDescription];
-    [requestCat setPredicate:predicate];
-    [requestCat setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
-
-    // Crea la peticion para puntos
-    NSFetchRequest *requestPoint = [[[NSFetchRequest alloc] init] autorelease];
-    [requestPoint setEntity:self.pointEntityDescription];
-    [requestPoint setPredicate:predicate];
-    [requestPoint setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
-    
-    
-    // Realiza la busqueda de las categorias
-    NSArray *cats = [self.moContext executeFetchRequest:requestCat error:&_err];
-    *error = _err;
-    if(_err) {
-        return nil;
+            default:
+                sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES] autorelease];
+                break;
+        }
+        
+        // Crea la peticion para categorias
+        NSFetchRequest *requestCat = [[[NSFetchRequest alloc] init] autorelease];
+        [requestCat setEntity:self.categoryEntityDescription];
+        [requestCat setPredicate:predicate];
+        [requestCat setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+        
+        // Crea la peticion para puntos
+        NSFetchRequest *requestPoint = [[[NSFetchRequest alloc] init] autorelease];
+        [requestPoint setEntity:self.pointEntityDescription];
+        [requestPoint setPredicate:predicate];
+        [requestPoint setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+        
+        
+        // Realiza la busqueda de los puntos
+        NSArray *points = [self.moContext executeFetchRequest:requestPoint error:&_err];
+        *error = _err;
+        if(_err) {
+            return nil;
+        }
+        
+        
+        // Realiza la busqueda de las categorias
+        NSArray *cats = [self.moContext executeFetchRequest:requestCat error:&_err];
+        *error = _err;
+        if(_err) {
+            return nil;
+        }
+        for(TCategory *cat in cats) {
+            cat.t_displayCount = [cat.points count];
+        }
+        
+        NSMutableArray *allElements = [NSMutableArray array];
+        [allElements addObjectsFromArray:cats];
+        [allElements addObjectsFromArray:points];
+        
+        return [[allElements copy] autorelease];
     }
-    [allElements addObjectsFromArray:cats];
-    
-    
-    // Realiza la busqueda de los puntos
-    NSArray *points = [self.moContext executeFetchRequest:requestPoint error:&_err];
-    *error = _err;
-    if(_err) {
-        return nil;
-    }
-    [allElements addObjectsFromArray:points];
-    
-    
-    return allElements;
 }
 
 
@@ -292,7 +371,7 @@ NSEntityDescription *_pointEntityDescription;
 - (NSEntityDescription *) categoryEntityDescription {
     if(_categoryEntityDescription==nil) {
         _categoryEntityDescription = [NSEntityDescription
-                                 entityForName:@"TCategory" inManagedObjectContext:self.moContext];
+                                      entityForName:@"TCategory" inManagedObjectContext:self.moContext];
     }
     return _categoryEntityDescription;
 }
@@ -301,7 +380,7 @@ NSEntityDescription *_pointEntityDescription;
 - (NSEntityDescription *) pointEntityDescription {
     if(_pointEntityDescription==nil) {
         _pointEntityDescription = [NSEntityDescription
-                                 entityForName:@"TPoint" inManagedObjectContext:self.moContext];
+                                   entityForName:@"TPoint" inManagedObjectContext:self.moContext];
     }
     return _pointEntityDescription;
 }

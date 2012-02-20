@@ -20,7 +20,7 @@ typedef enum {
     ST_Sync_Error = 7, 
 } SyncStatusType;
 
-static const NSString *SyncStatusType_Names[]={
+static const NSString *SyncStatusType_Names[8]={
     @"ST_Sync_OK", 
     @"ST_Sync_Create_Local", @"ST_Sync_Create_Remote", 
     @"ST_Sync_Delete_Local", @"ST_Sync_Delete_Remote", 
@@ -36,7 +36,7 @@ static const NSString *SyncStatusType_Names[]={
 @property (nonatomic, retain) NSString * syncETag;
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * desc;
-@property (nonatomic, assign) BOOL wasDeleted;
+@property (readonly, nonatomic, assign) BOOL wasDeleted;
 @property (nonatomic, assign) BOOL changed;
 @property (nonatomic, retain) NSString * iconURL;
 @property (nonatomic, retain) NSDate * ts_created;
@@ -47,6 +47,11 @@ static const NSString *SyncStatusType_Names[]={
 // ---------------------------------------------------------------------------------
 + (NSString *) calcRemoteCategotyETag;
 + (id) searchByGID:(NSString *)gid inArray:(NSArray *)collection;
+
+// Explicitado porque el marcado implica borrar sus relaciones
+// Quitar la marca no restaura las relaciones que antes existian
+- (void) markAsDeleted;
+- (void) unmarkAsDeleted;
 
 - (void) deleteFromModel;
 

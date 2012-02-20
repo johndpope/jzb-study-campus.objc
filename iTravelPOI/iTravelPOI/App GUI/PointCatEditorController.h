@@ -18,10 +18,12 @@
 //---------------------------------------------------------------------------------------------------------------------
 @protocol PointCatEditorDelegate <NSObject>
 
+- (TBaseEntity *) createNewInstanceForMap:(TMap *)map isPoint:(BOOL)isPoint;
 - (void) pointCatEditCancel:(PointCatEditorController *)sender;
-- (void) pointCatEditSave:(PointCatEditorController *)sender entity:TBaseEntity;
+- (void) pointCatEditSave:(PointCatEditorController *)sender entity:(TBaseEntity *)entity;
 
 @end
+
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------

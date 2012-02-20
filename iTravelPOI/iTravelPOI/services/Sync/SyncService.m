@@ -62,8 +62,8 @@
     [CollectionMerger merge:[localMap.points allObjects] remotes:[remoteMap.points allObjects] inLocalMap:localMap];
     
     // A continuación, mezcla las categorias. Pero primero las ordena poniendo primero a quien es subcategoria de otro
-    NSArray *localCats = [TCategory sortCategorized:localMap.categories];
-    NSArray *remoteCats = [TCategory sortCategorized:remoteMap.categories];
+    NSArray *localCats = [[ModelService sharedInstance] sortCategoriesCategorized:localMap.categories];
+    NSArray *remoteCats = [[ModelService sharedInstance] sortCategoriesCategorized:remoteMap.categories];
     [CollectionMerger merge:localCats remotes:remoteCats inLocalMap:localMap];
     
     // Por ultimo el ExtInfoPoint

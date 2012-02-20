@@ -17,6 +17,13 @@
 #define CD_SLQLITE_FNAME @"iTravelPOI.sqlite"
 
 
+typedef enum {
+    SORT_BY_NAME = 0,
+    SORT_BY_CREATING_DATE,
+    SORT_BY_UPDATING_DATE
+} SORTING_METHOD;
+
+
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
@@ -37,7 +44,10 @@
 
 
 - (NSArray *)getUserMapList:(NSError **)error;
+
+- (NSArray *)sortCategoriesCategorized:(NSSet *)categories;
+
 - (NSArray *)getAllCategoriesInMap:(TMap *)map error:(NSError **)error;
-- (NSArray *)getAllElemensInMap:(TMap *)map error:(NSError **)error;
+- (NSArray *)getFlatElemensInMap:(TMap *)map forCategory:(TCategory *)cat orderBy:(SORTING_METHOD)orderBy error:(NSError **)error ;
 
 @end

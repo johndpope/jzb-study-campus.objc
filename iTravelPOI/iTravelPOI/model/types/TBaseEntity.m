@@ -72,7 +72,7 @@ NSString* _typeToString(id element);
 
 //---------------------------------------------------------------------------------------------------------------------
 + (id) searchByGID:(NSString *)gid inArray:(NSArray *)collection {
-
+    
     for(TBaseEntity *entity in collection) {
         if([entity.GID isEqualToString:gid]) {
             return entity;
@@ -91,13 +91,23 @@ NSString* _typeToString(id element);
     self.desc = @"";
     self.iconURL = @"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png"; // Hay que crear un icono por defecto ( getDefaultIcon(); )
     self.changed = false;
-    self.wasDeleted = false;
+    self._i_wasDeleted = [NSNumber numberWithBool:NO];
     self.syncETag = _calcLocalETag();
     self.syncStatus = ST_Sync_OK;
     self.ts_created = [NSDate date];
     self.ts_updated = [NSDate date];
 }
 
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) markAsDeleted {
+    self._i_wasDeleted = [NSNumber numberWithBool:YES];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) unmarkAsDeleted {
+    self._i_wasDeleted = [NSNumber numberWithBool:NO];
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) deleteFromModel {
@@ -123,18 +133,13 @@ NSString* _typeToString(id element);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) setWasDeleted:(BOOL)value {
-    self._i_wasDeleted = [NSNumber numberWithBool:value];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
 - (BOOL) isLocal {
     return [self.syncETag hasPrefix:LOCAL_ETAG_PREFIX];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (NSString *) description {
-
+    
     return [self toXmlString];
 }
 
@@ -148,13 +153,13 @@ NSString* _typeToString(id element);
     
     NSString *strIdent1 = [[NSString string] stringByPaddingToLength:ident+0 withString:@" " startingAtIndex:0];
     NSString *strIdent2 = [[NSString string] stringByPaddingToLength:ident+2 withString:@" " startingAtIndex:0];
-
+    
     NSMutableString *buffer = [NSMutableString stringWithString:@""];
     
     [self _xmlStringBTag:buffer ident:strIdent1];
     [self _xmlStringBody:buffer ident:strIdent2];
     [self _xmlStringETag:buffer ident:strIdent1];
-
+    
     return [buffer copy];
 }
 
@@ -175,7 +180,7 @@ NSString* _typeToString(id element);
     [sbuf appendFormat:@"%@<id>%@</id>\n", ident, self.GID];
     [sbuf appendFormat:@"%@<name>%@</name>\n", ident, self.name];
     [sbuf appendFormat:@"%@<syncETag>%@</syncETag>\n", ident, self.syncETag];
-    [sbuf appendFormat:@"%@<syncStatus>%d</syncStatus>\n", ident, self.syncStatus];
+    [sbuf appendFormat:@"%@<syncStatus>%@</syncStatus>\n", ident, SyncStatusType_Names[self.syncStatus]];
     [sbuf appendFormat:@"%@<changed>%d</changed>\n", ident, self.changed];
     [sbuf appendFormat:@"%@<description>%@</description>\n", ident, self.desc];
     [sbuf appendFormat:@"%@<icon>%@</icon>\n", ident, self.iconURL];
@@ -196,9 +201,9 @@ NSString* _typeToString(id element);
 //---------------------------------------------------------------------------------------------------------------------
 //synchronized 
 NSUInteger _getNextIdCounter() {
-
+    
     static NSUInteger s_idCounter = 0;
-
+    
     if(s_idCounter==0) {
         srand((unsigned)time(0L));
         s_idCounter = (NSUInteger)rand()%1000;

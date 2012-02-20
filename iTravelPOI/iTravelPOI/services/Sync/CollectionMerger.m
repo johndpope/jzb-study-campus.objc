@@ -121,7 +121,7 @@ BOOL _needToBeUpdatedAfterCreateLocally(TBaseEntity *item1, TBaseEntity *item2) 
                 // CONFLICTO: Se borró la entidad local y se modifico la remota
                 // RESOLUCION: Se regenera la entidad local desde la remota.
                 // Se manda actualizar la entidad remota
-                localEntity.wasDeleted = false;
+                [localEntity unmarkAsDeleted];
                 [localEntity mergeFrom:remoteEntity withConflit:true];
                 localEntity.syncStatus = ST_Sync_Update_Remote;
             }
@@ -161,7 +161,7 @@ BOOL _needToBeUpdatedAfterCreateLocally(TBaseEntity *item1, TBaseEntity *item2) 
                 // Borra la entidad local puesto que no fue modificada y la remota ya no existe
                 NSLog(@"Sync: Local entity deleted as it wasn't modifies and remote was deleted previously: %@",localEntity.name);
                 localEntity.syncStatus = ST_Sync_Delete_Local;
-                localEntity.wasDeleted = true;
+                [localEntity markAsDeleted];
             }
         }
     }

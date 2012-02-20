@@ -176,7 +176,6 @@ NSString* _cleanHTML(NSString *str) {
     cat.desc       = [catData objectAtIndex:2];
     cat.iconURL    = [catData objectAtIndex:3];
     cat.changed    = [[catData objectAtIndex:4] boolValue];
-    cat.wasDeleted = false;
     cat.syncETag   = [catData objectAtIndex:5];
     cat.syncStatus = ST_Sync_OK;
     cat.ts_created = [catData objectAtIndex:6];

@@ -177,7 +177,7 @@ NSString * _getIconURLFromIndex(int n) {
     
     // Establecemos el tamaño maximo para que funcione el scroll bien y se vea la tabla
     self.scrollView.contentSize = CGSizeMake(320,680+s.height); //¿¿¿porque 680 ???!!!!
-        
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -258,42 +258,42 @@ NSString * _getIconURLFromIndex(int n) {
 
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)cancelAction:(id)sender {
-    [self.delegate pointCatEditCancel:self];
+    if(self.delegate) {
+        [self.delegate pointCatEditCancel:self];
+    }
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)saveAction:(id)sender {
-
-    // Si es una entidad nueva hay que crearla. Aquí deberíamos tener un DataSource hacia "atras"
-    if(self.entity==nil) {
-        if(self.isPoint.on) {
-            self.entity = [TPoint insertNewInMap:self.map];
-        } else {
-            self.entity = [TCategory insertNewInMap:self.map];
+    
+    if(self.delegate) {
+        // Si es una entidad nueva hay que crearla.
+        if(!self.entity) {
+            self.entity = [self.delegate createNewInstanceForMap:self.map isPoint:self.isPoint.on];
         }
-    }
-    
-    // Se actualiza la entidad con la informacion de la pantalla
-    self.entity.name = self.name.text;
-    self.entity.desc = self.desc.text;
-    self.entity.iconURL = _getIconURLFromIndex(self.icons.selectedSegmentIndex);
-    
-    SEL addCategory = @selector(addCategory:);
-    SEL removeCategory = @selector(removeCategory:);
-    for(TCatListItemInfo *catInfoElement in self.catListInfo) {
-        // Solo actuamos en caso de cambio
-        if(catInfoElement->isSelected != catInfoElement->wasSelected) {
-            if(catInfoElement->isSelected) {
-                [self.entity performSelector:addCategory withObject:catInfoElement->category];
-            } else {
-                [self.entity performSelector:removeCategory withObject:catInfoElement->category];
+        
+        // Se actualiza la entidad con la informacion de la pantalla
+        self.entity.name = self.name.text;
+        self.entity.desc = self.desc.text;
+        self.entity.iconURL = _getIconURLFromIndex(self.icons.selectedSegmentIndex);
+        
+        SEL addCategory = @selector(addCategory:);
+        SEL removeCategory = @selector(removeCategory:);
+        for(TCatListItemInfo *catInfoElement in self.catListInfo) {
+            // Solo actuamos en caso de cambio
+            if(catInfoElement->isSelected != catInfoElement->wasSelected) {
+                if(catInfoElement->isSelected) {
+                    [self.entity performSelector:addCategory withObject:catInfoElement->category];
+                } else {
+                    [self.entity performSelector:removeCategory withObject:catInfoElement->category];
+                }
+                
             }
-               
         }
+        
+        // Avisa a su delegate de que se debe salvar la entidad actualizada
+        [self.delegate pointCatEditSave:self entity:self.entity];
     }
-    
-    // Avisa a su delegate de que se debe salvar la entidad actualizada
-    [self.delegate pointCatEditSave:self entity:self.entity];
 }
 
 //---------------------------------------------------------------------------------------------------------------------

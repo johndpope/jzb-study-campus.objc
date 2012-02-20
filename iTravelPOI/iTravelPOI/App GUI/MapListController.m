@@ -171,24 +171,26 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) mapEditorSave:(MapEditorController *)sender name:(NSString *)name desc:(NSString *) desc {
+- (TMap *) createNewInstance {
+    return [TMap insertNew];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) mapEditorCancel:(MapEditorController *)sender {
+    NSLog(@"mapEditorCancel");
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) mapEditorSave:(MapEditorController *)sender map:(TMap *)map {
     
     NSLog(@"mapEditorSave");
     
     
     [self.navigationController dismissModalViewControllerAnimated:YES];
-    
-    
-    if(sender.map) {
-        sender.map.name = name;
-        sender.map.desc = desc;
-    } else {
-        TMap *newMap = [TMap insertNew];
-        newMap.name = name;
-        newMap.desc = desc;
-    }
-    
-    
+        
+    map.changed = true;
+
     [[ModelServiceAsync sharedInstance] saveContext:^(NSError *error) {
         if(error) {
             [SVProgressHUD showWithStatus:@"Saving local maps"];
@@ -206,12 +208,6 @@
         }
     }];
     
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) mapEditorCancel:(MapEditorController *)sender {
-    NSLog(@"mapEditorCancel");
-    [self.navigationController dismissModalViewControllerAnimated:YES];
 }
 
 
@@ -279,7 +275,7 @@
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the row from the data source
         TMap *map = [self.maps objectAtIndex:indexPath.row];
-        map.wasDeleted = true;
+        [map markAsDeleted];
         NSMutableArray *marray = [NSMutableArray arrayWithArray:self.maps];
         [marray removeObjectAtIndex:indexPath.row];
         self.maps = [[marray copy] autorelease];
@@ -352,6 +348,7 @@
 {
     PointListController *pointListController = [[PointListController alloc] initWithNibName:@"PointListController" bundle:nil];
     pointListController.map = [self.maps objectAtIndex:indexPath.row];
+    pointListController.filteringCategories = nil;
     [self.navigationController pushViewController:pointListController animated:YES];
     [pointListController release];
 }

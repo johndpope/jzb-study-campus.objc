@@ -97,7 +97,7 @@ dispatch_queue_t _ModelServiceQueue;
     
     // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
     dispatch_async(_ModelServiceQueue,^(void){
-        NSError *error;
+        NSError *error = nil;
         NSArray * maps = [[ModelService sharedInstance] getUserMapList:&error];
         
         // Avisamos al llamante de que ya se ha actualizado el mapa solicitado
@@ -108,9 +108,9 @@ dispatch_queue_t _ModelServiceQueue;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (ASYNCHRONOUS) getAllElemensInMap:(TMap *)map callback:(TBlock_getAllElemensInMapFinished)callbackBlock {
+- (ASYNCHRONOUS) getFlatElemensInMap:(TMap *)map forCategory:(TCategory *)cat orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getAllElemensInMapFinished)callbackBlock {
     
-    NSLog(@"ModelServiceAsync - getAllElemensInMap");
+    NSLog(@"ModelServiceAsync - getFlatElemensInMap");
     
     // Si no hay nadie esperando no hacemos nada
     if(callbackBlock==nil) {
@@ -122,8 +122,8 @@ dispatch_queue_t _ModelServiceQueue;
     
     // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
     dispatch_async(_ModelServiceQueue,^(void){
-        NSError *error;
-        NSArray *elements = [[ModelService sharedInstance] getAllElemensInMap:map error:&error];
+        NSError *error = nil;
+        NSArray *elements = [[ModelService sharedInstance] getFlatElemensInMap:map forCategory:cat orderBy:orderBy error:&error];
         
         // Avisamos al llamante de que ya se ha actualizado el mapa solicitado
         dispatch_async(caller_queue, ^(void){

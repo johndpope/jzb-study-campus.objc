@@ -79,40 +79,6 @@
     return [newCat autorelease];
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-// Ordena la lista de categorias poniendo primero a quien es subcategoria de otro y deja al final a las "padre"
-+ (NSArray *)sortCategorized:(NSSet *)categories {
-    
-    NSMutableArray *sortedList = [NSMutableArray array];
-    NSMutableArray *originalList = [NSMutableArray arrayWithArray:[categories allObjects]];
-    
-    while([originalList count] > 0) {
-        
-        TCategory *cat1 = [originalList objectAtIndex:0];
-        [originalList removeObjectAtIndex:0];
-        
-        BOOL addThisCat = true;
-        for(TCategory *cat2 in originalList) {
-            if([cat1 recursiveContainsSubCategory:cat2]) {
-                addThisCat = false;
-                break;
-            }
-        }
-        
-        if (addThisCat) {
-            // La saca y la da por ordenada
-            [sortedList addObject:cat1];
-        } else {
-            // La retorna para procesarla de nuevo contra el resto de categorias
-            [originalList addObject:cat1];
-        }
-        
-    }
-    
-    // Retorna la lista ordenada por categorizacion
-    return [[sortedList copy] autorelease];
-}
-
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)dealloc
@@ -124,6 +90,14 @@
 - (void) resetEntity {
     
     [super resetEntity];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) markAsDeleted {
+    [super markAsDeleted];
+    [self removeAllPoints];
+    [self removeAllCategories];
+    [self removeAllSubcategories];
 }
 
 //---------------------------------------------------------------------------------------------------------------------

@@ -28,9 +28,8 @@
 //---------------------------------------------------------------------------------------------------------------------
 + (TCategory *) insertNewInMap:(TMap *)ownerMap;
 + (TCategory *) insertTmpNewInMap:(TMap *)ownerMap;
-+ (NSArray *)sortCategorized:(NSSet *)categories;
 
-
+- (void) markAsDeleted;
 - (void) updateToRemoteETag;
 - (BOOL) recursiveContainsSubCategory:(TCategory *)subCat;
 
