@@ -14,7 +14,8 @@
 #define ASYNCHRONOUS void
 typedef void (^TBlock_saveContextFinished)(NSError *error);
 typedef void (^TBlock_getUserMapListFinished)(NSArray *maps, NSError *error);
-typedef void (^TBlock_getAllElemensInMapFinished)(NSArray *elements, NSError *error);
+typedef void (^TBlock_getFlatElemensInMapFinished)(NSArray *elements, NSError *error);
+typedef void (^TBlock_getCategorizedElemensInMapFinished)(NSArray *elements, NSError *error);
 
 
 
@@ -30,6 +31,7 @@ typedef void (^TBlock_getAllElemensInMapFinished)(NSArray *elements, NSError *er
 //---------------------------------------------------------------------------------------------------------------------
 - (ASYNCHRONOUS) saveContext:(TBlock_saveContextFinished)callbackBlock;
 - (ASYNCHRONOUS) getUserMapList:(TBlock_getUserMapListFinished)callbackBlock;
-- (ASYNCHRONOUS) getFlatElemensInMap:(TMap *)map forCategory:(TCategory *)cat orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getAllElemensInMapFinished)callbackBlock;
+- (ASYNCHRONOUS) getFlatElemensInMap:(TMap *)map forCategory:(TCategory *)cat orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getFlatElemensInMapFinished)callbackBlock;
+- (ASYNCHRONOUS) getCategorizedElemensInMap:(TMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getCategorizedElemensInMapFinished)callbackBlock;
 
 @end

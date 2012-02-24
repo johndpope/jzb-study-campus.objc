@@ -179,6 +179,33 @@
     return false;
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL) recursiveContainsPoint:(TPoint *)point {
+    
+    if([self.points containsObject: point]) {
+        return true;
+    } else {
+        for(TCategory *cat in self.subcategories) {
+            if([cat recursiveContainsPoint:point]) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSSet *) allRecursivePoints {
+
+    NSMutableSet * set = [NSMutableSet setWithSet:self.points];
+    for(TCategory *scat in self.subcategories) {
+        [set unionSet:[scat allRecursivePoints]];
+    }
+    return  set;
+}
+
+
 
 
 //---------------------------------------------------------------------------------------------------------------------

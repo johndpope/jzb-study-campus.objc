@@ -36,7 +36,7 @@
 @synthesize map = _map;
 @synthesize filteringCategories = _filteringCategories;
 @synthesize elements = _elements;
-
+@synthesize showMode = _showMode;
 
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -89,12 +89,20 @@
     // Inicializa el resto de la vista
     self.title = self.map.name;
     
-    // Creamos el boton de crear nuevos mapas
+    // Creamos el boton de crear nuevos elementos
     UIBarButtonItem *createMapBtn = [[UIBarButtonItem alloc]  initWithBarButtonSystemItem:UIBarButtonSystemItemCompose 
                                                                                    target:self 
                                                                                    action:@selector(createNewEntityAction:)];
     self.navigationItem.rightBarButtonItem=createMapBtn;
     [createMapBtn release];
+    
+    
+    // Creamos el boton de ver flat o categorized
+    UIBarButtonItem *showModeBtn = [[UIBarButtonItem alloc]  initWithBarButtonSystemItem:UIBarButtonSystemItemOrganize
+                                                                                  target:self 
+                                                                                  action:@selector(changeShowModeAction:)];
+    [self setToolbarItems:[NSArray arrayWithObject:showModeBtn]];
+    [showModeBtn release];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -113,18 +121,7 @@
     if(!self.elements) {
         // Lanzamos la busqueda de los mapas y los mostramos
         [SVProgressHUD showWithStatus:@"Loading elements info"];
-        [[ModelServiceAsync sharedInstance] getFlatElemensInMap:self.map 
-                                                    forCategory:[self.filteringCategories lastObject]
-                                                        orderBy:SORT_BY_NAME 
-                                                       callback:^(NSArray *elements, NSError *error) {
-                                                           if(error) {
-                                                               [SVProgressHUD dismissWithError:@"Error loading elements info" afterDelay:2];
-                                                           } else {
-                                                               [SVProgressHUD dismiss];
-                                                               self.elements = elements;
-                                                               [self.tableView reloadData];
-                                                           }
-                                                       }];
+        [self saveAndReloadElements];
     }
     
 }
@@ -168,18 +165,34 @@
             [SVProgressHUD showWithStatus:@"Loading local entities"];
             [SVProgressHUD dismissWithError:@"Error saving local entities" afterDelay:2];
         } else {
-            [[ModelServiceAsync sharedInstance] getFlatElemensInMap:self.map 
-                                                        forCategory:[self.filteringCategories lastObject]
-                                                            orderBy:SORT_BY_NAME 
-                                                           callback:^(NSArray *elements, NSError *error) {
-                                                               if(error) {
-                                                                   [SVProgressHUD showWithStatus:@"Loading local entities"];
-                                                                   [SVProgressHUD dismissWithError:@"Error loading local entities" afterDelay:2];
-                                                               } else {
-                                                                   self.elements = elements;
-                                                                   [self.tableView reloadData];
-                                                               }
-                                                           }];
+            if(self.showMode == showFlat) {
+                [[ModelServiceAsync sharedInstance] getFlatElemensInMap:self.map 
+                                                            forCategory:[self.filteringCategories lastObject]
+                                                                orderBy:SORT_BY_NAME 
+                                                               callback:^(NSArray *elements, NSError *error) {
+                                                                   if(error) {
+                                                                       [SVProgressHUD dismissWithError:@"Error loading elements info" afterDelay:2];
+                                                                   } else {
+                                                                       [SVProgressHUD dismiss];
+                                                                       self.elements = elements;
+                                                                       [self.tableView reloadData];
+                                                                   }
+                                                               }];
+            } else {
+                //    forCategory:[self.filteringCategories lastObject]
+                [[ModelServiceAsync sharedInstance] getCategorizedElemensInMap:self.map 
+                                                                 forCategories:self.filteringCategories
+                                                                       orderBy:SORT_BY_NAME 
+                                                                      callback:^(NSArray *elements, NSError *error) {
+                                                                          if(error) {
+                                                                              [SVProgressHUD dismissWithError:@"Error loading elements info" afterDelay:2];
+                                                                          } else {
+                                                                              [SVProgressHUD dismiss];
+                                                                              self.elements = elements;
+                                                                              [self.tableView reloadData];
+                                                                          }
+                                                                      }];
+            }
         }
     }];
 }
@@ -197,6 +210,20 @@
     //    [self.navigationController pushViewController:mapEditor animated:YES];
     [self.navigationController presentModalViewController:entityEditor animated:YES];
     [entityEditor release];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (IBAction)changeShowModeAction:(id)sender {
+    // Cambiamos el modo de mostrar la informacion
+    if(self.showMode==showFlat) {
+        self.showMode =  showCategorized;
+    } else {
+        self.showMode =  showFlat;
+    }
+    
+    // Lanzamos la busqueda de los mapas y los mostramos 
+    [SVProgressHUD showWithStatus:@"Loading elements info"];
+    [self saveAndReloadElements];
 }
 
 //---------------------------------------------------------------------------------------------------------------------

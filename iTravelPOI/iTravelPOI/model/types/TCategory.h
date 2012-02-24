@@ -32,6 +32,8 @@
 - (void) markAsDeleted;
 - (void) updateToRemoteETag;
 - (BOOL) recursiveContainsSubCategory:(TCategory *)subCat;
+- (BOOL) recursiveContainsPoint:(TPoint *)point;
+- (NSSet *) allRecursivePoints;
 
 
 //---------------------------------------------------------------------------------------------------------------------

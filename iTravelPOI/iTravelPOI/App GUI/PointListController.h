@@ -11,6 +11,11 @@
 #import "TMap.h"
 #import "TCategory.h"
 
+typedef enum {
+    showCategorized = 0,
+    showFlat = 1
+} PointListShowMode;
+
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
 @interface PointListController : UITableViewController <PointCatEditorDelegate> {
@@ -19,5 +24,6 @@
 
 @property (nonatomic, retain) TMap *map;
 @property (nonatomic, retain) NSArray *filteringCategories;
+@property (nonatomic, assign) PointListShowMode showMode;
 
 @end

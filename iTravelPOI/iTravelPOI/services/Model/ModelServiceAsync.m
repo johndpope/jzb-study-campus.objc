@@ -108,7 +108,7 @@ dispatch_queue_t _ModelServiceQueue;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (ASYNCHRONOUS) getFlatElemensInMap:(TMap *)map forCategory:(TCategory *)cat orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getAllElemensInMapFinished)callbackBlock {
+- (ASYNCHRONOUS) getFlatElemensInMap:(TMap *)map forCategory:(TCategory *)cat orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getFlatElemensInMapFinished)callbackBlock {
     
     NSLog(@"ModelServiceAsync - getFlatElemensInMap");
     
@@ -124,6 +124,31 @@ dispatch_queue_t _ModelServiceQueue;
     dispatch_async(_ModelServiceQueue,^(void){
         NSError *error = nil;
         NSArray *elements = [[ModelService sharedInstance] getFlatElemensInMap:map forCategory:cat orderBy:orderBy error:&error];
+        
+        // Avisamos al llamante de que ya se ha actualizado el mapa solicitado
+        dispatch_async(caller_queue, ^(void){
+            callbackBlock(elements, error);
+        });
+    });
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (ASYNCHRONOUS) getCategorizedElemensInMap:(TMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getCategorizedElemensInMapFinished)callbackBlock {
+    
+    NSLog(@"ModelServiceAsync - getCategorizedElemensInMap");
+    
+    // Si no hay nadie esperando no hacemos nada
+    if(callbackBlock==nil) {
+        return;
+    }
+    
+    // Se apunta la cola en la que deberá dar la respuesta de callback
+    dispatch_queue_t caller_queue = dispatch_get_current_queue();
+    
+    // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
+    dispatch_async(_ModelServiceQueue,^(void){
+        NSError *error = nil;
+        NSArray *elements = [[ModelService sharedInstance] getCategorizedElemensInMap:map forCategories:categories orderBy:orderBy error:&error];
         
         // Avisamos al llamante de que ya se ha actualizado el mapa solicitado
         dispatch_async(caller_queue, ^(void){

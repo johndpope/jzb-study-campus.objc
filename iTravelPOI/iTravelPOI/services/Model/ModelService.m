@@ -258,7 +258,7 @@ NSEntityDescription *_pointEntityDescription;
         
         NSArray *scats = [[cat.subcategories allObjects] sortedArrayUsingComparator:comparator];
         NSArray *points = [[cat.points allObjects] sortedArrayUsingComparator:comparator];
-
+        
         NSMutableArray *allElements = [NSMutableArray array];
         [allElements addObjectsFromArray:scats];
         [allElements addObjectsFromArray:points];
@@ -284,7 +284,7 @@ NSEntityDescription *_pointEntityDescription;
             case SORT_BY_UPDATING_DATE:
                 sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"ts_updated" ascending:YES] autorelease];
                 break;
-
+                
             default:
                 sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES] autorelease];
                 break;
@@ -328,6 +328,134 @@ NSEntityDescription *_pointEntityDescription;
         return [[allElements copy] autorelease];
     }
 }
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSSet *) getAllCategorizedPoints:(TMap *)map forCategories:(NSArray *)categories {
+    
+    NSMutableSet *set = [NSMutableSet set];
+    
+    // Si no hay categorias restringiendo los puntos retorna todos los del mapa
+    if([categories count]==0) {
+        for (TPoint *point in map.points) {
+            if(!point.wasDeleted) {
+                [set addObject:point];
+            }
+        }
+    }
+    else {
+        // En otro caso, retorna todos los puntos de las categorias de forma recursiva
+        // Pero solo aquellos que esten categorizados por la lista pasada
+        [set unionSet:[[categories objectAtIndex:0] allRecursivePoints]];
+        for(int n=1;n<[categories count];n++) {
+            [set intersectSet:[[categories objectAtIndex:n] allRecursivePoints]];
+        }
+    }
+    
+    return set;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSSet *) getAllCategoriesForPoints:(NSSet *)points excludedCategories:(NSArray *)excludedCats {
+    
+    NSMutableSet *set = [NSMutableSet set];
+    for(TPoint *point in points) {
+        [set unionSet:point.categories];
+    }
+    
+    [set minusSet:[NSSet setWithArray:excludedCats]];
+    
+    return  set;
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSSet *) filterSubcategories:(NSSet *)categories {
+
+    NSMutableSet *rootCats = [NSMutableSet set];
+    for(TCategory *c1 in categories) {
+        
+        BOOL isSubCat = false;
+        
+        for(TCategory *c2 in categories) {
+            if([c2 recursiveContainsSubCategory:c1]) {
+                isSubCat = true;
+                break;
+            }
+        }
+        
+        if(!isSubCat) {
+            c1.t_displayCount = 0;
+            [rootCats addObject:c1];
+        }
+    }
+    
+    return  rootCats;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSSet *) filterCategorizedPoints:(NSSet *)points forCategories:(NSSet *)categories {
+    
+    NSMutableSet *rootPoints = [NSMutableSet set];
+    
+    for(TPoint *point in points) {
+        
+        BOOL containedPoint = false;
+        
+        for(TCategory *cat in categories) {
+            
+            if([cat recursiveContainsPoint:point]) {
+                containedPoint = true;
+                cat.t_displayCount++;
+            }
+            
+        }
+        
+        if(!containedPoint) {
+            [rootPoints addObject:point];
+        }
+        
+    }
+    
+    return  rootPoints;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSArray *)getCategorizedElemensInMap:(TMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy error:(NSError **)error {
+    
+    NSLog(@"ModelService - getCategorizedElemensInMap");
+
+    NSSet *allFilteredPoints = [self getAllCategorizedPoints:map forCategories:categories];
+    NSSet *allPointsCategories = [self getAllCategoriesForPoints:allFilteredPoints excludedCategories:categories];
+    
+    NSSet *rootCats = [self filterSubcategories:allPointsCategories];
+    NSSet *rootPoints = [self filterCategorizedPoints:allFilteredPoints forCategories:rootCats];
+    
+    
+    NSComparator comparator = ^NSComparisonResult(id obj1, id obj2) {
+        TBaseEntity *e1 = obj1;
+        TBaseEntity *e2 = obj2;
+        switch (orderBy) {
+            case SORT_BY_CREATING_DATE:
+                return [e1.ts_created compare:e2.ts_created];
+                
+            case SORT_BY_UPDATING_DATE:
+                return [e1.ts_updated compare:e2.ts_updated];
+                
+            default:
+                return [e1.name compare:e2.name];
+        }
+    };
+    
+    NSArray *sortedCats = [[rootCats allObjects] sortedArrayUsingComparator:comparator];
+    NSArray *sortedPoints = [[rootPoints allObjects] sortedArrayUsingComparator:comparator];
+    
+    NSMutableArray *allElements = [NSMutableArray array];
+    [allElements addObjectsFromArray:sortedCats];
+    [allElements addObjectsFromArray:sortedPoints];
+
+    return allElements;
+}
+
 
 
 /***
