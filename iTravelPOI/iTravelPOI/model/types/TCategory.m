@@ -205,6 +205,16 @@
     return  set;
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (NSSet *) allParentCategories {
+
+    NSMutableSet *set = [NSMutableSet set];
+    [set unionSet:self.categories];
+    for(TCategory *cat in self.categories) {
+        [set unionSet:[cat allParentCategories]];
+    }
+    return set;
+}
 
 
 

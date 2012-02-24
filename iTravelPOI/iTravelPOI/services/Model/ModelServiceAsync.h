@@ -31,7 +31,7 @@ typedef void (^TBlock_getCategorizedElemensInMapFinished)(NSArray *elements, NSE
 //---------------------------------------------------------------------------------------------------------------------
 - (ASYNCHRONOUS) saveContext:(TBlock_saveContextFinished)callbackBlock;
 - (ASYNCHRONOUS) getUserMapList:(TBlock_getUserMapListFinished)callbackBlock;
-- (ASYNCHRONOUS) getFlatElemensInMap:(TMap *)map forCategory:(TCategory *)cat orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getFlatElemensInMapFinished)callbackBlock;
+- (ASYNCHRONOUS) getFlatElemensInMap:(TMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getFlatElemensInMapFinished)callbackBlock;
 - (ASYNCHRONOUS) getCategorizedElemensInMap:(TMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getCategorizedElemensInMapFinished)callbackBlock;
 
 @end

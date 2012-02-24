@@ -156,7 +156,7 @@ NSString * _getIconURLFromIndex(int n) {
         self.isPointLabel.hidden = YES;
         self.itemTitle.title = @"edit";
         self.name.text = self.entity.name;
-        if([self.name.text length]>1 && [self.name.text hasPrefix:@"@"]) {
+        if([self.name.text length]>1) {
             self.saveBtn.enabled = true;
         } else {
             self.saveBtn.enabled = false;
@@ -298,7 +298,7 @@ NSString * _getIconURLFromIndex(int n) {
 
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)nameChanged:(id)sender {
-    if([self.name.text length]>1 && [self.name.text hasPrefix:@"@"]) {
+    if([self.name.text length]>1) {
         self.saveBtn.enabled = true;
     } else {
         self.saveBtn.enabled = false;

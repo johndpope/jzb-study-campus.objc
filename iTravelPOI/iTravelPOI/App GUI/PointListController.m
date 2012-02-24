@@ -87,7 +87,19 @@
     
     
     // Inicializa el resto de la vista
-    self.title = self.map.name;
+    if(self.filteringCategories) {
+        NSMutableString *names = [NSMutableString string];
+        BOOL firstOne = true;
+        for(TCategory *cat in self.filteringCategories) {
+            if(!firstOne) {
+                [names appendString:@"|"];
+            }
+            [names appendString:cat.name];
+        }
+        self.title = names;
+    } else {
+        self.title = self.map.name;
+    }
     
     // Creamos el boton de crear nuevos elementos
     UIBarButtonItem *createMapBtn = [[UIBarButtonItem alloc]  initWithBarButtonSystemItem:UIBarButtonSystemItemCompose 
@@ -167,7 +179,7 @@
         } else {
             if(self.showMode == showFlat) {
                 [[ModelServiceAsync sharedInstance] getFlatElemensInMap:self.map 
-                                                            forCategory:[self.filteringCategories lastObject]
+                                                            forCategories:self.filteringCategories
                                                                 orderBy:SORT_BY_NAME 
                                                                callback:^(NSArray *elements, NSError *error) {
                                                                    if(error) {
@@ -402,6 +414,7 @@
         } else {
             pointListController.filteringCategories = [NSArray arrayWithObject:entity];
         }
+        pointListController.showMode = self.showMode;
         [self.navigationController pushViewController:pointListController animated:YES];
         [pointListController release];
     }

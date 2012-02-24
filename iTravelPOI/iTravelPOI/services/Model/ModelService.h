@@ -48,7 +48,7 @@ typedef enum {
 - (NSArray *)sortCategoriesCategorized:(NSSet *)categories;
 
 - (NSArray *)getAllCategoriesInMap:(TMap *)map error:(NSError **)error;
-- (NSArray *)getFlatElemensInMap:(TMap *)map forCategory:(TCategory *)cat orderBy:(SORTING_METHOD)orderBy error:(NSError **)error ;
+- (NSArray *)getFlatElemensInMap:(TMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy error:(NSError **)error ;
 - (NSArray *)getCategorizedElemensInMap:(TMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy error:(NSError **)error;
 
 
