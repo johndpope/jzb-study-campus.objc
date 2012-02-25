@@ -18,6 +18,8 @@
 		421A33A814F0512600968EB6 /* icon4.png in Resources */ = {isa = PBXBuildFile; fileRef = 421A33A214F0512600968EB6 /* icon4.png */; };
 		421A33A914F0512600968EB6 /* icon5.png in Resources */ = {isa = PBXBuildFile; fileRef = 421A33A314F0512600968EB6 /* icon5.png */; };
 		421A33AA14F0512600968EB6 /* pencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 421A33A414F0512600968EB6 /* pencil.png */; };
+		4297D8B914F8571500CBD657 /* ShowModeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4297D8B714F8571500CBD657 /* ShowModeController.m */; };
+		4297D8BA14F8571500CBD657 /* ShowModeController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4297D8B814F8571500CBD657 /* ShowModeController.xib */; };
 		42B9DCDD14F06E8C00848A5B /* PointListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B9DCDB14F06E8C00848A5B /* PointListController.m */; };
 		42B9DCDE14F06E8C00848A5B /* PointListController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 42B9DCDC14F06E8C00848A5B /* PointListController.xib */; };
 		42B9DCE314F0739900848A5B /* PointCatEditorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B9DCE114F0739800848A5B /* PointCatEditorController.m */; };
@@ -382,6 +384,9 @@
 		421A33A214F0512600968EB6 /* icon4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon4.png; sourceTree = "<group>"; };
 		421A33A314F0512600968EB6 /* icon5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon5.png; sourceTree = "<group>"; };
 		421A33A414F0512600968EB6 /* pencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pencil.png; sourceTree = "<group>"; };
+		4297D8B614F8571400CBD657 /* ShowModeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowModeController.h; sourceTree = "<group>"; };
+		4297D8B714F8571500CBD657 /* ShowModeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowModeController.m; sourceTree = "<group>"; };
+		4297D8B814F8571500CBD657 /* ShowModeController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShowModeController.xib; sourceTree = "<group>"; };
 		42B9DCDA14F06E8C00848A5B /* PointListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointListController.h; sourceTree = "<group>"; };
 		42B9DCDB14F06E8C00848A5B /* PointListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointListController.m; sourceTree = "<group>"; };
 		42B9DCDC14F06E8C00848A5B /* PointListController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PointListController.xib; sourceTree = "<group>"; };
@@ -1342,6 +1347,9 @@
 				42B9DCDA14F06E8C00848A5B /* PointListController.h */,
 				42B9DCDB14F06E8C00848A5B /* PointListController.m */,
 				42B9DCDC14F06E8C00848A5B /* PointListController.xib */,
+				4297D8B614F8571400CBD657 /* ShowModeController.h */,
+				4297D8B714F8571500CBD657 /* ShowModeController.m */,
+				4297D8B814F8571500CBD657 /* ShowModeController.xib */,
 			);
 			path = "App GUI";
 			sourceTree = "<group>";
@@ -2270,6 +2278,7 @@
 				421A33AA14F0512600968EB6 /* pencil.png in Resources */,
 				42B9DCDE14F06E8C00848A5B /* PointListController.xib in Resources */,
 				42B9DCE414F0739900848A5B /* PointCatEditorController.xib in Resources */,
+				4297D8BA14F8571500CBD657 /* ShowModeController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2614,6 +2623,7 @@
 				421A339C14F035FB00968EB6 /* MapEditorController.m in Sources */,
 				42B9DCDD14F06E8C00848A5B /* PointListController.m in Sources */,
 				42B9DCE314F0739900848A5B /* PointCatEditorController.m in Sources */,
+				4297D8B914F8571500CBD657 /* ShowModeController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

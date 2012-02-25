@@ -8,6 +8,7 @@
 
 #import "PointListController.h"
 #import "PointCatEditorController.h"
+#import "ShowModeController.h"
 #import "ModelServiceAsync.h"
 #import "TDBadgedCell.h"
 #import "SVProgressHUD.h"
@@ -226,6 +227,8 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)changeShowModeAction:(id)sender {
+    
+    /*
     // Cambiamos el modo de mostrar la informacion
     if(self.showMode==showFlat) {
         self.showMode =  showCategorized;
@@ -236,6 +239,14 @@
     // Lanzamos la busqueda de los mapas y los mostramos 
     [SVProgressHUD showWithStatus:@"Loading elements info"];
     [self saveAndReloadElements];
+     */
+    
+    ShowModeController *showModeController = [[ShowModeController alloc] initWithNibName:@"showModeController" bundle:nil];
+    //showModeController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    //[self.navigationController presentModalViewController:showModeController animated:YES];
+    [showModeController 
+    [showModeController release];
+
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -340,7 +351,6 @@
  }
  */
 
-//---------------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------------------
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
