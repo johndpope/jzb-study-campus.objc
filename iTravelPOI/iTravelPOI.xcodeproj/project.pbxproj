@@ -1239,21 +1239,17 @@
 		42AC3EFD14F8FFB000E5DECB /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				42AC3F4E14F92A8200E5DECB /* simple */,
 				42AC3EFE14F8FFB000E5DECB /* popoverArrowDown.png */,
 				42AC3EFF14F8FFB000E5DECB /* popoverArrowDown@2x.png */,
-				42AC3F0014F8FFB000E5DECB /* popoverArrowDownSimple.png */,
 				42AC3F0114F8FFB000E5DECB /* popoverArrowLeft.png */,
 				42AC3F0214F8FFB000E5DECB /* popoverArrowLeft@2x.png */,
-				42AC3F0314F8FFB000E5DECB /* popoverArrowLeftSimple.png */,
 				42AC3F0414F8FFB000E5DECB /* popoverArrowRight.png */,
 				42AC3F0514F8FFB000E5DECB /* popoverArrowRight@2x.png */,
-				42AC3F0614F8FFB000E5DECB /* popoverArrowRightSimple.png */,
 				42AC3F0714F8FFB000E5DECB /* popoverArrowUp.png */,
 				42AC3F0814F8FFB000E5DECB /* popoverArrowUp@2x.png */,
-				42AC3F0914F8FFB000E5DECB /* popoverArrowUpSimple.png */,
 				42AC3F0A14F8FFB000E5DECB /* popoverBg.png */,
 				42AC3F0B14F8FFB000E5DECB /* popoverBg@2x.png */,
-				42AC3F0C14F8FFB000E5DECB /* popoverBgSimple.png */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1297,6 +1293,18 @@
 				42AC3F4114F9001800E5DECB /* PointCatEditorController.xib */,
 			);
 			path = Editors;
+			sourceTree = "<group>";
+		};
+		42AC3F4E14F92A8200E5DECB /* simple */ = {
+			isa = PBXGroup;
+			children = (
+				42AC3F0014F8FFB000E5DECB /* popoverArrowDownSimple.png */,
+				42AC3F0314F8FFB000E5DECB /* popoverArrowLeftSimple.png */,
+				42AC3F0614F8FFB000E5DECB /* popoverArrowRightSimple.png */,
+				42AC3F0914F8FFB000E5DECB /* popoverArrowUpSimple.png */,
+				42AC3F0C14F8FFB000E5DECB /* popoverBgSimple.png */,
+			);
+			name = simple;
 			sourceTree = "<group>";
 		};
 		42BFAA9914EFE31F00604B90 = {

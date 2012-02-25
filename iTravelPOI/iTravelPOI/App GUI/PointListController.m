@@ -11,6 +11,7 @@
 #import "ShowModeController.h"
 #import "ModelServiceAsync.h"
 #import "WEPopoverController.h"
+#import "UIBarButtonItem+WEPopover.h" 
 #import "TDBadgedCell.h"
 #import "SVProgressHUD.h"
 
@@ -21,7 +22,6 @@
 @interface PointListController ()
 
 @property (nonatomic, retain) NSArray * elements;
-@property (nonatomic, retain) UIBarButtonItem *showModeBtn;
 @property (nonatomic, retain) WEPopoverController *popoverShowMode;
 
 - (IBAction)createNewEntityAction:(id)sender;
@@ -42,7 +42,6 @@
 @synthesize showMode = _showMode;
 
 @synthesize elements = _elements;
-@synthesize showModeBtn = _showModeBtn;
 @synthesize popoverShowMode = _popoverShowMode;
 
 
@@ -117,10 +116,11 @@
     
     
     // Creamos el boton de ver flat o categorized
-    self.showModeBtn = [[UIBarButtonItem alloc]  initWithBarButtonSystemItem:UIBarButtonSystemItemOrganize
-                                                                      target:self 
-                                                                      action:@selector(changeShowModeAction:)];
-    [self setToolbarItems:[NSArray arrayWithObject:self.showModeBtn]];
+    UIBarButtonItem *showModeBtn = [[UIBarButtonItem alloc]  initWithBarButtonSystemItem:UIBarButtonSystemItemOrganize
+                                                                                  target:self 
+                                                                                  action:@selector(changeShowModeAction:)];
+    [self setToolbarItems:[NSArray arrayWithObject:showModeBtn]];
+    [showModeBtn release];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -230,6 +230,43 @@
     [entityEditor release];
 }
 
+
+//---------------------------------------------------------------------------------------------------------------------
+- (WEPopoverContainerViewProperties *)improvedContainerViewProperties {
+	
+	WEPopoverContainerViewProperties *props = [[WEPopoverContainerViewProperties alloc] autorelease];
+	NSString *bgImageName = nil;
+	CGFloat bgMargin = 0.0;
+	CGFloat bgCapSize = 0.0;
+	CGFloat contentMargin = 4.0;
+	
+	bgImageName = @"popoverBg.png";
+	
+	// These constants are determined by the popoverBg.png image file and are image dependent
+	bgMargin = 13; // margin width of 13 pixels on all sides popoverBg.png (62 pixels wide - 36 pixel background) / 2 == 26 / 2 == 13 
+	bgCapSize = 31; // ImageSize/2  == 62 / 2 == 31 pixels
+	
+	props.leftBgMargin = bgMargin;
+	props.rightBgMargin = bgMargin;
+	props.topBgMargin = bgMargin;
+	props.bottomBgMargin = bgMargin;
+	props.leftBgCapSize = bgCapSize;
+	props.topBgCapSize = bgCapSize;
+	props.bgImageName = bgImageName;
+	props.leftContentMargin = contentMargin;
+	props.rightContentMargin = contentMargin - 1; // Need to shift one pixel for border to look correct
+	props.topContentMargin = contentMargin; 
+	props.bottomContentMargin = contentMargin;
+	
+	props.arrowMargin = 4.0;
+	
+	props.upArrowImageName = @"popoverArrowUp.png";
+	props.downArrowImageName = @"popoverArrowDown.png";
+	props.leftArrowImageName = @"popoverArrowLeft.png";
+	props.rightArrowImageName = @"popoverArrowRight.png";
+	return props;	
+}
+
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)changeShowModeAction:(id)sender {
     
@@ -246,23 +283,27 @@
      [self saveAndReloadElements];
      */
     
-    if (self.popoverShowMode) {
+    if (self.popoverShowMode && self.popoverShowMode.popoverVisible) {
         [self.popoverShowMode dismissPopoverAnimated:YES];
         self.popoverShowMode = nil;
-        //[self.showModeBtn setTitle:@"Show Popover" forState:UIControlStateNormal];
     } else {
-        ShowModeController *showModeController = [[ShowModeController alloc] initWithNibName:@"showModeController" bundle:nil];
-        //showModeController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-        //[self.navigationController presentModalViewController:showModeController animated:YES];
         
-        self.popoverShowMode = [[[WEPopoverController alloc] initWithContentViewController:showModeController] autorelease];
-        [self.popoverShowMode presentPopoverFromRect:self.showModeBtn.accessibilityFrame 
-                                              inView:self.view 
+        if(!self.popoverShowMode) {
+            
+            ShowModeController *showModeController = [[ShowModeController alloc] initWithNibName:@"showModeController" bundle:nil];
+            
+            self.popoverShowMode = [[[WEPopoverController alloc] initWithContentViewController:showModeController] autorelease];
+            self.popoverShowMode.containerViewProperties = [self improvedContainerViewProperties];
+            self.popoverShowMode.popoverContentSize = showModeController.view.frame.size;
+            
+            [showModeController release];
+        }
+        
+        CGRect btnFrame = {0, self.tableView.frame.size.height, 50, 1};
+        [self.popoverShowMode presentPopoverFromRect:btnFrame 
+                                              inView:self.tableView 
                             permittedArrowDirections:UIPopoverArrowDirectionDown
                                             animated:YES];
-        [showModeController release];
-        
-        //[self.showModeBtn setTitle:@"Hide Popover" forState:UIControlStateNormal];
     }
     
     
