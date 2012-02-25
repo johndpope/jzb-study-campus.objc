@@ -10,6 +10,7 @@
 #import "PointCatEditorController.h"
 #import "ShowModeController.h"
 #import "ModelServiceAsync.h"
+#import "WEPopoverController.h"
 #import "TDBadgedCell.h"
 #import "SVProgressHUD.h"
 
@@ -20,6 +21,8 @@
 @interface PointListController ()
 
 @property (nonatomic, retain) NSArray * elements;
+@property (nonatomic, retain) UIBarButtonItem *showModeBtn;
+@property (nonatomic, retain) WEPopoverController *popoverShowMode;
 
 - (IBAction)createNewEntityAction:(id)sender;
 - (void) saveAndReloadElements;
@@ -36,8 +39,11 @@
 
 @synthesize map = _map;
 @synthesize filteringCategories = _filteringCategories;
-@synthesize elements = _elements;
 @synthesize showMode = _showMode;
+
+@synthesize elements = _elements;
+@synthesize showModeBtn = _showModeBtn;
+@synthesize popoverShowMode = _popoverShowMode;
 
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -111,11 +117,10 @@
     
     
     // Creamos el boton de ver flat o categorized
-    UIBarButtonItem *showModeBtn = [[UIBarButtonItem alloc]  initWithBarButtonSystemItem:UIBarButtonSystemItemOrganize
-                                                                                  target:self 
-                                                                                  action:@selector(changeShowModeAction:)];
-    [self setToolbarItems:[NSArray arrayWithObject:showModeBtn]];
-    [showModeBtn release];
+    self.showModeBtn = [[UIBarButtonItem alloc]  initWithBarButtonSystemItem:UIBarButtonSystemItemOrganize
+                                                                      target:self 
+                                                                      action:@selector(changeShowModeAction:)];
+    [self setToolbarItems:[NSArray arrayWithObject:self.showModeBtn]];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -180,7 +185,7 @@
         } else {
             if(self.showMode == showFlat) {
                 [[ModelServiceAsync sharedInstance] getFlatElemensInMap:self.map 
-                                                            forCategories:self.filteringCategories
+                                                          forCategories:self.filteringCategories
                                                                 orderBy:SORT_BY_NAME 
                                                                callback:^(NSArray *elements, NSError *error) {
                                                                    if(error) {
@@ -229,24 +234,38 @@
 - (IBAction)changeShowModeAction:(id)sender {
     
     /*
-    // Cambiamos el modo de mostrar la informacion
-    if(self.showMode==showFlat) {
-        self.showMode =  showCategorized;
-    } else {
-        self.showMode =  showFlat;
-    }
-    
-    // Lanzamos la busqueda de los mapas y los mostramos 
-    [SVProgressHUD showWithStatus:@"Loading elements info"];
-    [self saveAndReloadElements];
+     // Cambiamos el modo de mostrar la informacion
+     if(self.showMode==showFlat) {
+     self.showMode =  showCategorized;
+     } else {
+     self.showMode =  showFlat;
+     }
+     
+     // Lanzamos la busqueda de los mapas y los mostramos 
+     [SVProgressHUD showWithStatus:@"Loading elements info"];
+     [self saveAndReloadElements];
      */
     
-    ShowModeController *showModeController = [[ShowModeController alloc] initWithNibName:@"showModeController" bundle:nil];
-    //showModeController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-    //[self.navigationController presentModalViewController:showModeController animated:YES];
-    [showModeController 
-    [showModeController release];
-
+    if (self.popoverShowMode) {
+        [self.popoverShowMode dismissPopoverAnimated:YES];
+        self.popoverShowMode = nil;
+        //[self.showModeBtn setTitle:@"Show Popover" forState:UIControlStateNormal];
+    } else {
+        ShowModeController *showModeController = [[ShowModeController alloc] initWithNibName:@"showModeController" bundle:nil];
+        //showModeController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+        //[self.navigationController presentModalViewController:showModeController animated:YES];
+        
+        self.popoverShowMode = [[[WEPopoverController alloc] initWithContentViewController:showModeController] autorelease];
+        [self.popoverShowMode presentPopoverFromRect:self.showModeBtn.accessibilityFrame 
+                                              inView:self.view 
+                            permittedArrowDirections:UIPopoverArrowDirectionDown
+                                            animated:YES];
+        [showModeController release];
+        
+        //[self.showModeBtn setTitle:@"Hide Popover" forState:UIControlStateNormal];
+    }
+    
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
