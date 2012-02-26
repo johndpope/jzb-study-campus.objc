@@ -53,7 +53,8 @@ permittedArrowDirections:(UIPopoverArrowDirection)permittedArrowDirections
 		self.backgroundColor = [UIColor clearColor];
 		UIImage *theImage = [UIImage imageNamed:properties.bgImageName];
 		bgImage = [[theImage stretchableImageWithLeftCapWidth:properties.leftBgCapSize topCapHeight:properties.topBgCapSize] retain];
-		
+		//bgImage = [theImage retain];
+        
 		self.clipsToBounds = YES;
 		self.userInteractionEnabled = YES;
 	}

@@ -64,4 +64,6 @@
 						   inView:(UIView *)view
 		 permittedArrowDirections:(UIPopoverArrowDirection)arrowDirections;
 
+- (WEPopoverContainerViewProperties *)improvedContainerViewProperties;
+
 @end

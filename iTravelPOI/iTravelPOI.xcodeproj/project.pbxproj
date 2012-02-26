@@ -13,6 +13,9 @@
 		421A33A814F0512600968EB6 /* icon4.png in Resources */ = {isa = PBXBuildFile; fileRef = 421A33A214F0512600968EB6 /* icon4.png */; };
 		421A33A914F0512600968EB6 /* icon5.png in Resources */ = {isa = PBXBuildFile; fileRef = 421A33A314F0512600968EB6 /* icon5.png */; };
 		421A33AA14F0512600968EB6 /* pencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 421A33A414F0512600968EB6 /* pencil.png */; };
+		42940E3614FA38AA00E11EBD /* MEMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 42940E3514FA38AA00E11EBD /* MEMap.m */; };
+		42940E3914FA38AB00E11EBD /* MEPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 42940E3814FA38AB00E11EBD /* MEPoint.m */; };
+		42940E3C14FA38AB00E11EBD /* MECategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 42940E3B14FA38AB00E11EBD /* MECategory.m */; };
 		4297D8B914F8571500CBD657 /* ShowModeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4297D8B714F8571500CBD657 /* ShowModeController.m */; };
 		4297D8BA14F8571500CBD657 /* ShowModeController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4297D8B814F8571500CBD657 /* ShowModeController.xib */; };
 		42AC3F2014F8FFB000E5DECB /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 42AC3EF514F8FFB000E5DECB /* SVProgressHUD.bundle */; };
@@ -387,6 +390,7 @@
 		42BFB4A114EFEFCC00604B90 /* GDataYouTubeStatistics.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFB36914EFEFC900604B90 /* GDataYouTubeStatistics.m */; };
 		42BFB4A214EFEFCC00604B90 /* GDataQueryYouTube.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFB36B14EFEFC900604B90 /* GDataQueryYouTube.m */; };
 		42BFB4A314EFEFCC00604B90 /* GDataServiceGoogleYouTube.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFB36D14EFEFC900604B90 /* GDataServiceGoogleYouTube.m */; };
+		42ED53D614FA4183006AD5AB /* MEBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 42ED53D514FA4183006AD5AB /* MEBaseEntity.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -396,6 +400,12 @@
 		421A33A214F0512600968EB6 /* icon4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon4.png; sourceTree = "<group>"; };
 		421A33A314F0512600968EB6 /* icon5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon5.png; sourceTree = "<group>"; };
 		421A33A414F0512600968EB6 /* pencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pencil.png; sourceTree = "<group>"; };
+		42940E3414FA38AA00E11EBD /* MEMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MEMap.h; path = types/MEMap.h; sourceTree = "<group>"; };
+		42940E3514FA38AA00E11EBD /* MEMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MEMap.m; path = types/MEMap.m; sourceTree = "<group>"; };
+		42940E3714FA38AB00E11EBD /* MEPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MEPoint.h; path = types/MEPoint.h; sourceTree = "<group>"; };
+		42940E3814FA38AB00E11EBD /* MEPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MEPoint.m; path = types/MEPoint.m; sourceTree = "<group>"; };
+		42940E3A14FA38AB00E11EBD /* MECategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MECategory.h; path = types/MECategory.h; sourceTree = "<group>"; };
+		42940E3B14FA38AB00E11EBD /* MECategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MECategory.m; path = types/MECategory.m; sourceTree = "<group>"; };
 		4297D8B614F8571400CBD657 /* ShowModeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowModeController.h; sourceTree = "<group>"; };
 		4297D8B714F8571500CBD657 /* ShowModeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowModeController.m; sourceTree = "<group>"; };
 		4297D8B814F8571500CBD657 /* ShowModeController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShowModeController.xib; sourceTree = "<group>"; };
@@ -1135,6 +1145,9 @@
 		42BFB36B14EFEFC900604B90 /* GDataQueryYouTube.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GDataQueryYouTube.m; path = Clients/YouTube/GDataQueryYouTube.m; sourceTree = "<group>"; };
 		42BFB36C14EFEFC900604B90 /* GDataServiceGoogleYouTube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GDataServiceGoogleYouTube.h; path = Clients/YouTube/GDataServiceGoogleYouTube.h; sourceTree = "<group>"; };
 		42BFB36D14EFEFC900604B90 /* GDataServiceGoogleYouTube.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GDataServiceGoogleYouTube.m; path = Clients/YouTube/GDataServiceGoogleYouTube.m; sourceTree = "<group>"; };
+		42CEC46214FA43AF00837C64 /* MEBaseEntity_Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MEBaseEntity_Protected.h; path = types/MEBaseEntity_Protected.h; sourceTree = "<group>"; };
+		42ED53D414FA4183006AD5AB /* MEBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MEBaseEntity.h; path = types/MEBaseEntity.h; sourceTree = "<group>"; };
+		42ED53D514FA4183006AD5AB /* MEBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MEBaseEntity.m; path = types/MEBaseEntity.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1175,6 +1188,23 @@
 				421A33A414F0512600968EB6 /* pencil.png */,
 			);
 			path = icons;
+			sourceTree = "<group>";
+		};
+		427EAF8D14F94637009682D9 /* improved */ = {
+			isa = PBXGroup;
+			children = (
+				42AC3EFE14F8FFB000E5DECB /* popoverArrowDown.png */,
+				42AC3EFF14F8FFB000E5DECB /* popoverArrowDown@2x.png */,
+				42AC3F0114F8FFB000E5DECB /* popoverArrowLeft.png */,
+				42AC3F0214F8FFB000E5DECB /* popoverArrowLeft@2x.png */,
+				42AC3F0414F8FFB000E5DECB /* popoverArrowRight.png */,
+				42AC3F0514F8FFB000E5DECB /* popoverArrowRight@2x.png */,
+				42AC3F0714F8FFB000E5DECB /* popoverArrowUp.png */,
+				42AC3F0814F8FFB000E5DECB /* popoverArrowUp@2x.png */,
+				42AC3F0A14F8FFB000E5DECB /* popoverBg.png */,
+				42AC3F0B14F8FFB000E5DECB /* popoverBg@2x.png */,
+			);
+			name = improved;
 			sourceTree = "<group>";
 		};
 		42AC3EF214F8FFB000E5DECB /* utils */ = {
@@ -1239,17 +1269,8 @@
 		42AC3EFD14F8FFB000E5DECB /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				427EAF8D14F94637009682D9 /* improved */,
 				42AC3F4E14F92A8200E5DECB /* simple */,
-				42AC3EFE14F8FFB000E5DECB /* popoverArrowDown.png */,
-				42AC3EFF14F8FFB000E5DECB /* popoverArrowDown@2x.png */,
-				42AC3F0114F8FFB000E5DECB /* popoverArrowLeft.png */,
-				42AC3F0214F8FFB000E5DECB /* popoverArrowLeft@2x.png */,
-				42AC3F0414F8FFB000E5DECB /* popoverArrowRight.png */,
-				42AC3F0514F8FFB000E5DECB /* popoverArrowRight@2x.png */,
-				42AC3F0714F8FFB000E5DECB /* popoverArrowUp.png */,
-				42AC3F0814F8FFB000E5DECB /* popoverArrowUp@2x.png */,
-				42AC3F0A14F8FFB000E5DECB /* popoverBg.png */,
-				42AC3F0B14F8FFB000E5DECB /* popoverBg@2x.png */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1380,6 +1401,15 @@
 			isa = PBXGroup;
 			children = (
 				42BFABF414EFE6C800604B90 /* iTravelPOI.xcdatamodeld */,
+				42CEC46214FA43AF00837C64 /* MEBaseEntity_Protected.h */,
+				42ED53D414FA4183006AD5AB /* MEBaseEntity.h */,
+				42ED53D514FA4183006AD5AB /* MEBaseEntity.m */,
+				42940E3A14FA38AB00E11EBD /* MECategory.h */,
+				42940E3B14FA38AB00E11EBD /* MECategory.m */,
+				42940E3714FA38AB00E11EBD /* MEPoint.h */,
+				42940E3814FA38AB00E11EBD /* MEPoint.m */,
+				42940E3414FA38AA00E11EBD /* MEMap.h */,
+				42940E3514FA38AA00E11EBD /* MEMap.m */,
 				42BFAB8C14EFE4AD00604B90 /* types */,
 			);
 			name = model;
@@ -2761,6 +2791,10 @@
 				42AC3F3A14F8FFB000E5DECB /* RegexKitLite.m in Sources */,
 				42AC3F4214F9001800E5DECB /* MapEditorController.m in Sources */,
 				42AC3F4414F9001800E5DECB /* PointCatEditorController.m in Sources */,
+				42940E3614FA38AA00E11EBD /* MEMap.m in Sources */,
+				42940E3914FA38AB00E11EBD /* MEPoint.m in Sources */,
+				42940E3C14FA38AB00E11EBD /* MECategory.m in Sources */,
+				42ED53D614FA4183006AD5AB /* MEBaseEntity.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
