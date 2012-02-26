@@ -13,7 +13,21 @@
 //---------------------------------------------------------------------------------------------------------------------
 @implementation ShowModeController
 
+@synthesize delegate = _delegate;
 
+
+//---------------------------------------------------------------------------------------------------------------------
+- (IBAction)btnFlatAction:(id)sender {
+    
+    [self.delegate changeShowMode:showFlat];
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------
+- (IBAction)btnCategorizedAction:(id)sender {
+
+    [self.delegate changeShowMode:showCategorized];
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil

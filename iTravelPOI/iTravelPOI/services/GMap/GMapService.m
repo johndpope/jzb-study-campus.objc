@@ -26,16 +26,16 @@
 
 
 + (NSString *)      _extract_Logged_UserID_fromFeed:(GDataFeedBase *) feed;
-+ (NSString *)      _extract_TMapID_fromEntry:(GDataEntryMap *) entry;
-+ (NSString *)      _extract_TPointID_fromEntry:(GDataEntryMapFeature *) entry;
++ (NSString *)      _extract_MEMapID_fromEntry:(GDataEntryMap *) entry;
++ (NSString *)      _extract_MEPointID_fromEntry:(GDataEntryMapFeature *) entry;
 + (NSString *)      _get_KML_fromEntry:(GDataEntryMapFeature *) entry;
 
-+ (void)            _fill_TMap:(TMap *)map withFeedMapEntry:(GDataEntryMap *) entry;
-+ (GDataEntryMap*)  _create_FeedMapEntry_fromTMap:(TMap *) map;
-+ (void)            _fill_TPoint:(TPoint *)point withFeedFeatureEntry:(GDataEntryMapFeature *) entry;
-+ (GDataEntryMapFeature*) _create_FeedFeatureEntry_fromTPoint:(TPoint *)point;
++ (void)            _fill_MEMap:(MEMap *)map withFeedMapEntry:(GDataEntryMap *) entry;
++ (GDataEntryMap*)  _create_FeedMapEntry_fromMEMap:(MEMap *) map;
++ (void)            _fill_MEPoint:(MEPoint *)point withFeedFeatureEntry:(GDataEntryMapFeature *) entry;
++ (GDataEntryMapFeature*) _create_FeedFeatureEntry_fromMEPoint:(MEPoint *)point;
 
-- (BOOL) _processPoint:(TPoint *) point inMap:(TMap *) map;
+- (BOOL) _processPoint:(MEPoint *) point inMap:(MEMap *) map;
 
 @end
 
@@ -140,8 +140,8 @@ BOOL _isLoggedIn;
         // ************************************************************************************
         
         
-        TMap *map = [TMap insertTmpNew];
-        [GMapService _fill_TMap:map withFeedMapEntry: mapEntry];
+        MEMap *map = [MEMap insertTmpNew];
+        [GMapService _fill_MEMap:map withFeedMapEntry: mapEntry];
         
         [mapList addObject:map];
     }
@@ -154,12 +154,13 @@ BOOL _isLoggedIn;
 
 //---------------------------------------------------------------------------------------------------------------------
 // Consigue la información, puntos y demas, del mapa pasado como parametro.
-- (TMap *) fetchMapData:(TMap *)map error:(NSError **)error {
+- (MEMap *) fetchMapData:(MEMap *)map error:(NSError **)error {
     
     NSLog(@"GMapService - fetchMapData (%@-%@)",map.name,map.GID);
     
     // Borra info para leerla desde GMap
-    [map clearAllData];
+    [map removeAllPointsAndCategories];
+    
     
     // Lee las "map features" del GMap
     GDataFeedBase *feed = [self.service fetchMapDataWithGID:map.GID error:error];
@@ -168,7 +169,7 @@ BOOL _isLoggedIn;
         return nil;
     }
     
-    // Itera las features creando los TPoint equivalentes
+    // Itera las features creando los MEPoint equivalentes
     for(GDataEntryMapFeature *featureEntry in [feed entries]) {
         
         // filtrar lo que no sea un punto
@@ -178,13 +179,13 @@ BOOL _isLoggedIn;
         }
         
         // Creamos y parseamos la informacion del punto
-        TPoint *point;
-        if([TPoint isExtInfoName:[[featureEntry title] stringValue]]){
-            point = [TPoint insertTmpEmptyExtInfoInMap:map];
+        MEPoint *point;
+        if([MEPoint isExtInfoName:[[featureEntry title] stringValue]]){
+            point = [MEPoint insertTmpEmptyExtInfoInMap:map];
         }else {
-            point = [TPoint insertTmpNewInMap:map];
+            point = [MEPoint insertTmpNewInMap:map];
         }
-        [GMapService _fill_TPoint:point withFeedFeatureEntry:featureEntry];
+        [GMapService _fill_MEPoint:point withFeedFeatureEntry:featureEntry];
     }
     
     // Añade la informacion extendida del mapa y las categorias
@@ -199,7 +200,7 @@ BOOL _isLoggedIn;
 //---------------------------------------------------------------------------------------------------------------------
 // OJO: El ID del mapa, puesto que es nuevo, se debe actualizar de la creación para que se pueda actualizar luego
 // Lo mismo pasa con los tiempos de creación y actualización
-- (TMap *) createNewEmptyGMap:(TMap *)map error:(NSError **)error {
+- (MEMap *) createNewEmptyGMap:(MEMap *)map error:(NSError **)error {
     
     NSLog(@"GMapService - createNewGMap (%@-%@)", map.name, map.GID);
     
@@ -235,17 +236,17 @@ BOOL _isLoggedIn;
     
     
     // Crea un feed entry desde los datos del mapa y lo da de alta en el servidor
-    GDataEntryMap *gmapEntry = [GMapService _create_FeedMapEntry_fromTMap: map];
+    GDataEntryMap *gmapEntry = [GMapService _create_FeedMapEntry_fromMEMap: map];
     
     // Añade la nueva entrada en el servidor
-    GDataEntryMap *createdEntry = [self.service insertMapEntry:gmapEntry userID:self.loggedUser_ID error:error];
+    GDataEntryMap *createdEntry = [self.service inserMEMapEntry:gmapEntry userID:self.loggedUser_ID error:error];
     if(*error) {
         NSLog(@"GMapService - createNewGMap - error: %@ / %@", *error, [*error userInfo]);
         return nil;
     }
     
     // Actualiza el mapa con la informacion que se ha recibido de GMap
-    [GMapService _fill_TMap:map withFeedMapEntry:createdEntry];
+    [GMapService _fill_MEMap:map withFeedMapEntry:createdEntry];
     
     // Retorna el mapa actualizado
     NSLog(@"GMapService - createNewGMap - exit");
@@ -254,7 +255,7 @@ BOOL _isLoggedIn;
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (TMap *) deleteGMap: (TMap *)map error:(NSError **)error {
+- (MEMap *) deleteGMap: (MEMap *)map error:(NSError **)error {
     
     NSLog(@"GMapService - deleteGMap (%@-%@)",map.name,map.GID);
     
@@ -287,7 +288,7 @@ BOOL _isLoggedIn;
     }
     
     // Actualiza el mapa con la informacion que se ha recibido de GMap
-    //[GMapService _fill_TMap:map withFeedMapEntry:(GDataEntryMap *)deletedEntry];
+    //[GMapService _fill_MEMap:map withFeedMapEntry:(GDataEntryMap *)deletedEntry];
     //¿¿¿ HAY QUE HACER ALGO AQUI ???
     
     // Retorna el mapa elimindado
@@ -298,7 +299,7 @@ BOOL _isLoggedIn;
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (TMap *) updateGMap: (TMap *)map error:(NSError **)error {
+- (MEMap *) updateGMap: (MEMap *)map error:(NSError **)error {
     
     NSLog(@"GMapService - updateGMap (%@-%@)",map.name,map.GID);
     
@@ -325,7 +326,7 @@ BOOL _isLoggedIn;
     
     // -----------------------------------------------------------------------------------
     // Primero todas las categorias
-    for(TCategory *cat in map.categories) {
+    for(MECategory *cat in map.categories) {
         NSLog(@"  ---> Sync Category: %@ - %@",cat.name, SyncStatusType_Names[cat.syncStatus]);
         switch (cat.syncStatus) {
                 
@@ -348,7 +349,7 @@ BOOL _isLoggedIn;
     // -----------------------------------------------------------------------------------
     // Luego todos los puntos
     BOOL allOK = true;
-    for(TPoint *point in map.points) {
+    for(MEPoint *point in map.points) {
         allOK &= [self _processPoint:point inMap: map];
     }
     
@@ -375,7 +376,7 @@ BOOL _isLoggedIn;
             return nil;
         } else {
             // Actualiza ETAG y UpdateTime del mapa
-            [GMapService _fill_TMap:map withFeedMapEntry:(GDataEntryMap *)updatedEntry];
+            [GMapService _fill_MEMap:map withFeedMapEntry:(GDataEntryMap *)updatedEntry];
         }
     }
     
@@ -386,14 +387,14 @@ BOOL _isLoggedIn;
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (BOOL) _processPoint:(TPoint *) point inMap:(TMap *) map {
+- (BOOL) _processPoint:(MEPoint *) point inMap:(MEMap *) map {
     
     GDataEntryMapFeature *featureEntryOrig;
     GDataEntryMapFeature *featureEntryUptd;
     NSError *error;
     
     NSLog(@"  ---> Sync Point: %@ - %@",point.name, SyncStatusType_Names[point.syncStatus]);
-    featureEntryOrig = [GMapService _create_FeedFeatureEntry_fromTPoint:point];
+    featureEntryOrig = [GMapService _create_FeedFeatureEntry_fromMEPoint:point];
     if(!featureEntryOrig) {
         return false;
     }
@@ -401,7 +402,7 @@ BOOL _isLoggedIn;
     switch (point.syncStatus) {
             
         case ST_Sync_Create_Remote:
-            featureEntryUptd = [self.service insertMapFeatureEntry:featureEntryOrig inMapWithGID:map.GID error:&error];
+            featureEntryUptd = [self.service inserMEMapFeatureEntry:featureEntryOrig inMapWithGID:map.GID error:&error];
             break;
             
         case ST_Sync_Delete_Remote:
@@ -421,9 +422,7 @@ BOOL _isLoggedIn;
     }
     
     if(!error) {
-        if(!point.wasDeleted) {
-            [GMapService _fill_TPoint:point withFeedFeatureEntry:featureEntryUptd];
-        }
+        [GMapService _fill_MEPoint:point withFeedFeatureEntry:featureEntryUptd];
         return true;
     } else {
         NSLog(@"  >> Sync Error: %@ / %@", error, [error userInfo]);
@@ -451,7 +450,7 @@ BOOL _isLoggedIn;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (NSString *) _extract_TMapID_fromEntry:(GDataEntryMap*) entry {
++ (NSString *) _extract_MEMapID_fromEntry:(GDataEntryMap*) entry {
     
     // La URL tiene el formato: http://maps.google.com/maps/feeds/features/<<user_id>>/<<map_id>>/full
     
@@ -468,7 +467,7 @@ BOOL _isLoggedIn;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (NSString *) _extract_TPointID_fromEntry:(GDataEntryMapFeature*) entry {
++ (NSString *) _extract_MEPointID_fromEntry:(GDataEntryMapFeature*) entry {
     
     // La URL tiene el formato:  http://maps.google.com/maps/feeds/features/<<user_id>>/<<map_id>>/full/<<feature_id>>
     
@@ -481,9 +480,9 @@ BOOL _isLoggedIn;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (void) _fill_TMap:(TMap *)map withFeedMapEntry:(GDataEntryMap*) entry {
++ (void) _fill_MEMap:(MEMap *)map withFeedMapEntry:(GDataEntryMap*) entry {
     
-    map.GID = [GMapService _extract_TMapID_fromEntry:entry];
+    map.GID = [GMapService _extract_MEMapID_fromEntry:entry];
     map.name = [[entry title] stringValue];
     map.syncETag = [entry ETag];
     map.desc = [[entry summary] stringValue];
@@ -493,9 +492,9 @@ BOOL _isLoggedIn;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (void) _fill_TPoint:(TPoint *)point withFeedFeatureEntry:(GDataEntryMapFeature*) entry {
++ (void) _fill_MEPoint:(MEPoint *)point withFeedFeatureEntry:(GDataEntryMapFeature*) entry {
     
-    point.GID = [GMapService _extract_TPointID_fromEntry:entry];
+    point.GID = [GMapService _extract_MEPointID_fromEntry:entry];
     point.name = [[entry title] stringValue];
     point.syncETag = [entry ETag];
     point.desc = [[entry summary] stringValue];
@@ -508,7 +507,7 @@ BOOL _isLoggedIn;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (GDataEntryMap*) _create_FeedMapEntry_fromTMap:(TMap *)map {
++ (GDataEntryMap*) _create_FeedMapEntry_fromMEMap:(MEMap *)map {
     
     GDataEntryMap *newEntry = [GDataEntryMap mapEntryWithTitle:map.name];
     
@@ -527,7 +526,7 @@ BOOL _isLoggedIn;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (GDataEntryMapFeature*) _create_FeedFeatureEntry_fromTPoint:(TPoint *)point {
++ (GDataEntryMapFeature*) _create_FeedFeatureEntry_fromMEPoint:(MEPoint *)point {
     
     GDataEntryMapFeature *newEntry = [GDataEntryMapFeature featureEntryWithTitle:point.name];
     
@@ -538,7 +537,7 @@ BOOL _isLoggedIn;
         [newEntry addKMLValue:kmlElem];
         return newEntry;
     } else {
-        NSLog(@"_create_FeedFeatureEntry_fromTPoint - cannot make kml element, %@", error);
+        NSLog(@"_create_FeedFeatureEntry_fromMEPoint - cannot make kml element, %@", error);
         return nil;
     }
 }

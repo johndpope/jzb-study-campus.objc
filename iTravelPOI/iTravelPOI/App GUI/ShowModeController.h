@@ -7,12 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "PointListController.h"
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
 @interface ShowModeController : UIViewController {
     
 }
+
+@property (nonatomic, assign) PointListController* delegate;
 
 @end

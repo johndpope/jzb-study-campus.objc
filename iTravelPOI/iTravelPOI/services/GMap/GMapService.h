@@ -7,9 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TMap.h"
-#import "TCategory.h"
-#import "TPoint.h"
+#import "MEMap.h"
+#import "MECategory.h"
+#import "MEPoint.h"
 
 
 //*********************************************************************************************************************
@@ -26,9 +26,9 @@
 - (BOOL) isLoggedIn;
 
 - (NSArray *) fetchUserMapList: (NSError **)error;
-- (TMap *)    fetchMapData:(TMap *)map error:(NSError **)error;
-- (TMap *)    createNewEmptyGMap: (TMap *)map error:(NSError **)error;
-- (TMap *)    deleteGMap: (TMap *)map error:(NSError **)error;
-- (TMap *)    updateGMap: (TMap *)map error:(NSError **)error;
+- (MEMap *)    fetchMapData:(MEMap *)map error:(NSError **)error;
+- (MEMap *)    createNewEmptyGMap: (MEMap *)map error:(NSError **)error;
+- (MEMap *)    deleteGMap: (MEMap *)map error:(NSError **)error;
+- (MEMap *)    updateGMap: (MEMap *)map error:(NSError **)error;
 
 @end

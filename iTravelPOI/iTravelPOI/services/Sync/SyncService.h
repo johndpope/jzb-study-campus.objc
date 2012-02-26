@@ -7,9 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TMap.h"
-#import "TCategory.h"
-#import "TPoint.h"
+#import "MEMap.h"
+#import "MECategory.h"
+#import "MEPoint.h"
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
@@ -20,7 +20,7 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) syncLocalMap:(TMap *) localMap withRemote:(TMap *)remoteMap;
+- (void) syncLocalMap:(MEMap *) localMap withRemote:(MEMap *)remoteMap;
 - (void) syncLocalMaps:(NSArray *)localMaps withRemotes:(NSArray *)remoteMaps;
 
 

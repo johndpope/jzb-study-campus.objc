@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TMap.h"
+#import "MEMap.h"
 
 
 
@@ -18,9 +18,9 @@
 //---------------------------------------------------------------------------------------------------------------------
 @protocol MapEditorDelegate 
 
-- (TMap *) createNewInstance;
+- (MEMap *) createNewInstance;
 - (void) mapEditorCancel:(MapEditorController *)sender;
-- (void) mapEditorSave:(MapEditorController *)sender map:(TMap *)map;
+- (void) mapEditorSave:(MapEditorController *)sender map:(MEMap *)map;
 
 @end
 
@@ -32,6 +32,6 @@
 }
 
 @property (nonatomic, assign) id <MapEditorDelegate> delegate;
-@property (nonatomic, assign) TMap *map;
+@property (nonatomic, assign) MEMap *map;
 
 @end

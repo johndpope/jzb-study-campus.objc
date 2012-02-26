@@ -23,15 +23,21 @@ typedef enum {
     ST_Sync_Error = 7, 
 } SyncStatusType;
 
+static const NSString *SyncStatusType_Names[8]={
+    @"ST_Sync_OK", 
+    @"ST_Sync_Create_Local", @"ST_Sync_Create_Remote", 
+    @"ST_Sync_Delete_Local", @"ST_Sync_Delete_Remote", 
+    @"ST_Sync_Update_Local", @"ST_Sync_Update_Remote",
+    @"ST_Sync_Error"
+};
+
 
 
 //*********************************************************************************************************************
 #pragma mark -
-#pragma mark MEBaseEntity interfade definition
+#pragma mark MEBaseEntity interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface MEBaseEntity : NSManagedObject {
-@private
-}
+@interface MEBaseEntity : NSManagedObject 
 
 @property (nonatomic, retain)   NSString * GID;
 @property (nonatomic, retain)   NSString * syncETag;

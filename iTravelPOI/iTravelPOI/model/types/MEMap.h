@@ -18,11 +18,9 @@
 
 //*********************************************************************************************************************
 #pragma mark -
-#pragma mark MEMap interfade definition
+#pragma mark MEMap interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface MEMap : MEBaseEntity {
-@private
-}
+@interface MEMap : MEBaseEntity
 
 @property (nonatomic, assign) BOOL wasDeleted;
 
@@ -40,6 +38,8 @@
 #pragma mark -
 #pragma mark MEMap CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
++ (NSEntityDescription *) mapEntity;
+
 + (MEMap *) insertNew;
 + (MEMap *) insertTmpNew;
 
@@ -54,7 +54,7 @@
 
 // Limpia el estado de sincronizacion y borrar DEFINITIVAMENTE los elementos marcados como borrados
 - (void) markAsSynchronized;
-- (void) clearAllData2;
+- (void) removeAllPointsAndCategories;
 
 
 

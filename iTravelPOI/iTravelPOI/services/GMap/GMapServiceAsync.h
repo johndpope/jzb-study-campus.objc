@@ -12,10 +12,10 @@
 
 #define ASYNCHRONOUS void
 typedef void (^TBlock_FetchUserMapListFinished)(NSArray *maps, NSError *error);
-typedef void (^TBlock_FetchMapDataFinished)(TMap *map, NSError *error);
-typedef void (^TBlock_CreateMapDataFinished)(TMap *map, NSError *error);
-typedef void (^TBlock_DeleteMapDataFinished)(TMap *map, NSError *error);
-typedef void (^TBlock_UpdateMapDataFinished)(TMap *map, NSError *error);
+typedef void (^TBlock_FetchMapDataFinished)(MEMap *map, NSError *error);
+typedef void (^TBlock_CreateMapDataFinished)(MEMap *map, NSError *error);
+typedef void (^TBlock_DeleteMapDataFinished)(MEMap *map, NSError *error);
+typedef void (^TBlock_UpdateMapDataFinished)(MEMap *map, NSError *error);
 
 
 
@@ -34,10 +34,10 @@ typedef void (^TBlock_UpdateMapDataFinished)(TMap *map, NSError *error);
 - (BOOL) isLoggedIn;
 
 - (ASYNCHRONOUS) fetchUserMapList:(TBlock_FetchUserMapListFinished)callbackBlock;
-- (ASYNCHRONOUS) fetchMapData:(TMap *)map callback:(TBlock_FetchMapDataFinished)callbackBlock;
-- (ASYNCHRONOUS) createNewEmptyGMap:(TMap *)map callback:(TBlock_CreateMapDataFinished)callbackBlock;
-- (ASYNCHRONOUS) deleteGMap:(TMap *)map callback:(TBlock_DeleteMapDataFinished)callbackBlock;
-- (ASYNCHRONOUS) updateGMap:(TMap *)map callback:(TBlock_UpdateMapDataFinished)callbackBlock;
+- (ASYNCHRONOUS) fetchMapData:(MEMap *)map callback:(TBlock_FetchMapDataFinished)callbackBlock;
+- (ASYNCHRONOUS) createNewEmptyGMap:(MEMap *)map callback:(TBlock_CreateMapDataFinished)callbackBlock;
+- (ASYNCHRONOUS) deleteGMap:(MEMap *)map callback:(TBlock_DeleteMapDataFinished)callbackBlock;
+- (ASYNCHRONOUS) updateGMap:(MEMap *)map callback:(TBlock_UpdateMapDataFinished)callbackBlock;
 
 
 @end

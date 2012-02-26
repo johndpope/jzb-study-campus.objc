@@ -9,9 +9,9 @@
 #import <QuartzCore/QuartzCore.h>
 #import "PointCatEditorController.h"
 #import "ModelService.h"
-#import "TMap.h"
-#import "TCategory.h"
-#import "TPoint.h"
+#import "MEMap.h"
+#import "MECategory.h"
+#import "MEPoint.h"
 
 
 
@@ -21,23 +21,23 @@
 @public
     BOOL wasSelected;
     BOOL isSelected;
-    TCategory *category;
+    MECategory *category;
 }
 
-- (id) initWithCategory:(TCategory *)cat forEntity:(TBaseEntity *)entity;
+- (id) initWithCategory:(MECategory *)cat forEntity:(MEBaseEntity *)entity;
 
 @end
 
 @implementation TCatListItemInfo
 
 //---------------------------------------------------------------------------------------------------------------------
-- (id) initWithCategory:(TCategory *)cat forEntity:(TBaseEntity *)entity {
+- (id) initWithCategory:(MECategory *)cat forEntity:(MEBaseEntity *)entity {
     
     self = [super init];
     if (self) {
         self->category = cat;
         SEL categoryByGID = @selector(categoryByGID:);
-        TCategory *categorizingCat = [entity performSelector:categoryByGID withObject:cat.GID];
+        MECategory *categorizingCat = [entity performSelector:categoryByGID withObject:cat.GID];
         self->wasSelected = self->isSelected = (categorizingCat != nil);
     }
     return self;
@@ -119,18 +119,12 @@ NSString * _getIconURLFromIndex(int n) {
 //---------------------------------------------------------------------------------------------------------------------
 - (void) _getCategoriesListInfo {
     
-    NSError *error = nil;
-    NSArray *allCats = [[ModelService sharedInstance] getAllCategoriesInMap:self.map error:&error];
-    if(!error) {
-        NSMutableArray *cats = [NSMutableArray array];
-        for(TCategory *cat in allCats) {
-            TCatListItemInfo *itemInfo = [[TCatListItemInfo alloc] initWithCategory:cat forEntity:self.entity];
-            [cats addObject:itemInfo];
-        }
-        self.catListInfo = [[cats copy] autorelease];
-    } else {
-        NSLog(@"Error reading map's categories info: %@ / %@", error, [error userInfo]);
+    NSMutableArray *cats = [NSMutableArray array];
+    for(MECategory *cat in self.map.categories) {
+        TCatListItemInfo *itemInfo = [[TCatListItemInfo alloc] initWithCategory:cat forEntity:self.entity];
+        [cats addObject:itemInfo];
     }
+    self.catListInfo = [[cats copy] autorelease];
 }
 
 //---------------------------------------------------------------------------------------------------------------------

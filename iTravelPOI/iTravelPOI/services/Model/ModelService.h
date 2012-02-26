@@ -7,11 +7,17 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TMap.h"
-#import "TCategory.h"
-#import "TPoint.h"
+#import "SrvcTicket.h"
+#import "MEBaseEntity.h"
+#import "MEMap.h"
+#import "MECategory.h"
+#import "MEPoint.h"
 
 
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark Enumeration & definitions
+//---------------------------------------------------------------------------------------------------------------------
 
 #define CD_MODEL_NAME @"iTravelPOI"
 #define CD_SLQLITE_FNAME @"iTravelPOI.sqlite"
@@ -24,32 +30,46 @@ typedef enum {
 } SORTING_METHOD;
 
 
+typedef void (^TBlock_saveContextFinished)(SrvcTicket *ticket, NSError *error);
+typedef void (^TBlock_getUserMapListFinished)(SrvcTicket *ticket, NSArray *maps, NSError *error);
+typedef void (^TBlock_getFlatElemensInMapFinished)(SrvcTicket *ticket, NSArray *elements, NSError *error);
+typedef void (^TBlock_getCategorizedElemensInMapFinished)(SrvcTicket *ticket, NSArray *elements, NSError *error);
+
+
 
 //*********************************************************************************************************************
+#pragma mark -
+#pragma mark ModelService interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface ModelService : NSObject {
-}
+@interface ModelService : NSObject 
+
 
 @property (readonly, nonatomic, retain) NSManagedObjectContext * moContext;
 
 
+
+//---------------------------------------------------------------------------------------------------------------------
+#pragma mark -
+#pragma mark ModelService CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
 + (ModelService *)sharedInstance;
 
 
+
+//---------------------------------------------------------------------------------------------------------------------
+#pragma mark -
+#pragma mark ModelService INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
 - (void) initCDStack;
 - (void) doneCDStack;
-- (NSError *) saveContext;
 
+- (SRVC_ASYNCHRONOUS) saveContext:(TBlock_saveContextFinished) callbackBlock;
 
-- (NSArray *)getUserMapList:(NSError **)error;
+- (SRVC_ASYNCHRONOUS) getUserMapList:(TBlock_getUserMapListFinished) callbackBlock;
 
-- (NSArray *)sortCategoriesCategorized:(NSSet *)categories;
+- (SRVC_ASYNCHRONOUS) getFlatElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getFlatElemensInMapFinished) callbackBlock;
+- (SRVC_ASYNCHRONOUS) getCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getCategorizedElemensInMapFinished) callbackBlock;
 
-- (NSArray *)getAllCategoriesInMap:(TMap *)map error:(NSError **)error;
-- (NSArray *)getFlatElemensInMap:(TMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy error:(NSError **)error ;
-- (NSArray *)getCategorizedElemensInMap:(TMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy error:(NSError **)error;
 
 
 @end

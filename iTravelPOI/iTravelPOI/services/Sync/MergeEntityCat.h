@@ -7,44 +7,44 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TBaseEntity.h"
-#import "TPoint.h"
-#import "TCategory.h"
-#import "TMap.h"
+#import "MEBaseEntity.h"
+#import "MEPoint.h"
+#import "MECategory.h"
+#import "MEMap.h"
 
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
-@interface TBaseEntity (MergeTBaseEntityCat)
+@interface MEBaseEntity (MergeMEBaseEntityCat)
 
-- (void) mergeFrom:(TBaseEntity *) other withConflit:(BOOL) thereWasConflit;
+- (void) mergeFrom:(MEBaseEntity *) other withConflit:(BOOL) thereWasConflit;
 
 @end
 
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
-@interface TPoint (MergeTPointCat)
+@interface MEPoint (MergeMEPointCat)
 
-- (void) mergeFrom:(TPoint *) other withConflit:(BOOL) thereWasConflit;
-
-@end
-
-
-//*********************************************************************************************************************
-//---------------------------------------------------------------------------------------------------------------------
-@interface TCategory (MergeTCategoryCat)
-
-- (void) mergeFrom:(TCategory *) other withConflit:(BOOL) thereWasConflit;
+- (void) mergeFrom:(MEPoint *) other withConflit:(BOOL) thereWasConflit;
 
 @end
 
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
-@interface TMap (MergeTMapCat)
+@interface MECategory (MergeMECategoryCat)
 
-- (void) mergeFrom:(TMap *) other withConflit:(BOOL) thereWasConflit;
+- (void) mergeFrom:(MECategory *) other withConflit:(BOOL) thereWasConflit;
+
+@end
+
+
+//*********************************************************************************************************************
+//---------------------------------------------------------------------------------------------------------------------
+@interface MEMap (MergeMEMapCat)
+
+- (void) mergeFrom:(MEMap *) other withConflit:(BOOL) thereWasConflit;
 
 @end
 

@@ -12,39 +12,76 @@
 
 
 //*********************************************************************************************************************
+#pragma mark -
+#pragma mark ModelService PRIVATE interface definition
 //---------------------------------------------------------------------------------------------------------------------
 @interface ModelService () 
 
-@property (readonly, nonatomic, retain) NSEntityDescription * mapEntityDescription;
-@property (readonly, nonatomic, retain) NSEntityDescription * categoryEntityDescription;
-@property (readonly, nonatomic, retain) NSEntityDescription * pointEntityDescription;
+@property (nonatomic, readonly) NSManagedObjectModel * moModel;
+@property (nonatomic, readonly) NSPersistentStoreCoordinator * psCoordinator;
 
-@property (readonly, nonatomic, retain) NSManagedObjectModel * moModel;
-@property (readonly, nonatomic, retain) NSPersistentStoreCoordinator * psCoordinator;
+
+- (NSURL *) _applicationDocumentsDirectory;
+
+- (void) _initCDStack;
+- (void) _doneCDStack;
+
+- (NSError *) _saveContext;
+- (NSArray *) _getUserMapList:(NSError **)error;
+- (NSArray *) _getFlatElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy error:(NSError **)error ;
+- (NSArray *) _getCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy error:(NSError **)error;
+
+- (NSSet *) _getAllCategorizedPoints:(MEMap *)map forCategories:(NSArray *)categories;
+- (NSSet *) _getAllCategoriesForPoints:(NSSet *)points excludedCategories:(NSArray *)excludedCats inMap:(MEMap *)map;
+- (NSSet *) _filterSubcategories:(NSSet *)categories;
+- (NSSet *) _filterCategorizedPoints:(NSSet *)points forCategories:(NSSet *)categories;
+
 
 @end
 
 
 
 //*********************************************************************************************************************
+#pragma mark -
+#pragma mark ModelService implementation
 //---------------------------------------------------------------------------------------------------------------------
 @implementation ModelService
 
+dispatch_queue_t _ModelServiceQueue;
+
 NSManagedObjectContext * _moContext;
-NSPersistentStoreCoordinator * _psCoordinator;
 NSManagedObjectModel * _moModel;
-NSEntityDescription *_mapEntityDescription;
-NSEntityDescription *_categoryEntityDescription;
-NSEntityDescription *_pointEntityDescription;
+NSPersistentStoreCoordinator * _psCoordinator;
 
 
 
-//=====================================================================================================================
-#pragma mark - Inicizacion de la clase
-//=====================================================================================================================
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark initialization & finalization
+//---------------------------------------------------------------------------------------------------------------------
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        _ModelServiceQueue = dispatch_queue_create("ModelServiceAsyncQueue", NULL);
+    }
+    
+    return self;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void)dealloc
+{
+    [self doneCDStack];
+    dispatch_release(_ModelServiceQueue);
+    [super dealloc];
+}
 
 
 
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark CLASS methods
 //---------------------------------------------------------------------------------------------------------------------
 + (ModelService *)sharedInstance {
     
@@ -59,68 +96,184 @@ NSEntityDescription *_pointEntityDescription;
 }
 
 
-//---------------------------------------------------------------------------------------------------------------------
-- (void)dealloc
-{
-    [self doneCDStack];
-    [super dealloc];
-}
 
-
-
-//=====================================================================================================================
-#pragma mark - API publico de la clase
-//=====================================================================================================================
-
-
-
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark General PUBLIC methods
 //---------------------------------------------------------------------------------------------------------------------
 - (void) initCDStack {
     
-    NSLog(@"ModelService - initCDStack");
+    NSLog(@"ModelService - Async - initCDStack");
     
-    [self moContext];
+    // Hacemos el trabajo en otro hilo porque el resto del API se ejecutara en ese hilo
+//    dispatch_sync(_ModelServiceQueue, ^(void) {
+        [[ModelService sharedInstance] _initCDStack];
+//    });
+    
 }
-
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) doneCDStack {
     
-    NSLog(@"ModelService - doneCDStack");
+    NSLog(@"ModelService - Async - doneCDStack");
     
-    [_moContext release];
-    [_moModel release];
-    [_psCoordinator release];
-    [_mapEntityDescription release];
-    [_categoryEntityDescription release];
-    [_pointEntityDescription release];
+    // Hacemos el trabajo en otro hilo porque el resto del API se ejecutara en ese hilo
+    dispatch_sync(_ModelServiceQueue, ^(void) {
+        [[ModelService sharedInstance] _doneCDStack];
+    });
     
-    _moContext = nil;
-    _moModel = nil;
-    _psCoordinator = nil;
-    _mapEntityDescription = nil;
-    _categoryEntityDescription = nil;
-    _pointEntityDescription = nil;
 }
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (NSError *) saveContext {
+- (SRVC_ASYNCHRONOUS) saveContext:(TBlock_saveContextFinished) callbackBlock {
     
-    NSLog(@"ModelService - saveContext");
+    NSLog(@"ModelService - Async - saveContext");
     
-    NSError *error = nil;
-    if(self.moContext!=nil && [self.moContext hasChanges]) {
-        if(![self.moContext save:&error]){
-            NSLog(@"ModelService - Error saving NSManagedContext: %@, %@", error, [error userInfo]);
-            return error;
-        } 
+    // Si no hay nadie esperando no hacemos nada
+    if(callbackBlock==nil) {
+        return nil;
     }
     
-    return nil;
+    // Se apunta la cola en la que deberá dar la respuesta de callback
+    dispatch_queue_t caller_queue = dispatch_get_current_queue();
     
+    // Crea un ticket para poder comprobar si se cancelo la llamada
+    SrvcTicket *ticket = [[SrvcTicket alloc] init];
+    
+    // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
+    dispatch_async(_ModelServiceQueue,^(void){
+        if(!ticket.isCancelled) {
+            NSError *error = [[ModelService sharedInstance] _saveContext];
+            
+            // Avisamos al llamante de que ya se ha actualizado el mapa solicitado
+            dispatch_async(caller_queue, ^(void){
+                callbackBlock(ticket, error);
+            });
+        }
+        
+        // Liberamos el ticket
+        [ticket release];
+    });
+    
+    // Retorna el ticket de esta operacion
+    return ticket;
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (SRVC_ASYNCHRONOUS) getUserMapList:(TBlock_getUserMapListFinished) callbackBlock {
+    
+    NSLog(@"ModelService - Async - getUserMapList");
+    
+    // Si no hay nadie esperando no hacemos nada
+    if(callbackBlock==nil) {
+        return nil;
+    }
+    
+    // Se apunta la cola en la que deberá dar la respuesta de callback
+    dispatch_queue_t caller_queue = dispatch_get_current_queue();
+    
+    // Crea un ticket para poder comprobar si se cancelo la llamada
+    SrvcTicket *ticket = [[SrvcTicket alloc] init];
+    
+    // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
+    dispatch_async(_ModelServiceQueue,^(void){
+        if(!ticket.isCancelled) {
+            NSError *error = nil;
+            NSArray * maps = [[ModelService sharedInstance] _getUserMapList:&error];
+            
+            // Avisamos al llamante de que ya se ha actualizado el mapa solicitado
+            dispatch_async(caller_queue, ^(void){
+                callbackBlock(ticket, maps, error);
+            });
+        }
+        
+        // Liberamos el ticket
+        [ticket release];
+    });
+    
+    // Retorna el ticket de esta operacion
+    return ticket;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (SRVC_ASYNCHRONOUS) getFlatElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getFlatElemensInMapFinished)callbackBlock {
+    
+    NSLog(@"ModelService - Async - getFlatElemensInMap");
+    
+    // Si no hay nadie esperando no hacemos nada
+    if(callbackBlock==nil) {
+        return nil;
+    }
+    
+    // Se apunta la cola en la que deberá dar la respuesta de callback
+    dispatch_queue_t caller_queue = dispatch_get_current_queue();
+    
+    // Crea un ticket para poder comprobar si se cancelo la llamada
+    SrvcTicket *ticket = [[SrvcTicket alloc] init];
+    
+    // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
+    dispatch_async(_ModelServiceQueue,^(void) {
+        
+        if(!ticket.isCancelled) {
+            NSError *error = nil;
+            NSArray *elements = [[ModelService sharedInstance] _getFlatElemensInMap:map forCategories:categories orderBy:orderBy error:&error];
+            
+            // Avisamos al llamante de que ya se ha actualizado el mapa solicitado
+            dispatch_async(caller_queue, ^(void){
+                callbackBlock(ticket, elements, error);
+            });
+        }
+        
+        // Liberamos el ticket
+        [ticket release];
+    });
+    
+    // Retorna el ticket de esta operacion
+    return ticket;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (SRVC_ASYNCHRONOUS) getCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getCategorizedElemensInMapFinished)callbackBlock {
+    
+    NSLog(@"ModelService - Async - getCategorizedElemensInMap");
+    
+    // Si no hay nadie esperando no hacemos nada
+    if(callbackBlock==nil) {
+        return nil;
+    }
+    
+    // Se apunta la cola en la que deberá dar la respuesta de callback
+    dispatch_queue_t caller_queue = dispatch_get_current_queue();
+    
+    // Crea un ticket para poder comprobar si se cancelo la llamada
+    SrvcTicket *ticket = [[SrvcTicket alloc] init];
+    
+    // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
+    dispatch_async(_ModelServiceQueue,^(void){
+        if(!ticket.isCancelled) {
+            NSError *error = nil;
+            NSArray *elements = [[ModelService sharedInstance] _getCategorizedElemensInMap:map forCategories:categories orderBy:orderBy error:&error];
+            
+            // Avisamos al llamante de que ya se ha actualizado el mapa solicitado
+            dispatch_async(caller_queue, ^(void){
+                callbackBlock(ticket, elements, error);
+            });
+        }
+        
+        // Liberamos el ticket
+        [ticket release];
+    });
+    
+    // Retorna el ticket de esta operacion
+    return ticket;
+}
+
+
+
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark Getter/Setter methods
 //---------------------------------------------------------------------------------------------------------------------
 - (NSManagedObjectContext *) moContext {
     
@@ -139,382 +292,6 @@ NSEntityDescription *_pointEntityDescription;
         return nil;
     }
     
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSArray *)getUserMapList:(NSError **)error {
-    
-    NSLog(@"ModelService - getUserMapList");
-    
-    // Crea la peticion
-    NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
-    [request setEntity:self.mapEntityDescription];
-    
-    // Establece el predicado de busqueda
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(_i_wasDeleted = 0)"];
-    [request setPredicate:predicate];
-    
-    // Estable el orden del resultado
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc]
-                                        initWithKey:@"name" ascending:YES];
-    [request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
-    [sortDescriptor release];
-    
-    // Realiza la busqueda
-    NSError *_err = nil;
-    NSArray *mapList = [self.moContext executeFetchRequest:request error:&_err];
-    
-    *error = _err;
-    return mapList;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-// Ordena la lista de categorias poniendo primero a quien es subcategoria de otro y deja al final a las "padre"
-- (NSArray *)sortCategoriesCategorized:(NSSet *)categories {
-    
-    NSMutableArray *sortedList = [NSMutableArray array];
-    NSMutableArray *originalList = [NSMutableArray arrayWithArray:[categories allObjects]];
-    
-    while([originalList count] > 0) {
-        
-        TCategory *cat1 = [originalList objectAtIndex:0];
-        [originalList removeObjectAtIndex:0];
-        
-        BOOL addThisCat = true;
-        for(TCategory *cat2 in originalList) {
-            if([cat1 recursiveContainsSubCategory:cat2]) {
-                addThisCat = false;
-                break;
-            }
-        }
-        
-        if (addThisCat) {
-            // La saca y la da por ordenada
-            [sortedList addObject:cat1];
-        } else {
-            // La retorna para procesarla de nuevo contra el resto de categorias
-            [originalList addObject:cat1];
-        }
-        
-    }
-    
-    // Retorna la lista ordenada por categorizacion
-    return [[sortedList copy] autorelease];
-}
-
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSArray *)getAllCategoriesInMap:(TMap *)map error:(NSError **)error {
-    
-    NSLog(@"ModelService - getAllCategoriesInMap");
-    
-    
-    // Establece el predicado de busqueda para las entidades
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(map.GID = %@) AND (_i_wasDeleted = 0)", map.GID];
-    
-    // Estable el orden del resultado
-    NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc]
-                                         initWithKey:@"name" ascending:YES] autorelease];
-    
-    // Crea la peticion para categorias
-    NSFetchRequest *requestCat = [[[NSFetchRequest alloc] init] autorelease];
-    [requestCat setEntity:self.categoryEntityDescription];
-    [requestCat setPredicate:predicate];
-    [requestCat setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
-    
-    // Realiza la busqueda de las categorias
-    NSError *_err = nil;
-    NSArray *cats = [self.moContext executeFetchRequest:requestCat error:&_err];
-    *error = _err;
-    if(_err) {
-        return nil;
-    }
-    
-    return cats;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSArray *)getFlatElemensInMap:(TMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy error:(NSError **)error {
-    
-    NSLog(@"ModelService - getFlatElemensInMap");
-    
-    
-    NSComparator comparator = ^NSComparisonResult(id obj1, id obj2) {
-        TBaseEntity *e1 = obj1;
-        TBaseEntity *e2 = obj2;
-        switch (orderBy) {
-            case SORT_BY_CREATING_DATE:
-                return [e1.ts_created compare:e2.ts_created];
-                
-            case SORT_BY_UPDATING_DATE:
-                return [e1.ts_updated compare:e2.ts_updated];
-                
-            default:
-                return [e1.name compare:e2.name];
-        }
-    };
-
-    
-    if(categories!=nil && [categories count]>0) {
-        
-        NSMutableArray *points = [NSMutableArray array];
-        for(TPoint *point in map.points) {
-            
-            if(point.wasDeleted) {
-                continue;
-            }
-            
-            BOOL all = true;
-            for(TCategory *cat in categories) {
-                if(![cat recursiveContainsPoint:point]) {
-                    all = false;
-                    break;
-                }
-            }
-            
-            if(all) {
-                [points addObject:point];
-            }
-            
-        }
-        
-        NSArray *sortedPoints = [points sortedArrayUsingComparator:comparator];
-        return sortedPoints;
-        
-    } else {
-
-        NSMutableArray *allCats = [NSMutableArray array];
-        for(TCategory *cat in map.categories) {
-            if(!cat.wasDeleted) {
-                cat.t_displayCount = [[cat allRecursivePoints] count];
-                [allCats addObject:cat];
-            }
-        }
-        NSArray *sortedCategories = [allCats sortedArrayUsingComparator:comparator];
-        
-        NSMutableArray *allPoints = [NSMutableArray array];
-        for(TPoint *point in map.points) {
-            if(!point.wasDeleted) {
-                [allPoints addObject:point];
-            }
-        }
-        NSArray *sortedPoints = [allPoints sortedArrayUsingComparator:comparator];
-
-        
-        NSMutableArray *allElements = [NSMutableArray array];
-        [allElements addObjectsFromArray:sortedCategories];
-        [allElements addObjectsFromArray:sortedPoints];
-        
-        return allElements;
-    }
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSSet *) getAllCategorizedPoints:(TMap *)map forCategories:(NSArray *)categories {
-    
-    NSMutableSet *set = [NSMutableSet set];
-    
-    // Si no hay categorias restringiendo los puntos retorna todos los del mapa
-    if([categories count]==0) {
-        for (TPoint *point in map.points) {
-            if(!point.wasDeleted) {
-                [set addObject:point];
-            }
-        }
-    }
-    else {
-        // En otro caso, retorna todos los puntos de las categorias de forma recursiva
-        // Pero solo aquellos que esten categorizados por la lista pasada
-        [set unionSet:[[categories objectAtIndex:0] allRecursivePoints]];
-        for(int n=1;n<[categories count];n++) {
-            [set intersectSet:[[categories objectAtIndex:n] allRecursivePoints]];
-        }
-    }
-    
-    return set;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSSet *) getAllCategoriesForPoints:(NSSet *)points excludedCategories:(NSArray *)excludedCats inMap:(TMap *)map {
-    
-    NSMutableSet *parentFilter = [NSMutableSet set];
-    for(TCategory *cat in excludedCats) {
-        [parentFilter unionSet:[cat allParentCategories]];
-    }
-    
-    NSSet *lastFilterCategories = ((TCategory *)[excludedCats lastObject]).subcategories;
-    
-    NSMutableSet *set = [NSMutableSet set];
-    
-    for(TPoint *point in points) {
-        
-        for(TCategory *cat in map.categories) {
-            
-            // Si no está borrada y categoriza a ese punto lo añade
-            if(!cat.wasDeleted && [cat recursiveContainsPoint:point]) {
-                
-                if([lastFilterCategories containsObject:cat] || ![[cat allParentCategories] intersectsSet:parentFilter]) {
-                    [set addObject:cat];
-                }
-            }
-            
-        }
-    }
-    
-    [set minusSet:[NSSet setWithArray:excludedCats]];
-    
-    return  set;
-}
-
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSSet *) filterSubcategories:(NSSet *)categories {
-    
-    NSMutableSet *rootCats = [NSMutableSet set];
-    for(TCategory *c1 in categories) {
-        
-        BOOL isSubCat = false;
-        
-        for(TCategory *c2 in categories) {
-            if([c2 recursiveContainsSubCategory:c1]) {
-                isSubCat = true;
-                break;
-            }
-        }
-        
-        if(!isSubCat) {
-            c1.t_displayCount = 0;
-            [rootCats addObject:c1];
-        }
-    }
-    
-    return  rootCats;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSSet *) filterCategorizedPoints:(NSSet *)points forCategories:(NSSet *)categories {
-    
-    NSMutableSet *rootPoints = [NSMutableSet set];
-    
-    for(TPoint *point in points) {
-        
-        BOOL containedPoint = false;
-        
-        for(TCategory *cat in categories) {
-            
-            if([cat recursiveContainsPoint:point]) {
-                containedPoint = true;
-                cat.t_displayCount++;
-            }
-            
-        }
-        
-        if(!containedPoint) {
-            [rootPoints addObject:point];
-        }
-        
-    }
-    
-    return  rootPoints;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSArray *)getCategorizedElemensInMap:(TMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy error:(NSError **)error {
-    
-    NSLog(@"ModelService - getCategorizedElemensInMap");
-    
-    NSSet *allFilteredPoints = [self getAllCategorizedPoints:map forCategories:categories];
-    NSSet *allCategoriesForPoints = [self getAllCategoriesForPoints:allFilteredPoints excludedCategories:categories inMap:map];
-    
-    NSSet *rootCats = [self filterSubcategories:allCategoriesForPoints];
-    NSSet *rootPoints = [self filterCategorizedPoints:allFilteredPoints forCategories:rootCats];
-    
-    
-    NSComparator comparator = ^NSComparisonResult(id obj1, id obj2) {
-        TBaseEntity *e1 = obj1;
-        TBaseEntity *e2 = obj2;
-        switch (orderBy) {
-            case SORT_BY_CREATING_DATE:
-                return [e1.ts_created compare:e2.ts_created];
-                
-            case SORT_BY_UPDATING_DATE:
-                return [e1.ts_updated compare:e2.ts_updated];
-                
-            default:
-                return [e1.name compare:e2.name];
-        }
-    };
-    
-    NSArray *sortedCats = [[rootCats allObjects] sortedArrayUsingComparator:comparator];
-    NSArray *sortedPoints = [[rootPoints allObjects] sortedArrayUsingComparator:comparator];
-    
-    NSMutableArray *allElements = [NSMutableArray array];
-    [allElements addObjectsFromArray:sortedCats];
-    [allElements addObjectsFromArray:sortedPoints];
-    
-    return allElements;
-}
-
-
-
-/***
- NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
- [request setEntity:entityDescription];
- 
- // Set example predicate and sort orderings...
- NSNumber *minimumSalary = ...;
- NSPredicate *predicate = [NSPredicate predicateWithFormat:
- @"(lastName LIKE[c] 'Worsley') AND (salary > %@)", minimumSalary];
- [request setPredicate:predicate];
- 
- NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc]
- initWithKey:@"firstName" ascending:YES];
- [request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
- [sortDescriptor release];
- 
- NSError *error = nil;
- NSArray *array = [moc executeFetchRequest:request error:&error];
- 
- ***/
-
-
-
-//=====================================================================================================================
-#pragma mark - Metodos privados de la clase
-//=====================================================================================================================
-
-
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSEntityDescription *) mapEntityDescription {
-    if(_mapEntityDescription==nil) {
-        _mapEntityDescription = [NSEntityDescription
-                                 entityForName:@"TMap" inManagedObjectContext:self.moContext];
-    }
-    return _mapEntityDescription;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSEntityDescription *) categoryEntityDescription {
-    if(_categoryEntityDescription==nil) {
-        _categoryEntityDescription = [NSEntityDescription
-                                      entityForName:@"TCategory" inManagedObjectContext:self.moContext];
-    }
-    return _categoryEntityDescription;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSEntityDescription *) pointEntityDescription {
-    if(_pointEntityDescription==nil) {
-        _pointEntityDescription = [NSEntityDescription
-                                   entityForName:@"TPoint" inManagedObjectContext:self.moContext];
-    }
-    return _pointEntityDescription;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSURL *) _applicationDocumentsDirectory {
-    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -547,7 +324,6 @@ NSEntityDescription *_pointEntityDescription;
     return _psCoordinator;
 }
 
-
 //---------------------------------------------------------------------------------------------------------------------
 - (NSManagedObjectModel *) moModel {
     
@@ -565,5 +341,345 @@ NSEntityDescription *_pointEntityDescription;
     
     return _moModel;
 }
+
+
+
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark PRIVATE methods
+//---------------------------------------------------------------------------------------------------------------------
+- (NSURL *) _applicationDocumentsDirectory {
+    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _initCDStack {
+    
+    NSLog(@"ModelService - _initCDStack");
+    
+    [self moContext];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _doneCDStack {
+    
+    NSLog(@"ModelService - _doneCDStack");
+    
+    [_moContext release];
+    [_moModel release];
+    [_psCoordinator release];
+    
+    _moContext = nil;
+    _moModel = nil;
+    _psCoordinator = nil;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSError *) _saveContext {
+    
+    NSLog(@"ModelService - _saveContext");
+    
+    NSError *error = nil;
+    if(self.moContext!=nil && [self.moContext hasChanges]) {
+        if(![self.moContext save:&error]){
+            NSLog(@"ModelService - Error saving NSManagedContext: %@, %@", error, [error userInfo]);
+            return error;
+        } 
+    }
+    
+    return nil;
+    
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSArray *) _getUserMapList:(NSError **)error {
+    
+    NSLog(@"ModelService - _getUserMapList");
+    
+    // Crea la peticion
+    NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
+    [request setEntity:[MEMap mapEntity]];
+    
+    // Establece el predicado de busqueda
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(_i_wasDeleted = 0)"];
+    [request setPredicate:predicate];
+    
+    // Estable el orden del resultado
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc]
+                                        initWithKey:@"name" ascending:YES];
+    [request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+    [sortDescriptor release];
+    
+    // Realiza la busqueda
+    NSError *_err = nil;
+    NSArray *mapList = [self.moContext executeFetchRequest:request error:&_err];
+    
+    *error = _err;
+    return mapList;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSArray *) _getAllCategoriesInMap:(MEMap *)map error:(NSError **)error {
+    
+    NSLog(@"ModelService - _getAllCategoriesInMap");
+    
+    
+    // Establece el predicado de busqueda para las entidades
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(map.GID = %@) AND (_i_wasDeleted = 0)", map.GID];
+    
+    // Estable el orden del resultado
+    NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc]
+                                         initWithKey:@"name" ascending:YES] autorelease];
+    
+    // Crea la peticion para categorias
+    NSFetchRequest *requestCat = [[[NSFetchRequest alloc] init] autorelease];
+    [requestCat setEntity:[MECategory categoryEntity]];
+    [requestCat setPredicate:predicate];
+    [requestCat setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+    
+    // Realiza la busqueda de las categorias
+    NSError *_err = nil;
+    NSArray *cats = [self.moContext executeFetchRequest:requestCat error:&_err];
+    *error = _err;
+    if(_err) {
+        return nil;
+    }
+    
+    return cats;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSArray *) _getFlatElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy error:(NSError **)error {
+    
+    NSLog(@"ModelService - _getFlatElemensInMap");
+    
+    
+    // Algoritmo de comparacion para ordenar los elementos segun se especifique
+    NSComparator comparator = ^NSComparisonResult(id obj1, id obj2) {
+        MEBaseEntity *e1 = obj1;
+        MEBaseEntity *e2 = obj2;
+        switch (orderBy) {
+            case SORT_BY_CREATING_DATE:
+                return [e1.ts_created compare:e2.ts_created];
+                
+            case SORT_BY_UPDATING_DATE:
+                return [e1.ts_updated compare:e2.ts_updated];
+                
+            default:
+                return [e1.name compare:e2.name];
+        }
+    };
+    
+    
+    
+    // Se retorna desde el mapa si no se han especificado categorias filtro
+    if(categories!=nil && [categories count]>0) {
+        
+        // Se queda solo con los puntos que estan categorizados por el filtro
+        NSMutableArray *points = [NSMutableArray array];
+        for(MEPoint *point in map.points) {
+                        
+            BOOL all = true;
+            for(MECategory *cat in categories) {
+                if(![cat recursiveContainsPoint:point]) {
+                    all = false;
+                    break;
+                }
+            }
+            
+            if(all) {
+                [points addObject:point];
+            }
+            
+        }
+        
+        // Los ordena y retorna
+        NSArray *sortedPoints = [points sortedArrayUsingComparator:comparator];
+        return sortedPoints;
+        
+    } else {
+        
+        // Actualiza la cuenta de los puntos de forma recursiva para todas las categorias y las ordena
+        for(MECategory *cat in map.categories) {
+                cat.t_displayCount = [[cat allRecursivePoints] count];
+        }
+        NSArray *sortedCategories = [[map.categories allObjects] sortedArrayUsingComparator:comparator];
+
+        // Ordena todos los puntos del mapa segun hayan indicado
+        NSArray *sortedPoints = [[map.points allObjects] sortedArrayUsingComparator:comparator];
+        
+        // Retorna la union de categorias y puntos
+        NSMutableArray *allElements = [NSMutableArray array];
+        [allElements addObjectsFromArray:sortedCategories];
+        [allElements addObjectsFromArray:sortedPoints];
+        
+        return allElements;
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSArray *) _getCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy error:(NSError **)error {
+    
+    NSLog(@"ModelService - _getCategorizedElemensInMap");
+
+    
+    // Algoritmo de comparacion para ordenar los elementos segun se especifique
+    NSComparator comparator = ^NSComparisonResult(id obj1, id obj2) {
+        MEBaseEntity *e1 = obj1;
+        MEBaseEntity *e2 = obj2;
+        switch (orderBy) {
+            case SORT_BY_CREATING_DATE:
+                return [e1.ts_created compare:e2.ts_created];
+                
+            case SORT_BY_UPDATING_DATE:
+                return [e1.ts_updated compare:e2.ts_updated];
+                
+            default:
+                return [e1.name compare:e2.name];
+        }
+    };
+
+    
+    // Consigue el conjunto de puntos para el filtro y las categorias del este
+    NSSet *allFilteredPoints = [self _getAllCategorizedPoints:map forCategories:categories];
+    NSSet *allCategoriesForPoints = [self _getAllCategoriesForPoints:allFilteredPoints excludedCategories:categories inMap:map];
+    
+    // Elimina las subcategorias y puntos que no deben aparecer a primer nivel
+    NSSet *rootCats = [self _filterSubcategories:allCategoriesForPoints];
+    NSSet *rooMEPoints = [self _filterCategorizedPoints:allFilteredPoints forCategories:rootCats];
+    
+    
+    // Ordena los conjuntos de categorias y puntos resultantes segun lo indicado
+    NSArray *sortedCats = [[rootCats allObjects] sortedArrayUsingComparator:comparator];
+    NSArray *sortedPoints = [[rooMEPoints allObjects] sortedArrayUsingComparator:comparator];
+    
+    // Retorna la union de categorias y puntos
+    NSMutableArray *allElements = [NSMutableArray array];
+    [allElements addObjectsFromArray:sortedCats];
+    [allElements addObjectsFromArray:sortedPoints];
+    
+    return allElements;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+// Retorna el conjunto de puntos que estan categorizados (jeraquicamente) por el filtro pasado
+- (NSSet *) _getAllCategorizedPoints:(MEMap *)map forCategories:(NSArray *)categories {
+        
+    // Si no hay categorias restringiendo los puntos retorna todos los del mapa
+    if([categories count]==0) {
+        return map.points;
+    }
+    else {
+        // En otro caso, retorna todos los puntos de las categorias de forma recursiva
+        // Pero solo aquellos que esten categorizados por la lista pasada
+        NSMutableSet *set = [NSMutableSet set];
+
+        [set unionSet:[[categories objectAtIndex:0] allRecursivePoints]];
+        for(int n=1;n<[categories count];n++) {
+            [set intersectSet:[[categories objectAtIndex:n] allRecursivePoints]];
+        }
+
+        return set;
+    }
+    
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+// Retorna el conjunto de categorias aplicadas al conjunto de puntos indicado
+// Se filtran aquellas categorias que no estan relacionadas con el filtro
+- (NSSet *) _getAllCategoriesForPoints:(NSSet *)points excludedCategories:(NSArray *)excludedCats inMap:(MEMap *)map {
+    
+    // Conjunto de categorias "padre" del filtro
+    NSMutableSet *parentFilter = [NSMutableSet set];
+    for(MECategory *cat in excludedCats) {
+        [parentFilter unionSet:[cat allParentCategories]];
+    }
+    
+    // Subcategorias del ultimo paso del filtro
+    NSSet *lastFilterCategories = ((MECategory *)[excludedCats lastObject]).subcategories;
+
+    // Calcula el conjunto resultante para cada punto con las categorias del mapa (jerarquico)
+    NSMutableSet *set = [NSMutableSet set];
+    for(MEPoint *point in points) {
+        
+        for(MECategory *cat in map.categories) {
+            
+            // Si categoriza (jerarquicamente) a ese punto lo podria añadir
+            if([cat recursiveContainsPoint:point]) {
+                
+                // Evita categorias que compartan como "padre" a alguno de los del filtro
+                // En puntos que tengan C1 y C2, con ambas con C0 como ancestro, si se va por C1 se filtra C2
+                // Las categorias "hijas" del ultimo filtro siempre se añaden
+                if([lastFilterCategories containsObject:cat] || ![[cat allParentCategories] intersectsSet:parentFilter]) {
+                    [set addObject:cat];
+                }
+            }
+            
+        }
+    }
+    
+    // Se eliminan las categorias del filtro
+    [set minusSet:[NSSet setWithArray:excludedCats]];
+    
+    return  set;
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------
+// Se eliminan aquellas categorias que sean hijas (jerarquicamente) de alguna otra
+// De paso, antes de añadirla al conjunto a retornar, le pone la cuenta de puntos a cero
+- (NSSet *) _filterSubcategories:(NSSet *)categories {
+    
+    NSMutableSet *rootCats = [NSMutableSet set];
+    for(MECategory *c1 in categories) {
+        
+        BOOL isSubCat = false;
+        
+        for(MECategory *c2 in categories) {
+            if([c2 recursiveContainsSubCategory:c1]) {
+                isSubCat = true;
+                break;
+            }
+        }
+        
+        if(!isSubCat) {
+            c1.t_displayCount = 0;
+            [rootCats addObject:c1];
+        }
+    }
+    
+    return  rootCats;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+// Elimina aquellos puntos que queden "dentro" de alguna categoria (filtrado a primer nivel)
+// Actualiza la cuenta de las categorias que terminen "escondiendo" un punto
+- (NSSet *) _filterCategorizedPoints:(NSSet *)points forCategories:(NSSet *)categories {
+    
+    NSMutableSet *rooMEPoints = [NSMutableSet set];
+    
+    for(MEPoint *point in points) {
+        
+        BOOL containedPoint = false;
+        
+        for(MECategory *cat in categories) {
+            
+            if([cat recursiveContainsPoint:point]) {
+                containedPoint = true;
+                cat.t_displayCount++;
+            }
+            
+        }
+        
+        if(!containedPoint) {
+            [rooMEPoints addObject:point];
+        }
+        
+    }
+    
+    return  rooMEPoints;
+}
+
+
 
 @end

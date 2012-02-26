@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "PointCatEditorController.h"
-#import "TMap.h"
-#import "TCategory.h"
+#import "MEMap.h"
+#import "MECategory.h"
 
 typedef enum {
     showCategorized = 0,
@@ -22,8 +22,10 @@ typedef enum {
     
 }
 
-@property (nonatomic, retain) TMap *map;
+@property (nonatomic, retain) MEMap *map;
 @property (nonatomic, retain) NSArray *filteringCategories;
 @property (nonatomic, assign) PointListShowMode showMode;
+
+- (void) changeShowMode:(PointListShowMode) mode;
 
 @end

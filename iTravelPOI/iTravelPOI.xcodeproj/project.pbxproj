@@ -49,6 +49,8 @@
 		42AC3F4314F9001800E5DECB /* MapEditorController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 42AC3F3E14F9001800E5DECB /* MapEditorController.xib */; };
 		42AC3F4414F9001800E5DECB /* PointCatEditorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42AC3F4014F9001800E5DECB /* PointCatEditorController.m */; };
 		42AC3F4514F9001800E5DECB /* PointCatEditorController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 42AC3F4114F9001800E5DECB /* PointCatEditorController.xib */; };
+		42B235FC14FAAEC400094484 /* cabeceras.txt in Resources */ = {isa = PBXBuildFile; fileRef = 42B235FB14FAAEC300094484 /* cabeceras.txt */; };
+		42B235FF14FAB9DF00094484 /* SrvcTicket.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B235FE14FAB9DE00094484 /* SrvcTicket.m */; };
 		42B9DCDD14F06E8C00848A5B /* PointListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B9DCDB14F06E8C00848A5B /* PointListController.m */; };
 		42B9DCDE14F06E8C00848A5B /* PointListController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 42B9DCDC14F06E8C00848A5B /* PointListController.xib */; };
 		42BFAAA914EFE32000604B90 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BFAAA814EFE32000604B90 /* UIKit.framework */; };
@@ -59,20 +61,7 @@
 		42BFAAB814EFE32000604B90 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFAAB714EFE32000604B90 /* main.m */; };
 		42BFAABB14EFE32000604B90 /* iTravelPOIAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFAABA14EFE32000604B90 /* iTravelPOIAppDelegate.m */; };
 		42BFAAC114EFE32000604B90 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 42BFAABF14EFE32000604B90 /* MainWindow.xib */; };
-		42BFABBD14EFE4AD00604B90 /* TBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFAB8E14EFE4AD00604B90 /* TBaseEntity.m */; };
-		42BFABBE14EFE4AD00604B90 /* TCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFAB9114EFE4AD00604B90 /* TCategory.m */; };
-		42BFABBF14EFE4AD00604B90 /* TMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFAB9314EFE4AD00604B90 /* TMap.m */; };
-		42BFABC014EFE4AD00604B90 /* TPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFAB9514EFE4AD00604B90 /* TPoint.m */; };
-		42BFABEA14EFE5BB00604B90 /* GMapService.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFABD514EFE5BB00604B90 /* GMapService.m */; };
-		42BFABEB14EFE5BB00604B90 /* GMapServiceAsync.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFABD714EFE5BB00604B90 /* GMapServiceAsync.m */; };
-		42BFABEC14EFE5BB00604B90 /* GMapServiceWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFABD914EFE5BB00604B90 /* GMapServiceWrapper.m */; };
-		42BFABED14EFE5BB00604B90 /* PointXmlCat.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFABDB14EFE5BB00604B90 /* PointXmlCat.m */; };
 		42BFABEE14EFE5BB00604B90 /* ModelService.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFABDE14EFE5BB00604B90 /* ModelService.m */; };
-		42BFABEF14EFE5BB00604B90 /* ModelServiceAsync.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFABE014EFE5BB00604B90 /* ModelServiceAsync.m */; };
-		42BFABF014EFE5BB00604B90 /* CollectionMerger.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFABE314EFE5BB00604B90 /* CollectionMerger.m */; };
-		42BFABF114EFE5BB00604B90 /* MergeEntityCat.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFABE514EFE5BB00604B90 /* MergeEntityCat.m */; };
-		42BFABF214EFE5BB00604B90 /* SyncService.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFABE714EFE5BB00604B90 /* SyncService.m */; };
-		42BFABF314EFE5BB00604B90 /* SyncServiceAsync.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFABE914EFE5BB00604B90 /* SyncServiceAsync.m */; };
 		42BFABF614EFE6C800604B90 /* iTravelPOI.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 42BFABF414EFE6C800604B90 /* iTravelPOI.xcdatamodeld */; };
 		42BFABFB14EFE75E00604B90 /* MapListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFABF914EFE75E00604B90 /* MapListController.m */; };
 		42BFABFC14EFE75E00604B90 /* MapListController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 42BFABFA14EFE75E00604B90 /* MapListController.xib */; };
@@ -400,12 +389,12 @@
 		421A33A214F0512600968EB6 /* icon4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon4.png; sourceTree = "<group>"; };
 		421A33A314F0512600968EB6 /* icon5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon5.png; sourceTree = "<group>"; };
 		421A33A414F0512600968EB6 /* pencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pencil.png; sourceTree = "<group>"; };
-		42940E3414FA38AA00E11EBD /* MEMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MEMap.h; path = types/MEMap.h; sourceTree = "<group>"; };
-		42940E3514FA38AA00E11EBD /* MEMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MEMap.m; path = types/MEMap.m; sourceTree = "<group>"; };
-		42940E3714FA38AB00E11EBD /* MEPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MEPoint.h; path = types/MEPoint.h; sourceTree = "<group>"; };
-		42940E3814FA38AB00E11EBD /* MEPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MEPoint.m; path = types/MEPoint.m; sourceTree = "<group>"; };
-		42940E3A14FA38AB00E11EBD /* MECategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MECategory.h; path = types/MECategory.h; sourceTree = "<group>"; };
-		42940E3B14FA38AB00E11EBD /* MECategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MECategory.m; path = types/MECategory.m; sourceTree = "<group>"; };
+		42940E3414FA38AA00E11EBD /* MEMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEMap.h; sourceTree = "<group>"; };
+		42940E3514FA38AA00E11EBD /* MEMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MEMap.m; sourceTree = "<group>"; };
+		42940E3714FA38AB00E11EBD /* MEPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEPoint.h; sourceTree = "<group>"; };
+		42940E3814FA38AB00E11EBD /* MEPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MEPoint.m; sourceTree = "<group>"; };
+		42940E3A14FA38AB00E11EBD /* MECategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MECategory.h; sourceTree = "<group>"; };
+		42940E3B14FA38AB00E11EBD /* MECategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MECategory.m; sourceTree = "<group>"; };
 		4297D8B614F8571400CBD657 /* ShowModeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowModeController.h; sourceTree = "<group>"; };
 		4297D8B714F8571500CBD657 /* ShowModeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowModeController.m; sourceTree = "<group>"; };
 		4297D8B814F8571500CBD657 /* ShowModeController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShowModeController.xib; sourceTree = "<group>"; };
@@ -452,6 +441,9 @@
 		42AC3F3F14F9001800E5DECB /* PointCatEditorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointCatEditorController.h; sourceTree = "<group>"; };
 		42AC3F4014F9001800E5DECB /* PointCatEditorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointCatEditorController.m; sourceTree = "<group>"; };
 		42AC3F4114F9001800E5DECB /* PointCatEditorController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PointCatEditorController.xib; sourceTree = "<group>"; };
+		42B235FB14FAAEC300094484 /* cabeceras.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cabeceras.txt; sourceTree = "<group>"; };
+		42B235FD14FAB9DE00094484 /* SrvcTicket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SrvcTicket.h; sourceTree = "<group>"; };
+		42B235FE14FAB9DE00094484 /* SrvcTicket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SrvcTicket.m; sourceTree = "<group>"; };
 		42B9DCDA14F06E8C00848A5B /* PointListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointListController.h; sourceTree = "<group>"; };
 		42B9DCDB14F06E8C00848A5B /* PointListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointListController.m; sourceTree = "<group>"; };
 		42B9DCDC14F06E8C00848A5B /* PointListController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PointListController.xib; sourceTree = "<group>"; };
@@ -467,35 +459,8 @@
 		42BFAAB914EFE32000604B90 /* iTravelPOIAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iTravelPOIAppDelegate.h; sourceTree = "<group>"; };
 		42BFAABA14EFE32000604B90 /* iTravelPOIAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iTravelPOIAppDelegate.m; sourceTree = "<group>"; };
 		42BFAAC014EFE32000604B90 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
-		42BFAB8D14EFE4AD00604B90 /* TBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBaseEntity.h; sourceTree = "<group>"; };
-		42BFAB8E14EFE4AD00604B90 /* TBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBaseEntity.m; sourceTree = "<group>"; };
-		42BFAB8F14EFE4AD00604B90 /* TBaseEntity_Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBaseEntity_Protected.h; sourceTree = "<group>"; };
-		42BFAB9014EFE4AD00604B90 /* TCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCategory.h; sourceTree = "<group>"; };
-		42BFAB9114EFE4AD00604B90 /* TCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCategory.m; sourceTree = "<group>"; };
-		42BFAB9214EFE4AD00604B90 /* TMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMap.h; sourceTree = "<group>"; };
-		42BFAB9314EFE4AD00604B90 /* TMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMap.m; sourceTree = "<group>"; };
-		42BFAB9414EFE4AD00604B90 /* TPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPoint.h; sourceTree = "<group>"; };
-		42BFAB9514EFE4AD00604B90 /* TPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPoint.m; sourceTree = "<group>"; };
-		42BFABD414EFE5BB00604B90 /* GMapService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMapService.h; sourceTree = "<group>"; };
-		42BFABD514EFE5BB00604B90 /* GMapService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapService.m; sourceTree = "<group>"; };
-		42BFABD614EFE5BB00604B90 /* GMapServiceAsync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMapServiceAsync.h; sourceTree = "<group>"; };
-		42BFABD714EFE5BB00604B90 /* GMapServiceAsync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapServiceAsync.m; sourceTree = "<group>"; };
-		42BFABD814EFE5BB00604B90 /* GMapServiceWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMapServiceWrapper.h; sourceTree = "<group>"; };
-		42BFABD914EFE5BB00604B90 /* GMapServiceWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapServiceWrapper.m; sourceTree = "<group>"; };
-		42BFABDA14EFE5BB00604B90 /* PointXmlCat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointXmlCat.h; sourceTree = "<group>"; };
-		42BFABDB14EFE5BB00604B90 /* PointXmlCat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointXmlCat.m; sourceTree = "<group>"; };
 		42BFABDD14EFE5BB00604B90 /* ModelService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelService.h; sourceTree = "<group>"; };
 		42BFABDE14EFE5BB00604B90 /* ModelService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModelService.m; sourceTree = "<group>"; };
-		42BFABDF14EFE5BB00604B90 /* ModelServiceAsync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelServiceAsync.h; sourceTree = "<group>"; };
-		42BFABE014EFE5BB00604B90 /* ModelServiceAsync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModelServiceAsync.m; sourceTree = "<group>"; };
-		42BFABE214EFE5BB00604B90 /* CollectionMerger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionMerger.h; sourceTree = "<group>"; };
-		42BFABE314EFE5BB00604B90 /* CollectionMerger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionMerger.m; sourceTree = "<group>"; };
-		42BFABE414EFE5BB00604B90 /* MergeEntityCat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MergeEntityCat.h; sourceTree = "<group>"; };
-		42BFABE514EFE5BB00604B90 /* MergeEntityCat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MergeEntityCat.m; sourceTree = "<group>"; };
-		42BFABE614EFE5BB00604B90 /* SyncService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyncService.h; sourceTree = "<group>"; };
-		42BFABE714EFE5BB00604B90 /* SyncService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyncService.m; sourceTree = "<group>"; };
-		42BFABE814EFE5BB00604B90 /* SyncServiceAsync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyncServiceAsync.h; sourceTree = "<group>"; };
-		42BFABE914EFE5BB00604B90 /* SyncServiceAsync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyncServiceAsync.m; sourceTree = "<group>"; };
 		42BFABF514EFE6C800604B90 /* WCDTest.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = WCDTest.xcdatamodel; sourceTree = "<group>"; };
 		42BFABF814EFE75E00604B90 /* MapListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapListController.h; sourceTree = "<group>"; };
 		42BFABF914EFE75E00604B90 /* MapListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapListController.m; sourceTree = "<group>"; };
@@ -1145,9 +1110,9 @@
 		42BFB36B14EFEFC900604B90 /* GDataQueryYouTube.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GDataQueryYouTube.m; path = Clients/YouTube/GDataQueryYouTube.m; sourceTree = "<group>"; };
 		42BFB36C14EFEFC900604B90 /* GDataServiceGoogleYouTube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GDataServiceGoogleYouTube.h; path = Clients/YouTube/GDataServiceGoogleYouTube.h; sourceTree = "<group>"; };
 		42BFB36D14EFEFC900604B90 /* GDataServiceGoogleYouTube.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GDataServiceGoogleYouTube.m; path = Clients/YouTube/GDataServiceGoogleYouTube.m; sourceTree = "<group>"; };
-		42CEC46214FA43AF00837C64 /* MEBaseEntity_Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MEBaseEntity_Protected.h; path = types/MEBaseEntity_Protected.h; sourceTree = "<group>"; };
-		42ED53D414FA4183006AD5AB /* MEBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MEBaseEntity.h; path = types/MEBaseEntity.h; sourceTree = "<group>"; };
-		42ED53D514FA4183006AD5AB /* MEBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MEBaseEntity.m; path = types/MEBaseEntity.m; sourceTree = "<group>"; };
+		42CEC46214FA43AF00837C64 /* MEBaseEntity_Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEBaseEntity_Protected.h; sourceTree = "<group>"; };
+		42ED53D414FA4183006AD5AB /* MEBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEBaseEntity.h; sourceTree = "<group>"; };
+		42ED53D514FA4183006AD5AB /* MEBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MEBaseEntity.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1331,6 +1296,7 @@
 		42BFAA9914EFE31F00604B90 = {
 			isa = PBXGroup;
 			children = (
+				42B235FB14FAAEC300094484 /* cabeceras.txt */,
 				42BFB0D214EFEFC700604B90 /* GData Sources */,
 				42AC3EF214F8FFB000E5DECB /* utils */,
 				42BFAAB014EFE32000604B90 /* iTravelPOI */,
@@ -1401,15 +1367,6 @@
 			isa = PBXGroup;
 			children = (
 				42BFABF414EFE6C800604B90 /* iTravelPOI.xcdatamodeld */,
-				42CEC46214FA43AF00837C64 /* MEBaseEntity_Protected.h */,
-				42ED53D414FA4183006AD5AB /* MEBaseEntity.h */,
-				42ED53D514FA4183006AD5AB /* MEBaseEntity.m */,
-				42940E3A14FA38AB00E11EBD /* MECategory.h */,
-				42940E3B14FA38AB00E11EBD /* MECategory.m */,
-				42940E3714FA38AB00E11EBD /* MEPoint.h */,
-				42940E3814FA38AB00E11EBD /* MEPoint.m */,
-				42940E3414FA38AA00E11EBD /* MEMap.h */,
-				42940E3514FA38AA00E11EBD /* MEMap.m */,
 				42BFAB8C14EFE4AD00604B90 /* types */,
 			);
 			name = model;
@@ -1419,15 +1376,15 @@
 		42BFAB8C14EFE4AD00604B90 /* types */ = {
 			isa = PBXGroup;
 			children = (
-				42BFAB8D14EFE4AD00604B90 /* TBaseEntity.h */,
-				42BFAB8E14EFE4AD00604B90 /* TBaseEntity.m */,
-				42BFAB8F14EFE4AD00604B90 /* TBaseEntity_Protected.h */,
-				42BFAB9014EFE4AD00604B90 /* TCategory.h */,
-				42BFAB9114EFE4AD00604B90 /* TCategory.m */,
-				42BFAB9214EFE4AD00604B90 /* TMap.h */,
-				42BFAB9314EFE4AD00604B90 /* TMap.m */,
-				42BFAB9414EFE4AD00604B90 /* TPoint.h */,
-				42BFAB9514EFE4AD00604B90 /* TPoint.m */,
+				42CEC46214FA43AF00837C64 /* MEBaseEntity_Protected.h */,
+				42ED53D414FA4183006AD5AB /* MEBaseEntity.h */,
+				42ED53D514FA4183006AD5AB /* MEBaseEntity.m */,
+				42940E3A14FA38AB00E11EBD /* MECategory.h */,
+				42940E3B14FA38AB00E11EBD /* MECategory.m */,
+				42940E3714FA38AB00E11EBD /* MEPoint.h */,
+				42940E3814FA38AB00E11EBD /* MEPoint.m */,
+				42940E3414FA38AA00E11EBD /* MEMap.h */,
+				42940E3514FA38AA00E11EBD /* MEMap.m */,
 			);
 			path = types;
 			sourceTree = "<group>";
@@ -1435,27 +1392,12 @@
 		42BFAB9614EFE4AD00604B90 /* services */ = {
 			isa = PBXGroup;
 			children = (
-				42BFABD314EFE5BB00604B90 /* GMap */,
+				42B235FD14FAB9DE00094484 /* SrvcTicket.h */,
+				42B235FE14FAB9DE00094484 /* SrvcTicket.m */,
 				42BFABDC14EFE5BB00604B90 /* Model */,
-				42BFABE114EFE5BB00604B90 /* Sync */,
 			);
 			name = services;
 			path = iTravelPOI/services;
-			sourceTree = "<group>";
-		};
-		42BFABD314EFE5BB00604B90 /* GMap */ = {
-			isa = PBXGroup;
-			children = (
-				42BFABD414EFE5BB00604B90 /* GMapService.h */,
-				42BFABD514EFE5BB00604B90 /* GMapService.m */,
-				42BFABD614EFE5BB00604B90 /* GMapServiceAsync.h */,
-				42BFABD714EFE5BB00604B90 /* GMapServiceAsync.m */,
-				42BFABD814EFE5BB00604B90 /* GMapServiceWrapper.h */,
-				42BFABD914EFE5BB00604B90 /* GMapServiceWrapper.m */,
-				42BFABDA14EFE5BB00604B90 /* PointXmlCat.h */,
-				42BFABDB14EFE5BB00604B90 /* PointXmlCat.m */,
-			);
-			path = GMap;
 			sourceTree = "<group>";
 		};
 		42BFABDC14EFE5BB00604B90 /* Model */ = {
@@ -1463,25 +1405,8 @@
 			children = (
 				42BFABDD14EFE5BB00604B90 /* ModelService.h */,
 				42BFABDE14EFE5BB00604B90 /* ModelService.m */,
-				42BFABDF14EFE5BB00604B90 /* ModelServiceAsync.h */,
-				42BFABE014EFE5BB00604B90 /* ModelServiceAsync.m */,
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		42BFABE114EFE5BB00604B90 /* Sync */ = {
-			isa = PBXGroup;
-			children = (
-				42BFABE214EFE5BB00604B90 /* CollectionMerger.h */,
-				42BFABE314EFE5BB00604B90 /* CollectionMerger.m */,
-				42BFABE414EFE5BB00604B90 /* MergeEntityCat.h */,
-				42BFABE514EFE5BB00604B90 /* MergeEntityCat.m */,
-				42BFABE614EFE5BB00604B90 /* SyncService.h */,
-				42BFABE714EFE5BB00604B90 /* SyncService.m */,
-				42BFABE814EFE5BB00604B90 /* SyncServiceAsync.h */,
-				42BFABE914EFE5BB00604B90 /* SyncServiceAsync.m */,
-			);
-			path = Sync;
 			sourceTree = "<group>";
 		};
 		42BFABF714EFE73F00604B90 /* App GUI */ = {
@@ -2442,6 +2367,7 @@
 				42AC3F3914F8FFB000E5DECB /* RegexKitLite-4.0.pdf in Resources */,
 				42AC3F4314F9001800E5DECB /* MapEditorController.xib in Resources */,
 				42AC3F4514F9001800E5DECB /* PointCatEditorController.xib in Resources */,
+				42B235FC14FAAEC400094484 /* cabeceras.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2454,20 +2380,7 @@
 			files = (
 				42BFAAB814EFE32000604B90 /* main.m in Sources */,
 				42BFAABB14EFE32000604B90 /* iTravelPOIAppDelegate.m in Sources */,
-				42BFABBD14EFE4AD00604B90 /* TBaseEntity.m in Sources */,
-				42BFABBE14EFE4AD00604B90 /* TCategory.m in Sources */,
-				42BFABBF14EFE4AD00604B90 /* TMap.m in Sources */,
-				42BFABC014EFE4AD00604B90 /* TPoint.m in Sources */,
-				42BFABEA14EFE5BB00604B90 /* GMapService.m in Sources */,
-				42BFABEB14EFE5BB00604B90 /* GMapServiceAsync.m in Sources */,
-				42BFABEC14EFE5BB00604B90 /* GMapServiceWrapper.m in Sources */,
-				42BFABED14EFE5BB00604B90 /* PointXmlCat.m in Sources */,
 				42BFABEE14EFE5BB00604B90 /* ModelService.m in Sources */,
-				42BFABEF14EFE5BB00604B90 /* ModelServiceAsync.m in Sources */,
-				42BFABF014EFE5BB00604B90 /* CollectionMerger.m in Sources */,
-				42BFABF114EFE5BB00604B90 /* MergeEntityCat.m in Sources */,
-				42BFABF214EFE5BB00604B90 /* SyncService.m in Sources */,
-				42BFABF314EFE5BB00604B90 /* SyncServiceAsync.m in Sources */,
 				42BFABF614EFE6C800604B90 /* iTravelPOI.xcdatamodeld in Sources */,
 				42BFABFB14EFE75E00604B90 /* MapListController.m in Sources */,
 				42BFB36E14EFEFCC00604B90 /* GDataFramework.m in Sources */,
@@ -2795,6 +2708,7 @@
 				42940E3914FA38AB00E11EBD /* MEPoint.m in Sources */,
 				42940E3C14FA38AB00E11EBD /* MECategory.m in Sources */,
 				42ED53D614FA4183006AD5AB /* MEBaseEntity.m in Sources */,
+				42B235FF14FAB9DF00094484 /* SrvcTicket.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

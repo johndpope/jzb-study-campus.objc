@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TMap.h"
+#import "MEMap.h"
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
@@ -16,6 +16,6 @@
     
 }
 
-+ (NSArray *) merge:(NSArray *)locals remotes:(NSArray * )remotes inLocalMap:(TMap *)localMap;
++ (NSArray *) merge:(NSArray *)locals remotes:(NSArray * )remotes inLocalMap:(MEMap *)localMap;
 
 @end

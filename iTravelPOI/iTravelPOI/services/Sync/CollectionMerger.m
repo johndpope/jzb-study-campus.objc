@@ -7,16 +7,16 @@
 //
 
 #import "CollectionMerger.h"
-#import "TBaseEntity.h"
-#import "TMap.h"
-#import "TCategory.h"
-#import "TPoint.h"
+#import "MEBaseEntity.h"
+#import "MEMap.h"
+#import "MECategory.h"
+#import "MEPoint.h"
 #import "MergeEntityCat.h"
 
 
 //---------------------------------------------------------------------------------------------------------------------
-TBaseEntity * _createNewLocalEntity(TMap *localMap, TBaseEntity *remoteEntity);
-BOOL _needToBeUpdatedAfterCreateLocally(TBaseEntity *item1, TBaseEntity *item2);
+MEBaseEntity * _createNewLocalEntity(MEMap *localMap, MEBaseEntity *remoteEntity);
+BOOL _needToBeUpdatedAfterCreateLocally(MEBaseEntity *item1, MEBaseEntity *item2);
 
 
 
@@ -45,14 +45,14 @@ BOOL _needToBeUpdatedAfterCreateLocally(TBaseEntity *item1, TBaseEntity *item2);
 
 
 //---------------------------------------------------------------------------------------------------------------------
-TBaseEntity * _createNewLocalEntity(TMap *localMap, TBaseEntity *remoteEntity) {
+MEBaseEntity * _createNewLocalEntity(MEMap *localMap, MEBaseEntity *remoteEntity) {
     
-    if([remoteEntity isKindOfClass: [TMap class]]) {
-        return [TMap insertNew];
-    } else if([remoteEntity isKindOfClass: [TCategory class]]) {
-        return [TCategory insertNewInMap:localMap];
-    } else if([remoteEntity isKindOfClass: [TPoint class]]) {
-        return [TPoint insertNewInMap:localMap];
+    if([remoteEntity isKindOfClass: [MEMap class]]) {
+        return [MEMap insertNew];
+    } else if([remoteEntity isKindOfClass: [MECategory class]]) {
+        return [MECategory insertNewInMap:localMap];
+    } else if([remoteEntity isKindOfClass: [MEPoint class]]) {
+        return [MEPoint insertNewInMap:localMap];
     } else {
         return nil;
     }
@@ -60,12 +60,12 @@ TBaseEntity * _createNewLocalEntity(TMap *localMap, TBaseEntity *remoteEntity) {
 }
 
 // ----------------------------------------------------------------------------------------------------
-BOOL _needToBeUpdatedAfterCreateLocally(TBaseEntity *item1, TBaseEntity *item2) {
+BOOL _needToBeUpdatedAfterCreateLocally(MEBaseEntity *item1, MEBaseEntity *item2) {
     
     // Solo comprueba que las categorias terminan teniendo el mismo numero de subelementos
-    if([item1 isKindOfClass:[TCategory class]]) {
-        TCategory *c1 = (TCategory *)item1;
-        TCategory *c2 = (TCategory *)item2;
+    if([item1 isKindOfClass:[MECategory class]]) {
+        MECategory *c1 = (MECategory *)item1;
+        MECategory *c2 = (MECategory *)item2;
         BOOL eq1 = [c1.points count] == [c2.points count];
         BOOL eq2 = [c1.subcategories count] == [c2.subcategories count];
         return eq1 && eq2;
@@ -82,16 +82,16 @@ BOOL _needToBeUpdatedAfterCreateLocally(TBaseEntity *item1, TBaseEntity *item2) 
 // Busca elementos existentes en ambos para actualizar [Quien depende de info de cambios]
 // [Debe ser el ultimo por cambios de dependencias contra algo nuevo que crean los anteriores]
 // [En teoria, lo creado en pasos previos deberia dar OK en este y no hacer nada]
-+ (NSArray *) merge:(NSArray *)locals remotes:(NSArray * )remotes inLocalMap:(TMap *)localMap {
++ (NSArray *) merge:(NSArray *)locals remotes:(NSArray * )remotes inLocalMap:(MEMap *)localMap {
     
     NSMutableArray *newAddedEntities = [NSMutableArray array];
     
     
     // ----------------------------------------------------------------------------------------------------
     // Buscamos elementos remotos nuevos a crear en local [o borrar en remoto si fueron borrados]
-    for(TBaseEntity *remoteEntity in remotes) {
+    for(MEBaseEntity *remoteEntity in remotes) {
         
-        TBaseEntity *localEntity = [TBaseEntity searchByGID:remoteEntity.GID inArray:locals];
+        MEBaseEntity *localEntity = [MEBaseEntity searchByGID:remoteEntity.GID inArray:locals];
         
         // Solo procesa los nuevos
         if(localEntity != nil && !localEntity.wasDeleted) {
@@ -102,7 +102,7 @@ BOOL _needToBeUpdatedAfterCreateLocally(TBaseEntity *item1, TBaseEntity *item2) 
         if(localEntity == nil) {
             // Se crea una nueva entidad local desde la remota
             NSLog(@"Sync: Creating local entity from remote: %@",remoteEntity.name);
-            TBaseEntity *newLocal = _createNewLocalEntity(localMap, remoteEntity);
+            MEBaseEntity *newLocal = _createNewLocalEntity(localMap, remoteEntity);
             [newLocal mergeFrom:remoteEntity withConflit:false];
             newLocal.syncStatus = ST_Sync_Create_Local;
             [newAddedEntities addObject:newLocal];
@@ -131,14 +131,14 @@ BOOL _needToBeUpdatedAfterCreateLocally(TBaseEntity *item1, TBaseEntity *item2) 
     
     // ----------------------------------------------------------------------------------------------------
     // Buscamos elementos locales nuevos a crear en remoto [o borrar en local si fueron borrados]
-    for(TBaseEntity *localEntity in locals) {
+    for(MEBaseEntity *localEntity in locals) {
         
         // No procesa los elementos locales borrados
         if(localEntity.wasDeleted) {
             continue;
         }
         
-        TBaseEntity *remoteEntity = [TBaseEntity searchByGID:localEntity.GID inArray:remotes];
+        MEBaseEntity *remoteEntity = [MEBaseEntity searchByGID:localEntity.GID inArray:remotes];
         
         // Solo procesa los nuevos
         if(remoteEntity != nil) {
@@ -169,14 +169,14 @@ BOOL _needToBeUpdatedAfterCreateLocally(TBaseEntity *item1, TBaseEntity *item2) 
     
     // ----------------------------------------------------------------------------------------------------
     // Buscamos elementos locales y remotos que existan en ambos y difieran para ser actualizados [quien dependera de como esten]
-    for(TBaseEntity *localEntity in locals) {
+    for(MEBaseEntity *localEntity in locals) {
         
         // No procesa los elementos locales borrados
         if(localEntity.wasDeleted) {
             continue;
         }
         
-        TBaseEntity *remoteEntity = [TBaseEntity searchByGID:localEntity.GID inArray:remotes];
+        MEBaseEntity *remoteEntity = [MEBaseEntity searchByGID:localEntity.GID inArray:remotes];
         
         // Solo procesa lo existente
         if(remoteEntity == nil) {

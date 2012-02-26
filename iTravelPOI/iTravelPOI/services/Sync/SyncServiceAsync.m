@@ -59,7 +59,7 @@ dispatch_queue_t _SyncServiceQueue;
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (ASYNCHRONOUS) syncLocalMap:(TMap *) localMap withRemote:(TMap *)remoteMap callback:(TBlock_SyncFinished)callbackBlock {
+- (ASYNCHRONOUS) syncLocalMap:(MEMap *) localMap withRemote:(MEMap *)remoteMap callback:(TBlock_SyncFinished)callbackBlock {
     
     NSLog(@"SyncServiceAsync - syncLocalMap [%@ - %@] witn [%@ - %@]", localMap.name, localMap.GID, remoteMap.name, remoteMap.GID);
     

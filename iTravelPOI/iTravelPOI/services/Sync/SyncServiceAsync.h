@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TMap.h"
+#import "MEMap.h"
 
 
 #define ASYNCHRONOUS void
@@ -25,7 +25,7 @@ typedef void (^TBlock_SyncFinished)();
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (ASYNCHRONOUS) syncLocalMap:(TMap *) localMap withRemote:(TMap *)remoteMap callback:(TBlock_SyncFinished)callbackBlock;
+- (ASYNCHRONOUS) syncLocalMap:(MEMap *) localMap withRemote:(MEMap *)remoteMap callback:(TBlock_SyncFinished)callbackBlock;
 - (ASYNCHRONOUS) syncLocalMaps:(NSArray *)localMaps withRemotes:(NSArray *)remoteMaps callback:(TBlock_SyncFinished)callbackBlock;
 
 @end

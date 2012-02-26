@@ -17,17 +17,17 @@
 
 //*********************************************************************************************************************
 #pragma mark -
-#pragma mark MEPoint interfade definition
+#pragma mark MEPoint interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface MEPoint : MEBaseEntity {
-@private
-}
+@interface MEPoint : MEBaseEntity 
 
 @property (nonatomic, assign)   double lng;
 @property (nonatomic, assign)   double lat;
-@property (nonatomic, readonly) BOOL   isExtInfo;
+
 @property (nonatomic, retain)   MEMap * map;
 @property (nonatomic, retain)   NSSet* categories;
+
+@property (nonatomic, readonly) BOOL   isExtInfo;
 
 
 
@@ -35,6 +35,8 @@
 #pragma mark -
 #pragma mark MEPoint CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
++ (NSEntityDescription *) pointEntity;
+
 + (MEPoint *) insertNewInMap:(MEMap *)ownerMap;
 + (MEPoint *) insertTmpNewInMap:(MEMap *)ownerMap;
 
@@ -56,7 +58,7 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 #pragma mark -
-#pragma mark MEMap "categories" INSTANCE public methods
+#pragma mark MEPoint "categories" INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
 - (MECategory *) categoryByGID:(NSString *)gid;
 - (void)addCategory:(MECategory *)value ;    

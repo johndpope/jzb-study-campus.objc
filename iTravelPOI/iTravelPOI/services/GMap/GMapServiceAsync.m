@@ -102,7 +102,7 @@ dispatch_queue_t _GMapServiceQueue;
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (ASYNCHRONOUS) fetchMapData:(TMap *)map callback:(TBlock_FetchMapDataFinished)callbackBlock {
+- (ASYNCHRONOUS) fetchMapData:(MEMap *)map callback:(TBlock_FetchMapDataFinished)callbackBlock {
     
     NSLog(@"GMapServiceAsync - fetchMapData (%@-%@)",map.name,map.GID);
     
@@ -127,7 +127,7 @@ dispatch_queue_t _GMapServiceQueue;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (ASYNCHRONOUS) createNewEmptyGMap:(TMap *)map callback:(TBlock_CreateMapDataFinished)callbackBlock {
+- (ASYNCHRONOUS) createNewEmptyGMap:(MEMap *)map callback:(TBlock_CreateMapDataFinished)callbackBlock {
     
     NSLog(@"GMapServiceAsync - createNewGMap (%@-%@)",map.name,map.GID);
     
@@ -152,7 +152,7 @@ dispatch_queue_t _GMapServiceQueue;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (ASYNCHRONOUS) deleteGMap:(TMap *)map callback:(TBlock_DeleteMapDataFinished)callbackBlock {
+- (ASYNCHRONOUS) deleteGMap:(MEMap *)map callback:(TBlock_DeleteMapDataFinished)callbackBlock {
     
     NSLog(@"GMapServiceAsync - deleteGMap (%@-%@)",map.name,map.GID);
     
@@ -177,7 +177,7 @@ dispatch_queue_t _GMapServiceQueue;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (ASYNCHRONOUS) updateGMap:(TMap *)map callback:(TBlock_UpdateMapDataFinished)callbackBlock {
+- (ASYNCHRONOUS) updateGMap:(MEMap *)map callback:(TBlock_UpdateMapDataFinished)callbackBlock {
     
     NSLog(@"GMapServiceAsync - updateGMap (%@-%@)",map.name,map.GID);
     

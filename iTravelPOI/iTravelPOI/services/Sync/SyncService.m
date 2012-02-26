@@ -7,9 +7,9 @@
 //
 
 #import "SyncService.h"
-#import "TMap.h"
-#import "TCategory.h"
-#import "TPoint.h"
+#import "MEMap.h"
+#import "MECategory.h"
+#import "MEPoint.h"
 #import "CollectionMerger.h"
 #import "MergeEntityCat.h"
 #import "ModelService.h"
@@ -54,7 +54,7 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) syncLocalMap:(TMap *) localMap withRemote:(TMap *)remoteMap {
+- (void) syncLocalMap:(MEMap *) localMap withRemote:(MEMap *)remoteMap {
     
     NSLog(@"SyncService - syncLocalMap [%@ - %@] witn [%@ - %@]", localMap.name, localMap.GID, remoteMap.name, remoteMap.GID);
     
@@ -67,8 +67,8 @@
     [CollectionMerger merge:localCats remotes:remoteCats inLocalMap:localMap];
     
     // Por ultimo el ExtInfoPoint
-    TPoint *leip = localMap.extInfo;
-    TPoint *reip = remoteMap.extInfo;
+    MEPoint *leip = localMap.extInfo;
+    MEPoint *reip = remoteMap.extInfo;
     NSString *xml = leip.desc;
     [leip mergeFrom:reip withConflit:true]; 
     leip.desc = xml;
@@ -86,28 +86,28 @@
     
     
     // Itera la lista de mapas recien creados
-    for(TMap *localMap in addedMaps) {
+    for(MEMap *localMap in addedMaps) {
         NSError *error;
-        TMap *remoteMap = [TBaseEntity searchByGID:localMap.GID inArray:remoteMaps];
+        MEMap *remoteMap = [MEBaseEntity searchByGID:localMap.GID inArray:remoteMaps];
         [[GMapService sharedInstance] fetchMapData:remoteMap error:&error];
         [self syncLocalMap:localMap withRemote:remoteMap];
     }
     
     
     // Itera la lista de mapas actualizando su estado
-    for(TMap *localMap in localMaps) {
+    for(MEMap *localMap in localMaps) {
         
         NSError *error;
-        TMap *remoteMap;
+        MEMap *remoteMap;
         
         switch (localMap.syncStatus) {
                 
                 // -----------------------------------------------------
             case ST_Sync_Create_Remote:
-                for(TPoint *point in localMap.points) {
+                for(MEPoint *point in localMap.points) {
                     point.syncStatus = ST_Sync_Create_Remote;
                 }
-                for(TCategory *cat in localMap.categories) {
+                for(MECategory *cat in localMap.categories) {
                     cat.syncStatus = ST_Sync_Create_Remote;
                 }
                 [[GMapService sharedInstance] createNewEmptyGMap:localMap error:&error];
@@ -122,7 +122,7 @@
                 // -----------------------------------------------------
             case ST_Sync_Update_Local:
             case ST_Sync_Update_Remote:
-                remoteMap = [TBaseEntity searchByGID:localMap.GID inArray:remoteMaps];
+                remoteMap = [MEBaseEntity searchByGID:localMap.GID inArray:remoteMaps];
                 [[GMapService sharedInstance] fetchMapData:remoteMap error:&error];
                 [self syncLocalMap:localMap withRemote:remoteMap];
                 [[GMapService sharedInstance] updateGMap:localMap error:&error];
@@ -134,7 +134,7 @@
     }
     
     // Elimina del modelo local todo lo que este marcado como borrado
-    for(TMap *localMap in localMaps) {
+    for(MEMap *localMap in localMaps) {
         if(localMap.wasDeleted) {
             [localMap deleteFromModel];
         } else {

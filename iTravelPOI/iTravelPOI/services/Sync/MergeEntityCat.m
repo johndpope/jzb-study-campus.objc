@@ -12,11 +12,11 @@
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
-@implementation TBaseEntity (MergeTBaseEntityCat)
+@implementation MEBaseEntity (MergeMEBaseEntityCat)
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) mergeFrom:(TBaseEntity *) other withConflit:(BOOL) thereWasConflit {
+- (void) mergeFrom:(MEBaseEntity *) other withConflit:(BOOL) thereWasConflit {
     
     self.GID = other.GID;
     self.syncETag = other.syncETag;
@@ -42,12 +42,12 @@
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
-@implementation TPoint (MergeTPointCat)
+@implementation MEPoint (MergeMEPointCat)
 
 
 //---------------------------------------------------------------------------------------------------------------------
 // Copia SOLO los datos. NO las categorias. Se sincroniza de "abajo" (puntos) hacia "arriba" (cats)
-- (void) mergeFrom:(TPoint *) other withConflit:(BOOL) thereWasConflit {
+- (void) mergeFrom:(MEPoint *) other withConflit:(BOOL) thereWasConflit {
 
     [super mergeFrom:other withConflit:thereWasConflit];
 
@@ -60,16 +60,16 @@
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
-@implementation TCategory (MergeTCategoryCat)
+@implementation MECategory (MergeMECategoryCat)
 
 
 //---------------------------------------------------------------------------------------------------------------------
 // Copia los datos, los puntos y las subcategorias, pero NO HACIA "arriba". Eso su cat "padre"
-- (void) mergeFrom:(TCategory *) other withConflit:(BOOL) thereWasConflit {
+- (void) mergeFrom:(MECategory *) other withConflit:(BOOL) thereWasConflit {
     
     [super mergeFrom:other withConflit:thereWasConflit];
     
-    TMap *myMap = self.map;
+    MEMap *myMap = self.map;
   
     
     // Se copia los puntos que categoriza desde la otra.
@@ -82,9 +82,9 @@
     }
     
     // Itero los puntos de la otra categoria
-    for(TPoint *point in other.points) {     
+    for(MEPoint *point in other.points) {     
         // si no lo tengo lo añado
-        TPoint *myPoint = [self pointByGID:point.GID];
+        MEPoint *myPoint = [self pointByGID:point.GID];
         if (myPoint == nil) {
             // Siempre que exista previamente en mi mapa porque primero se deberian haber procesado los puntos
             myPoint = [myMap pointByGID:point.GID];
@@ -100,9 +100,9 @@
     }
 
     // Itero las subcategorias de la otra categoria
-    for(TCategory *scat in other.subcategories) {
+    for(MECategory *scat in other.subcategories) {
         // si no la tengo lo añado
-        TCategory *mySCat = [self subcategoryByGID:scat.GID];
+        MECategory *mySCat = [self subcategoryByGID:scat.GID];
         if (mySCat == nil) {
             // Siempre que exista en mi mapa
             mySCat = [myMap categoryByGID:scat.GID];
@@ -119,11 +119,11 @@
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
-@implementation TMap (MergeTMapCat)
+@implementation MEMap (MergeMEMapCat)
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) mergeFrom:(TMap *) other withConflit:(BOOL) thereWasConflit {
+- (void) mergeFrom:(MEMap *) other withConflit:(BOOL) thereWasConflit {
     
     [super mergeFrom:other withConflit:thereWasConflit];
     

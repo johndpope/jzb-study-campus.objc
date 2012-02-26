@@ -7,7 +7,7 @@
 //
 
 #import "MapListController.h"
-#import "ModelServiceAsync.h"
+#import "ModelService.h"
 #import "PointListController.h"
 #import "SVProgressHUD.h"
 #import "TDBadgedCell.h"
@@ -109,7 +109,7 @@
         // Lanzamos la busqueda de los mapas y los mostramos
         [SVProgressHUD showWithStatus:@"Loading local maps"];
         
-        [[ModelServiceAsync sharedInstance] getUserMapList:^(NSArray *maps, NSError *error) {
+        [[ModelService sharedInstance] getUserMapList:^(SrvcTicket *ticket, NSArray *maps, NSError *error) {
             if(error) {
                 [SVProgressHUD dismissWithError:@"Error loading local maps" afterDelay:2];
             } else {
@@ -171,8 +171,8 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (TMap *) createNewInstance {
-    return [TMap insertNew];
+- (MEMap *) createNewInstance {
+    return [MEMap insertNew];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -182,7 +182,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) mapEditorSave:(MapEditorController *)sender map:(TMap *)map {
+- (void) mapEditorSave:(MapEditorController *)sender map:(MEMap *)map {
     
     NSLog(@"mapEditorSave");
     
@@ -191,12 +191,12 @@
         
     map.changed = true;
 
-    [[ModelServiceAsync sharedInstance] saveContext:^(NSError *error) {
+    [[ModelService sharedInstance] saveContext:^(SrvcTicket *ticket, NSError *error) {
         if(error) {
             [SVProgressHUD showWithStatus:@"Saving local maps"];
             [SVProgressHUD dismissWithError:@"Error saving local maps" afterDelay:2];
         } else {
-            [[ModelServiceAsync sharedInstance] getUserMapList:^(NSArray *maps, NSError *error) {
+            [[ModelService sharedInstance] getUserMapList:^(SrvcTicket *ticket, NSArray *maps, NSError *error) {
                 if(error) {
                     [SVProgressHUD showWithStatus:@"Loading local maps"];
                     [SVProgressHUD dismissWithError:@"Error loading local maps" afterDelay:2];
@@ -249,7 +249,7 @@
     
     static NSString *mapViewIdentifier = @"MapCellView";
     
-    TMap *map = [self.maps objectAtIndex:indexPath.row];
+    MEMap *map = [self.maps objectAtIndex:indexPath.row];
     
     TDBadgedCell *cell = (TDBadgedCell *)[tableView dequeueReusableCellWithIdentifier:mapViewIdentifier];
     if (cell == nil) {
@@ -274,13 +274,13 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the row from the data source
-        TMap *map = [self.maps objectAtIndex:indexPath.row];
+        MEMap *map = [self.maps objectAtIndex:indexPath.row];
         [map markAsDeleted];
         NSMutableArray *marray = [NSMutableArray arrayWithArray:self.maps];
         [marray removeObjectAtIndex:indexPath.row];
         self.maps = [[marray copy] autorelease];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-        [[ModelServiceAsync sharedInstance] saveContext:^(NSError *error) {
+        [[ModelService sharedInstance] saveContext:^(SrvcTicket *ticket, NSError *error) {
             if(error) {
                 NSLog(@"Error saving context when deleting an item: %@ / %@", error, [error userInfo]);
             }

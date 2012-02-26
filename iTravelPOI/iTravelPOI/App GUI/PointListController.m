@@ -9,7 +9,7 @@
 #import "PointListController.h"
 #import "PointCatEditorController.h"
 #import "ShowModeController.h"
-#import "ModelServiceAsync.h"
+#import "ModelService.h"
 #import "WEPopoverController.h"
 #import "UIBarButtonItem+WEPopover.h" 
 #import "TDBadgedCell.h"
@@ -96,7 +96,7 @@
     if(self.filteringCategories) {
         NSMutableString *names = [NSMutableString string];
         BOOL firstOne = true;
-        for(TCategory *cat in self.filteringCategories) {
+        for(MECategory *cat in self.filteringCategories) {
             if(!firstOne) {
                 [names appendString:@"|"];
             }
@@ -178,16 +178,16 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void) saveAndReloadElements {
     
-    [[ModelServiceAsync sharedInstance] saveContext:^(NSError *error) {
+    [[ModelService sharedInstance] saveContext:^(SrvcTicket *ticket, NSError *error) {
         if(error) {
             [SVProgressHUD showWithStatus:@"Loading local entities"];
             [SVProgressHUD dismissWithError:@"Error saving local entities" afterDelay:2];
         } else {
             if(self.showMode == showFlat) {
-                [[ModelServiceAsync sharedInstance] getFlatElemensInMap:self.map 
+                [[ModelService sharedInstance] getFlatElemensInMap:self.map 
                                                           forCategories:self.filteringCategories
                                                                 orderBy:SORT_BY_NAME 
-                                                               callback:^(NSArray *elements, NSError *error) {
+                                                               callback:^(SrvcTicket *ticket, NSArray *elements, NSError *error) {
                                                                    if(error) {
                                                                        [SVProgressHUD dismissWithError:@"Error loading elements info" afterDelay:2];
                                                                    } else {
@@ -198,10 +198,10 @@
                                                                }];
             } else {
                 //    forCategory:[self.filteringCategories lastObject]
-                [[ModelServiceAsync sharedInstance] getCategorizedElemensInMap:self.map 
+                [[ModelService sharedInstance] getCategorizedElemensInMap:self.map 
                                                                  forCategories:self.filteringCategories
                                                                        orderBy:SORT_BY_NAME 
-                                                                      callback:^(NSArray *elements, NSError *error) {
+                                                                      callback:^(SrvcTicket *ticket, NSArray *elements, NSError *error) {
                                                                           if(error) {
                                                                               [SVProgressHUD dismissWithError:@"Error loading elements info" afterDelay:2];
                                                                           } else {
@@ -231,20 +231,28 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (IBAction)changeShowModeAction:(id)sender {
-    
-    /*
-     // Cambiamos el modo de mostrar la informacion
-     if(self.showMode==showFlat) {
-     self.showMode =  showCategorized;
-     } else {
-     self.showMode =  showFlat;
-     }
+- (void) changeShowMode:(PointListShowMode) mode {
+
+    if(self.showMode!=mode) {
+
+        // Guardamos nuevo modo
+        self.showMode = mode;
+        
+        // Lanzamos la busqueda de los mapas y los mostramos 
+        [SVProgressHUD showWithStatus:@"Loading elements info"];
+        [self saveAndReloadElements];
+    }
+
+    if(self.popoverShowMode) {
+        [self.popoverShowMode dismissPopoverAnimated:YES];
+        self.popoverShowMode = nil;
+    }
      
-     // Lanzamos la busqueda de los mapas y los mostramos 
-     [SVProgressHUD showWithStatus:@"Loading elements info"];
-     [self saveAndReloadElements];
-     */
+    
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (IBAction)changeShowModeAction:(id)sender {
     
     if (self.popoverShowMode && self.popoverShowMode.popoverVisible) {
         [self.popoverShowMode dismissPopoverAnimated:YES];
@@ -254,6 +262,7 @@
         if(!self.popoverShowMode) {
             
             ShowModeController *showModeController = [[ShowModeController alloc] initWithNibName:@"showModeController" bundle:nil];
+            showModeController.delegate = self;
             
             self.popoverShowMode = [[[WEPopoverController alloc] initWithContentViewController:showModeController] autorelease];
             self.popoverShowMode.containerViewProperties = [self.popoverShowMode improvedContainerViewProperties];
@@ -273,11 +282,11 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (TBaseEntity *) createNewInstanceForMap:(TMap *)map isPoint:(BOOL)isPoint {
+- (MEBaseEntity *) createNewInstanceForMap:(MEMap *)map isPoint:(BOOL)isPoint {
     if(isPoint) {
-        return [TPoint insertNewInMap:map];
+        return [MEPoint insertNewInMap:map];
     } else {
-        return [TCategory insertNewInMap:map];
+        return [MECategory insertNewInMap:map];
     }
 }
 
@@ -288,7 +297,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) pointCatEditSave:(PointCatEditorController *)sender entity:(TBaseEntity *)entity {
+- (void) pointCatEditSave:(PointCatEditorController *)sender entity:(MEBaseEntity *)entity {
     
     NSLog(@"pointCatEditSave");
     
@@ -339,7 +348,7 @@
     
     static NSString *mapViewIdentifier = @"PointCatCellView";
     
-    TBaseEntity *entity = [self.elements objectAtIndex:indexPath.row];
+    MEBaseEntity *entity = [self.elements objectAtIndex:indexPath.row];
     
     TDBadgedCell *cell = (TDBadgedCell *)[tableView dequeueReusableCellWithIdentifier:mapViewIdentifier];
     if (cell == nil) {
@@ -349,8 +358,8 @@
     cell.textLabel.text = entity.name;
     cell.detailTextLabel.text = entity.desc;
     cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-    if([entity isKindOfClass:[TCategory class]]) {
-        TCategory *cat = (TCategory *)entity;
+    if([entity isKindOfClass:[MECategory class]]) {
+        MECategory *cat = (MECategory *)entity;
         cell.badgeString = [NSString stringWithFormat:@"%03u", cat.t_displayCount];
     } else {
         cell.badgeString = nil;
@@ -379,7 +388,7 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the row from the data source
-        TBaseEntity *entity = [self.elements objectAtIndex:indexPath.row];
+        MEBaseEntity *entity = [self.elements objectAtIndex:indexPath.row];
         [entity markAsDeleted];
         // No se puede hacer "facil" por el tema de la categorizacion
         [self saveAndReloadElements];
@@ -435,9 +444,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    TBaseEntity *entity = [self.elements objectAtIndex:indexPath.row];
+    MEBaseEntity *entity = [self.elements objectAtIndex:indexPath.row];
     
-    if([entity isKindOfClass:[TCategory class]]) {
+    if([entity isKindOfClass:[MECategory class]]) {
         PointListController *pointListController = [[PointListController alloc] initWithNibName:@"PointListController" bundle:nil];
         pointListController.map = self.map;
         if(self.filteringCategories) {

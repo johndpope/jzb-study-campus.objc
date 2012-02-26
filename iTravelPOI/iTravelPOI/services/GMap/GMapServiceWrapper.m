@@ -112,7 +112,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (GDataEntryMap *) insertMapEntry:(GDataEntryMap *)gmapEntry userID:(NSString *)loggedID error:(NSError **)err {
+- (GDataEntryMap *) inserMEMapEntry:(GDataEntryMap *)gmapEntry userID:(NSString *)loggedID error:(NSError **)err {
     
     // Variable de salida del block
     __block BOOL endLoop = false;
@@ -184,7 +184,7 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (GDataEntryMapFeature *) insertMapFeatureEntry:(GDataEntryMapFeature *)featureEntry  inMapWithGID:(NSString *)mapGID error:(NSError **)err {
+- (GDataEntryMapFeature *) inserMEMapFeatureEntry:(GDataEntryMapFeature *)featureEntry  inMapWithGID:(NSString *)mapGID error:(NSError **)err {
     
     // Variable de salida del block
     __block BOOL endLoop = false;

@@ -22,19 +22,10 @@
 #define REMOTE_ETAG_PREFIX @"@Sync-"
 
 
-static const NSString *_SyncStatusType_Names[8]={
-    @"ST_Sync_OK", 
-    @"ST_Sync_Create_Local", @"ST_Sync_Create_Remote", 
-    @"ST_Sync_Delete_Local", @"ST_Sync_Delete_Remote", 
-    @"ST_Sync_Update_Local", @"ST_Sync_Update_Remote",
-    @"ST_Sync_Error"
-};
-
-
 
 //*********************************************************************************************************************
 #pragma mark -
-#pragma mark MEBaseEntity PRIVATE interfade definition
+#pragma mark MEBaseEntity PRIVATE interface definition
 //---------------------------------------------------------------------------------------------------------------------
 @interface MEBaseEntity () 
 
@@ -202,7 +193,7 @@ static const NSString *_SyncStatusType_Names[8]={
     [sbuf appendFormat:@"%@<id>%@</id>\n", ident, self.GID];
     [sbuf appendFormat:@"%@<name>%@</name>\n", ident, self.name];
     [sbuf appendFormat:@"%@<syncETag>%@</syncETag>\n", ident, self.syncETag];
-    [sbuf appendFormat:@"%@<syncStatus>%@</syncStatus>\n", ident, _SyncStatusType_Names[self.syncStatus]];
+    [sbuf appendFormat:@"%@<syncStatus>%@</syncStatus>\n", ident, SyncStatusType_Names[self.syncStatus]];
     [sbuf appendFormat:@"%@<changed>%d</changed>\n", ident, self.changed];
     [sbuf appendFormat:@"%@<description>%@</description>\n", ident, self.desc];
     [sbuf appendFormat:@"%@<icon>%@</icon>\n", ident, self.iconURL];

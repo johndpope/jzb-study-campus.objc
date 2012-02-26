@@ -1,24 +1,25 @@
 //
-//  PointXmlUtil.h
-//  CDTest
+//  SrvcTicket.h
+//  iTravelPOI
 //
-//  Created by jzarzuela on 06/02/12.
+//  Created by jzarzuela on 26/02/12.
 //  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
-#import "MEMap.h"
-#import "MECategory.h"
-#import "MEPoint.h"
+
+// Definicion para que se pueda marcar de forma visible las operaciones
+#define SRVC_ASYNCHRONOUS SrvcTicket*
 
 
 //*********************************************************************************************************************
+#pragma mark -
+#pragma mark SrvcTicket interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface MEPoint (PointXmlCat) 
+@interface SrvcTicket : NSObject 
 
-@property (nonatomic, assign) NSString * kmlBlob;
+@property (nonatomic, readonly) BOOL isCancelled;
 
-- (void) updateExtInfoFromMap;
-- (BOOL) parseExtInfoFromString:(NSString*) value;
+- (void) cancel;
 
 @end

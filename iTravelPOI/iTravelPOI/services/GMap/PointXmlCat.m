@@ -18,7 +18,7 @@
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
-@implementation TPoint (PointXmlCat)
+@implementation MEPoint (PointXmlCat)
 
 
 
@@ -141,7 +141,7 @@ NSString* _cleanHTML(NSString *str) {
 //---------------------------------------------------------------------------------------------------------------------
 // AVISO: PARA PODER SER COMPATIBLES CON EXTERNALIZACIONES DE VERSIONES ANTERIORES NO SE PUEDE ELIMAR O CAMBIAR
 // ELEMENTOS DEL ARRAY. HABRA QUE SEGUIR PONIENDO ALGO QUE TENGA SENTIDO CON COMPATIBILIDAD HACIA ATRAS
-- (void) _putInArray:(NSMutableArray *)data category:(TCategory *)cat {
+- (void) _putInArray:(NSMutableArray *)data category:(MECategory *)cat {
     
     // La informacion, para que sea muy compacta, se escribe en un NSArray de tipos basicos
     NSMutableArray *catData = [[[NSMutableArray alloc] init] autorelease];
@@ -166,7 +166,7 @@ NSString* _cleanHTML(NSString *str) {
 //---------------------------------------------------------------------------------------------------------------------
 // AVISO: PARA PODER SER COMPATIBLES CON EXTERNALIZACIONES DE VERSIONES ANTERIORES NO SE PUEDE ELIMAR O CAMBIAR
 // ELEMENTOS DEL ARRAY. HABRA QUE SEGUIR PONIENDO ALGO QUE TENGA SENTIDO CON COMPATIBILIDAD HACIA ATRAS
-- (void) _getFromArray:(NSArray *)catData category:(TCategory *)cat {
+- (void) _getFromArray:(NSArray *)catData category:(MECategory *)cat {
     
     // Como esto es para persistir en GMap y no en el SQLite local, no se almaceno lo siguiente:
     //  wasDeleted = false
@@ -209,7 +209,7 @@ NSString* _cleanHTML(NSString *str) {
     
     // ********* Escribe la informacion de las categorias *********
     NSMutableArray *catsData = [[[NSMutableArray alloc] init] autorelease];
-    for(TCategory *cat in self.map.categories) {
+    for(MECategory *cat in self.map.categories) {
         [catIndexDic setObject:[NSNumber numberWithUnsignedShort:catIndex++] forKey:cat.GID];
         [self _putInArray:catsData category:cat];
     }
@@ -218,7 +218,7 @@ NSString* _cleanHTML(NSString *str) {
     
     // ********* Escribe la informacion de points y subcategories de cada categoria *********
     NSMutableArray *linksData = [[[NSMutableArray alloc] init] autorelease];
-    for(TCategory *cat in self.map.categories) {
+    for(MECategory *cat in self.map.categories) {
         
         NSMutableArray *oneLinkData = [[[NSMutableArray alloc] init] autorelease];
         
@@ -227,14 +227,14 @@ NSString* _cleanHTML(NSString *str) {
         
         // Los puntos
         NSMutableArray *pointsData = [[[NSMutableArray alloc] init] autorelease];
-        for(TPoint *point in cat.points) {
+        for(MEPoint *point in cat.points) {
             [pointsData addObject:point.GID];
         }
         [oneLinkData addObject: [[pointsData copy] autorelease]];
         
         // Las subcategorias
         NSMutableArray *subCatsData = [[[NSMutableArray alloc] init] autorelease];
-        for(TCategory *subCat in cat.subcategories) {
+        for(MECategory *subCat in cat.subcategories) {
             [subCatsData addObject:[catIndexDic objectForKey:subCat.GID]];
         }
         [oneLinkData addObject: [[subCatsData copy] autorelease]];
@@ -306,7 +306,7 @@ NSString* _cleanHTML(NSString *str) {
     // ********* Lee la informacion de las categorias *********
     NSArray *catsData = [data objectAtIndex:1];
     for(NSArray *itemData in catsData) {
-        TCategory *cat = [TCategory insertTmpNewInMap:self.map];
+        MECategory *cat = [MECategory insertTmpNewInMap:self.map];
         [self _getFromArray:itemData category:cat];
         [self.map addCategory:cat];
         [catsByIndexArray addObject:cat];
@@ -319,13 +319,13 @@ NSString* _cleanHTML(NSString *str) {
         
         // El index de la categoria padre
         unsigned short catIndex = [[oneLinkData objectAtIndex:0] unsignedShortValue];
-        TCategory *cat = [catsByIndexArray objectAtIndex:catIndex];
+        MECategory *cat = [catsByIndexArray objectAtIndex:catIndex];
         
         // Lee los puntos
         NSArray *pointsData = [oneLinkData objectAtIndex:1];
         for(NSString *pointGID in pointsData) {
             // Se busca el punto por GID
-            TPoint *point = [self.map pointByGID:pointGID];
+            MEPoint *point = [self.map pointByGID:pointGID];
             if( point!=nil) {
                 [cat addPoint:point];
             }
@@ -335,7 +335,7 @@ NSString* _cleanHTML(NSString *str) {
         NSArray *subCatsData = [oneLinkData objectAtIndex:2];
         for(NSNumber *subCatIndex in subCatsData) {
             // Se busca por indice
-            TCategory *subcat = [catsByIndexArray objectAtIndex:[subCatIndex intValue]];
+            MECategory *subcat = [catsByIndexArray objectAtIndex:[subCatIndex intValue]];
             [cat addSubcategory:subcat];
         }
         

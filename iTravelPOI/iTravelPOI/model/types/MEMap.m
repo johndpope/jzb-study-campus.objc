@@ -14,14 +14,13 @@
 
 //*********************************************************************************************************************
 #pragma mark -
-#pragma mark MEMap PRIVATE interfade definition
+#pragma mark MEMap PRIVATE interface definition
 //---------------------------------------------------------------------------------------------------------------------
 @interface MEMap () 
 
-@property (nonatomic, retain) NSNumber * _i_wasDeleted;
-@property (nonatomic, assign) BOOL isTemp;
 
-+ (NSEntityDescription *) mapEntity;
+@property (nonatomic, retain) NSNumber * _i_wasDeleted;
+
 
 @end
 
@@ -41,7 +40,6 @@
 @dynamic deletedCategories;
 
 @synthesize wasDeleted = _wasDeleted;
-@synthesize isTemp = _isTemp;
 
 
 
@@ -80,7 +78,6 @@
     if(ctx) 
     {
         MEMap *newMap = [[NSManagedObject alloc] initWithEntity:[MEMap mapEntity] insertIntoManagedObjectContext:ctx];
-        newMap.isTemp = false;
         [newMap resetEntity];
         [MEPoint insertEmptyExtInfoInMap:newMap];
         return newMap;
@@ -95,7 +92,6 @@
 + (MEMap *) insertTmpNew {
     
     MEMap *newMap = [[NSManagedObject alloc] initWithEntity:[MEMap mapEntity] insertIntoManagedObjectContext:nil];
-    newMap.isTemp = true;
     [newMap resetEntity];
     [MEPoint insertTmpEmptyExtInfoInMap:newMap];
     return [newMap autorelease];
@@ -124,10 +120,10 @@
     self._i_wasDeleted = [NSNumber numberWithBool:YES];
     
     // "recuerda" sus elementos para eliminarlos luego
-    NSSet *allPoints = self.points;
-    NSSet *allCategories = self.categories;
-    NSSet *allDeletedPoints = self.deletedPoints;
-    NSSet *allDeletedCategories = self.deletedCategories;
+    NSSet *allPoints = [NSSet setWithSet:self.points];
+    NSSet *allCategories = [NSSet setWithSet:self.categories];
+    NSSet *allDeletedPoints = [NSSet setWithSet:self.deletedPoints];
+    NSSet *allDeletedCategories = [NSSet setWithSet:self.deletedCategories];
     
     // Limpia las relaciones de sus elementos
     [self removeAllPoints];
@@ -159,9 +155,11 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) clearAllData2 {
+- (void) removeAllPointsAndCategories {
     [self removeAllPoints];
     [self removeAllCategories];
+    [self removeAllDeletedPoints];
+    [self removeAllDeletedCategories];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -208,7 +206,6 @@
 {
     [super resetEntity];
     self._i_wasDeleted = [NSNumber numberWithBool:NO];
-    self.isTemp = YES;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -294,7 +291,7 @@
     [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     [changedObjects release];
     
-    if(self.isTemp) value.map=self;
+    value.map=self;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -306,7 +303,7 @@
     [changedObjects release];
     
     [value removeAllCategories];
-    if(self.isTemp) value.map=nil;
+    value.map=nil;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -315,10 +312,8 @@
     [[self primitiveValueForKey:@"points"] unionSet:value];
     [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
     
-    if(self.isTemp) {
-        for(MEPoint *entity in value) {
-            entity.map = self;
-        }
+    for(MEPoint *entity in value) {
+        entity.map = self;
     }
 }
 
@@ -330,29 +325,22 @@
     
     for(MEPoint *entity in value) {
         [entity removeAllCategories];
-        if(self.isTemp) {
-            entity.map = nil;
-        }
+        entity.map = nil;
     }
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removeAllPoints {
     
-    NSSet *allPoints = [[NSSet alloc] initWithSet:self.points];
+    NSSet *allPoints = [NSSet setWithSet:self.points];
     [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:allPoints];
     [[self primitiveValueForKey:@"points"] minusSet:allPoints];
     [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:allPoints];
     
     for(MEPoint *entity in allPoints) {
         [entity removeAllCategories];
-        if(self.isTemp) {
-            entity.map = nil;
-        }
+        entity.map = nil;
     }
-    
-    [allPoints release];
-    
 }
 
 
@@ -378,7 +366,7 @@
     [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     [changedObjects release];
     
-    if(self.isTemp) value.map=self;
+    value.map=self;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -391,7 +379,8 @@
     
     [value removeAllPoints];
     [value removeAllSubcategories];
-    if(self.isTemp) value.map=nil;
+    [value removeAllCategories];
+    value.map=nil;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -400,10 +389,8 @@
     [[self primitiveValueForKey:@"categories"] unionSet:value];
     [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
     
-    if(self.isTemp) {
-        for(MECategory *entity in value) {
-            entity.map = self;
-        }
+    for(MECategory *entity in value) {
+        entity.map = self;
     }
     
 }
@@ -417,9 +404,8 @@
     for(MECategory *entity in value) {
         [entity removeAllPoints];
         [entity removeAllSubcategories];
-        if(self.isTemp) {
-            entity.map = nil;
-        }
+        [entity removeAllCategories];
+        entity.map = nil;
     }
     
 }
@@ -427,7 +413,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removeAllCategories {
     
-    NSSet *allCategories = [[NSSet alloc] initWithSet:self.points];
+    NSSet *allCategories = [NSSet setWithSet:self.categories];
     [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:allCategories];
     [[self primitiveValueForKey:@"categories"] minusSet:allCategories];
     [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:allCategories];
@@ -435,13 +421,9 @@
     for(MECategory *entity in allCategories) {
         [entity removeAllPoints];
         [entity removeAllSubcategories];
-        if(self.isTemp) {
-            entity.map = nil;
-        }
+        [entity removeAllCategories];
+        entity.map = nil;
     }
-    
-    [allCategories release];
-    
 }
 
 
@@ -467,7 +449,7 @@
     [self didChangeValueForKey:@"deletedPoints" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     [changedObjects release];
     
-    if(self.isTemp) value.map=self;
+    value.map=self;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -479,7 +461,7 @@
     [changedObjects release];
     
     [value removeAllCategories];
-    if(self.isTemp) value.map=nil;
+    value.map=nil;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -488,10 +470,8 @@
     [[self primitiveValueForKey:@"deletedPoints"] unionSet:value];
     [self didChangeValueForKey:@"deletedPoints" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
     
-    if(self.isTemp) {
-        for(MEPoint *entity in value) {
-            entity.map = self;
-        }
+    for(MEPoint *entity in value) {
+        entity.map = self;
     }
 }
 
@@ -503,29 +483,22 @@
     
     for(MEPoint *entity in value) {
         [entity removeAllCategories];
-        if(self.isTemp) {
-            entity.map = nil;
-        }
+        entity.map = nil;
     }
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removeAllDeletedPoints {
     
-    NSSet *allDeletedPoints = [[NSSet alloc] initWithSet:self.deletedPoints];
+    NSSet *allDeletedPoints = [NSSet setWithSet:self.deletedPoints];
     [self willChangeValueForKey:@"deletedPoints" withSetMutation:NSKeyValueMinusSetMutation usingObjects:allDeletedPoints];
     [[self primitiveValueForKey:@"deletedPoints"] minusSet:allDeletedPoints];
     [self didChangeValueForKey:@"deletedPoints" withSetMutation:NSKeyValueMinusSetMutation usingObjects:allDeletedPoints];
     
     for(MEPoint *entity in allDeletedPoints) {
         [entity removeAllCategories];
-        if(self.isTemp) {
-            entity.map = nil;
-        }
+        entity.map = nil;
     }
-    
-    [allDeletedPoints release];
-    
 }
 
 
@@ -551,7 +524,7 @@
     [self didChangeValueForKey:@"deletedCategories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
     [changedObjects release];
     
-    if(self.isTemp) value.map=self;
+    value.map=self;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -564,7 +537,7 @@
     
     [value removeAllPoints];
     [value removeAllSubcategories];
-    if(self.isTemp) value.map=nil;
+    value.map=nil;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -573,10 +546,8 @@
     [[self primitiveValueForKey:@"deletedCategories"] unionSet:value];
     [self didChangeValueForKey:@"deletedCategories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
     
-    if(self.isTemp) {
-        for(MECategory *entity in value) {
-            entity.map = self;
-        }
+    for(MECategory *entity in value) {
+        entity.map = self;
     }
     
 }
@@ -590,9 +561,7 @@
     for(MECategory *entity in value) {
         [entity removeAllPoints];
         [entity removeAllSubcategories];
-        if(self.isTemp) {
-            entity.map = nil;
-        }
+        entity.map = nil;
     }
     
 }
@@ -600,7 +569,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removeAllDeletedCategories {
     
-    NSSet *allDeletedCategories = [[NSSet alloc] initWithSet:self.deletedPoints];
+    NSSet *allDeletedCategories = [NSSet setWithSet:self.deletedCategories];
     [self willChangeValueForKey:@"deletedCategories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:allDeletedCategories];
     [[self primitiveValueForKey:@"deletedCategories"] minusSet:allDeletedCategories];
     [self didChangeValueForKey:@"deletedCategories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:allDeletedCategories];
@@ -608,13 +577,8 @@
     for(MECategory *entity in allDeletedCategories) {
         [entity removeAllPoints];
         [entity removeAllSubcategories];
-        if(self.isTemp) {
-            entity.map = nil;
-        }
+        entity.map = nil;
     }
-    
-    [allDeletedCategories release];
-    
 }
 
 
