@@ -30,10 +30,9 @@ typedef enum {
 } SORTING_METHOD;
 
 
-typedef void (^TBlock_saveContextFinished)(SrvcTicket *ticket, NSError *error);
-typedef void (^TBlock_getUserMapListFinished)(SrvcTicket *ticket, NSArray *maps, NSError *error);
-typedef void (^TBlock_getFlatElemensInMapFinished)(SrvcTicket *ticket, NSArray *elements, NSError *error);
-typedef void (^TBlock_getCategorizedElemensInMapFinished)(SrvcTicket *ticket, NSArray *elements, NSError *error);
+typedef void (^TBlock_getUserMapListFinished)(NSArray *maps, NSError *error);
+typedef void (^TBlock_getFlatElemensInMapFinished)(NSArray *elements, NSError *error);
+typedef void (^TBlock_getCategorizedElemensInMapFinished)(NSArray *elements, NSError *error);
 
 
 
@@ -63,7 +62,7 @@ typedef void (^TBlock_getCategorizedElemensInMapFinished)(SrvcTicket *ticket, NS
 - (void) initCDStack;
 - (void) doneCDStack;
 
-- (SRVC_ASYNCHRONOUS) saveContext:(TBlock_saveContextFinished) callbackBlock;
+- (NSError *) commitChanges;
 
 - (SRVC_ASYNCHRONOUS) getUserMapList:(TBlock_getUserMapListFinished) callbackBlock;
 

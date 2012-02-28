@@ -23,10 +23,7 @@
 
 - (NSURL *) _applicationDocumentsDirectory;
 
-- (void) _initCDStack;
-- (void) _doneCDStack;
 
-- (NSError *) _saveContext;
 - (NSArray *) _getUserMapList:(NSError **)error;
 - (NSArray *) _getFlatElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy error:(NSError **)error ;
 - (NSArray *) _getCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy error:(NSError **)error;
@@ -103,62 +100,41 @@ NSPersistentStoreCoordinator * _psCoordinator;
 //---------------------------------------------------------------------------------------------------------------------
 - (void) initCDStack {
     
-    NSLog(@"ModelService - Async - initCDStack");
+    NSLog(@"ModelService - initCDStack");
     
-    // Hacemos el trabajo en otro hilo porque el resto del API se ejecutara en ese hilo
-//    dispatch_sync(_ModelServiceQueue, ^(void) {
-        [[ModelService sharedInstance] _initCDStack];
-//    });
-    
+    [self moContext];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) doneCDStack {
     
-    NSLog(@"ModelService - Async - doneCDStack");
+    NSLog(@"ModelService - doneCDStack");
     
-    // Hacemos el trabajo en otro hilo porque el resto del API se ejecutara en ese hilo
-    dispatch_sync(_ModelServiceQueue, ^(void) {
-        [[ModelService sharedInstance] _doneCDStack];
-    });
+    [_moContext release];
+    [_moModel release];
+    [_psCoordinator release];
     
+    _moContext = nil;
+    _moModel = nil;
+    _psCoordinator = nil;
 }
-
 
 //---------------------------------------------------------------------------------------------------------------------
-- (SRVC_ASYNCHRONOUS) saveContext:(TBlock_saveContextFinished) callbackBlock {
+- (NSError *) commitChanges {
     
-    NSLog(@"ModelService - Async - saveContext");
+    NSLog(@"ModelService - commitChanges");
     
-    // Si no hay nadie esperando no hacemos nada
-    if(callbackBlock==nil) {
-        return nil;
+    NSError *error = nil;
+    if(self.moContext!=nil && [self.moContext hasChanges]) {
+        if(![self.moContext save:&error]){
+            NSLog(@"ModelService - Error saving NSManagedContext: %@, %@", error, [error userInfo]);
+        } 
     }
     
-    // Se apunta la cola en la que deberá dar la respuesta de callback
-    dispatch_queue_t caller_queue = dispatch_get_current_queue();
+    return error;
     
-    // Crea un ticket para poder comprobar si se cancelo la llamada
-    SrvcTicket *ticket = [[SrvcTicket alloc] init];
-    
-    // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
-    dispatch_async(_ModelServiceQueue,^(void){
-        if(!ticket.isCancelled) {
-            NSError *error = [[ModelService sharedInstance] _saveContext];
-            
-            // Avisamos al llamante de que ya se ha actualizado el mapa solicitado
-            dispatch_async(caller_queue, ^(void){
-                callbackBlock(ticket, error);
-            });
-        }
-        
-        // Liberamos el ticket
-        [ticket release];
-    });
-    
-    // Retorna el ticket de esta operacion
-    return ticket;
 }
+
 
 //---------------------------------------------------------------------------------------------------------------------
 - (SRVC_ASYNCHRONOUS) getUserMapList:(TBlock_getUserMapListFinished) callbackBlock {
@@ -167,33 +143,23 @@ NSPersistentStoreCoordinator * _psCoordinator;
     
     // Si no hay nadie esperando no hacemos nada
     if(callbackBlock==nil) {
-        return nil;
+        return;
     }
     
     // Se apunta la cola en la que deberá dar la respuesta de callback
     dispatch_queue_t caller_queue = dispatch_get_current_queue();
     
-    // Crea un ticket para poder comprobar si se cancelo la llamada
-    SrvcTicket *ticket = [[SrvcTicket alloc] init];
-    
     // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
     dispatch_async(_ModelServiceQueue,^(void){
-        if(!ticket.isCancelled) {
-            NSError *error = nil;
-            NSArray * maps = [[ModelService sharedInstance] _getUserMapList:&error];
-            
-            // Avisamos al llamante de que ya se ha actualizado el mapa solicitado
-            dispatch_async(caller_queue, ^(void){
-                callbackBlock(ticket, maps, error);
-            });
-        }
+        NSError *error = nil;
+        NSArray * maps = [[ModelService sharedInstance] _getUserMapList:&error];
         
-        // Liberamos el ticket
-        [ticket release];
+        // Avisamos al llamante de que ya se ha actualizado el mapa solicitado
+        dispatch_async(caller_queue, ^(void){
+            callbackBlock(maps, error);
+        });
     });
     
-    // Retorna el ticket de esta operacion
-    return ticket;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -203,34 +169,23 @@ NSPersistentStoreCoordinator * _psCoordinator;
     
     // Si no hay nadie esperando no hacemos nada
     if(callbackBlock==nil) {
-        return nil;
+        return;
     }
     
     // Se apunta la cola en la que deberá dar la respuesta de callback
     dispatch_queue_t caller_queue = dispatch_get_current_queue();
     
-    // Crea un ticket para poder comprobar si se cancelo la llamada
-    SrvcTicket *ticket = [[SrvcTicket alloc] init];
-    
     // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
     dispatch_async(_ModelServiceQueue,^(void) {
         
-        if(!ticket.isCancelled) {
-            NSError *error = nil;
-            NSArray *elements = [[ModelService sharedInstance] _getFlatElemensInMap:map forCategories:categories orderBy:orderBy error:&error];
-            
-            // Avisamos al llamante de que ya se ha actualizado el mapa solicitado
-            dispatch_async(caller_queue, ^(void){
-                callbackBlock(ticket, elements, error);
-            });
-        }
+        NSError *error = nil;
+        NSArray *elements = [[ModelService sharedInstance] _getFlatElemensInMap:map forCategories:categories orderBy:orderBy error:&error];
         
-        // Liberamos el ticket
-        [ticket release];
+        // Avisamos al llamante de que ya se ha actualizado el mapa solicitado
+        dispatch_async(caller_queue, ^(void){
+            callbackBlock(elements, error);
+        });
     });
-    
-    // Retorna el ticket de esta operacion
-    return ticket;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -240,33 +195,24 @@ NSPersistentStoreCoordinator * _psCoordinator;
     
     // Si no hay nadie esperando no hacemos nada
     if(callbackBlock==nil) {
-        return nil;
+        return;
     }
     
     // Se apunta la cola en la que deberá dar la respuesta de callback
     dispatch_queue_t caller_queue = dispatch_get_current_queue();
     
-    // Crea un ticket para poder comprobar si se cancelo la llamada
-    SrvcTicket *ticket = [[SrvcTicket alloc] init];
-    
     // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
     dispatch_async(_ModelServiceQueue,^(void){
-        if(!ticket.isCancelled) {
-            NSError *error = nil;
-            NSArray *elements = [[ModelService sharedInstance] _getCategorizedElemensInMap:map forCategories:categories orderBy:orderBy error:&error];
-            
-            // Avisamos al llamante de que ya se ha actualizado el mapa solicitado
-            dispatch_async(caller_queue, ^(void){
-                callbackBlock(ticket, elements, error);
-            });
-        }
+        NSError *error = nil;
+        NSArray *elements = [[ModelService sharedInstance] _getCategorizedElemensInMap:map forCategories:categories orderBy:orderBy error:&error];
         
-        // Liberamos el ticket
-        [ticket release];
+        // Avisamos al llamante de que ya se ha actualizado el mapa solicitado
+        dispatch_async(caller_queue, ^(void){
+            callbackBlock(elements, error);
+        });
+        
     });
     
-    // Retorna el ticket de esta operacion
-    return ticket;
 }
 
 
@@ -350,45 +296,6 @@ NSPersistentStoreCoordinator * _psCoordinator;
 //---------------------------------------------------------------------------------------------------------------------
 - (NSURL *) _applicationDocumentsDirectory {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _initCDStack {
-    
-    NSLog(@"ModelService - _initCDStack");
-    
-    [self moContext];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _doneCDStack {
-    
-    NSLog(@"ModelService - _doneCDStack");
-    
-    [_moContext release];
-    [_moModel release];
-    [_psCoordinator release];
-    
-    _moContext = nil;
-    _moModel = nil;
-    _psCoordinator = nil;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSError *) _saveContext {
-    
-    NSLog(@"ModelService - _saveContext");
-    
-    NSError *error = nil;
-    if(self.moContext!=nil && [self.moContext hasChanges]) {
-        if(![self.moContext save:&error]){
-            NSLog(@"ModelService - Error saving NSManagedContext: %@, %@", error, [error userInfo]);
-            return error;
-        } 
-    }
-    
-    return nil;
-    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -478,7 +385,7 @@ NSPersistentStoreCoordinator * _psCoordinator;
         // Se queda solo con los puntos que estan categorizados por el filtro
         NSMutableArray *points = [NSMutableArray array];
         for(MEPoint *point in map.points) {
-                        
+            
             BOOL all = true;
             for(MECategory *cat in categories) {
                 if(![cat recursiveContainsPoint:point]) {
@@ -501,10 +408,10 @@ NSPersistentStoreCoordinator * _psCoordinator;
         
         // Actualiza la cuenta de los puntos de forma recursiva para todas las categorias y las ordena
         for(MECategory *cat in map.categories) {
-                cat.t_displayCount = [[cat allRecursivePoints] count];
+            cat.t_displayCount = [[cat allRecursivePoints] count];
         }
         NSArray *sortedCategories = [[map.categories allObjects] sortedArrayUsingComparator:comparator];
-
+        
         // Ordena todos los puntos del mapa segun hayan indicado
         NSArray *sortedPoints = [[map.points allObjects] sortedArrayUsingComparator:comparator];
         
@@ -521,7 +428,7 @@ NSPersistentStoreCoordinator * _psCoordinator;
 - (NSArray *) _getCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy error:(NSError **)error {
     
     NSLog(@"ModelService - _getCategorizedElemensInMap");
-
+    
     
     // Algoritmo de comparacion para ordenar los elementos segun se especifique
     NSComparator comparator = ^NSComparisonResult(id obj1, id obj2) {
@@ -538,7 +445,7 @@ NSPersistentStoreCoordinator * _psCoordinator;
                 return [e1.name compare:e2.name];
         }
     };
-
+    
     
     // Consigue el conjunto de puntos para el filtro y las categorias del este
     NSSet *allFilteredPoints = [self _getAllCategorizedPoints:map forCategories:categories];
@@ -564,7 +471,7 @@ NSPersistentStoreCoordinator * _psCoordinator;
 //---------------------------------------------------------------------------------------------------------------------
 // Retorna el conjunto de puntos que estan categorizados (jeraquicamente) por el filtro pasado
 - (NSSet *) _getAllCategorizedPoints:(MEMap *)map forCategories:(NSArray *)categories {
-        
+    
     // Si no hay categorias restringiendo los puntos retorna todos los del mapa
     if([categories count]==0) {
         return map.points;
@@ -573,12 +480,12 @@ NSPersistentStoreCoordinator * _psCoordinator;
         // En otro caso, retorna todos los puntos de las categorias de forma recursiva
         // Pero solo aquellos que esten categorizados por la lista pasada
         NSMutableSet *set = [NSMutableSet set];
-
+        
         [set unionSet:[[categories objectAtIndex:0] allRecursivePoints]];
         for(int n=1;n<[categories count];n++) {
             [set intersectSet:[[categories objectAtIndex:n] allRecursivePoints]];
         }
-
+        
         return set;
     }
     
@@ -597,7 +504,7 @@ NSPersistentStoreCoordinator * _psCoordinator;
     
     // Subcategorias del ultimo paso del filtro
     NSSet *lastFilterCategories = ((MECategory *)[excludedCats lastObject]).subcategories;
-
+    
     // Calcula el conjunto resultante para cada punto con las categorias del mapa (jerarquico)
     NSMutableSet *set = [NSMutableSet set];
     for(MEPoint *point in points) {

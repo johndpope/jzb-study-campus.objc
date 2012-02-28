@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 // Definicion para que se pueda marcar de forma visible las operaciones
-#define SRVC_ASYNCHRONOUS SrvcTicket*
+#define SRVC_ASYNCHRONOUS void
 
 
 //*********************************************************************************************************************

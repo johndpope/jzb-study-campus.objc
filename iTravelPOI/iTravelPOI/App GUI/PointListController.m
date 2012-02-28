@@ -178,41 +178,40 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void) saveAndReloadElements {
     
-    [[ModelService sharedInstance] saveContext:^(SrvcTicket *ticket, NSError *error) {
-        if(error) {
-            [SVProgressHUD showWithStatus:@"Loading local entities"];
-            [SVProgressHUD dismissWithError:@"Error saving local entities" afterDelay:2];
+    NSError *error = [[ModelService sharedInstance] commitChanges];
+    if(error) {
+        [SVProgressHUD showWithStatus:@"Loading local entities"];
+        [SVProgressHUD dismissWithError:@"Error saving local entities" afterDelay:2];
+    } else {
+        if(self.showMode == showFlat) {
+            [[ModelService sharedInstance] getFlatElemensInMap:self.map 
+                                                 forCategories:self.filteringCategories
+                                                       orderBy:SORT_BY_NAME 
+                                                      callback:^(NSArray *elements, NSError *error) {
+                                                          if(error) {
+                                                              [SVProgressHUD dismissWithError:@"Error loading elements info" afterDelay:2];
+                                                          } else {
+                                                              [SVProgressHUD dismiss];
+                                                              self.elements = elements;
+                                                              [self.tableView reloadData];
+                                                          }
+                                                      }];
         } else {
-            if(self.showMode == showFlat) {
-                [[ModelService sharedInstance] getFlatElemensInMap:self.map 
-                                                          forCategories:self.filteringCategories
-                                                                orderBy:SORT_BY_NAME 
-                                                               callback:^(SrvcTicket *ticket, NSArray *elements, NSError *error) {
-                                                                   if(error) {
-                                                                       [SVProgressHUD dismissWithError:@"Error loading elements info" afterDelay:2];
-                                                                   } else {
-                                                                       [SVProgressHUD dismiss];
-                                                                       self.elements = elements;
-                                                                       [self.tableView reloadData];
-                                                                   }
-                                                               }];
-            } else {
-                //    forCategory:[self.filteringCategories lastObject]
-                [[ModelService sharedInstance] getCategorizedElemensInMap:self.map 
-                                                                 forCategories:self.filteringCategories
-                                                                       orderBy:SORT_BY_NAME 
-                                                                      callback:^(SrvcTicket *ticket, NSArray *elements, NSError *error) {
-                                                                          if(error) {
-                                                                              [SVProgressHUD dismissWithError:@"Error loading elements info" afterDelay:2];
-                                                                          } else {
-                                                                              [SVProgressHUD dismiss];
-                                                                              self.elements = elements;
-                                                                              [self.tableView reloadData];
-                                                                          }
-                                                                      }];
-            }
+            //    forCategory:[self.filteringCategories lastObject]
+            [[ModelService sharedInstance] getCategorizedElemensInMap:self.map 
+                                                        forCategories:self.filteringCategories
+                                                              orderBy:SORT_BY_NAME 
+                                                             callback:^(NSArray *elements, NSError *error) {
+                                                                 if(error) {
+                                                                     [SVProgressHUD dismissWithError:@"Error loading elements info" afterDelay:2];
+                                                                 } else {
+                                                                     [SVProgressHUD dismiss];
+                                                                     self.elements = elements;
+                                                                     [self.tableView reloadData];
+                                                                 }
+                                                             }];
         }
-    }];
+    }
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -232,9 +231,9 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) changeShowMode:(PointListShowMode) mode {
-
+    
     if(self.showMode!=mode) {
-
+        
         // Guardamos nuevo modo
         self.showMode = mode;
         
@@ -242,12 +241,12 @@
         [SVProgressHUD showWithStatus:@"Loading elements info"];
         [self saveAndReloadElements];
     }
-
+    
     if(self.popoverShowMode) {
         [self.popoverShowMode dismissPopoverAnimated:YES];
         self.popoverShowMode = nil;
     }
-     
+    
     
 }
 

@@ -109,7 +109,7 @@
         // Lanzamos la busqueda de los mapas y los mostramos
         [SVProgressHUD showWithStatus:@"Loading local maps"];
         
-        [[ModelService sharedInstance] getUserMapList:^(SrvcTicket *ticket, NSArray *maps, NSError *error) {
+        [[ModelService sharedInstance] getUserMapList:^(NSArray *maps, NSError *error) {
             if(error) {
                 [SVProgressHUD dismissWithError:@"Error loading local maps" afterDelay:2];
             } else {
@@ -188,25 +188,24 @@
     
     
     [self.navigationController dismissModalViewControllerAnimated:YES];
-        
+    
     map.changed = true;
-
-    [[ModelService sharedInstance] saveContext:^(SrvcTicket *ticket, NSError *error) {
-        if(error) {
-            [SVProgressHUD showWithStatus:@"Saving local maps"];
-            [SVProgressHUD dismissWithError:@"Error saving local maps" afterDelay:2];
-        } else {
-            [[ModelService sharedInstance] getUserMapList:^(SrvcTicket *ticket, NSArray *maps, NSError *error) {
-                if(error) {
-                    [SVProgressHUD showWithStatus:@"Loading local maps"];
-                    [SVProgressHUD dismissWithError:@"Error loading local maps" afterDelay:2];
-                } else {
-                    self.maps = maps;
-                    [self.tableView reloadData];
-                }
-            }];
-        }
-    }];
+    
+    NSError *error = [[ModelService sharedInstance] commitChanges];
+    if(error) {
+        [SVProgressHUD showWithStatus:@"Saving local maps"];
+        [SVProgressHUD dismissWithError:@"Error saving local maps" afterDelay:2];
+    } else {
+        [[ModelService sharedInstance] getUserMapList:^(NSArray *maps, NSError *error) {
+            if(error) {
+                [SVProgressHUD showWithStatus:@"Loading local maps"];
+                [SVProgressHUD dismissWithError:@"Error loading local maps" afterDelay:2];
+            } else {
+                self.maps = maps;
+                [self.tableView reloadData];
+            }
+        }];
+    }
     
 }
 
@@ -280,11 +279,10 @@
         [marray removeObjectAtIndex:indexPath.row];
         self.maps = [[marray copy] autorelease];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-        [[ModelService sharedInstance] saveContext:^(SrvcTicket *ticket, NSError *error) {
-            if(error) {
-                NSLog(@"Error saving context when deleting an item: %@ / %@", error, [error userInfo]);
-            }
-        }];
+        NSError *error = [[ModelService sharedInstance] commitChanges];
+        if(error) {
+            NSLog(@"Error saving context when deleting an item: %@ / %@", error, [error userInfo]);
+        }
     }   
     else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
