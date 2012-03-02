@@ -58,26 +58,20 @@
 #pragma mark -
 #pragma mark CLASS methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (NSEntityDescription *) mapEntity {
++ (NSEntityDescription *) mapEntity:(NSManagedObjectContext *)ctx {
     
-    static NSEntityDescription *_mapEntity = nil;
-    
-    if(!_mapEntity) {
-        NSManagedObjectContext * ctx = [ModelService sharedInstance].moContext;
-        _mapEntity = [NSEntityDescription entityForName:@"MEMap" inManagedObjectContext:ctx];
-    }
+    NSEntityDescription *_mapEntity = [NSEntityDescription entityForName:@"MEMap" inManagedObjectContext:ctx];
     return _mapEntity;
 }
 
 
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (MEMap *) insertNew {
++ (MEMap *) insertNew:(NSManagedObjectContext *) ctx {
     
-    NSManagedObjectContext * ctx = [ModelService sharedInstance].moContext;
     if(ctx) 
     {
-        MEMap *newMap = [[NSManagedObject alloc] initWithEntity:[MEMap mapEntity] insertIntoManagedObjectContext:ctx];
+        MEMap *newMap = [[NSManagedObject alloc] initWithEntity:[MEMap mapEntity:ctx] insertIntoManagedObjectContext:ctx];
         [newMap resetEntity];
         [MEPoint insertEmptyExtInfoInMap:newMap];
         return newMap;
@@ -91,7 +85,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 + (MEMap *) insertTmpNew {
     
-    MEMap *newMap = [[NSManagedObject alloc] initWithEntity:[MEMap mapEntity] insertIntoManagedObjectContext:nil];
+    MEMap *newMap = [[NSManagedObject alloc] initWithEntity:[MEMap mapEntity:nil] insertIntoManagedObjectContext:nil];
     [newMap resetEntity];
     [MEPoint insertTmpEmptyExtInfoInMap:newMap];
     return [newMap autorelease];

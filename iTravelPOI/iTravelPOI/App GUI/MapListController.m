@@ -17,7 +17,8 @@
 //---------------------------------------------------------------------------------------------------------------------
 @interface MapListController()
 
-@property (nonatomic, retain) NSArray *maps;
+@property (nonatomic, readonly) NSManagedObjectContext *moContext;
+@property (nonatomic, retain)   NSArray *maps;
 
 - (IBAction)createNewMapAction:(id)sender;
 
@@ -31,6 +32,7 @@
 
 
 
+@synthesize moContext = _moContext;
 @synthesize maps = _maps;
 
 
@@ -50,6 +52,9 @@
 - (void)dealloc
 {
     [super dealloc];
+    self.maps = nil;
+    [_maps release];
+    [_moContext release];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -67,6 +72,15 @@
 #pragma mark - View lifecycle
 //=====================================================================================================================
 
+
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSManagedObjectContext *) moContext {
+    if(!_moContext) {
+        _moContext = [[ModelService sharedInstance] initContext];
+    }
+    return _moContext;
+}
 
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -109,7 +123,7 @@
         // Lanzamos la busqueda de los mapas y los mostramos
         [SVProgressHUD showWithStatus:@"Loading local maps"];
         
-        [[ModelService sharedInstance] getUserMapList:^(NSArray *maps, NSError *error) {
+        [[ModelService sharedInstance] getUserMapList:self.moContext callback:^(NSArray *maps, NSError *error) {
             if(error) {
                 [SVProgressHUD dismissWithError:@"Error loading local maps" afterDelay:2];
             } else {
@@ -172,7 +186,7 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (MEMap *) createNewInstance {
-    return [MEMap insertNew];
+    return [MEMap insertNew:self.moContext];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -191,12 +205,12 @@
     
     map.changed = true;
     
-    NSError *error = [[ModelService sharedInstance] commitChanges];
+    NSError *error = [map commitChanges];
     if(error) {
         [SVProgressHUD showWithStatus:@"Saving local maps"];
         [SVProgressHUD dismissWithError:@"Error saving local maps" afterDelay:2];
     } else {
-        [[ModelService sharedInstance] getUserMapList:^(NSArray *maps, NSError *error) {
+        [[ModelService sharedInstance] getUserMapList:self.moContext callback:^(NSArray *maps, NSError *error) {
             if(error) {
                 [SVProgressHUD showWithStatus:@"Loading local maps"];
                 [SVProgressHUD dismissWithError:@"Error loading local maps" afterDelay:2];
@@ -279,7 +293,7 @@
         [marray removeObjectAtIndex:indexPath.row];
         self.maps = [[marray copy] autorelease];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-        NSError *error = [[ModelService sharedInstance] commitChanges];
+        NSError *error = [map commitChanges];
         if(error) {
             NSLog(@"Error saving context when deleting an item: %@ / %@", error, [error userInfo]);
         }
@@ -344,8 +358,12 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    MEMap *map = [self.maps objectAtIndex:indexPath.row];
+    NSManagedObjectContext *ctx = [[ModelService sharedInstance] initContext];
+    MEMap *mapToView = (MEMap *)[ctx objectWithID:[map objectID]];
+
     PointListController *pointListController = [[PointListController alloc] initWithNibName:@"PointListController" bundle:nil];
-    pointListController.map = [self.maps objectAtIndex:indexPath.row];
+    pointListController.map = mapToView;
     pointListController.filteringCategories = nil;
     [self.navigationController pushViewController:pointListController animated:YES];
     [pointListController release];

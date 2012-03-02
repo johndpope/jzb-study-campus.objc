@@ -65,7 +65,10 @@ static const NSString *SyncStatusType_Names[8]={
 #pragma mark MEBaseEntity INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
 
-// Necesario para borrar DEFINITIVAMENTE una entidad del modelo
+// A llamar para persistir una entidad recien creada DESPUES que se rellene su informacion adecuadamente
+- (NSError *) commitChanges;
+
+    // Necesario para borrar DEFINITIVAMENTE una entidad del modelo
 - (void) deleteFromModel;
 
 // "Marca" la entidad como borrada y elimina sus relaciones con otras entidades.

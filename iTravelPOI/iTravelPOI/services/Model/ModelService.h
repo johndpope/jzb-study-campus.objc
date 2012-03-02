@@ -43,7 +43,8 @@ typedef void (^TBlock_getCategorizedElemensInMapFinished)(NSArray *elements, NSE
 @interface ModelService : NSObject 
 
 
-@property (readonly, nonatomic, retain) NSManagedObjectContext * moContext;
+@property (readonly, nonatomic, retain) NSManagedObjectContext * moContext3;
+@property (nonatomic, readonly) NSPersistentStoreCoordinator * psCoordinator;
 
 
 
@@ -62,9 +63,11 @@ typedef void (^TBlock_getCategorizedElemensInMapFinished)(NSArray *elements, NSE
 - (void) initCDStack;
 - (void) doneCDStack;
 
-- (NSError *) commitChanges;
+- (NSManagedObjectContext *) initContext;
 
-- (SRVC_ASYNCHRONOUS) getUserMapList:(TBlock_getUserMapListFinished) callbackBlock;
+- (SRVC_ASYNCHRONOUS) getUserMapList:(NSManagedObjectContext *)ctx callback:(TBlock_getUserMapListFinished) callbackBlock;
+
+- (NSArray *) getAllCategoriesInMap:(MEMap *)map orderBy:(SORTING_METHOD)orderBy;
 
 - (SRVC_ASYNCHRONOUS) getFlatElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getFlatElemensInMapFinished) callbackBlock;
 - (SRVC_ASYNCHRONOUS) getCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getCategorizedElemensInMapFinished) callbackBlock;

@@ -18,20 +18,19 @@
 @interface ModelService () 
 
 @property (nonatomic, readonly) NSManagedObjectModel * moModel;
-@property (nonatomic, readonly) NSPersistentStoreCoordinator * psCoordinator;
 
 
 - (NSURL *) _applicationDocumentsDirectory;
 
 
-- (NSArray *) _getUserMapList:(NSError **)error;
+- (NSArray *) _getUserMapList:(NSManagedObjectContext *)ctx error:(NSError **)error;
 - (NSArray *) _getFlatElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy error:(NSError **)error ;
 - (NSArray *) _getCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy error:(NSError **)error;
 
-- (NSSet *) _getAllCategorizedPoints:(MEMap *)map forCategories:(NSArray *)categories;
-- (NSSet *) _getAllCategoriesForPoints:(NSSet *)points excludedCategories:(NSArray *)excludedCats inMap:(MEMap *)map;
-- (NSSet *) _filterSubcategories:(NSSet *)categories;
-- (NSSet *) _filterCategorizedPoints:(NSSet *)points forCategories:(NSSet *)categories;
+- (NSSet *) __getAllCategorizedPoints:(MEMap *)map forCategories:(NSArray *)categories;
+- (NSSet *) __getAllCategoriesForPoints:(NSSet *)points excludedCategories:(NSArray *)excludedCats inMap:(MEMap *)map;
+- (NSSet *) __filterSubcategories:(NSSet *)categories;
+- (NSSet *) __filterCategorizedPoints:(NSSet *)points forCategories:(NSSet *)categories;
 
 
 @end
@@ -46,7 +45,7 @@
 
 dispatch_queue_t _ModelServiceQueue;
 
-NSManagedObjectContext * _moContext;
+NSManagedObjectContext * _moContext3;
 NSManagedObjectModel * _moModel;
 NSPersistentStoreCoordinator * _psCoordinator;
 
@@ -102,7 +101,7 @@ NSPersistentStoreCoordinator * _psCoordinator;
     
     NSLog(@"ModelService - initCDStack");
     
-    [self moContext];
+    [self moContext3];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -110,34 +109,30 @@ NSPersistentStoreCoordinator * _psCoordinator;
     
     NSLog(@"ModelService - doneCDStack");
     
-    [_moContext release];
+    [_moContext3 release];
     [_moModel release];
     [_psCoordinator release];
     
-    _moContext = nil;
+    _moContext3 = nil;
     _moModel = nil;
     _psCoordinator = nil;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (NSError *) commitChanges {
+- (NSManagedObjectContext *) initContext {
     
-    NSLog(@"ModelService - commitChanges");
-    
-    NSError *error = nil;
-    if(self.moContext!=nil && [self.moContext hasChanges]) {
-        if(![self.moContext save:&error]){
-            NSLog(@"ModelService - Error saving NSManagedContext: %@, %@", error, [error userInfo]);
-        } 
+    NSPersistentStoreCoordinator *coor = self.psCoordinator;
+    if(coor!=nil) {
+        NSManagedObjectContext * ctx = [[NSManagedObjectContext alloc] init];
+        [ctx setPersistentStoreCoordinator:coor];
+        return ctx;
+    } else {
+        return nil;
     }
-    
-    return error;
-    
 }
 
-
 //---------------------------------------------------------------------------------------------------------------------
-- (SRVC_ASYNCHRONOUS) getUserMapList:(TBlock_getUserMapListFinished) callbackBlock {
+- (SRVC_ASYNCHRONOUS) getUserMapList:(NSManagedObjectContext *)ctx callback:(TBlock_getUserMapListFinished) callbackBlock {
     
     NSLog(@"ModelService - Async - getUserMapList");
     
@@ -152,7 +147,7 @@ NSPersistentStoreCoordinator * _psCoordinator;
     // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
     dispatch_async(_ModelServiceQueue,^(void){
         NSError *error = nil;
-        NSArray * maps = [[ModelService sharedInstance] _getUserMapList:&error];
+        NSArray *maps = [[ModelService sharedInstance] _getUserMapList:ctx error:&error];
         
         // Avisamos al llamante de que ya se ha actualizado el mapa solicitado
         dispatch_async(caller_queue, ^(void){
@@ -160,6 +155,32 @@ NSPersistentStoreCoordinator * _psCoordinator;
         });
     });
     
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSArray *) getAllCategoriesInMap:(MEMap *)map orderBy:(SORTING_METHOD)orderBy {
+    
+    NSLog(@"ModelService - getAllCategoriesInMap");
+    
+    // Algoritmo de comparacion para ordenar los elementos segun se especifique
+    NSComparator comparator = ^NSComparisonResult(id obj1, id obj2) {
+        MEBaseEntity *e1 = obj1;
+        MEBaseEntity *e2 = obj2;
+        switch (orderBy) {
+            case SORT_BY_CREATING_DATE:
+                return [e1.ts_created compare:e2.ts_created];
+                
+            case SORT_BY_UPDATING_DATE:
+                return [e1.ts_updated compare:e2.ts_updated];
+                
+            default:
+                return [e1.name compare:e2.name];
+        }
+    };
+    
+    // Las ordena y retorna
+    NSArray *sortedCategories = [[[map categories] allObjects] sortedArrayUsingComparator:comparator];
+    return sortedCategories;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -177,7 +198,6 @@ NSPersistentStoreCoordinator * _psCoordinator;
     
     // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
     dispatch_async(_ModelServiceQueue,^(void) {
-        
         NSError *error = nil;
         NSArray *elements = [[ModelService sharedInstance] _getFlatElemensInMap:map forCategories:categories orderBy:orderBy error:&error];
         
@@ -221,19 +241,19 @@ NSPersistentStoreCoordinator * _psCoordinator;
 #pragma mark -
 #pragma mark Getter/Setter methods
 //---------------------------------------------------------------------------------------------------------------------
-- (NSManagedObjectContext *) moContext {
+- (NSManagedObjectContext *) moContext3 {
     
-    if(_moContext!=nil) {
-        return _moContext;
+    if(_moContext3!=nil) {
+        return _moContext3;
     }
     
     NSLog(@"ModelService - Creating moContext");
     
     NSPersistentStoreCoordinator *coor = self.psCoordinator;
     if(coor!=nil) {
-        _moContext = [[NSManagedObjectContext alloc] init];
-        [_moContext setPersistentStoreCoordinator:coor];
-        return _moContext;
+        _moContext3 = [[NSManagedObjectContext alloc] init];
+        [_moContext3 setPersistentStoreCoordinator:coor];
+        return _moContext3;
     } else {
         return nil;
     }
@@ -299,13 +319,13 @@ NSPersistentStoreCoordinator * _psCoordinator;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (NSArray *) _getUserMapList:(NSError **)error {
+- (NSArray *) _getUserMapList:(NSManagedObjectContext *)ctx error:(NSError **)error {
     
     NSLog(@"ModelService - _getUserMapList");
     
     // Crea la peticion
     NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
-    [request setEntity:[MEMap mapEntity]];
+    [request setEntity:[MEMap mapEntity:ctx]];
     
     // Establece el predicado de busqueda
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(_i_wasDeleted = 0)"];
@@ -319,40 +339,10 @@ NSPersistentStoreCoordinator * _psCoordinator;
     
     // Realiza la busqueda
     NSError *_err = nil;
-    NSArray *mapList = [self.moContext executeFetchRequest:request error:&_err];
+    NSArray *mapList = [ctx executeFetchRequest:request error:&_err];
     
     *error = _err;
     return mapList;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSArray *) _getAllCategoriesInMap:(MEMap *)map error:(NSError **)error {
-    
-    NSLog(@"ModelService - _getAllCategoriesInMap");
-    
-    
-    // Establece el predicado de busqueda para las entidades
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(map.GID = %@) AND (_i_wasDeleted = 0)", map.GID];
-    
-    // Estable el orden del resultado
-    NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc]
-                                         initWithKey:@"name" ascending:YES] autorelease];
-    
-    // Crea la peticion para categorias
-    NSFetchRequest *requestCat = [[[NSFetchRequest alloc] init] autorelease];
-    [requestCat setEntity:[MECategory categoryEntity]];
-    [requestCat setPredicate:predicate];
-    [requestCat setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
-    
-    // Realiza la busqueda de las categorias
-    NSError *_err = nil;
-    NSArray *cats = [self.moContext executeFetchRequest:requestCat error:&_err];
-    *error = _err;
-    if(_err) {
-        return nil;
-    }
-    
-    return cats;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -448,13 +438,12 @@ NSPersistentStoreCoordinator * _psCoordinator;
     
     
     // Consigue el conjunto de puntos para el filtro y las categorias del este
-    NSSet *allFilteredPoints = [self _getAllCategorizedPoints:map forCategories:categories];
-    NSSet *allCategoriesForPoints = [self _getAllCategoriesForPoints:allFilteredPoints excludedCategories:categories inMap:map];
+    NSSet *allFilteredPoints = [self __getAllCategorizedPoints:map forCategories:categories];
+    NSSet *allCategoriesForPoints = [self __getAllCategoriesForPoints:allFilteredPoints excludedCategories:categories inMap:map];
     
     // Elimina las subcategorias y puntos que no deben aparecer a primer nivel
-    NSSet *rootCats = [self _filterSubcategories:allCategoriesForPoints];
-    NSSet *rooMEPoints = [self _filterCategorizedPoints:allFilteredPoints forCategories:rootCats];
-    
+    NSSet *rootCats = [self __filterSubcategories:allCategoriesForPoints];
+    NSSet *rooMEPoints = [self __filterCategorizedPoints:allFilteredPoints forCategories:rootCats];
     
     // Ordena los conjuntos de categorias y puntos resultantes segun lo indicado
     NSArray *sortedCats = [[rootCats allObjects] sortedArrayUsingComparator:comparator];
@@ -470,7 +459,7 @@ NSPersistentStoreCoordinator * _psCoordinator;
 
 //---------------------------------------------------------------------------------------------------------------------
 // Retorna el conjunto de puntos que estan categorizados (jeraquicamente) por el filtro pasado
-- (NSSet *) _getAllCategorizedPoints:(MEMap *)map forCategories:(NSArray *)categories {
+- (NSSet *) __getAllCategorizedPoints:(MEMap *)map forCategories:(NSArray *)categories {
     
     // Si no hay categorias restringiendo los puntos retorna todos los del mapa
     if([categories count]==0) {
@@ -494,7 +483,7 @@ NSPersistentStoreCoordinator * _psCoordinator;
 //---------------------------------------------------------------------------------------------------------------------
 // Retorna el conjunto de categorias aplicadas al conjunto de puntos indicado
 // Se filtran aquellas categorias que no estan relacionadas con el filtro
-- (NSSet *) _getAllCategoriesForPoints:(NSSet *)points excludedCategories:(NSArray *)excludedCats inMap:(MEMap *)map {
+- (NSSet *) __getAllCategoriesForPoints:(NSSet *)points excludedCategories:(NSArray *)excludedCats inMap:(MEMap *)map {
     
     // Conjunto de categorias "padre" del filtro
     NSMutableSet *parentFilter = [NSMutableSet set];
@@ -535,7 +524,7 @@ NSPersistentStoreCoordinator * _psCoordinator;
 //---------------------------------------------------------------------------------------------------------------------
 // Se eliminan aquellas categorias que sean hijas (jerarquicamente) de alguna otra
 // De paso, antes de añadirla al conjunto a retornar, le pone la cuenta de puntos a cero
-- (NSSet *) _filterSubcategories:(NSSet *)categories {
+- (NSSet *) __filterSubcategories:(NSSet *)categories {
     
     NSMutableSet *rootCats = [NSMutableSet set];
     for(MECategory *c1 in categories) {
@@ -561,7 +550,7 @@ NSPersistentStoreCoordinator * _psCoordinator;
 //---------------------------------------------------------------------------------------------------------------------
 // Elimina aquellos puntos que queden "dentro" de alguna categoria (filtrado a primer nivel)
 // Actualiza la cuenta de las categorias que terminen "escondiendo" un punto
-- (NSSet *) _filterCategorizedPoints:(NSSet *)points forCategories:(NSSet *)categories {
+- (NSSet *) __filterCategorizedPoints:(NSSet *)points forCategories:(NSSet *)categories {
     
     NSMutableSet *rooMEPoints = [NSMutableSet set];
     

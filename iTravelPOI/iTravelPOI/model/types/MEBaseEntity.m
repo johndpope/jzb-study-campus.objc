@@ -122,8 +122,22 @@
 #pragma mark -
 #pragma mark General PUBLIC methods
 //---------------------------------------------------------------------------------------------------------------------
+- (NSError *) commitChanges {
+
+    NSManagedObjectContext *ctx = [self managedObjectContext];
+    NSError *error = nil;
+    if(ctx!=nil && [ctx hasChanges]) {
+        if(![ctx save:&error]){
+            NSLog(@"Error saving NSManagedContext: %@, %@", error, [error userInfo]);
+        } 
+    }
+    
+    return error;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 - (void) deleteFromModel {
-    [[ModelService sharedInstance].moContext deleteObject:self];
+    [[self managedObjectContext] deleteObject:self];
 }
 
 //---------------------------------------------------------------------------------------------------------------------

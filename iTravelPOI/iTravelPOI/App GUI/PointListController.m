@@ -25,7 +25,7 @@
 @property (nonatomic, retain) WEPopoverController *popoverShowMode;
 
 - (IBAction)createNewEntityAction:(id)sender;
-- (void) saveAndReloadElements;
+- (void) reloadElements;
 
 
 @end
@@ -139,7 +139,7 @@
     if(!self.elements) {
         // Lanzamos la busqueda de los mapas y los mostramos
         [SVProgressHUD showWithStatus:@"Loading elements info"];
-        [self saveAndReloadElements];
+        [self reloadElements];
     }
     
 }
@@ -176,13 +176,8 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) saveAndReloadElements {
+- (void) reloadElements {
     
-    NSError *error = [[ModelService sharedInstance] commitChanges];
-    if(error) {
-        [SVProgressHUD showWithStatus:@"Loading local entities"];
-        [SVProgressHUD dismissWithError:@"Error saving local entities" afterDelay:2];
-    } else {
         if(self.showMode == showFlat) {
             [[ModelService sharedInstance] getFlatElemensInMap:self.map 
                                                  forCategories:self.filteringCategories
@@ -211,7 +206,6 @@
                                                                  }
                                                              }];
         }
-    }
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -239,7 +233,7 @@
         
         // Lanzamos la busqueda de los mapas y los mostramos 
         [SVProgressHUD showWithStatus:@"Loading elements info"];
-        [self saveAndReloadElements];
+        [self reloadElements];
     }
     
     if(self.popoverShowMode) {
@@ -303,8 +297,9 @@
     [self.navigationController dismissModalViewControllerAnimated:YES];
     
     entity.changed = true;
+    [entity commitChanges];
     
-    [self saveAndReloadElements];
+    [self reloadElements];
 }
 
 
@@ -342,8 +337,6 @@
             myPngs[n] = [[UIImage imageWithContentsOfFile:path] retain];
         }
     }
-    
-    
     
     static NSString *mapViewIdentifier = @"PointCatCellView";
     
@@ -389,8 +382,9 @@
         // Delete the row from the data source
         MEBaseEntity *entity = [self.elements objectAtIndex:indexPath.row];
         [entity markAsDeleted];
+        [entity commitChanges];
         // No se puede hacer "facil" por el tema de la categorizacion
-        [self saveAndReloadElements];
+        [self reloadElements];
     }   
     else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view

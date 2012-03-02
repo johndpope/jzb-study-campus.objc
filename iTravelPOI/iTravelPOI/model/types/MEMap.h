@@ -38,9 +38,9 @@
 #pragma mark -
 #pragma mark MEMap CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (NSEntityDescription *) mapEntity;
++ (NSEntityDescription *) mapEntity:(NSManagedObjectContext *)ctx;
 
-+ (MEMap *) insertNew;
++ (MEMap *) insertNew:(NSManagedObjectContext *) ctx;
 + (MEMap *) insertTmpNew;
 
 

@@ -76,23 +76,18 @@
 #pragma mark -
 #pragma mark CLASS methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (NSEntityDescription *) pointEntity {
-    static NSEntityDescription *_pointEntity = nil;
-    
-    if(!_pointEntity) {
-        NSManagedObjectContext * ctx = [ModelService sharedInstance].moContext;
-        _pointEntity = [NSEntityDescription entityForName:@"MEPoint" inManagedObjectContext:ctx];
-    }
++ (NSEntityDescription *) pointEntity:(NSManagedObjectContext *) ctx {
+    NSEntityDescription * _pointEntity = [NSEntityDescription entityForName:@"MEPoint" inManagedObjectContext:ctx];
     return _pointEntity;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 + (MEPoint *) insertNewInMap:(MEMap *)ownerMap {
     
-    NSManagedObjectContext * ctx = [ModelService sharedInstance].moContext;
+    NSManagedObjectContext * ctx = [ownerMap managedObjectContext];
     if(ctx) 
     {
-        MEPoint *newPoint = [[NSManagedObject alloc] initWithEntity:[MEPoint pointEntity] insertIntoManagedObjectContext:ctx];
+        MEPoint *newPoint = [[NSManagedObject alloc] initWithEntity:[MEPoint pointEntity:ctx] insertIntoManagedObjectContext:ctx];
         newPoint.isTemp = false;
         [newPoint resetEntity];
         [ownerMap addPoint:newPoint];
@@ -106,7 +101,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 + (MEPoint *) insertTmpNewInMap:(MEMap *)ownerMap {
     
-    MEPoint *newPoint = [[NSManagedObject alloc] initWithEntity:[MEPoint pointEntity] insertIntoManagedObjectContext:nil];
+    MEPoint *newPoint = [[NSManagedObject alloc] initWithEntity:[MEPoint pointEntity:nil] insertIntoManagedObjectContext:nil];
     newPoint.isTemp = true;
     [newPoint resetEntity];
     [ownerMap addPoint:newPoint];
@@ -116,10 +111,10 @@
 //---------------------------------------------------------------------------------------------------------------------
 + (MEPoint *) insertEmptyExtInfoInMap:(MEMap *)ownerMap {
     
-    NSManagedObjectContext * ctx = [ModelService sharedInstance].moContext;
+    NSManagedObjectContext * ctx = [ownerMap managedObjectContext];
     if(ctx) 
     {
-        MEPoint *extInfo = [[NSManagedObject alloc] initWithEntity:[MEPoint pointEntity] insertIntoManagedObjectContext:ctx];
+        MEPoint *extInfo = [[NSManagedObject alloc] initWithEntity:[MEPoint pointEntity:ctx] insertIntoManagedObjectContext:ctx];
         extInfo.isTemp = false;
         [extInfo resetEntity];
         [extInfo resetExtInfo];
@@ -135,7 +130,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 + (MEPoint *) insertTmpEmptyExtInfoInMap:(MEMap *)ownerMap {
     
-    MEPoint *extInfo = [[NSManagedObject alloc] initWithEntity:[MEPoint pointEntity] insertIntoManagedObjectContext:nil];
+    MEPoint *extInfo = [[NSManagedObject alloc] initWithEntity:[MEPoint pointEntity:nil] insertIntoManagedObjectContext:nil];
     extInfo.isTemp = true;
     [extInfo resetEntity];
     [extInfo resetExtInfo];
@@ -194,7 +189,7 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) unmarkAsDeleted {
-
+    
     [super unmarkAsDeleted];
     [self.map removeDeletedPoint:self];
     [self.map addPoint:self];

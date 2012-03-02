@@ -62,13 +62,8 @@
 #pragma mark -
 #pragma mark CLASS methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (NSEntityDescription *) categoryEntity {
-    static NSEntityDescription *_categoryEntity = nil;
-    
-    if(!_categoryEntity) {
-        NSManagedObjectContext * ctx = [ModelService sharedInstance].moContext;
-        _categoryEntity = [NSEntityDescription entityForName:@"MECategory" inManagedObjectContext:ctx];
-    }
++ (NSEntityDescription *) categoryEntity:(NSManagedObjectContext *) ctx {
+    NSEntityDescription * _categoryEntity = [NSEntityDescription entityForName:@"MECategory" inManagedObjectContext:ctx];
     return _categoryEntity;
 }
 
@@ -76,10 +71,10 @@
 //---------------------------------------------------------------------------------------------------------------------
 + (MECategory *) insertNewInMap:(MEMap *)ownerMap {
     
-    NSManagedObjectContext * ctx = [ModelService sharedInstance].moContext;
+    NSManagedObjectContext * ctx = [ownerMap managedObjectContext];
     if(ctx) 
     {
-        MECategory *newCat = [[NSManagedObject alloc] initWithEntity:[MECategory categoryEntity] insertIntoManagedObjectContext:ctx];
+        MECategory *newCat = [[NSManagedObject alloc] initWithEntity:[MECategory categoryEntity:ctx] insertIntoManagedObjectContext:ctx];
         newCat.isTemp = false;
         [newCat resetEntity];
         [ownerMap addCategory:newCat];
@@ -93,7 +88,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 + (MECategory *) insertTmpNewInMap:(MEMap *)ownerMap {
     
-    MECategory *newCat = [[NSManagedObject alloc] initWithEntity:[MECategory categoryEntity] insertIntoManagedObjectContext:nil];
+    MECategory *newCat = [[NSManagedObject alloc] initWithEntity:[MECategory categoryEntity:nil] insertIntoManagedObjectContext:nil];
     newCat.isTemp = true;
     [newCat resetEntity];
     [ownerMap addCategory:newCat];

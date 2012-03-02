@@ -32,7 +32,8 @@
 #pragma mark -
 #pragma mark MECategory CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (NSEntityDescription *) categoryEntity;
+
++ (NSEntityDescription *) categoryEntity:(NSManagedObjectContext *) ctx;
 
 + (MECategory *) insertNewInMap:(MEMap *)ownerMap;
 + (MECategory *) insertTmpNewInMap:(MEMap *)ownerMap;

@@ -35,7 +35,8 @@
 #pragma mark -
 #pragma mark MEPoint CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (NSEntityDescription *) pointEntity;
+
++ (NSEntityDescription *) pointEntity:(NSManagedObjectContext *) ctx;
 
 + (MEPoint *) insertNewInMap:(MEMap *)ownerMap;
 + (MEPoint *) insertTmpNewInMap:(MEMap *)ownerMap;
