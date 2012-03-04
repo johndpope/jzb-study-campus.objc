@@ -43,12 +43,6 @@
 //---------------------------------------------------------------------------------------------------------------------
 @implementation ModelService
 
-dispatch_queue_t _ModelServiceQueue;
-
-NSManagedObjectContext * _moContext3;
-NSManagedObjectModel * _moModel;
-NSPersistentStoreCoordinator * _psCoordinator;
-
 
 
 //*********************************************************************************************************************
@@ -66,10 +60,11 @@ NSPersistentStoreCoordinator * _psCoordinator;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void)dealloc
-{
-    [self doneCDStack];
+- (void)dealloc {
     dispatch_release(_ModelServiceQueue);
+    [_psCoordinator release];
+    [_moModel release];
+
     [super dealloc];
 }
 
@@ -97,30 +92,10 @@ NSPersistentStoreCoordinator * _psCoordinator;
 #pragma mark -
 #pragma mark General PUBLIC methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) initCDStack {
-    
-    NSLog(@"ModelService - initCDStack");
-    
-    [self moContext3];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) doneCDStack {
-    
-    NSLog(@"ModelService - doneCDStack");
-    
-    [_moContext3 release];
-    [_moModel release];
-    [_psCoordinator release];
-    
-    _moContext3 = nil;
-    _moModel = nil;
-    _psCoordinator = nil;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
 - (NSManagedObjectContext *) initContext {
     
+    NSLog(@"ModelService - initContext");
+
     NSPersistentStoreCoordinator *coor = self.psCoordinator;
     if(coor!=nil) {
         NSManagedObjectContext * ctx = [[NSManagedObjectContext alloc] init];
@@ -240,26 +215,6 @@ NSPersistentStoreCoordinator * _psCoordinator;
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark Getter/Setter methods
-//---------------------------------------------------------------------------------------------------------------------
-- (NSManagedObjectContext *) moContext3 {
-    
-    if(_moContext3!=nil) {
-        return _moContext3;
-    }
-    
-    NSLog(@"ModelService - Creating moContext");
-    
-    NSPersistentStoreCoordinator *coor = self.psCoordinator;
-    if(coor!=nil) {
-        _moContext3 = [[NSManagedObjectContext alloc] init];
-        [_moContext3 setPersistentStoreCoordinator:coor];
-        return _moContext3;
-    } else {
-        return nil;
-    }
-    
-}
-
 //---------------------------------------------------------------------------------------------------------------------
 - (NSPersistentStoreCoordinator *) psCoordinator {
     

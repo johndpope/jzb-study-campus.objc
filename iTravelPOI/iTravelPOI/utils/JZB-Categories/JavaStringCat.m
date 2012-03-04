@@ -52,12 +52,12 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (NSString *) subStrFrom: (NSUInteger)p1 To:(NSUInteger)p2 {
+- (NSString *) subStrFrom: (NSUInteger)p1 to:(NSUInteger)p2 {
     return [self substringWithRange: (NSRange){p1, p2-p1}];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (NSString *) replaceStr: (NSString *)str1 With:(NSString *)str2 {
+- (NSString *) replaceStr: (NSString *)str1 with:(NSString *)str2 {
     
     NSMutableString *ms = [NSMutableString stringWithString:self];
     [ms replaceOccurrencesOfString: str1 withString: str2 options:0 range: (NSRange){0,[ms length]}];

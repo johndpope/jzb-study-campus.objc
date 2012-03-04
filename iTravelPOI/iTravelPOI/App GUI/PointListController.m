@@ -56,9 +56,12 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void)dealloc
-{
+- (void)dealloc {
     [_map release];
+    [_filteringCategories release];
+    [_elements release];
+    [_popoverShowMode release];
+
     [super dealloc];
 }
 
@@ -329,15 +332,6 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    static UIImage * myPngs[5] = {nil, nil, nil, nil, nil};
-    if(myPngs[0]==nil) {
-        for(int n=0;n<5;n++) {
-            NSString *iconName = [NSString stringWithFormat:@"icon%u",(n+1)];
-            NSString *path = [[NSBundle mainBundle] pathForResource:iconName ofType:@"png"];
-            myPngs[n] = [[UIImage imageWithContentsOfFile:path] retain];
-        }
-    }
-    
     static NSString *mapViewIdentifier = @"PointCatCellView";
     
     MEBaseEntity *entity = [self.elements objectAtIndex:indexPath.row];
@@ -360,7 +354,7 @@
     cell.badgeColor = [UIColor colorWithRed:0.197 green:0.592 blue:0.219 alpha:1.000];
     cell.badge.radius = 9;
     
-    cell.imageView.image = myPngs[indexPath.row % 5];
+    cell.imageView.image = entity.gmapIcon.image;
     
     return cell;
 }

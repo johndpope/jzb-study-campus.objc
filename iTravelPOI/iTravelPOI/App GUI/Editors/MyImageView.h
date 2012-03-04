@@ -19,6 +19,6 @@
     
 }
 
-@property (nonatomic, retain) id<MyImageDelegate2> delegate2;
+@property (nonatomic, assign) id<MyImageDelegate2> delegate2;
 
 @end

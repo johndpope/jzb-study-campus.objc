@@ -9,17 +9,16 @@
 #import <Foundation/Foundation.h>
 
 
-//*********************************************************************************************************************
-#pragma mark -
-#pragma mark Enumerations & definitions
-//---------------------------------------------------------------------------------------------------------------------
-
 
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark MEBaseEntity interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface GMapIcon : NSObject 
+@interface GMapIcon : NSObject {
+@private
+    UIImage *_image;
+    UIImage *_shadowImage;
+}
 
 
 @property (nonatomic, readonly) NSString *url;
@@ -34,12 +33,6 @@
 #pragma mark GMapIcon CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
 + (GMapIcon *) iconForURL:(NSString *)url;
-+ (GMapIcon *) iconForShortName:(NSString *)shortName;
 
-
-//---------------------------------------------------------------------------------------------------------------------
-#pragma mark -
-#pragma mark GMapIcon INSTANCE public methods
-//---------------------------------------------------------------------------------------------------------------------
 
 @end

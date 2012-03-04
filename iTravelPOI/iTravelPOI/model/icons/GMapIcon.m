@@ -15,8 +15,6 @@
 #pragma mark -
 #pragma mark GMapIcon PRIVATE CONSTANTS and C-Methods definitions
 //---------------------------------------------------------------------------------------------------------------------
-static NSMutableDictionary *iconsForURL = nil;
-static NSMutableDictionary *iconsForShortName = nil;
 
 
 
@@ -27,6 +25,7 @@ static NSMutableDictionary *iconsForShortName = nil;
 @interface GMapIcon () 
 
 + (void) loadIconsData;
++ (NSString *) calcShorNameFromIconURL: (NSString *)iconURL;
 
 - (id) initWithURL:(NSString *)url shortName:(NSString *)shortName; 
 
@@ -44,11 +43,11 @@ static NSMutableDictionary *iconsForShortName = nil;
 @synthesize url = _url;
 @synthesize shortName = _shortName;
 
-UIImage *_image = nil;
-UIImage *_shadowImage = nil;
-
 static UIImage *_errorImage = nil;
 static UIImage *_errorShadowImage = nil;
+
+static NSMutableDictionary *iconsForURL = nil;
+
 
 
 //*********************************************************************************************************************
@@ -67,13 +66,13 @@ static UIImage *_errorShadowImage = nil;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void)dealloc
-{
-    [super dealloc];
+- (void)dealloc {
     [_url release];
     [_shortName release];
     [_image release];
     [_shadowImage release];
+    
+    [super dealloc];
 }
 
 
@@ -90,57 +89,26 @@ static UIImage *_errorShadowImage = nil;
     GMapIcon *icon = [iconsForURL objectForKey:url];
     if(!icon) {
         // No ha encontrado un icono para esta informacion
-        icon = [[GMapIcon alloc] initWithURL:url shortName:url];
+        NSString *shortName = [GMapIcon calcShorNameFromIconURL:url];
+        icon = [[GMapIcon alloc] initWithURL:url shortName:shortName];
     }
     
-    return icon;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-+ (GMapIcon *) iconForShortName:(NSString *)shortName {
-    
-    if(!iconsForShortName) {
-        [GMapIcon loadIconsData];
-    }
-    
-    GMapIcon *icon = [iconsForShortName objectForKey:shortName];
-    if(!icon) {
-        // No ha encontrado un icono para esta informacion
-        icon = [[GMapIcon alloc] initWithURL:shortName shortName:shortName];
-    }
-    
-    return icon;
+    return [icon autorelease];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 + (void) loadIconsData {
     
-    if(!iconsForURL && !iconsForShortName) {
+    if(!iconsForURL) {
         
-        iconsForURL = [NSMutableDictionary dictionary];
-        iconsForShortName = [NSMutableDictionary dictionary];
+        iconsForURL = [[NSMutableDictionary alloc] init];
         
-        NSString *dictPath = [[NSBundle mainBundle] pathForResource:@"GMapIcons.bundle/allGMapIconsInfo" ofType:@"plist"];
-        NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:dictPath];
-        NSArray *allIconsData = [dict objectForKey:@"iconsData"];
+        [_errorImage release];
+        _errorImage = [[UIImage imageNamed:@"GMapIcons.bundle/error.png"] retain];
         
-        for(NSDictionary *iconDict in allIconsData) {
-            
-            NSString *url = [iconDict valueForKey:@"url"];
-            NSString *shortName = [iconDict valueForKey:@"shortName"];
-            
-            GMapIcon * icon = [[GMapIcon alloc] initWithURL:url shortName:shortName];
-            
-            [iconsForURL setObject:icon forKey:url];
-            [iconsForShortName setObject:icon forKey:shortName];
-        }
+        [_errorShadowImage release];
+        _errorShadowImage = [[UIImage imageNamed:@"GMapIcons.bundle/error.shadow.png"] retain];
     }
-    
-    [_errorImage release];
-    _errorImage = [[UIImage imageNamed:@"GMapIcons.bundle/error.png"] retain];
-    
-    [_errorShadowImage release];
-    _errorShadowImage = [[UIImage imageNamed:@"GMapIcons.bundle/error.shadow.png"] retain];
 }
 
 
@@ -155,7 +123,8 @@ static UIImage *_errorShadowImage = nil;
         NSString *imageName = [NSString stringWithFormat:@"GMapIcons.bundle/%@.png", self.shortName];
         _image = [[UIImage imageNamed:imageName] retain];
         if(!_image) {
-            _image = _errorImage;
+            // AQUI SE PODRIA INTENTAR CARGAR UNA IMAGEN DE OTRO SITIO QUE NO SEA LAS DE POR DEFECTO DE GMAP
+            _image = [_errorImage retain];
         }
     }
     return _image;
@@ -168,7 +137,8 @@ static UIImage *_errorShadowImage = nil;
         NSString *shadowImageName = [NSString stringWithFormat:@"GMapIcons.bundle/%@.shadow.png", self.shortName];
         _shadowImage = [[UIImage imageNamed:shadowImageName] retain];
         if(!_shadowImage) {
-            _shadowImage = _errorShadowImage;
+            // AQUI SE PODRIA INTENTAR CARGAR UNA IMAGEN DE OTRO SITIO QUE NO SEA LAS DE POR DEFECTO DE GMAP
+            _shadowImage = [_errorShadowImage retain];
         }
     }
     return _shadowImage;
@@ -187,6 +157,95 @@ static UIImage *_errorShadowImage = nil;
 #pragma mark PRIVATE methods
 //---------------------------------------------------------------------------------------------------------------------
 
+
+
+//-----------------------------------------------------------------------------------------
+// Utility method that calculates a "simplified shortName" from the iconURL
++ (NSString *) calcShorNameFromIconURL: (NSString *)iconURL {
+    
+    NSString *shortName = nil;
+    
+    //-----------------------------------------------------------
+    if(iconURL == nil || [iconURL length] == 0) {
+        
+        return nil;
+        
+    } 
+    //-----------------------------------------------------------
+    else if([iconURL indexOf:@"chst=d_map_pin_letter"] != -1) {
+        
+        NSUInteger p1 = [iconURL lastIndexOf:@"chld="];
+        if(p1 != -1) {
+            
+            NSUInteger p2 = [iconURL lastIndexOf:@"|" startIndex:p1];
+            if(p2 == -1) {
+                p2 = [iconURL length];
+            }
+            
+            shortName = [NSString stringWithFormat:@"Pin_Letter_%@", [iconURL subStrFrom: p1+5 to:p2]];
+            shortName = [shortName replaceStr:@"|" with:@"_"];
+        }
+    }
+    //-----------------------------------------------------------
+    else if([iconURL indexOf:@"/kml/paddle"] != -1) {
+        
+        NSUInteger p1 = [iconURL lastIndexOf:@"/"];
+        if(p1 != -1) {
+            
+            NSUInteger p2 = [iconURL lastIndexOf:@"_maps" startIndex:p1];
+            if(p2 == -1) {
+                p2 = [iconURL length];
+            }
+            
+            shortName = [NSString stringWithFormat:@"Pin_Letter_%@", [iconURL subStrFrom: p1+1 to:p2]];
+        } 
+    }
+    //-----------------------------------------------------------
+    else if([iconURL indexOf:@"/mapfiles/ms/micons"] != -1 || [iconURL indexOf:@"/mapfiles/ms2/micons"] != -1) {
+        
+        NSUInteger p1 = [iconURL lastIndexOf:@"/"];
+        if(p1 != -1) {
+            
+            NSUInteger p2 = [iconURL lastIndexOf:@"." startIndex:p1];
+            if(p2 == -1) {
+                p2 = [iconURL length];
+            }
+            
+            shortName = [NSString stringWithFormat:@"GMI_%@", [iconURL subStrFrom: p1+1 to:p2]];
+        } 
+    }
+    //-----------------------------------------------------------
+    else if([iconURL indexOf:@"/kml/shapes"] != -1) {
+        
+        NSUInteger p1 = [iconURL lastIndexOf:@"/"];
+        if(p1 != -1) {
+            
+            NSUInteger p2 = [iconURL lastIndexOf:@"_maps" startIndex:p1];
+            if(p2 == -1) {
+                p2 = [iconURL length];
+            }
+            
+            shortName = [NSString stringWithFormat:@"GMI_%@", [iconURL subStrFrom: p1+1 to:p2]];
+        } 
+    }
+    
+    
+    
+    //-----------------------------------------------------------
+    // Retorna la categoria calculada o la última parte de la URL
+    if(!shortName) {
+        NSUInteger p1 = [iconURL lastIndexOf:@"/"];
+        if(p1 != -1) {
+            NSUInteger p2 = [iconURL length];
+            shortName = [iconURL subStrFrom: p1+1 to:p2];
+        } else {
+            shortName = iconURL;
+        }
+    }    
+    
+    return shortName;
+    
+}
 
 
 @end

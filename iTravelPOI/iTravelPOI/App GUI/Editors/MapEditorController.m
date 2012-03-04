@@ -31,11 +31,11 @@
 @synthesize saveButton = _saveButton;
 @synthesize mapName = _mapName;
 @synthesize mapDescription = _mapDescription;
-@synthesize delegate = _delegate;
-@synthesize map = _map;
 @synthesize editToolBar = _editToolBar;
 
-id edittingText;
+@synthesize delegate = _delegate;
+@synthesize map = _map;
+
 
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -64,11 +64,12 @@ id edittingText;
 //---------------------------------------------------------------------------------------------------------------------
 - (void)dealloc
 {
+    [_saveButton release];
     [_mapName release];
     [_mapDescription release];
-    [_saveButton release];
     [_editToolBar release];
-    [super dealloc];
+
+    [super dealloc];    
 }
 
 //---------------------------------------------------------------------------------------------------------------------

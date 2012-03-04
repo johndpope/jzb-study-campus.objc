@@ -21,6 +21,8 @@
 #define LOCAL_ID_PREFIX    @"@cafe-"
 #define REMOTE_ETAG_PREFIX @"@Sync-"
 
+#define DEFAULT_ICON_URL   @"http://maps.google.com/mapfiles/ms/micons/blue-dot.png"
+
 
 
 //*********************************************************************************************************************
@@ -29,7 +31,8 @@
 //---------------------------------------------------------------------------------------------------------------------
 @interface MEBaseEntity () 
 
-@property (nonatomic, retain) NSNumber * _i_changed;
+@property (nonatomic, retain) NSString * i_iconURL;
+@property (nonatomic, retain) NSNumber * i_changed;
 
 
 + (NSString *) _calcRemoteCategoryETag;
@@ -55,12 +58,11 @@
 @dynamic syncETag;
 @dynamic name;
 @dynamic desc;
-@dynamic iconURL;
+@dynamic i_iconURL;
 @dynamic ts_created;
 @dynamic ts_updated;
-@dynamic _i_changed;
+@dynamic i_changed;
 
-@synthesize changed = _changed;
 @synthesize syncStatus = _syncStatus;
 
 
@@ -68,8 +70,9 @@
 #pragma mark -
 #pragma mark initialization & finalization
 //---------------------------------------------------------------------------------------------------------------------
-- (void)dealloc
-{
+- (void)dealloc {
+    [_gmapIcon release];
+    
     [super dealloc];
 }
 
@@ -99,17 +102,33 @@
 #pragma mark Getter/Setter methods
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL) changed {
-    return [self._i_changed boolValue];
+    return [self.i_changed boolValue];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) setChanged:(BOOL)value {
     
     self.ts_updated = [NSDate date];
-    self._i_changed = [NSNumber numberWithBool:value];
+    self.i_changed = [NSNumber numberWithBool:value];
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (GMapIcon *) gmapIcon {
+    if(!_gmapIcon) {
+        _gmapIcon = [[GMapIcon iconForURL:self.i_iconURL] retain];
+    }
+    return _gmapIcon;
+}
 
+//---------------------------------------------------------------------------------------------------------------------
+- (void) setGmapIcon:(GMapIcon *)icon {
+    
+    if(!_gmapIcon) {
+        [_gmapIcon release];
+    }
+    _gmapIcon = [icon retain];
+    self.i_iconURL = icon.url;
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL) isLocal {
@@ -182,8 +201,7 @@
     self.GID = [self _calcLocalGID]; 
     self.name = @"";
     self.desc = @"";
-    // Hay que crear un icono por defecto ( getDefaultIcon(); )
-    self.iconURL = @"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png"; 
+    self.i_iconURL = DEFAULT_ICON_URL;
     self.changed = false;
     self.syncETag = [self _calcLocalETag];
     self.syncStatus = ST_Sync_OK;
@@ -210,11 +228,10 @@
     [sbuf appendFormat:@"%@<syncStatus>%@</syncStatus>\n", ident, SyncStatusType_Names[self.syncStatus]];
     [sbuf appendFormat:@"%@<changed>%d</changed>\n", ident, self.changed];
     [sbuf appendFormat:@"%@<description>%@</description>\n", ident, self.desc];
-    [sbuf appendFormat:@"%@<icon>%@</icon>\n", ident, self.iconURL];
+    [sbuf appendFormat:@"%@<icon>%@</icon>\n", ident, self.i_iconURL];
     [sbuf appendFormat:@"%@<ts_created>%@</ts_created>\n", ident, self.ts_created];
     [sbuf appendFormat:@"%@<ts_updated>%@</ts_updated>\n", ident, self.ts_updated];
 }
-
 
 
 //*********************************************************************************************************************

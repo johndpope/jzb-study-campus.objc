@@ -22,6 +22,8 @@
 		4297D8B914F8571500CBD657 /* ShowModeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4297D8B714F8571500CBD657 /* ShowModeController.m */; };
 		4297D8BA14F8571500CBD657 /* ShowModeController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4297D8B814F8571500CBD657 /* ShowModeController.xib */; };
 		429F521D150387EF00C67427 /* GMapIcons.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 429F521C150387EF00C67427 /* GMapIcons.bundle */; };
+		429F52201503BFF500C67427 /* allGMapIcons.png in Resources */ = {isa = PBXBuildFile; fileRef = 429F521E1503BFF300C67427 /* allGMapIcons.png */; };
+		429F52211503BFF500C67427 /* allGMapIconsInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 429F521F1503BFF400C67427 /* allGMapIconsInfo.plist */; };
 		42AC3F2014F8FFB000E5DECB /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 42AC3EF514F8FFB000E5DECB /* SVProgressHUD.bundle */; };
 		42AC3F2114F8FFB000E5DECB /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 42AC3EF714F8FFB000E5DECB /* SVProgressHUD.m */; };
 		42AC3F2214F8FFB000E5DECB /* TDBadgedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 42AC3EFA14F8FFB000E5DECB /* TDBadgedCell.m */; };
@@ -409,6 +411,8 @@
 		4297D8B714F8571500CBD657 /* ShowModeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowModeController.m; sourceTree = "<group>"; };
 		4297D8B814F8571500CBD657 /* ShowModeController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShowModeController.xib; sourceTree = "<group>"; };
 		429F521C150387EF00C67427 /* GMapIcons.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = GMapIcons.bundle; sourceTree = "<group>"; };
+		429F521E1503BFF300C67427 /* allGMapIcons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = allGMapIcons.png; sourceTree = "<group>"; };
+		429F521F1503BFF400C67427 /* allGMapIconsInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = allGMapIconsInfo.plist; sourceTree = "<group>"; };
 		42AC3EF514F8FFB000E5DECB /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVProgressHUD.bundle; sourceTree = "<group>"; };
 		42AC3EF614F8FFB000E5DECB /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
 		42AC3EF714F8FFB000E5DECB /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
@@ -1284,6 +1288,8 @@
 		42AC3F3B14F9001800E5DECB /* Editors */ = {
 			isa = PBXGroup;
 			children = (
+				429F521E1503BFF300C67427 /* allGMapIcons.png */,
+				429F521F1503BFF400C67427 /* allGMapIconsInfo.plist */,
 				42AC3F3C14F9001800E5DECB /* MapEditorController.h */,
 				42AC3F3D14F9001800E5DECB /* MapEditorController.m */,
 				42AC3F3E14F9001800E5DECB /* MapEditorController.xib */,
@@ -2399,6 +2405,8 @@
 				42B235FC14FAAEC400094484 /* cabeceras.txt in Resources */,
 				426805E315016B23000137FF /* IconEditor.xib in Resources */,
 				429F521D150387EF00C67427 /* GMapIcons.bundle in Resources */,
+				429F52201503BFF500C67427 /* allGMapIcons.png in Resources */,
+				429F52211503BFF500C67427 /* allGMapIconsInfo.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

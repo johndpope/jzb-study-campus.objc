@@ -16,7 +16,10 @@
 #pragma mark -
 #pragma mark SrvcTicket interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface SrvcTicket : NSObject 
+@interface SrvcTicket : NSObject {
+    @private
+    BOOL _isCancelled;
+}
 
 @property (nonatomic, readonly) BOOL isCancelled;
 

@@ -23,7 +23,7 @@
 #define EXT_INFO_POINT_LNG      -101.804811
 #define EXT_INFO_POINT_LAT      40.736959
 
-#define DEFAULT_ICON_URL = "http://maps.google.com/mapfiles/ms/micons/blue-dot.png"
+#define DEFAULT_POINT_ICON_URL  @"http://maps.google.com/mapfiles/ms/micons/blue-dot.png"
 
 
 //*********************************************************************************************************************
@@ -66,8 +66,7 @@
 #pragma mark -
 #pragma mark initialization & finalization
 //---------------------------------------------------------------------------------------------------------------------
-- (void)dealloc
-{
+- (void)dealloc {
     [super dealloc];
 }
 
@@ -205,13 +204,15 @@
 - (void) resetEntity {
     
     [super resetEntity];
+    self.gmapIcon = [GMapIcon iconForURL:DEFAULT_POINT_ICON_URL];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) resetExtInfo {
     
+    [super resetEntity];
     self.name = EXT_INFO_POINT_NAME;
-    self.iconURL = EXT_INFO_POINT_ICON_URL;
+    self.gmapIcon = [GMapIcon iconForURL:EXT_INFO_POINT_ICON_URL];
     self.lng = EXT_INFO_POINT_LNG;
     self.lat = EXT_INFO_POINT_LAT;
 }

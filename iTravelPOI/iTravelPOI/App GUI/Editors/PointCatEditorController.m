@@ -54,15 +54,16 @@
 
 @property (nonatomic, retain) NSArray *catListInfo;
 
-@property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
+
 @property (nonatomic, retain) IBOutlet UINavigationItem *itemTitle;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *saveBtn;
-@property (nonatomic, retain) IBOutlet UISwitch *isPoint;
-@property (nonatomic, retain) IBOutlet UILabel *isPointLabel;
 @property (nonatomic, retain) IBOutlet UITextField *name;
 @property (nonatomic, retain) IBOutlet UITextView *desc;
-@property (nonatomic, retain) IBOutlet UISegmentedControl *icons;
+@property (nonatomic, retain) IBOutlet UISwitch *isPoint;
+@property (nonatomic, retain) IBOutlet UILabel *isPointLabel;
 @property (nonatomic, retain) IBOutlet UITableView *categories;
+@property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
+@property (nonatomic, retain) IBOutlet UISegmentedControl *icons;
 
 
 @end
@@ -156,7 +157,7 @@ NSString * _getIconURLFromIndex(int n) {
             self.saveBtn.enabled = false;
         }
         self.desc.text = self.entity.desc;
-        self.icons.selectedSegmentIndex = _getIndexFromIconURL(self.entity.iconURL);
+        self.icons.selectedSegmentIndex = _getIndexFromIconURL(self.entity.gmapIcon.url);
         [self _getCategoriesListInfo];
         [self.categories reloadData];
     }
@@ -175,19 +176,20 @@ NSString * _getIconURLFromIndex(int n) {
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void)dealloc
-{
-    [_catListInfo release];
+- (void)dealloc { 
     
-    [_name release];
-    [_desc release];
+    [_catListInfo release];
+
     [_itemTitle release];
     [_saveBtn release];
-    [_icons release];
-    [_categories release];
-    [_scrollView release];
+    [_name release];
+    [_desc release];
     [_isPoint release];
     [_isPointLabel release];
+    [_categories release];
+    [_scrollView release];
+    [_icons release];
+
     [super dealloc];
 }
 
@@ -269,7 +271,7 @@ NSString * _getIconURLFromIndex(int n) {
         // Se actualiza la entidad con la informacion de la pantalla
         self.entity.name = self.name.text;
         self.entity.desc = self.desc.text;
-        self.entity.iconURL = _getIconURLFromIndex(self.icons.selectedSegmentIndex);
+        self.entity.gmapIcon = [GMapIcon iconForURL:_getIconURLFromIndex(self.icons.selectedSegmentIndex)];
         
         SEL addCategory = @selector(addCategory:);
         SEL removeCategory = @selector(removeCategory:);

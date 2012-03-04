@@ -29,6 +29,8 @@
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
 @interface MapEditorController : UIViewController <UITextFieldDelegate, UITextViewDelegate> {
+@private
+    id edittingText;
 }
 
 @property (nonatomic, assign) id <MapEditorDelegate> delegate;

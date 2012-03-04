@@ -33,7 +33,11 @@
 - (void)awakeFromNib
 {
     // Inicializa la persistencia de los datos
-    [[ModelService sharedInstance] initCDStack];
+    NSManagedObjectContext *ctx = [[ModelService sharedInstance] initContext];
+    if(!ctx) {
+        NSLog(@"Error: data core can't be initialized");
+    }
+    [ctx release];
 
 }
 

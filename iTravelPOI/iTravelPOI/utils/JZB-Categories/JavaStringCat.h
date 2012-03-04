@@ -22,9 +22,9 @@
 
 
 - (NSString *) subStrFrom: (NSUInteger)p1;
-- (NSString *) subStrFrom: (NSUInteger)p1 To:(NSUInteger)p2;
+- (NSString *) subStrFrom: (NSUInteger)p1 to:(NSUInteger)p2;
 
-- (NSString *) replaceStr: (NSString *)str1 With:(NSString *)str2;
+- (NSString *) replaceStr: (NSString *)str1 with:(NSString *)str2;
 
 
 @end

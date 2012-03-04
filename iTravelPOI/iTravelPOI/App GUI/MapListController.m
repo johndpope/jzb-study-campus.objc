@@ -52,10 +52,10 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void)dealloc
 {
-    [super dealloc];
-    self.maps = nil;
     [_maps release];
     [_moContext release];
+
+    [super dealloc];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -175,12 +175,6 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)createNewMapAction:(id)sender {
     
-    IconEditor *iconEditor = [[IconEditor alloc] initWithNibName:@"IconEditor" bundle:nil];
-    iconEditor.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-    [self.navigationController presentModalViewController:iconEditor animated:YES];
-    [iconEditor release];
-    
-/*    
     MapEditorController *mapEditor = [[MapEditorController alloc] initWithNibName:@"MapEditorController" bundle:nil];
     
     mapEditor.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
@@ -189,7 +183,6 @@
     //    [self.navigationController pushViewController:mapEditor animated:YES];
     [self.navigationController presentModalViewController:mapEditor animated:YES];
     [mapEditor release];
-*/
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -257,17 +250,6 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    static UIImage * myPngs[5] = {nil, nil, nil, nil, nil};
-    if(myPngs[0]==nil) {
-        for(int n=0;n<5;n++) {
-            NSString *iconName = [NSString stringWithFormat:@"icon%u",(n+1)];
-            NSString *path = [[NSBundle mainBundle] pathForResource:iconName ofType:@"png"];
-            myPngs[n] = [[UIImage imageWithContentsOfFile:path] retain];
-        }
-    }
-    
-    
-    
     static NSString *mapViewIdentifier = @"MapCellView";
     
     MEMap *map = [self.maps objectAtIndex:indexPath.row];
@@ -285,7 +267,7 @@
     cell.badgeColor = [UIColor colorWithRed:0.197 green:0.592 blue:0.219 alpha:1.000];
     cell.badge.radius = 9;
     
-    cell.imageView.image = myPngs[[map.points count] % 5];
+    cell.imageView.image = map.gmapIcon.image;
     
     return cell;
 }

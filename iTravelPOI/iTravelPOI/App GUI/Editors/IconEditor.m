@@ -23,7 +23,7 @@
 
 
 - (void) viewWillAppear:(BOOL)animated {
-    CGSize size = {320,640};
+    CGSize size = {320,635};
     self.scrollerView.contentSize = size;
     self.imageMap.delegate2 = self;
 }
@@ -39,11 +39,11 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void)dealloc
-{
+- (void)dealloc {
     [_selectedIcon release];
     [_imageMap release];
     [_scrollerView release];
+    
     [super dealloc];
 }
 

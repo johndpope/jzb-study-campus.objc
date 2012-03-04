@@ -32,6 +32,7 @@
 
 @property (nonatomic, assign) MEBaseEntity * entity;
 @property (nonatomic, assign) MEMap *map;
+
 @property (nonatomic, assign) id <PointCatEditorDelegate> delegate;
 
 

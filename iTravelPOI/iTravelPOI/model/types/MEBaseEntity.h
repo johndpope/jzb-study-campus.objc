@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-
+#import "GMapIcon.h"
 
 
 //*********************************************************************************************************************
@@ -37,13 +37,16 @@ static const NSString *SyncStatusType_Names[8]={
 #pragma mark -
 #pragma mark MEBaseEntity interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface MEBaseEntity : NSManagedObject 
+@interface MEBaseEntity : NSManagedObject {
+@private
+    GMapIcon *_gmapIcon;
+}
 
 @property (nonatomic, retain)   NSString * GID;
 @property (nonatomic, retain)   NSString * syncETag;
 @property (nonatomic, retain)   NSString * name;
 @property (nonatomic, retain)   NSString * desc;
-@property (nonatomic, retain)   NSString * iconURL;
+@property (nonatomic, retain)   GMapIcon * gmapIcon;
 @property (nonatomic, retain)   NSDate * ts_created;
 @property (nonatomic, retain)   NSDate * ts_updated;
 @property (nonatomic, assign)   BOOL changed;
@@ -68,7 +71,7 @@ static const NSString *SyncStatusType_Names[8]={
 // A llamar para persistir una entidad recien creada DESPUES que se rellene su informacion adecuadamente
 - (NSError *) commitChanges;
 
-    // Necesario para borrar DEFINITIVAMENTE una entidad del modelo
+// Necesario para borrar DEFINITIVAMENTE una entidad del modelo
 - (void) deleteFromModel;
 
 // "Marca" la entidad como borrada y elimina sus relaciones con otras entidades.

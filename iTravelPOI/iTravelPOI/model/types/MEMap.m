@@ -47,8 +47,7 @@
 #pragma mark -
 #pragma mark initialization & finalization
 //---------------------------------------------------------------------------------------------------------------------
-- (void)dealloc
-{
+- (void)dealloc {
     [super dealloc];
 }
 

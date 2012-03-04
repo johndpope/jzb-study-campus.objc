@@ -40,10 +40,14 @@ typedef void (^TBlock_getCategorizedElemensInMapFinished)(NSArray *elements, NSE
 #pragma mark -
 #pragma mark ModelService interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface ModelService : NSObject 
+@interface ModelService : NSObject {
+@private
+    dispatch_queue_t _ModelServiceQueue;
+    
+    NSPersistentStoreCoordinator * _psCoordinator;
+    NSManagedObjectModel * _moModel;
+}
 
-
-@property (readonly, nonatomic, retain) NSManagedObjectContext * moContext3;
 @property (nonatomic, readonly) NSPersistentStoreCoordinator * psCoordinator;
 
 
@@ -60,8 +64,6 @@ typedef void (^TBlock_getCategorizedElemensInMapFinished)(NSArray *elements, NSE
 #pragma mark -
 #pragma mark ModelService INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) initCDStack;
-- (void) doneCDStack;
 
 - (NSManagedObjectContext *) initContext;
 
