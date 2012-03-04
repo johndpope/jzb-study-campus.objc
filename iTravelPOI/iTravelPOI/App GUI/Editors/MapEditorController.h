@@ -28,7 +28,7 @@
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
-@interface MapEditorController : UIViewController {
+@interface MapEditorController : UIViewController <UITextFieldDelegate, UITextViewDelegate> {
 }
 
 @property (nonatomic, assign) id <MapEditorDelegate> delegate;

@@ -13,11 +13,15 @@
 		421A33A814F0512600968EB6 /* icon4.png in Resources */ = {isa = PBXBuildFile; fileRef = 421A33A214F0512600968EB6 /* icon4.png */; };
 		421A33A914F0512600968EB6 /* icon5.png in Resources */ = {isa = PBXBuildFile; fileRef = 421A33A314F0512600968EB6 /* icon5.png */; };
 		421A33AA14F0512600968EB6 /* pencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 421A33A414F0512600968EB6 /* pencil.png */; };
+		426805E215016B23000137FF /* IconEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 426805E015016B22000137FF /* IconEditor.m */; };
+		426805E315016B23000137FF /* IconEditor.xib in Resources */ = {isa = PBXBuildFile; fileRef = 426805E115016B23000137FF /* IconEditor.xib */; };
+		426805EA15017A3F000137FF /* MyImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 426805E815017A3E000137FF /* MyImageView.m */; };
 		42940E3614FA38AA00E11EBD /* MEMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 42940E3514FA38AA00E11EBD /* MEMap.m */; };
 		42940E3914FA38AB00E11EBD /* MEPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 42940E3814FA38AB00E11EBD /* MEPoint.m */; };
 		42940E3C14FA38AB00E11EBD /* MECategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 42940E3B14FA38AB00E11EBD /* MECategory.m */; };
 		4297D8B914F8571500CBD657 /* ShowModeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4297D8B714F8571500CBD657 /* ShowModeController.m */; };
 		4297D8BA14F8571500CBD657 /* ShowModeController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4297D8B814F8571500CBD657 /* ShowModeController.xib */; };
+		429F521D150387EF00C67427 /* GMapIcons.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 429F521C150387EF00C67427 /* GMapIcons.bundle */; };
 		42AC3F2014F8FFB000E5DECB /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 42AC3EF514F8FFB000E5DECB /* SVProgressHUD.bundle */; };
 		42AC3F2114F8FFB000E5DECB /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 42AC3EF714F8FFB000E5DECB /* SVProgressHUD.m */; };
 		42AC3F2214F8FFB000E5DECB /* TDBadgedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 42AC3EFA14F8FFB000E5DECB /* TDBadgedCell.m */; };
@@ -53,6 +57,7 @@
 		42B235FF14FAB9DF00094484 /* SrvcTicket.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B235FE14FAB9DE00094484 /* SrvcTicket.m */; };
 		42B9DCDD14F06E8C00848A5B /* PointListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B9DCDB14F06E8C00848A5B /* PointListController.m */; };
 		42B9DCDE14F06E8C00848A5B /* PointListController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 42B9DCDC14F06E8C00848A5B /* PointListController.xib */; };
+		42BEDDB71502629A008C8DCC /* GMapIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BEDDB61502629A008C8DCC /* GMapIcon.m */; };
 		42BFAAA914EFE32000604B90 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BFAAA814EFE32000604B90 /* UIKit.framework */; };
 		42BFAAAB14EFE32000604B90 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BFAAAA14EFE32000604B90 /* Foundation.framework */; };
 		42BFAAAD14EFE32000604B90 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BFAAAC14EFE32000604B90 /* CoreGraphics.framework */; };
@@ -389,6 +394,11 @@
 		421A33A214F0512600968EB6 /* icon4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon4.png; sourceTree = "<group>"; };
 		421A33A314F0512600968EB6 /* icon5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon5.png; sourceTree = "<group>"; };
 		421A33A414F0512600968EB6 /* pencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pencil.png; sourceTree = "<group>"; };
+		426805DF15016B22000137FF /* IconEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconEditor.h; sourceTree = "<group>"; };
+		426805E015016B22000137FF /* IconEditor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IconEditor.m; sourceTree = "<group>"; };
+		426805E115016B23000137FF /* IconEditor.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IconEditor.xib; sourceTree = "<group>"; };
+		426805E715017A3D000137FF /* MyImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyImageView.h; sourceTree = "<group>"; };
+		426805E815017A3E000137FF /* MyImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyImageView.m; sourceTree = "<group>"; };
 		42940E3414FA38AA00E11EBD /* MEMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEMap.h; sourceTree = "<group>"; };
 		42940E3514FA38AA00E11EBD /* MEMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MEMap.m; sourceTree = "<group>"; };
 		42940E3714FA38AB00E11EBD /* MEPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEPoint.h; sourceTree = "<group>"; };
@@ -398,6 +408,7 @@
 		4297D8B614F8571400CBD657 /* ShowModeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowModeController.h; sourceTree = "<group>"; };
 		4297D8B714F8571500CBD657 /* ShowModeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowModeController.m; sourceTree = "<group>"; };
 		4297D8B814F8571500CBD657 /* ShowModeController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShowModeController.xib; sourceTree = "<group>"; };
+		429F521C150387EF00C67427 /* GMapIcons.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = GMapIcons.bundle; sourceTree = "<group>"; };
 		42AC3EF514F8FFB000E5DECB /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVProgressHUD.bundle; sourceTree = "<group>"; };
 		42AC3EF614F8FFB000E5DECB /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
 		42AC3EF714F8FFB000E5DECB /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
@@ -447,6 +458,8 @@
 		42B9DCDA14F06E8C00848A5B /* PointListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointListController.h; sourceTree = "<group>"; };
 		42B9DCDB14F06E8C00848A5B /* PointListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointListController.m; sourceTree = "<group>"; };
 		42B9DCDC14F06E8C00848A5B /* PointListController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PointListController.xib; sourceTree = "<group>"; };
+		42BEDDB51502629A008C8DCC /* GMapIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMapIcon.h; sourceTree = "<group>"; };
+		42BEDDB61502629A008C8DCC /* GMapIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapIcon.m; sourceTree = "<group>"; };
 		42BFAAA414EFE32000604B90 /* iTravelPOI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iTravelPOI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		42BFAAA814EFE32000604B90 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		42BFAAAA14EFE32000604B90 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1277,6 +1290,11 @@
 				42AC3F3F14F9001800E5DECB /* PointCatEditorController.h */,
 				42AC3F4014F9001800E5DECB /* PointCatEditorController.m */,
 				42AC3F4114F9001800E5DECB /* PointCatEditorController.xib */,
+				426805DF15016B22000137FF /* IconEditor.h */,
+				426805E015016B22000137FF /* IconEditor.m */,
+				426805E115016B23000137FF /* IconEditor.xib */,
+				426805E715017A3D000137FF /* MyImageView.h */,
+				426805E815017A3E000137FF /* MyImageView.m */,
 			);
 			path = Editors;
 			sourceTree = "<group>";
@@ -1291,6 +1309,16 @@
 				42AC3F0C14F8FFB000E5DECB /* popoverBgSimple.png */,
 			);
 			name = simple;
+			sourceTree = "<group>";
+		};
+		42BEDDAE15025E52008C8DCC /* icons */ = {
+			isa = PBXGroup;
+			children = (
+				429F521C150387EF00C67427 /* GMapIcons.bundle */,
+				42BEDDB51502629A008C8DCC /* GMapIcon.h */,
+				42BEDDB61502629A008C8DCC /* GMapIcon.m */,
+			);
+			path = icons;
 			sourceTree = "<group>";
 		};
 		42BFAA9914EFE31F00604B90 = {
@@ -1367,6 +1395,7 @@
 			isa = PBXGroup;
 			children = (
 				42BFABF414EFE6C800604B90 /* iTravelPOI.xcdatamodeld */,
+				42BEDDAE15025E52008C8DCC /* icons */,
 				42BFAB8C14EFE4AD00604B90 /* types */,
 			);
 			name = model;
@@ -2368,6 +2397,8 @@
 				42AC3F4314F9001800E5DECB /* MapEditorController.xib in Resources */,
 				42AC3F4514F9001800E5DECB /* PointCatEditorController.xib in Resources */,
 				42B235FC14FAAEC400094484 /* cabeceras.txt in Resources */,
+				426805E315016B23000137FF /* IconEditor.xib in Resources */,
+				429F521D150387EF00C67427 /* GMapIcons.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2709,6 +2740,9 @@
 				42940E3C14FA38AB00E11EBD /* MECategory.m in Sources */,
 				42ED53D614FA4183006AD5AB /* MEBaseEntity.m in Sources */,
 				42B235FF14FAB9DF00094484 /* SrvcTicket.m in Sources */,
+				426805E215016B23000137FF /* IconEditor.m in Sources */,
+				426805EA15017A3F000137FF /* MyImageView.m in Sources */,
+				42BEDDB71502629A008C8DCC /* GMapIcon.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

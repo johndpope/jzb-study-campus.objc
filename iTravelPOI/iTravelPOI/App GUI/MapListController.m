@@ -9,6 +9,7 @@
 #import "MapListController.h"
 #import "ModelService.h"
 #import "PointListController.h"
+#import "IconEditor.h"
 #import "SVProgressHUD.h"
 #import "TDBadgedCell.h"
 
@@ -174,6 +175,12 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)createNewMapAction:(id)sender {
     
+    IconEditor *iconEditor = [[IconEditor alloc] initWithNibName:@"IconEditor" bundle:nil];
+    iconEditor.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    [self.navigationController presentModalViewController:iconEditor animated:YES];
+    [iconEditor release];
+    
+/*    
     MapEditorController *mapEditor = [[MapEditorController alloc] initWithNibName:@"MapEditorController" bundle:nil];
     
     mapEditor.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
@@ -182,6 +189,7 @@
     //    [self.navigationController pushViewController:mapEditor animated:YES];
     [self.navigationController presentModalViewController:mapEditor animated:YES];
     [mapEditor release];
+*/
 }
 
 //---------------------------------------------------------------------------------------------------------------------

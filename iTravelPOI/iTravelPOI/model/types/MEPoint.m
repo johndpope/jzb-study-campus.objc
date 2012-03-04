@@ -23,6 +23,7 @@
 #define EXT_INFO_POINT_LNG      -101.804811
 #define EXT_INFO_POINT_LAT      40.736959
 
+#define DEFAULT_ICON_URL = "http://maps.google.com/mapfiles/ms/micons/blue-dot.png"
 
 
 //*********************************************************************************************************************

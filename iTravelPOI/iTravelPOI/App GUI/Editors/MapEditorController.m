@@ -18,6 +18,7 @@
 @property (nonatomic, retain) IBOutlet UIButton *saveButton;
 @property (nonatomic, retain) IBOutlet UITextField *mapName;
 @property (nonatomic, retain) IBOutlet UITextView *mapDescription;
+@property (nonatomic, retain) IBOutlet UIToolbar *editToolBar;
 
 @end
 
@@ -32,6 +33,9 @@
 @synthesize mapDescription = _mapDescription;
 @synthesize delegate = _delegate;
 @synthesize map = _map;
+@synthesize editToolBar = _editToolBar;
+
+id edittingText;
 
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -54,8 +58,8 @@
         self.mapName.text = self.map.name;
         self.mapDescription.text = self.map.desc;
     }
+    
 }
-
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)dealloc
@@ -63,6 +67,7 @@
     [_mapName release];
     [_mapDescription release];
     [_saveButton release];
+    [_editToolBar release];
     [super dealloc];
 }
 
@@ -113,8 +118,26 @@
     }
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    [textField setInputAccessoryView:self.editToolBar];
+    edittingText = textField;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL) textViewShouldBeginEditing:(UITextView *)textView {
+    [textView setInputAccessoryView:self.editToolBar];
+    edittingText = textView;
+    return YES;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (IBAction)editToolBarOKAction:(id)sender {
+    [edittingText resignFirstResponder];
+}
 
 
+	
 //=====================================================================================================================
 #pragma mark - View lifecycle
 //=====================================================================================================================
@@ -134,6 +157,7 @@
     [self setMapName:nil];
     [self setMapDescription:nil];
     [self setSaveButton:nil];
+    [self setEditToolBar:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
