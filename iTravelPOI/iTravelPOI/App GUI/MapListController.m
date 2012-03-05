@@ -14,35 +14,50 @@
 #import "TDBadgedCell.h"
 
 
+
+
+
 //*********************************************************************************************************************
+#pragma mark -
+#pragma mark MapListController PRIVATE interface definition
 //---------------------------------------------------------------------------------------------------------------------
 @interface MapListController()
+
+@property (nonatomic, retain) IBOutlet UITableView *mapTableView;
 
 @property (nonatomic, readonly) NSManagedObjectContext *moContext;
 @property (nonatomic, retain)   NSArray *maps;
 
-- (IBAction)createNewMapAction:(id)sender;
+- (IBAction) createAndEditMapAction:(id)sender;
+- (void) loadMapListData;
+- (void) showMapEditorFor:(MEMap *)mapToView;
+- (void) showErrorToUser:(NSString *)errorMsg;
 
 @end
 
 
 
 //*********************************************************************************************************************
+#pragma mark -
+#pragma mark MapListController implementation
 //---------------------------------------------------------------------------------------------------------------------
 @implementation MapListController
 
 
+@synthesize mapTableView = _mapTableView;
 
 @synthesize moContext = _moContext;
 @synthesize maps = _maps;
 
 
 
-
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark initialization & finalization
 //---------------------------------------------------------------------------------------------------------------------
-- (id)initWithStyle:(UITableViewStyle)style
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithStyle:style];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
     }
@@ -54,7 +69,8 @@
 {
     [_maps release];
     [_moContext release];
-
+    
+    [_mapTableView release];
     [super dealloc];
 }
 
@@ -69,12 +85,9 @@
 
 
 
-//=====================================================================================================================
-#pragma mark - View lifecycle
-//=====================================================================================================================
-
-
-
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark Getter/Setter methods
 //---------------------------------------------------------------------------------------------------------------------
 - (NSManagedObjectContext *) moContext {
     if(!_moContext) {
@@ -84,6 +97,10 @@
 }
 
 
+
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark View lifecycle
 //---------------------------------------------------------------------------------------------------------------------
 - (void)viewDidLoad
 {
@@ -92,27 +109,27 @@
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    self.navigationItem.leftBarButtonItem = self.editButtonItem;
-    
-    
     // Inicializa el resto de la vista
     self.title = @"Maps";
     
-    // Creamos el boton de crear nuevos mapas
+    // Creamos el boton para crear o editar mapas
     UIBarButtonItem *createMapBtn = [[UIBarButtonItem alloc]  initWithBarButtonSystemItem:UIBarButtonSystemItemCompose 
                                                                                    target:self 
-                                                                                   action:@selector(createNewMapAction:)];
+                                                                                   action:@selector(createAndEditMapAction:)];
     self.navigationItem.rightBarButtonItem=createMapBtn;
     [createMapBtn release];
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)viewDidUnload
 {
+    self.mapTableView = nil;
+    self.maps = nil;
+    [_moContext release];
+    _moContext = nil;
+    
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -120,20 +137,11 @@
 {
     [super viewWillAppear:animated];
     
+    // Si no tenemos los mapas de una iteracion previa los cargamos
     if(!self.maps) {
-        // Lanzamos la busqueda de los mapas y los mostramos
-        [SVProgressHUD showWithStatus:@"Loading local maps"];
-        
-        [[ModelService sharedInstance] getUserMapList:self.moContext callback:^(NSArray *maps, NSError *error) {
-            if(error) {
-                [SVProgressHUD dismissWithError:@"Error loading local maps" afterDelay:2];
-            } else {
-                [SVProgressHUD dismiss];
-                self.maps = maps;
-                [self.tableView reloadData];
-            }
-        }];
+        [self loadMapListData];
     }
+    
     
 }
 
@@ -165,35 +173,24 @@
 
 
 
-//=====================================================================================================================
-#pragma mark - Internal Event Handlers
-//=====================================================================================================================
-
-
-
-
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark Internal Event Handlers
 //---------------------------------------------------------------------------------------------------------------------
-- (IBAction)createNewMapAction:(id)sender {
+- (IBAction) createAndEditMapAction:(id)sender {
     
-    MapEditorController *mapEditor = [[MapEditorController alloc] initWithNibName:@"MapEditorController" bundle:nil];
-    
-    mapEditor.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-    
-    mapEditor.delegate = self;
-    //    [self.navigationController pushViewController:mapEditor animated:YES];
-    [self.navigationController presentModalViewController:mapEditor animated:YES];
-    [mapEditor release];
+    [self showMapEditorFor:nil];
 }
 
+
+
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark MapEditor delegate
 //---------------------------------------------------------------------------------------------------------------------
-- (MEMap *) createNewInstance {
+- (MEMap *) mapEditorCreateMapInstance {
+    NSLog(@"mapEditorCreateMapInstance");
     return [MEMap insertNew:self.moContext];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) mapEditorCancel:(MapEditorController *)sender {
-    NSLog(@"mapEditorCancel");
-    [self.navigationController dismissModalViewControllerAnimated:YES];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -201,37 +198,26 @@
     
     NSLog(@"mapEditorSave");
     
+    [self.navigationController popViewControllerAnimated:true];
     
-    [self.navigationController dismissModalViewControllerAnimated:YES];
-    
+    // Marca el mapa como modificado
     map.changed = true;
     
+    // Almacena los cambios
     NSError *error = [map commitChanges];
     if(error) {
-        [SVProgressHUD showWithStatus:@"Saving local maps"];
-        [SVProgressHUD dismissWithError:@"Error saving local maps" afterDelay:2];
-    } else {
-        [[ModelService sharedInstance] getUserMapList:self.moContext callback:^(NSArray *maps, NSError *error) {
-            if(error) {
-                [SVProgressHUD showWithStatus:@"Loading local maps"];
-                [SVProgressHUD dismissWithError:@"Error loading local maps" afterDelay:2];
-            } else {
-                self.maps = maps;
-                [self.tableView reloadData];
-            }
-        }];
+        [self showErrorToUser:@"Error saving local maps"];
     }
     
+    // Se recarga entera por si hubo un cambio de nombre y afecta al orden
+    [self loadMapListData];
 }
 
 
 
-//=====================================================================================================================
-#pragma mark - Table view data source
-//=====================================================================================================================
-
-
-
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark Table view data source
 //---------------------------------------------------------------------------------------------------------------------
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -276,73 +262,33 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        MEMap *map = [self.maps objectAtIndex:indexPath.row];
-        [map markAsDeleted];
+        
         NSMutableArray *marray = [NSMutableArray arrayWithArray:self.maps];
         [marray removeObjectAtIndex:indexPath.row];
         self.maps = [[marray copy] autorelease];
+        
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        
+        MEMap *map = [self.maps objectAtIndex:indexPath.row];
+        [map markAsDeleted];
         NSError *error = [map commitChanges];
         if(error) {
             NSLog(@"Error saving context when deleting an item: %@ / %@", error, [error userInfo]);
+            [self showErrorToUser:@"Error deleting map"];
         }
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+        
     }   
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
-
-//---------------------------------------------------------------------------------------------------------------------
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
-
-//---------------------------------------------------------------------------------------------------------------------
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
 
 
-
-//=====================================================================================================================
-#pragma mark - Table view delegate
-//=====================================================================================================================
-
-
-
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark Table view data source
 //---------------------------------------------------------------------------------------------------------------------
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
     
-    MapEditorController *mapEditor = [[MapEditorController alloc] initWithNibName:@"MapEditorController" bundle:nil];
-    
-    mapEditor.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-    
-    mapEditor.delegate = self;
-    mapEditor.map = [self.maps objectAtIndex:indexPath.row];
-    
-    //    [self.navigationController pushViewController:mapEditor animated:YES];
-    [self.navigationController presentModalViewController:mapEditor animated:YES];
-    [mapEditor release];
-    
+    [self showMapEditorFor:[self.maps objectAtIndex:indexPath.row]];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -351,12 +297,60 @@
     MEMap *map = [self.maps objectAtIndex:indexPath.row];
     NSManagedObjectContext *ctx = [[ModelService sharedInstance] initContext];
     MEMap *mapToView = (MEMap *)[ctx objectWithID:[map objectID]];
-
+    
     PointListController *pointListController = [[PointListController alloc] initWithNibName:@"PointListController" bundle:nil];
     pointListController.map = mapToView;
     pointListController.filteringCategories = nil;
     [self.navigationController pushViewController:pointListController animated:YES];
     [pointListController release];
+}
+
+
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark PRIVATE methods
+//---------------------------------------------------------------------------------------------------------------------
+- (void) loadMapListData {
+    
+    // Pone un indicador de actividad
+    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+    self.navigationItem.rightBarButtonItem.customView = activityIndicator;
+    [activityIndicator startAnimating];
+    [activityIndicator release];
+    
+    // Lanzamos la carga de los mapas
+    [[ModelService sharedInstance] getUserMapList:self.moContext callback:^(NSArray *maps, NSError *error) {
+        
+        // Paramos el indicador de actividad
+        UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *)self.navigationItem.rightBarButtonItem.customView;
+        [activityIndicator stopAnimating];
+        
+        // Si hay un error lo indica. En otro caso, recarga la tabla con los mapas
+        if(error) {
+            [self showErrorToUser:@"Error loading local maps"];
+        } else {
+            self.navigationItem.rightBarButtonItem.customView = nil;
+            self.maps = maps;
+            [self.mapTableView reloadData];
+        }
+    }];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) showMapEditorFor:(MEMap *)mapToView {
+    
+    MapEditorController *mapEditor = [[MapEditorController alloc] initWithNibName:@"MapEditorController" bundle:nil];
+    mapEditor.delegate = self;
+    mapEditor.map = mapToView;
+    mapEditor.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    [self.navigationController pushViewController:mapEditor animated:YES];
+    [mapEditor release];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) showErrorToUser:(NSString *)errorMsg {
+    [SVProgressHUD showWithStatus:@""];
+    [SVProgressHUD dismissWithError:errorMsg afterDelay:2];
 }
 
 @end

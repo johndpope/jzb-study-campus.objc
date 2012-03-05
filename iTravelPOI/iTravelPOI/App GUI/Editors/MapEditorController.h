@@ -18,9 +18,8 @@
 //---------------------------------------------------------------------------------------------------------------------
 @protocol MapEditorDelegate 
 
-- (MEMap *) createNewInstance;
-- (void) mapEditorCancel:(MapEditorController *)sender;
-- (void) mapEditorSave:(MapEditorController *)sender map:(MEMap *)map;
+- (MEMap *) mapEditorCreateMapInstance;
+- (void)    mapEditorSave:(MapEditorController *)sender map:(MEMap *)map;
 
 @end
 

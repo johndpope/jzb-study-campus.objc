@@ -124,6 +124,7 @@ NSString * _getIconURLFromIndex(int n) {
     for(MECategory *cat in self.map.categories) {
         TCatListItemInfo *itemInfo = [[TCatListItemInfo alloc] initWithCategory:cat forEntity:self.entity];
         [cats addObject:itemInfo];
+        [itemInfo release];
     }
     self.catListInfo = [[cats copy] autorelease];
 }

@@ -58,8 +58,8 @@ static NSMutableDictionary *iconsForURL = nil;
     
     self = [super init];
     if(self) {
-        _url = [url retain];
-        _shortName = [shortName retain];
+        _url = [[NSString alloc] initWithString:url];
+        _shortName = [[NSString alloc] initWithString:shortName];
     }
     return self;
     

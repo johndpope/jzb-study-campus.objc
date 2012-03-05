@@ -20,6 +20,8 @@
 @property (nonatomic, retain) IBOutlet UITextView *mapDescription;
 @property (nonatomic, retain) IBOutlet UIToolbar *editToolBar;
 
+- (IBAction)saveAction:(id)sender;
+
 @end
 
 
@@ -49,6 +51,23 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+- (void) viewDidLoad {
+    
+    [super viewDidLoad];
+    
+    // Inicializa el resto de la vista
+    self.title = @"Map Editor";
+    
+    // Creamos el boton para crear o editar mapas
+    UIBarButtonItem *saveBtn = [[UIBarButtonItem alloc]  initWithBarButtonSystemItem:UIBarButtonSystemItemSave
+                                                                              target:self
+                                                                              action:@selector(saveAction:)];
+    self.navigationItem.rightBarButtonItem=saveBtn;
+    [saveBtn release];
+    
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 - (void)viewWillAppear:(BOOL)animated {
     
     self.mapDescription.layer.cornerRadius = 5.0;
@@ -58,7 +77,10 @@
         self.mapName.text = self.map.name;
         self.mapDescription.text = self.map.desc;
     }
-    
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) viewDidAppear:(BOOL)animated {
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -68,7 +90,7 @@
     [_mapName release];
     [_mapDescription release];
     [_editToolBar release];
-
+    
     [super dealloc];    
 }
 
@@ -99,19 +121,13 @@
     }
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-- (IBAction)cancelAction:(id)sender {
-    if(self.delegate) {
-        [self.delegate mapEditorCancel:self];
-    }
-}
 
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)saveAction:(id)sender {
     
     if(self.delegate) {
         if(!self.map) {
-            self.map = [self.delegate createNewInstance];
+            self.map = [self.delegate mapEditorCreateMapInstance];
         }
         self.map.name = self.mapName.text;
         self.map.desc = self.mapDescription.text;
@@ -138,30 +154,22 @@
 }
 
 
-	
+
 //=====================================================================================================================
 #pragma mark - View lifecycle
 //=====================================================================================================================
 
 
 
-//---------------------------------------------------------------------------------------------------------------------
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
-}
+
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)viewDidUnload
 {
     [self setMapName:nil];
     [self setMapDescription:nil];
-    [self setSaveButton:nil];
-    [self setEditToolBar:nil];
+
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 //---------------------------------------------------------------------------------------------------------------------

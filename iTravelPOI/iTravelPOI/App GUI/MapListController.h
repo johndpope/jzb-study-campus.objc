@@ -9,10 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "MapEditorController.h"
 
+
 //*********************************************************************************************************************
+#pragma mark -
+#pragma mark MapListController interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface MapListController : UITableViewController <MapEditorDelegate> {
-    
+@interface MapListController : UIViewController <MapEditorDelegate> {
 }
 
 @end
