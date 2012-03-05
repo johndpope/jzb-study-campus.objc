@@ -29,6 +29,8 @@
 @property (nonatomic, retain)   NSArray *maps;
 
 - (IBAction) createAndEditMapAction:(id)sender;
+- (void) modelHasChanged:(NSNotification *)notification;
+
 - (void) loadMapListData;
 - (void) showMapEditorFor:(MEMap *)mapToView;
 - (void) showErrorToUser:(NSString *)errorMsg;
@@ -119,6 +121,11 @@
     self.navigationItem.rightBarButtonItem=createMapBtn;
     [createMapBtn release];
     
+    // Se registra para saber si hubo cambios en el modelo desde otros ViewControllers
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelHasChangedAction) name:@"ModelHasChangedNotification" object:nil];
+   
+   // [[NSNotificationCenter defaultCenter] postNotificationName:@"ModelHasChangedNotification" object:self userInfo:(NSDictionary *)nil];
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -128,6 +135,9 @@
     self.maps = nil;
     [_moContext release];
     _moContext = nil;
+    
+    // Se deregistra de las notificaciones
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [super viewDidUnload];
 }
@@ -180,6 +190,18 @@
 - (IBAction) createAndEditMapAction:(id)sender {
     
     [self showMapEditorFor:nil];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) modelHasChanged:(NSNotification *)notification {
+    
+    // Puesto que el contenido del modelo ha cambiado deberiamos invalidar lo que se esta mostrando y pedirlo de nuevo
+    // ¿Que pasa si se llama cuando no estamos en pantalla?
+    // ¿Que pasa si se pone a "nul" y si esta en pantalla?
+    
+    // self.maps = nil;
+    // [self loadMapListData];
+    NSLog(@"modelHasChanged");
 }
 
 
