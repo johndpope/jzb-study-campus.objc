@@ -15,6 +15,8 @@
 
 
 //*********************************************************************************************************************
+#pragma mark -
+#pragma mark MapEditorDelegate protocol definition
 //---------------------------------------------------------------------------------------------------------------------
 @protocol MapEditorDelegate 
 
@@ -26,13 +28,13 @@
 
 
 //*********************************************************************************************************************
+#pragma mark -
+#pragma mark MapEditorController interface definition
 //---------------------------------------------------------------------------------------------------------------------
 @interface MapEditorController : UIViewController <UITextFieldDelegate, UITextViewDelegate> {
-@private
-    id edittingText;
 }
 
 @property (nonatomic, assign) id <MapEditorDelegate> delegate;
-@property (nonatomic, assign) MEMap *map;
+@property (nonatomic, retain) MEMap *map;
 
 @end

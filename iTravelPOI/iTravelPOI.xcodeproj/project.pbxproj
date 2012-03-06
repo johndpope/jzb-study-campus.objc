@@ -396,11 +396,11 @@
 		421A33A214F0512600968EB6 /* icon4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon4.png; sourceTree = "<group>"; };
 		421A33A314F0512600968EB6 /* icon5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon5.png; sourceTree = "<group>"; };
 		421A33A414F0512600968EB6 /* pencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pencil.png; sourceTree = "<group>"; };
-		426805DF15016B22000137FF /* IconEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconEditor.h; sourceTree = "<group>"; };
-		426805E015016B22000137FF /* IconEditor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IconEditor.m; sourceTree = "<group>"; };
-		426805E115016B23000137FF /* IconEditor.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IconEditor.xib; sourceTree = "<group>"; };
-		426805E715017A3D000137FF /* MyImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyImageView.h; sourceTree = "<group>"; };
-		426805E815017A3E000137FF /* MyImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyImageView.m; sourceTree = "<group>"; };
+		426805DF15016B22000137FF /* IconEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IconEditor.h; path = Editors/IconEditor.h; sourceTree = "<group>"; };
+		426805E015016B22000137FF /* IconEditor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IconEditor.m; path = Editors/IconEditor.m; sourceTree = "<group>"; };
+		426805E115016B23000137FF /* IconEditor.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = IconEditor.xib; path = Editors/IconEditor.xib; sourceTree = "<group>"; };
+		426805E715017A3D000137FF /* MyImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyImageView.h; path = Editors/MyImageView.h; sourceTree = "<group>"; };
+		426805E815017A3E000137FF /* MyImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyImageView.m; path = Editors/MyImageView.m; sourceTree = "<group>"; };
 		42940E3414FA38AA00E11EBD /* MEMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEMap.h; sourceTree = "<group>"; };
 		42940E3514FA38AA00E11EBD /* MEMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MEMap.m; sourceTree = "<group>"; };
 		42940E3714FA38AB00E11EBD /* MEPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEPoint.h; sourceTree = "<group>"; };
@@ -411,8 +411,8 @@
 		4297D8B714F8571500CBD657 /* ShowModeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowModeController.m; sourceTree = "<group>"; };
 		4297D8B814F8571500CBD657 /* ShowModeController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShowModeController.xib; sourceTree = "<group>"; };
 		429F521C150387EF00C67427 /* GMapIcons.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = GMapIcons.bundle; sourceTree = "<group>"; };
-		429F521E1503BFF300C67427 /* allGMapIcons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = allGMapIcons.png; sourceTree = "<group>"; };
-		429F521F1503BFF400C67427 /* allGMapIconsInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = allGMapIconsInfo.plist; sourceTree = "<group>"; };
+		429F521E1503BFF300C67427 /* allGMapIcons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = allGMapIcons.png; path = Editors/allGMapIcons.png; sourceTree = "<group>"; };
+		429F521F1503BFF400C67427 /* allGMapIconsInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = allGMapIconsInfo.plist; path = Editors/allGMapIconsInfo.plist; sourceTree = "<group>"; };
 		42AC3EF514F8FFB000E5DECB /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVProgressHUD.bundle; sourceTree = "<group>"; };
 		42AC3EF614F8FFB000E5DECB /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
 		42AC3EF714F8FFB000E5DECB /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
@@ -453,9 +453,9 @@
 		42AC3F3C14F9001800E5DECB /* MapEditorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapEditorController.h; sourceTree = "<group>"; };
 		42AC3F3D14F9001800E5DECB /* MapEditorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapEditorController.m; sourceTree = "<group>"; };
 		42AC3F3E14F9001800E5DECB /* MapEditorController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MapEditorController.xib; sourceTree = "<group>"; };
-		42AC3F3F14F9001800E5DECB /* PointCatEditorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointCatEditorController.h; sourceTree = "<group>"; };
-		42AC3F4014F9001800E5DECB /* PointCatEditorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointCatEditorController.m; sourceTree = "<group>"; };
-		42AC3F4114F9001800E5DECB /* PointCatEditorController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PointCatEditorController.xib; sourceTree = "<group>"; };
+		42AC3F3F14F9001800E5DECB /* PointCatEditorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PointCatEditorController.h; path = Editors/PointCatEditorController.h; sourceTree = "<group>"; };
+		42AC3F4014F9001800E5DECB /* PointCatEditorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PointCatEditorController.m; path = Editors/PointCatEditorController.m; sourceTree = "<group>"; };
+		42AC3F4114F9001800E5DECB /* PointCatEditorController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PointCatEditorController.xib; path = Editors/PointCatEditorController.xib; sourceTree = "<group>"; };
 		42B235FB14FAAEC300094484 /* cabeceras.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cabeceras.txt; sourceTree = "<group>"; };
 		42B235FD14FAB9DE00094484 /* SrvcTicket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SrvcTicket.h; sourceTree = "<group>"; };
 		42B235FE14FAB9DE00094484 /* SrvcTicket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SrvcTicket.m; sourceTree = "<group>"; };
@@ -1172,6 +1172,37 @@
 			path = icons;
 			sourceTree = "<group>";
 		};
+		427CD94D15058363003048EE /* __malos_pendientes__ */ = {
+			isa = PBXGroup;
+			children = (
+				42B9DCDA14F06E8C00848A5B /* PointListController.h */,
+				42B9DCDB14F06E8C00848A5B /* PointListController.m */,
+				42B9DCDC14F06E8C00848A5B /* PointListController.xib */,
+				4297D8B614F8571400CBD657 /* ShowModeController.h */,
+				4297D8B714F8571500CBD657 /* ShowModeController.m */,
+				4297D8B814F8571500CBD657 /* ShowModeController.xib */,
+				427CD94F15058377003048EE /* Editors */,
+			);
+			name = __malos_pendientes__;
+			sourceTree = "<group>";
+		};
+		427CD94F15058377003048EE /* Editors */ = {
+			isa = PBXGroup;
+			children = (
+				429F521E1503BFF300C67427 /* allGMapIcons.png */,
+				429F521F1503BFF400C67427 /* allGMapIconsInfo.plist */,
+				42AC3F3F14F9001800E5DECB /* PointCatEditorController.h */,
+				42AC3F4014F9001800E5DECB /* PointCatEditorController.m */,
+				42AC3F4114F9001800E5DECB /* PointCatEditorController.xib */,
+				426805DF15016B22000137FF /* IconEditor.h */,
+				426805E015016B22000137FF /* IconEditor.m */,
+				426805E115016B23000137FF /* IconEditor.xib */,
+				426805E715017A3D000137FF /* MyImageView.h */,
+				426805E815017A3E000137FF /* MyImageView.m */,
+			);
+			name = Editors;
+			sourceTree = "<group>";
+		};
 		427EAF8D14F94637009682D9 /* improved */ = {
 			isa = PBXGroup;
 			children = (
@@ -1288,19 +1319,9 @@
 		42AC3F3B14F9001800E5DECB /* Editors */ = {
 			isa = PBXGroup;
 			children = (
-				429F521E1503BFF300C67427 /* allGMapIcons.png */,
-				429F521F1503BFF400C67427 /* allGMapIconsInfo.plist */,
 				42AC3F3C14F9001800E5DECB /* MapEditorController.h */,
 				42AC3F3D14F9001800E5DECB /* MapEditorController.m */,
 				42AC3F3E14F9001800E5DECB /* MapEditorController.xib */,
-				42AC3F3F14F9001800E5DECB /* PointCatEditorController.h */,
-				42AC3F4014F9001800E5DECB /* PointCatEditorController.m */,
-				42AC3F4114F9001800E5DECB /* PointCatEditorController.xib */,
-				426805DF15016B22000137FF /* IconEditor.h */,
-				426805E015016B22000137FF /* IconEditor.m */,
-				426805E115016B23000137FF /* IconEditor.xib */,
-				426805E715017A3D000137FF /* MyImageView.h */,
-				426805E815017A3E000137FF /* MyImageView.m */,
 			);
 			path = Editors;
 			sourceTree = "<group>";
@@ -1447,16 +1468,11 @@
 		42BFABF714EFE73F00604B90 /* App GUI */ = {
 			isa = PBXGroup;
 			children = (
+				427CD94D15058363003048EE /* __malos_pendientes__ */,
 				42AC3F3B14F9001800E5DECB /* Editors */,
 				42BFABF814EFE75E00604B90 /* MapListController.h */,
 				42BFABF914EFE75E00604B90 /* MapListController.m */,
 				42BFABFA14EFE75E00604B90 /* MapListController.xib */,
-				42B9DCDA14F06E8C00848A5B /* PointListController.h */,
-				42B9DCDB14F06E8C00848A5B /* PointListController.m */,
-				42B9DCDC14F06E8C00848A5B /* PointListController.xib */,
-				4297D8B614F8571400CBD657 /* ShowModeController.h */,
-				4297D8B714F8571500CBD657 /* ShowModeController.m */,
-				4297D8B814F8571500CBD657 /* ShowModeController.xib */,
 			);
 			path = "App GUI";
 			sourceTree = "<group>";

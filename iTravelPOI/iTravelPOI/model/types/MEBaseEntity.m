@@ -142,15 +142,19 @@
 #pragma mark General PUBLIC methods
 //---------------------------------------------------------------------------------------------------------------------
 - (NSError *) commitChanges {
-
+    
     NSManagedObjectContext *ctx = [self managedObjectContext];
     NSError *error = nil;
     if(ctx!=nil && [ctx hasChanges]) {
         if(![ctx save:&error]){
             NSLog(@"Error saving NSManagedContext: %@, %@", error, [error userInfo]);
-        } 
+        }
     }
     
+    // Notifica de cambios en el modelo
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ModelHasChangedNotification" object:nil userInfo:(NSDictionary *)nil];
+    
+    // Retorna la condicion de error
     return error;
 }
 

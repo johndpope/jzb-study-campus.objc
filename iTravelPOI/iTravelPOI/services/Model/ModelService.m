@@ -277,7 +277,7 @@
 - (NSArray *) _getUserMapList:(NSManagedObjectContext *)ctx error:(NSError **)error {
     
     NSLog(@"ModelService - _getUserMapList");
-    
+
     // Crea la peticion
     NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
     [request setEntity:[MEMap mapEntity:ctx]];

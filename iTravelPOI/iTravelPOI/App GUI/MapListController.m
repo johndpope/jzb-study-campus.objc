@@ -122,7 +122,7 @@
     [createMapBtn release];
     
     // Se registra para saber si hubo cambios en el modelo desde otros ViewControllers
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelHasChangedAction) name:@"ModelHasChangedNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelHasChanged:) name:@"ModelHasChangedNotification" object:nil];
    
    // [[NSNotificationCenter defaultCenter] postNotificationName:@"ModelHasChangedNotification" object:self userInfo:(NSDictionary *)nil];
     
@@ -145,20 +145,19 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
-    
-    // Si no tenemos los mapas de una iteracion previa los cargamos
-    if(!self.maps) {
-        [self loadMapListData];
-    }
-    
-    
+    [super viewWillAppear:animated];    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
+    // Si no estan cargados los mapas de una iteracion previa los volvemos a cargar
+    if(!self.maps) {
+        [self loadMapListData];
+    }
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -202,6 +201,7 @@
     // self.maps = nil;
     // [self loadMapListData];
     NSLog(@"modelHasChanged");
+    self.maps=nil;
 }
 
 
@@ -232,7 +232,7 @@
     }
     
     // Se recarga entera por si hubo un cambio de nombre y afecta al orden
-    [self loadMapListData];
+    //[self loadMapListData];
 }
 
 
@@ -285,15 +285,16 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         
+        MEMap *mapToRemove = [self.maps objectAtIndex:indexPath.row];
+
         NSMutableArray *marray = [NSMutableArray arrayWithArray:self.maps];
         [marray removeObjectAtIndex:indexPath.row];
         self.maps = [[marray copy] autorelease];
         
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
         
-        MEMap *map = [self.maps objectAtIndex:indexPath.row];
-        [map markAsDeleted];
-        NSError *error = [map commitChanges];
+        [mapToRemove markAsDeleted];
+        NSError *error = [mapToRemove commitChanges];
         if(error) {
             NSLog(@"Error saving context when deleting an item: %@ / %@", error, [error userInfo]);
             [self showErrorToUser:@"Error deleting map"];
@@ -306,7 +307,7 @@
 
 //*********************************************************************************************************************
 #pragma mark -
-#pragma mark Table view data source
+#pragma mark Table view data delegate
 //---------------------------------------------------------------------------------------------------------------------
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
     
@@ -342,7 +343,7 @@
     
     // Lanzamos la carga de los mapas
     [[ModelService sharedInstance] getUserMapList:self.moContext callback:^(NSArray *maps, NSError *error) {
-        
+
         // Paramos el indicador de actividad
         UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *)self.navigationItem.rightBarButtonItem.customView;
         [activityIndicator stopAnimating];
@@ -364,7 +365,6 @@
     MapEditorController *mapEditor = [[MapEditorController alloc] initWithNibName:@"MapEditorController" bundle:nil];
     mapEditor.delegate = self;
     mapEditor.map = mapToView;
-    mapEditor.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
     [self.navigationController pushViewController:mapEditor animated:YES];
     [mapEditor release];
 }
