@@ -18,15 +18,23 @@
 //---------------------------------------------------------------------------------------------------------------------
 @interface MapEditorController()
 
+@property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
 @property (nonatomic, retain) IBOutlet UITextField *mapName;
 @property (nonatomic, retain) IBOutlet UITextView *mapDescription;
 @property (nonatomic, retain) IBOutlet UIToolbar *editToolBar;
 
-@property (nonatomic, assign) id editingUIControl;
+@property (nonatomic, assign) UIView *activeField;
 
 - (IBAction)saveAction:(id)sender;
 
 - (void) showIconSelector;
+
+
+
+- (void) registerForKeyboardNotifications;
+- (void) unregisterForKeyboardNotifications;
+- (void) keyboardWasShown:(NSNotification*) aNotification;
+- (void) keyboardWillBeHidden:(NSNotification*) aNotification;
 
 
 @end
@@ -39,11 +47,12 @@
 //---------------------------------------------------------------------------------------------------------------------
 @implementation MapEditorController
 
+@synthesize scrollView = _scrollView;
 @synthesize mapName = _mapName;
 @synthesize mapDescription = _mapDescription;
 @synthesize editToolBar = _editToolBar;
 
-@synthesize editingUIControl = _editingUIControl;
+@synthesize activeField = _activeField;
 
 @synthesize delegate = _delegate;
 @synthesize map = _map;
@@ -66,6 +75,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void)dealloc
 {
+    [_scrollView release];
     [_mapName release];
     [_mapDescription release];
     [_editToolBar release];
@@ -108,11 +118,20 @@
     // Redondea el borde de la caja de texto de la descripcion
     self.mapDescription.layer.cornerRadius = 5.0;
     self.mapDescription.clipsToBounds = YES;
+    
+    
+    [self registerForKeyboardNotifications];
+    
+    CGRect aRect = self.view.bounds;
+    aRect.size.height *=4;
+    self.scrollView.contentSize = aRect.size;
+
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)viewDidUnload
 {
+    self.scrollView = nil;
     self.mapName = nil;
     self.mapDescription = nil;
     self.editToolBar = nil;
@@ -127,7 +146,7 @@
     
     self.mapName.text = self.map.name;
     self.mapDescription.text = self.map.desc;
-    self.editingUIControl = nil;
+    self.activeField = nil;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -173,20 +192,20 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     [textField setInputAccessoryView:self.editToolBar];
-    self.editingUIControl = textField;
+    self.activeField = textField;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL) textViewShouldBeginEditing:(UITextView *)textView {
     [textView setInputAccessoryView:self.editToolBar];
-    self.editingUIControl = textView;
+    self.activeField = textView;
     return YES;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)editToolBarOKAction:(id)sender {
-    [self.editingUIControl resignFirstResponder];
-    self.editingUIControl = nil;
+    [self.activeField resignFirstResponder];
+    self.activeField = nil;
 }
 
 
@@ -253,6 +272,87 @@
     IconEditor *iconEditor = [[IconEditor alloc] initWithNibName:@"IconEditor" bundle:nil];
     [self.navigationController pushViewController:iconEditor animated:YES];
     [IconEditor release];
+}
+
+
+
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark Keyboard handling methods
+//---------------------------------------------------------------------------------------------------------------------
+// Call this method somewhere in your view controller setup code.
+- (void) registerForKeyboardNotifications {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWasShown:)
+                                                 name:UIKeyboardDidShowNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillBeHidden:)
+                                                 name:UIKeyboardWillHideNotification object:nil];
+    
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+// Call this method somewhere in your view controller setup code.
+- (void) unregisterForKeyboardNotifications {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void)keyboardWasShown3:(NSNotification*)aNotification {
+    NSDictionary* info = [aNotification userInfo];
+    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    CGRect bkgndRect = self.activeField.superview.frame;
+    bkgndRect.size.height += kbSize.height;
+    [self.activeField.superview setFrame:bkgndRect];
+    [self.scrollView setContentOffset:CGPointMake(0.0, self.activeField.frame.origin.y-kbSize.height) animated:YES];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+// Called when the UIKeyboardDidShowNotification is sent.
+- (void) keyboardWasShown:(NSNotification*) aNotification {
+    
+    NSDictionary* info = [aNotification userInfo];
+    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    
+
+    
+    CGFloat n1= self.editToolBar.frame.origin.y;
+    n1 = self.mapDescription.inputAccessoryView.frame.origin.y;
+    CGFloat n2= self.mapDescription.frame.origin.y;
+    CGFloat n3= self.mapDescription.frame.size.height;
+    NSLog(@"%f, %f, %f",n1,n2,n3);
+    
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
+    self.scrollView.contentInset = contentInsets;
+    self.scrollView.scrollIndicatorInsets = contentInsets;
+    
+    // If active text field is hidden by keyboard, scroll it so it's visible
+    // Your application might not need or want this behavior.
+    CGRect aRect = self.view.frame;
+    aRect.size.height -= kbSize.height;
+    if (!CGRectContainsPoint(aRect, self.activeField.frame.origin) ) {
+        CGPoint scrollPoint = CGPointMake(0.0, self.activeField.frame.origin.y-kbSize.height);
+//        [self.scrollView setContentOffset:scrollPoint animated:YES];
+        [self.scrollView setContentOffset:(CGPoint){0,220} ];
+    }
+     
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+// Called when the UIKeyboardWillHideNotification is sent
+- (void) keyboardWillBeHidden:(NSNotification*) aNotification {
+
+    CGFloat n1= self.editToolBar.frame.origin.y;
+    CGFloat n2= self.mapDescription.frame.origin.y;
+    CGFloat n3= self.mapDescription.frame.size.height;
+    NSLog(@"%f, %f, %f",n1,n2,n3);
+
+    NSLog(@"%f,%f",self.scrollView.contentOffset.x,self.scrollView.contentOffset.y);
+    UIEdgeInsets contentInsets = UIEdgeInsetsZero;
+    self.scrollView.contentInset = contentInsets;
+    self.scrollView.scrollIndicatorInsets = contentInsets;
+    self.scrollView.contentOffset = (CGPoint){0,0};
 }
 
 @end

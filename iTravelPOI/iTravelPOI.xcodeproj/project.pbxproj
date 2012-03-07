@@ -464,7 +464,7 @@
 		42B9DCDC14F06E8C00848A5B /* PointListController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PointListController.xib; sourceTree = "<group>"; };
 		42BEDDB51502629A008C8DCC /* GMapIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMapIcon.h; sourceTree = "<group>"; };
 		42BEDDB61502629A008C8DCC /* GMapIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapIcon.m; sourceTree = "<group>"; };
-		42BFAAA414EFE32000604B90 /* iTravelPOI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iTravelPOI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		42BFAAA414EFE32000604B90 /* iTravelPOIs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iTravelPOIs.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		42BFAAA814EFE32000604B90 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		42BFAAAA14EFE32000604B90 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		42BFAAAC14EFE32000604B90 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -1363,7 +1363,7 @@
 		42BFAAA514EFE32000604B90 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				42BFAAA414EFE32000604B90 /* iTravelPOI.app */,
+				42BFAAA414EFE32000604B90 /* iTravelPOIs.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2340,9 +2340,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		42BFAAA314EFE32000604B90 /* iTravelPOI */ = {
+		42BFAAA314EFE32000604B90 /* iTravelPOIs */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 42BFAACA14EFE32000604B90 /* Build configuration list for PBXNativeTarget "iTravelPOI" */;
+			buildConfigurationList = 42BFAACA14EFE32000604B90 /* Build configuration list for PBXNativeTarget "iTravelPOIs" */;
 			buildPhases = (
 				42BFAAA014EFE32000604B90 /* Sources */,
 				42BFAAA114EFE32000604B90 /* Frameworks */,
@@ -2352,9 +2352,9 @@
 			);
 			dependencies = (
 			);
-			name = iTravelPOI;
+			name = iTravelPOIs;
 			productName = iTravelPOI;
-			productReference = 42BFAAA414EFE32000604B90 /* iTravelPOI.app */;
+			productReference = 42BFAAA414EFE32000604B90 /* iTravelPOIs.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -2375,7 +2375,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				42BFAAA314EFE32000604B90 /* iTravelPOI */,
+				42BFAAA314EFE32000604B90 /* iTravelPOIs */,
 			);
 		};
 /* End PBXProject section */
@@ -2880,7 +2880,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		42BFAACA14EFE32000604B90 /* Build configuration list for PBXNativeTarget "iTravelPOI" */ = {
+		42BFAACA14EFE32000604B90 /* Build configuration list for PBXNativeTarget "iTravelPOIs" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				42BFAACB14EFE32000604B90 /* Debug */,
