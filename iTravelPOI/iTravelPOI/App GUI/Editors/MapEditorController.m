@@ -123,9 +123,23 @@
     [self registerForKeyboardNotifications];
     
     CGRect aRect = self.view.bounds;
-    aRect.size.height *=4;
+    aRect.size.height = 500;
     self.scrollView.contentSize = aRect.size;
+    self.scrollView.contentInset=UIEdgeInsetsMake(0.0,0.0,84.0,0.0);
 
+    CGRect rect;
+    
+    NSLog(@"view %@",self.view);
+    rect = self.view.frame;
+    NSLog(@"view frame rect %f,%f-%f,%f",rect.origin.x,rect.origin.y,rect.size.width,rect.size.height);
+    
+    NSLog(@"scrollView %@",self.scrollView);
+    rect = self.scrollView.frame;
+    NSLog(@"scrollView frame rect %f,%f-%f,%f",rect.origin.x,rect.origin.y,rect.size.width,rect.size.height);
+    rect = self.scrollView.bounds;
+    NSLog(@"scrollView bounds rect %f,%f-%f,%f",rect.origin.x,rect.origin.y,rect.size.width,rect.size.height);
+    rect = [[UIScreen mainScreen] applicationFrame];
+    NSLog(@"applicationFrame frame rect %f,%f-%f,%f",rect.origin.x,rect.origin.y,rect.size.width,rect.size.height);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -269,6 +283,9 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void) showIconSelector {
     
+    CGPoint p=self.scrollView.contentOffset;
+    NSLog(@"%f %f",p.x,p.y);
+    
     IconEditor *iconEditor = [[IconEditor alloc] initWithNibName:@"IconEditor" bundle:nil];
     [self.navigationController pushViewController:iconEditor animated:YES];
     [IconEditor release];
@@ -298,61 +315,40 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-- (void)keyboardWasShown3:(NSNotification*)aNotification {
-    NSDictionary* info = [aNotification userInfo];
-    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    CGRect bkgndRect = self.activeField.superview.frame;
-    bkgndRect.size.height += kbSize.height;
-    [self.activeField.superview setFrame:bkgndRect];
-    [self.scrollView setContentOffset:CGPointMake(0.0, self.activeField.frame.origin.y-kbSize.height) animated:YES];
-}
 
 //---------------------------------------------------------------------------------------------------------------------
 // Called when the UIKeyboardDidShowNotification is sent.
-- (void) keyboardWasShown:(NSNotification*) aNotification {
+- (void)keyboardWasShown:(NSNotification *)notification {
+    CGRect start, end;
     
-    NSDictionary* info = [aNotification userInfo];
-    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    // position of keyboard before animation
+    [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] getValue:&start];
+    // and after..
+    [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&end];
     
-
+    double duration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    int curve = [[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue];
     
-    CGFloat n1= self.editToolBar.frame.origin.y;
-    n1 = self.mapDescription.inputAccessoryView.frame.origin.y;
-    CGFloat n2= self.mapDescription.frame.origin.y;
-    CGFloat n3= self.mapDescription.frame.size.height;
-    NSLog(@"%f, %f, %f",n1,n2,n3);
-    
-    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
-    self.scrollView.contentInset = contentInsets;
-    self.scrollView.scrollIndicatorInsets = contentInsets;
-    
-    // If active text field is hidden by keyboard, scroll it so it's visible
-    // Your application might not need or want this behavior.
-    CGRect aRect = self.view.frame;
-    aRect.size.height -= kbSize.height;
-    if (!CGRectContainsPoint(aRect, self.activeField.frame.origin) ) {
-        CGPoint scrollPoint = CGPointMake(0.0, self.activeField.frame.origin.y-kbSize.height);
-//        [self.scrollView setContentOffset:scrollPoint animated:YES];
-        [self.scrollView setContentOffset:(CGPoint){0,220} ];
-    }
-     
+    // slide view up..
+    [UIView beginAnimations:@"foo" context:nil];
+    [UIView setAnimationDuration:duration];
+    [UIView setAnimationCurve:curve];
+    self.view.frame = CGRectMake(0, -end.size.height, 480, 320);
+    [UIView commitAnimations];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 // Called when the UIKeyboardWillHideNotification is sent
-- (void) keyboardWillBeHidden:(NSNotification*) aNotification {
-
-    CGFloat n1= self.editToolBar.frame.origin.y;
-    CGFloat n2= self.mapDescription.frame.origin.y;
-    CGFloat n3= self.mapDescription.frame.size.height;
-    NSLog(@"%f, %f, %f",n1,n2,n3);
-
-    NSLog(@"%f,%f",self.scrollView.contentOffset.x,self.scrollView.contentOffset.y);
-    UIEdgeInsets contentInsets = UIEdgeInsetsZero;
-    self.scrollView.contentInset = contentInsets;
-    self.scrollView.scrollIndicatorInsets = contentInsets;
-    self.scrollView.contentOffset = (CGPoint){0,0};
+- (void) keyboardWillBeHidden:(NSNotification *)notification {
+    double duration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    int curve = [[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue];
+    
+    // slide view down
+    [UIView beginAnimations:@"foo" context:nil];
+    [UIView setAnimationDuration:duration];
+    [UIView setAnimationCurve:curve];
+    self.view.frame = CGRectMake(0, 0, 480, 320);
+    [UIView commitAnimations];
 }
 
 @end
