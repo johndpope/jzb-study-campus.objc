@@ -35,6 +35,8 @@
 
 + (NSEntityDescription *) categoryEntity:(NSManagedObjectContext *) ctx;
 
++ (NSString *) defaultIconURL;
+
 + (MECategory *) insertNewInMap:(MEMap *)ownerMap;
 + (MECategory *) insertTmpNewInMap:(MEMap *)ownerMap;
 

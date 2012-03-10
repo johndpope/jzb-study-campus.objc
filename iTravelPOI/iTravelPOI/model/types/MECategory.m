@@ -18,6 +18,14 @@
 
 //*********************************************************************************************************************
 #pragma mark -
+#pragma mark MECategory PRIVATE CONSTANTS and C-Methods definitions
+//---------------------------------------------------------------------------------------------------------------------
+#define DEFAULT_CATEGORY_ICON_URL   @"http://maps.google.com/mapfiles/ms/micons/blue-dot.png"
+
+
+
+//*********************************************************************************************************************
+#pragma mark -
 #pragma mark MECategory PRIVATE interface definition
 //---------------------------------------------------------------------------------------------------------------------
 @interface MECategory () 
@@ -66,6 +74,10 @@
     return _categoryEntity;
 }
 
+//---------------------------------------------------------------------------------------------------------------------
++ (NSString *) defaultIconURL {
+    return DEFAULT_CATEGORY_ICON_URL;
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 + (MECategory *) insertNewInMap:(MEMap *)ownerMap {
@@ -73,7 +85,7 @@
     NSManagedObjectContext * ctx = [ownerMap managedObjectContext];
     if(ctx) 
     {
-        MECategory *newCat = [[NSManagedObject alloc] initWithEntity:[MECategory categoryEntity:ctx] insertIntoManagedObjectContext:ctx];
+        MECategory *newCat = (MECategory *)[[NSManagedObject alloc] initWithEntity:[MECategory categoryEntity:ctx] insertIntoManagedObjectContext:ctx];
         newCat.isTemp = false;
         [newCat resetEntity];
         [ownerMap addCategory:newCat];
@@ -87,7 +99,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 + (MECategory *) insertTmpNewInMap:(MEMap *)ownerMap {
     
-    MECategory *newCat = [[NSManagedObject alloc] initWithEntity:[MECategory categoryEntity:nil] insertIntoManagedObjectContext:nil];
+    MECategory *newCat = (MECategory *)[[NSManagedObject alloc] initWithEntity:[MECategory categoryEntity:nil] insertIntoManagedObjectContext:nil];
     newCat.isTemp = true;
     [newCat resetEntity];
     [ownerMap addCategory:newCat];

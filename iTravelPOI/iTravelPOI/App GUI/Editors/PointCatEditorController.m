@@ -158,7 +158,7 @@ NSString * _getIconURLFromIndex(int n) {
             self.saveBtn.enabled = false;
         }
         self.desc.text = self.entity.desc;
-        self.icons.selectedSegmentIndex = _getIndexFromIconURL(self.entity.gmapIcon.url);
+        self.icons.selectedSegmentIndex = _getIndexFromIconURL(self.entity.icon.url);
         [self _getCategoriesListInfo];
         [self.categories reloadData];
     }
@@ -272,7 +272,7 @@ NSString * _getIconURLFromIndex(int n) {
         // Se actualiza la entidad con la informacion de la pantalla
         self.entity.name = self.name.text;
         self.entity.desc = self.desc.text;
-        self.entity.gmapIcon = [GMapIcon iconForURL:_getIconURLFromIndex(self.icons.selectedSegmentIndex)];
+        self.entity.icon = [GMapIcon iconForURL:_getIconURLFromIndex(self.icons.selectedSegmentIndex)];
         
         SEL addCategory = @selector(addCategory:);
         SEL removeCategory = @selector(removeCategory:);

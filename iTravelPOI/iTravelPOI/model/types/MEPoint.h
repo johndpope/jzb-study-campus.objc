@@ -38,6 +38,8 @@
 
 + (NSEntityDescription *) pointEntity:(NSManagedObjectContext *) ctx;
 
++ (NSString *) defaultIconURL;
+
 + (MEPoint *) insertNewInMap:(MEMap *)ownerMap;
 + (MEPoint *) insertTmpNewInMap:(MEMap *)ownerMap;
 

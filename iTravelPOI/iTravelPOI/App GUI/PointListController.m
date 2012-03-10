@@ -354,7 +354,7 @@
     cell.badgeColor = [UIColor colorWithRed:0.197 green:0.592 blue:0.219 alpha:1.000];
     cell.badge.radius = 9;
     
-    cell.imageView.image = entity.gmapIcon.image;
+    cell.imageView.image = entity.icon.image;
     
     return cell;
 }

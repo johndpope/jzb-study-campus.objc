@@ -40,6 +40,8 @@
 //---------------------------------------------------------------------------------------------------------------------
 + (NSEntityDescription *) mapEntity:(NSManagedObjectContext *)ctx;
 
++ (NSString *) defaultIconURL;
+
 + (MEMap *) insertNew:(NSManagedObjectContext *) ctx;
 + (MEMap *) insertTmpNew;
 

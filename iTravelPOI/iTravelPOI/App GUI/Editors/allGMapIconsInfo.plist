@@ -6,785 +6,785 @@
 	<array>
 		<dict>
 			<key>iconFileName</key>
-			<string>blue-dot.png</string>
+			<string>GMI_blue-dot.png</string>
 			<key>shortName</key>
-			<string>blue-dot</string>
+			<string>GMI_blue-dot</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/blue-dot.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>red-dot.png</string>
+			<string>GMI_red-dot.png</string>
 			<key>shortName</key>
-			<string>red-dot</string>
+			<string>GMI_red-dot</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/red-dot.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>green-dot.png</string>
+			<string>GMI_green-dot.png</string>
 			<key>shortName</key>
-			<string>green-dot</string>
+			<string>GMI_green-dot</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/green-dot.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>ltblue-dot.png</string>
+			<string>GMI_ltblue-dot.png</string>
 			<key>shortName</key>
-			<string>ltblue-dot</string>
+			<string>GMI_ltblue-dot</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/ltblue-dot.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>yellow-dot.png</string>
+			<string>GMI_yellow-dot.png</string>
 			<key>shortName</key>
-			<string>yellow-dot</string>
+			<string>GMI_yellow-dot</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/yellow-dot.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>purple-dot.png</string>
+			<string>GMI_purple-dot.png</string>
 			<key>shortName</key>
-			<string>purple-dot</string>
+			<string>GMI_purple-dot</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/purple-dot.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>pink-dot.png</string>
+			<string>GMI_pink-dot.png</string>
 			<key>shortName</key>
-			<string>pink-dot</string>
+			<string>GMI_pink-dot</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/pink-dot.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>blue.png</string>
+			<string>GMI_blue.png</string>
 			<key>shortName</key>
-			<string>blue</string>
+			<string>GMI_blue</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/blue.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>red.png</string>
+			<string>GMI_red.png</string>
 			<key>shortName</key>
-			<string>red</string>
+			<string>GMI_red</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/red.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>green.png</string>
+			<string>GMI_green.png</string>
 			<key>shortName</key>
-			<string>green</string>
+			<string>GMI_green</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/green.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>lightblue.png</string>
+			<string>GMI_lightblue.png</string>
 			<key>shortName</key>
-			<string>lightblue</string>
+			<string>GMI_lightblue</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/lightblue.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>yellow.png</string>
+			<string>GMI_yellow.png</string>
 			<key>shortName</key>
-			<string>yellow</string>
+			<string>GMI_yellow</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/yellow.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>purple.png</string>
+			<string>GMI_purple.png</string>
 			<key>shortName</key>
-			<string>purple</string>
+			<string>GMI_purple</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/purple.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>pink.png</string>
+			<string>GMI_pink.png</string>
 			<key>shortName</key>
-			<string>pink</string>
+			<string>GMI_pink</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/pink.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>blue-pushpin.png</string>
+			<string>GMI_blue-pushpin.png</string>
 			<key>shortName</key>
-			<string>blue-pushpin</string>
+			<string>GMI_blue-pushpin</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/blue-pushpin.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>red-pushpin.png</string>
+			<string>GMI_red-pushpin.png</string>
 			<key>shortName</key>
-			<string>red-pushpin</string>
+			<string>GMI_red-pushpin</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/red-pushpin.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>grn-pushpin.png</string>
+			<string>GMI_grn-pushpin.png</string>
 			<key>shortName</key>
-			<string>grn-pushpin</string>
+			<string>GMI_grn-pushpin</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/grn-pushpin.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>ltblu-pushpin.png</string>
+			<string>GMI_ltblu-pushpin.png</string>
 			<key>shortName</key>
-			<string>ltblu-pushpin</string>
+			<string>GMI_ltblu-pushpin</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/ltblu-pushpin.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>ylw-pushpin.png</string>
+			<string>GMI_ylw-pushpin.png</string>
 			<key>shortName</key>
-			<string>ylw-pushpin</string>
+			<string>GMI_ylw-pushpin</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/ylw-pushpin.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>purple-pushpin.png</string>
+			<string>GMI_purple-pushpin.png</string>
 			<key>shortName</key>
-			<string>purple-pushpin</string>
+			<string>GMI_purple-pushpin</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/purple-pushpin.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>pink-pushpin.png</string>
+			<string>GMI_pink-pushpin.png</string>
 			<key>shortName</key>
-			<string>pink-pushpin</string>
+			<string>GMI_pink-pushpin</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/pink-pushpin.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>restaurant.png</string>
+			<string>GMI_restaurant.png</string>
 			<key>shortName</key>
-			<string>restaurant</string>
+			<string>GMI_restaurant</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/restaurant.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>coffeehouse.png</string>
+			<string>GMI_coffeehouse.png</string>
 			<key>shortName</key>
-			<string>coffeehouse</string>
+			<string>GMI_coffeehouse</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/coffeehouse.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>bar.png</string>
+			<string>GMI_bar.png</string>
 			<key>shortName</key>
-			<string>bar</string>
+			<string>GMI_bar</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/bar.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>snack_bar.png</string>
+			<string>GMI_snack_bar.png</string>
 			<key>shortName</key>
-			<string>snack_bar</string>
+			<string>GMI_snack_bar</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/snack_bar.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>tram.png</string>
+			<string>GMI_tram.png</string>
 			<key>shortName</key>
-			<string>tram</string>
+			<string>GMI_tram</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/tram.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>lodging.png</string>
+			<string>GMI_lodging.png</string>
 			<key>shortName</key>
-			<string>lodging</string>
+			<string>GMI_lodging</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/lodging.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>wheel_chair_accessible.png</string>
+			<string>GMI_wheel_chair_accessible.png</string>
 			<key>shortName</key>
-			<string>wheel_chair_accessible</string>
+			<string>GMI_wheel_chair_accessible</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/wheel_chair_accessible.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>shopping.png</string>
+			<string>GMI_shopping.png</string>
 			<key>shortName</key>
-			<string>shopping</string>
+			<string>GMI_shopping</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/shopping.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>movies.png</string>
+			<string>GMI_movies.png</string>
 			<key>shortName</key>
-			<string>movies</string>
+			<string>GMI_movies</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/movies.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>grocerystore.png</string>
+			<string>GMI_grocerystore.png</string>
 			<key>shortName</key>
-			<string>grocerystore</string>
+			<string>GMI_grocerystore</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/grocerystore.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>convienancestore.png</string>
+			<string>GMI_convienancestore.png</string>
 			<key>shortName</key>
-			<string>convienancestore</string>
+			<string>GMI_convienancestore</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/convienancestore.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>arts.png</string>
+			<string>GMI_arts.png</string>
 			<key>shortName</key>
-			<string>arts</string>
+			<string>GMI_arts</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/arts.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>homegardenbusiness.png</string>
+			<string>GMI_homegardenbusiness.png</string>
 			<key>shortName</key>
-			<string>homegardenbusiness</string>
+			<string>GMI_homegardenbusiness</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/homegardenbusiness.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>electronics.png</string>
+			<string>GMI_electronics.png</string>
 			<key>shortName</key>
-			<string>electronics</string>
+			<string>GMI_electronics</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/electronics.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>mechanic.png</string>
+			<string>GMI_mechanic.png</string>
 			<key>shortName</key>
-			<string>mechanic</string>
+			<string>GMI_mechanic</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/mechanic.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>partly_cloudy.png</string>
+			<string>GMI_partly_cloudy.png</string>
 			<key>shortName</key>
-			<string>partly_cloudy</string>
+			<string>GMI_partly_cloudy</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/partly_cloudy.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>realestate.png</string>
+			<string>GMI_realestate.png</string>
 			<key>shortName</key>
-			<string>realestate</string>
+			<string>GMI_realestate</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/realestate.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>salon.png</string>
+			<string>GMI_salon.png</string>
 			<key>shortName</key>
-			<string>salon</string>
+			<string>GMI_salon</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/salon.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>dollar.png</string>
+			<string>GMI_dollar.png</string>
 			<key>shortName</key>
-			<string>dollar</string>
+			<string>GMI_dollar</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/dollar.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>parkinglot.png</string>
+			<string>GMI_parkinglot.png</string>
 			<key>shortName</key>
-			<string>parkinglot</string>
+			<string>GMI_parkinglot</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/parkinglot.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>gas.png</string>
+			<string>GMI_gas.png</string>
 			<key>shortName</key>
-			<string>gas</string>
+			<string>GMI_gas</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/gas.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>cabs.png</string>
+			<string>GMI_cabs.png</string>
 			<key>shortName</key>
-			<string>cabs</string>
+			<string>GMI_cabs</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/cabs.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>bus.png</string>
+			<string>GMI_bus.png</string>
 			<key>shortName</key>
-			<string>bus</string>
+			<string>GMI_bus</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/bus.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>truck.png</string>
+			<string>GMI_truck.png</string>
 			<key>shortName</key>
-			<string>truck</string>
+			<string>GMI_truck</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/truck.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>rail.png</string>
+			<string>GMI_rail.png</string>
 			<key>shortName</key>
-			<string>rail</string>
+			<string>GMI_rail</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/rail.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>plane.png</string>
+			<string>GMI_plane.png</string>
 			<key>shortName</key>
-			<string>plane</string>
+			<string>GMI_plane</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/plane.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>ferry.png</string>
+			<string>GMI_ferry.png</string>
 			<key>shortName</key>
-			<string>ferry</string>
+			<string>GMI_ferry</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/ferry.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>helicopter.png</string>
+			<string>GMI_helicopter.png</string>
 			<key>shortName</key>
-			<string>helicopter</string>
+			<string>GMI_helicopter</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/helicopter.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>subway.png</string>
+			<string>GMI_subway.png</string>
 			<key>shortName</key>
-			<string>subway</string>
+			<string>GMI_subway</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/subway.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>info.png</string>
+			<string>GMI_info.png</string>
 			<key>shortName</key>
-			<string>info</string>
+			<string>GMI_info</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/info.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>flag.png</string>
+			<string>GMI_flag.png</string>
 			<key>shortName</key>
-			<string>flag</string>
+			<string>GMI_flag</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/flag.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>earthquake.png</string>
+			<string>GMI_earthquake.png</string>
 			<key>shortName</key>
-			<string>earthquake</string>
+			<string>GMI_earthquake</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/earthquake.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>webcam.png</string>
+			<string>GMI_webcam.png</string>
 			<key>shortName</key>
-			<string>webcam</string>
+			<string>GMI_webcam</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/webcam.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>postoffice-us.png</string>
+			<string>GMI_postoffice-us.png</string>
 			<key>shortName</key>
-			<string>postoffice-us</string>
+			<string>GMI_postoffice-us</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/postoffice-us.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>police.png</string>
+			<string>GMI_police.png</string>
 			<key>shortName</key>
-			<string>police</string>
+			<string>GMI_police</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/police.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>firedept.png</string>
+			<string>GMI_firedept.png</string>
 			<key>shortName</key>
-			<string>firedept</string>
+			<string>GMI_firedept</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/firedept.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>hospitals.png</string>
+			<string>GMI_hospitals.png</string>
 			<key>shortName</key>
-			<string>hospitals</string>
+			<string>GMI_hospitals</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/hospitals.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>info_circle.png</string>
+			<string>GMI_info_circle.png</string>
 			<key>shortName</key>
-			<string>info_circle</string>
+			<string>GMI_info_circle</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/info_circle.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>phone.png</string>
+			<string>GMI_phone.png</string>
 			<key>shortName</key>
-			<string>phone</string>
+			<string>GMI_phone</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/phone.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>caution.png</string>
+			<string>GMI_caution.png</string>
 			<key>shortName</key>
-			<string>caution</string>
+			<string>GMI_caution</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/caution.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>fallingrocks.png</string>
+			<string>GMI_fallingrocks.png</string>
 			<key>shortName</key>
-			<string>fallingrocks</string>
+			<string>GMI_fallingrocks</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/fallingrocks.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>camera.png</string>
+			<string>GMI_camera.png</string>
 			<key>shortName</key>
-			<string>camera</string>
+			<string>GMI_camera</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/camera.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>tree.png</string>
+			<string>GMI_tree.png</string>
 			<key>shortName</key>
-			<string>tree</string>
+			<string>GMI_tree</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/tree.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>campfire.png</string>
+			<string>GMI_campfire.png</string>
 			<key>shortName</key>
-			<string>campfire</string>
+			<string>GMI_campfire</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/campfire.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>picnic.png</string>
+			<string>GMI_picnic.png</string>
 			<key>shortName</key>
-			<string>picnic</string>
+			<string>GMI_picnic</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/picnic.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>campground.png</string>
+			<string>GMI_campground.png</string>
 			<key>shortName</key>
-			<string>campground</string>
+			<string>GMI_campground</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/campground.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>rangerstation.png</string>
+			<string>GMI_rangerstation.png</string>
 			<key>shortName</key>
-			<string>rangerstation</string>
+			<string>GMI_rangerstation</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/rangerstation.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>toilets.png</string>
+			<string>GMI_toilets.png</string>
 			<key>shortName</key>
-			<string>toilets</string>
+			<string>GMI_toilets</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/toilets.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>POI.png</string>
+			<string>GMI_POI.png</string>
 			<key>shortName</key>
-			<string>POI</string>
+			<string>GMI_POI</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/POI.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>hiker.png</string>
+			<string>GMI_hiker.png</string>
 			<key>shortName</key>
-			<string>hiker</string>
+			<string>GMI_hiker</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/hiker.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>cycling.png</string>
+			<string>GMI_cycling.png</string>
 			<key>shortName</key>
-			<string>cycling</string>
+			<string>GMI_cycling</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/cycling.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>motorcycling.png</string>
+			<string>GMI_motorcycling.png</string>
 			<key>shortName</key>
-			<string>motorcycling</string>
+			<string>GMI_motorcycling</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/motorcycling.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>horsebackriding.png</string>
+			<string>GMI_horsebackriding.png</string>
 			<key>shortName</key>
-			<string>horsebackriding</string>
+			<string>GMI_horsebackriding</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/horsebackriding.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>sportvenue.png</string>
+			<string>GMI_sportvenue.png</string>
 			<key>shortName</key>
-			<string>sportvenue</string>
+			<string>GMI_sportvenue</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/sportvenue.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>golfer.png</string>
+			<string>GMI_golfer.png</string>
 			<key>shortName</key>
-			<string>golfer</string>
+			<string>GMI_golfer</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/golfer.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>trail.png</string>
+			<string>GMI_trail.png</string>
 			<key>shortName</key>
-			<string>trail</string>
+			<string>GMI_trail</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/trail.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>water.png</string>
+			<string>GMI_water.png</string>
 			<key>shortName</key>
-			<string>water</string>
+			<string>GMI_water</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/water.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>snowflake_simple.png</string>
+			<string>GMI_snowflake_simple.png</string>
 			<key>shortName</key>
-			<string>snowflake_simple</string>
+			<string>GMI_snowflake_simple</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/snowflake_simple.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>marina.png</string>
+			<string>GMI_marina.png</string>
 			<key>shortName</key>
-			<string>marina</string>
+			<string>GMI_marina</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/marina.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>fishing.png</string>
+			<string>GMI_fishing.png</string>
 			<key>shortName</key>
-			<string>fishing</string>
+			<string>GMI_fishing</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/fishing.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>sailing.png</string>
+			<string>GMI_sailing.png</string>
 			<key>shortName</key>
-			<string>sailing</string>
+			<string>GMI_sailing</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/sailing.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>swimming.png</string>
+			<string>GMI_swimming.png</string>
 			<key>shortName</key>
-			<string>swimming</string>
+			<string>GMI_swimming</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/swimming.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>ski.png</string>
+			<string>GMI_ski.png</string>
 			<key>shortName</key>
-			<string>ski</string>
+			<string>GMI_ski</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/ski.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>woman.png</string>
+			<string>GMI_woman.png</string>
 			<key>shortName</key>
-			<string>woman</string>
+			<string>GMI_woman</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/woman.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>man.png</string>
+			<string>GMI_man.png</string>
 			<key>shortName</key>
-			<string>man</string>
+			<string>GMI_man</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/man.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>rainy.png</string>
+			<string>GMI_rainy.png</string>
 			<key>shortName</key>
-			<string>rainy</string>
+			<string>GMI_rainy</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/rainy.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>volcano.png</string>
+			<string>GMI_volcano.png</string>
 			<key>shortName</key>
-			<string>volcano</string>
+			<string>GMI_volcano</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/volcano.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>sunny.png</string>
+			<string>GMI_sunny.png</string>
 			<key>shortName</key>
-			<string>sunny</string>
+			<string>GMI_sunny</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/sunny.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>euro.png</string>
+			<string>GMI_euro.png</string>
 			<key>shortName</key>
-			<string>euro</string>
+			<string>GMI_euro</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/euro.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>yen.png</string>
+			<string>GMI_yen.png</string>
 			<key>shortName</key>
-			<string>yen</string>
+			<string>GMI_yen</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/yen.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>orange-dot.png</string>
+			<string>GMI_orange-dot.png</string>
 			<key>shortName</key>
-			<string>orange-dot</string>
+			<string>GMI_orange-dot</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/orange-dot.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>orange.png</string>
+			<string>GMI_orange.png</string>
 			<key>shortName</key>
-			<string>orange</string>
+			<string>GMI_orange</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/orange.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>waterfalls.png</string>
+			<string>GMI_waterfalls.png</string>
 			<key>shortName</key>
-			<string>waterfalls</string>
+			<string>GMI_waterfalls</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/waterfalls.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>recycle.png</string>
+			<string>GMI_recycle.png</string>
 			<key>shortName</key>
-			<string>recycle</string>
+			<string>GMI_recycle</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/recycle.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>pharmacy-us.png</string>
+			<string>GMI_pharmacy-us.png</string>
 			<key>shortName</key>
-			<string>pharmacy-us</string>
+			<string>GMI_pharmacy-us</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/pharmacy-us.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>landmarks-jp.png</string>
+			<string>GMI_landmarks-jp.png</string>
 			<key>shortName</key>
-			<string>landmarks-jp</string>
+			<string>GMI_landmarks-jp</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/landmarks-jp.png</string>
 		</dict>
 		<dict>
 			<key>iconFileName</key>
-			<string>hotsprings.png</string>
+			<string>GMI_hotsprings.png</string>
 			<key>shortName</key>
-			<string>hotsprings</string>
+			<string>GMI_hotsprings</string>
 			<key>url</key>
 			<string>http://maps.google.com/mapfiles/ms/micons/hotsprings.png</string>
 		</dict>

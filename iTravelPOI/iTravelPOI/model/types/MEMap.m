@@ -14,6 +14,14 @@
 
 //*********************************************************************************************************************
 #pragma mark -
+#pragma mark MEMap PRIVATE CONSTANTS and C-Methods definitions
+//---------------------------------------------------------------------------------------------------------------------
+#define DEFAULT_MAP_ICON_URL   @"http://maps.google.com/mapfiles/ms/micons/blue-dot.png"
+
+
+
+//*********************************************************************************************************************
+#pragma mark -
 #pragma mark MEMap PRIVATE interface definition
 //---------------------------------------------------------------------------------------------------------------------
 @interface MEMap () 
@@ -66,11 +74,16 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
++ (NSString *) defaultIconURL {
+    return DEFAULT_MAP_ICON_URL;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 + (MEMap *) insertNew:(NSManagedObjectContext *) ctx {
     
     if(ctx) 
     {
-        MEMap *newMap = [[NSManagedObject alloc] initWithEntity:[MEMap mapEntity:ctx] insertIntoManagedObjectContext:ctx];
+        MEMap *newMap = (MEMap *)[[NSManagedObject alloc] initWithEntity:[MEMap mapEntity:ctx] insertIntoManagedObjectContext:ctx];
         [newMap resetEntity];
         [MEPoint insertEmptyExtInfoInMap:newMap];
         return newMap;
@@ -84,7 +97,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 + (MEMap *) insertTmpNew {
     
-    MEMap *newMap = [[NSManagedObject alloc] initWithEntity:[MEMap mapEntity:nil] insertIntoManagedObjectContext:nil];
+    MEMap *newMap = (MEMap *)[[NSManagedObject alloc] initWithEntity:[MEMap mapEntity:nil] insertIntoManagedObjectContext:nil];
     [newMap resetEntity];
     [MEPoint insertTmpEmptyExtInfoInMap:newMap];
     return [newMap autorelease];

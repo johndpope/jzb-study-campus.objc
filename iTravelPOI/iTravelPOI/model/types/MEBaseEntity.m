@@ -21,7 +21,7 @@
 #define LOCAL_ID_PREFIX    @"@cafe-"
 #define REMOTE_ETAG_PREFIX @"@Sync-"
 
-#define DEFAULT_ICON_URL   @"http://maps.google.com/mapfiles/ms/micons/blue-dot.png"
+#define DEFAULT_ICON_URL   @"http://maps.google.com/mapfiles/ms/micons/red-dot.png"
 
 
 
@@ -96,6 +96,11 @@
     return nil;
 }
 
+//---------------------------------------------------------------------------------------------------------------------
++ (NSString *) defaultIconURL {
+    return DEFAULT_ICON_URL;
+}
+
 
 //*********************************************************************************************************************
 #pragma mark -
@@ -113,7 +118,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (GMapIcon *) gmapIcon {
+- (GMapIcon *) icon {
     if(!_gmapIcon) {
         _gmapIcon = [[GMapIcon iconForURL:self.i_iconURL] retain];
     }
@@ -121,7 +126,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) setGmapIcon:(GMapIcon *)icon {
+- (void) setIcon:(GMapIcon *)icon {
     
     if(!_gmapIcon) {
         [_gmapIcon release];
@@ -205,7 +210,7 @@
     self.GID = [self _calcLocalGID]; 
     self.name = @"";
     self.desc = @"";
-    self.i_iconURL = DEFAULT_ICON_URL;
+    self.i_iconURL = [[self class] defaultIconURL];
     self.changed = false;
     self.syncETag = [self _calcLocalETag];
     self.syncStatus = ST_Sync_OK;

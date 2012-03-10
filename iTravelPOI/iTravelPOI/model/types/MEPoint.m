@@ -82,12 +82,17 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
++ (NSString *) defaultIconURL {
+    return DEFAULT_POINT_ICON_URL;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 + (MEPoint *) insertNewInMap:(MEMap *)ownerMap {
     
     NSManagedObjectContext * ctx = [ownerMap managedObjectContext];
     if(ctx) 
     {
-        MEPoint *newPoint = [[NSManagedObject alloc] initWithEntity:[MEPoint pointEntity:ctx] insertIntoManagedObjectContext:ctx];
+        MEPoint *newPoint = (MEPoint *)[[NSManagedObject alloc] initWithEntity:[MEPoint pointEntity:ctx] insertIntoManagedObjectContext:ctx];
         newPoint.isTemp = false;
         [newPoint resetEntity];
         [ownerMap addPoint:newPoint];
@@ -101,7 +106,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 + (MEPoint *) insertTmpNewInMap:(MEMap *)ownerMap {
     
-    MEPoint *newPoint = [[NSManagedObject alloc] initWithEntity:[MEPoint pointEntity:nil] insertIntoManagedObjectContext:nil];
+    MEPoint *newPoint = (MEPoint *)[[NSManagedObject alloc] initWithEntity:[MEPoint pointEntity:nil] insertIntoManagedObjectContext:nil];
     newPoint.isTemp = true;
     [newPoint resetEntity];
     [ownerMap addPoint:newPoint];
@@ -114,7 +119,7 @@
     NSManagedObjectContext * ctx = [ownerMap managedObjectContext];
     if(ctx) 
     {
-        MEPoint *extInfo = [[NSManagedObject alloc] initWithEntity:[MEPoint pointEntity:ctx] insertIntoManagedObjectContext:ctx];
+        MEPoint *extInfo = (MEPoint *)[[NSManagedObject alloc] initWithEntity:[MEPoint pointEntity:ctx] insertIntoManagedObjectContext:ctx];
         extInfo.isTemp = false;
         [extInfo resetEntity];
         [extInfo resetExtInfo];
@@ -130,7 +135,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 + (MEPoint *) insertTmpEmptyExtInfoInMap:(MEMap *)ownerMap {
     
-    MEPoint *extInfo = [[NSManagedObject alloc] initWithEntity:[MEPoint pointEntity:nil] insertIntoManagedObjectContext:nil];
+    MEPoint *extInfo = (MEPoint *)[[NSManagedObject alloc] initWithEntity:[MEPoint pointEntity:nil] insertIntoManagedObjectContext:nil];
     extInfo.isTemp = true;
     [extInfo resetEntity];
     [extInfo resetExtInfo];
@@ -204,7 +209,7 @@
 - (void) resetEntity {
     
     [super resetEntity];
-    self.gmapIcon = [GMapIcon iconForURL:DEFAULT_POINT_ICON_URL];
+    self.icon = [GMapIcon iconForURL:DEFAULT_POINT_ICON_URL];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -212,7 +217,7 @@
     
     [super resetEntity];
     self.name = EXT_INFO_POINT_NAME;
-    self.gmapIcon = [GMapIcon iconForURL:EXT_INFO_POINT_ICON_URL];
+    self.icon = [GMapIcon iconForURL:EXT_INFO_POINT_ICON_URL];
     self.lng = EXT_INFO_POINT_LNG;
     self.lat = EXT_INFO_POINT_LAT;
 }
