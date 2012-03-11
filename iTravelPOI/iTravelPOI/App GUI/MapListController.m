@@ -10,8 +10,11 @@
 #import "ModelService.h"
 #import "PointListController.h"
 #import "GMapIconEditor.h"
+#import "SortOptionsController.h"
 #import "SVProgressHUD.h"
 #import "TDBadgedCell.h"
+#import "WEPopoverController.h"
+//#import "UIBarButtonItem+WEPopover.h" 
 
 
 
@@ -27,6 +30,9 @@
 
 @property (nonatomic, readonly) NSManagedObjectContext *moContext;
 @property (nonatomic, retain)   NSArray *maps;
+
+@property (nonatomic, retain) WEPopoverController *sortMapPopover;
+
 
 - (IBAction) createAndEditMapAction:(id)sender;
 - (void) modelHasChanged:(NSNotification *)notification;
@@ -51,6 +57,8 @@
 @synthesize moContext = _moContext;
 @synthesize maps = _maps;
 
+@synthesize sortMapPopover = _sortMapPopover;
+
 
 
 //*********************************************************************************************************************
@@ -71,8 +79,11 @@
 {
     [_maps release];
     [_moContext release];
+    [_sortMapPopover release];
     
     [_mapTableView release];
+    
+    
     [super dealloc];
 }
 
@@ -123,8 +134,8 @@
     
     // Se registra para saber si hubo cambios en el modelo desde otros ViewControllers
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelHasChanged:) name:@"ModelHasChangedNotification" object:nil];
-   
-   // [[NSNotificationCenter defaultCenter] postNotificationName:@"ModelHasChangedNotification" object:self userInfo:(NSDictionary *)nil];
+    
+    // [[NSNotificationCenter defaultCenter] postNotificationName:@"ModelHasChangedNotification" object:self userInfo:(NSDictionary *)nil];
     
 }
 
@@ -135,6 +146,7 @@
     self.maps = nil;
     [_moContext release];
     _moContext = nil;
+    self.sortMapPopover = nil;
     
     // Se deregistra de las notificaciones
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -204,6 +216,37 @@
     self.maps=nil;
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (IBAction)sortMapPopoverAction:(UIBarButtonItem *)sender {
+    
+    if (self.sortMapPopover && self.sortMapPopover.popoverVisible) {
+        [self.sortMapPopover dismissPopoverAnimated:YES];
+        self.sortMapPopover = nil;
+    } else {
+        
+        if(!self.sortMapPopover) {
+            
+            SortOptionsController *sortOptionsController = [[SortOptionsController alloc] initWithNibName:@"SortOptionsController" bundle:nil];
+            //showModeController.delegate = self;
+            
+            self.sortMapPopover = [[[WEPopoverController alloc] initWithContentViewController:sortOptionsController] autorelease];
+            self.sortMapPopover.containerViewProperties = [self.sortMapPopover improvedContainerViewProperties];
+            
+            self.sortMapPopover.popoverContentSize = sortOptionsController.view.frame.size;
+            
+            [sortOptionsController release];
+        }
+        
+        CGRect btnFrame = {150, 250, 50, 1};
+        [self.sortMapPopover presentPopoverFromRect:btnFrame 
+                                              inView:self.view 
+                            permittedArrowDirections:UIPopoverArrowDirectionDown
+                                            animated:YES];
+    }
+    
+    
+    
+}
 
 
 //*********************************************************************************************************************
@@ -286,7 +329,7 @@
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         
         MEMap *mapToRemove = [self.maps objectAtIndex:indexPath.row];
-
+        
         NSMutableArray *marray = [NSMutableArray arrayWithArray:self.maps];
         [marray removeObjectAtIndex:indexPath.row];
         self.maps = [[marray copy] autorelease];
@@ -343,7 +386,7 @@
     
     // Lanzamos la carga de los mapas
     [[ModelService sharedInstance] getUserMapList:self.moContext callback:^(NSArray *maps, NSError *error) {
-
+        
         // Paramos el indicador de actividad
         UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *)self.navigationItem.rightBarButtonItem.customView;
         [activityIndicator stopAnimating];

@@ -13,6 +13,10 @@
 		421A33A814F0512600968EB6 /* icon4.png in Resources */ = {isa = PBXBuildFile; fileRef = 421A33A214F0512600968EB6 /* icon4.png */; };
 		421A33A914F0512600968EB6 /* icon5.png in Resources */ = {isa = PBXBuildFile; fileRef = 421A33A314F0512600968EB6 /* icon5.png */; };
 		421A33AA14F0512600968EB6 /* pencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 421A33A414F0512600968EB6 /* pencil.png */; };
+		424A100F150CCC73000F31EA /* SortOptionsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 424A100D150CCC72000F31EA /* SortOptionsController.m */; };
+		424A1010150CCC73000F31EA /* SortOptionsController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 424A100E150CCC72000F31EA /* SortOptionsController.xib */; };
+		424A1015150CD86B000F31EA /* calendarSortIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 424A1013150CD86B000F31EA /* calendarSortIcon.png */; };
+		424A1016150CD86B000F31EA /* AlphabeticSortIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 424A1014150CD86B000F31EA /* AlphabeticSortIcon.png */; };
 		42865A7F150BA23600611BA6 /* kbToolBarButtonOK.png in Resources */ = {isa = PBXBuildFile; fileRef = 42865A7E150BA23600611BA6 /* kbToolBarButtonOK.png */; };
 		42865A88150BA3A100611BA6 /* kbToolBar.png in Resources */ = {isa = PBXBuildFile; fileRef = 42865A87150BA3A100611BA6 /* kbToolBar.png */; };
 		42940E3614FA38AA00E11EBD /* MEMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 42940E3514FA38AA00E11EBD /* MEMap.m */; };
@@ -403,6 +407,11 @@
 		421A33A214F0512600968EB6 /* icon4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon4.png; sourceTree = "<group>"; };
 		421A33A314F0512600968EB6 /* icon5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon5.png; sourceTree = "<group>"; };
 		421A33A414F0512600968EB6 /* pencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pencil.png; sourceTree = "<group>"; };
+		424A100C150CCC72000F31EA /* SortOptionsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SortOptionsController.h; sourceTree = "<group>"; };
+		424A100D150CCC72000F31EA /* SortOptionsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SortOptionsController.m; sourceTree = "<group>"; };
+		424A100E150CCC72000F31EA /* SortOptionsController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SortOptionsController.xib; sourceTree = "<group>"; };
+		424A1013150CD86B000F31EA /* calendarSortIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = calendarSortIcon.png; sourceTree = "<group>"; };
+		424A1014150CD86B000F31EA /* AlphabeticSortIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AlphabeticSortIcon.png; sourceTree = "<group>"; };
 		42865A7E150BA23600611BA6 /* kbToolBarButtonOK.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kbToolBarButtonOK.png; sourceTree = "<group>"; };
 		42865A87150BA3A100611BA6 /* kbToolBar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kbToolBar.png; sourceTree = "<group>"; };
 		42940E3414FA38AA00E11EBD /* MEMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEMap.h; sourceTree = "<group>"; };
@@ -1327,12 +1336,12 @@
 			children = (
 				42CB0B09150BFE5E003E5959 /* icons */,
 				429F521F1503BFF400C67427 /* allGMapIconsInfo.plist */,
-				42AC3F3C14F9001800E5DECB /* MapEditorController.h */,
-				42AC3F3D14F9001800E5DECB /* MapEditorController.m */,
-				42AC3F3E14F9001800E5DECB /* MapEditorController.xib */,
 				42CB0B0A150BFE97003E5959 /* GMapIconEditor.h */,
 				42CB0B0B150BFE97003E5959 /* GMapIconEditor.m */,
 				42CB0B0C150BFE97003E5959 /* GMapIconEditor.xib */,
+				42AC3F3C14F9001800E5DECB /* MapEditorController.h */,
+				42AC3F3D14F9001800E5DECB /* MapEditorController.m */,
+				42AC3F3E14F9001800E5DECB /* MapEditorController.xib */,
 			);
 			path = Editors;
 			sourceTree = "<group>";
@@ -1484,6 +1493,11 @@
 				42BFABF814EFE75E00604B90 /* MapListController.h */,
 				42BFABF914EFE75E00604B90 /* MapListController.m */,
 				42BFABFA14EFE75E00604B90 /* MapListController.xib */,
+				424A1013150CD86B000F31EA /* calendarSortIcon.png */,
+				424A1014150CD86B000F31EA /* AlphabeticSortIcon.png */,
+				424A100C150CCC72000F31EA /* SortOptionsController.h */,
+				424A100D150CCC72000F31EA /* SortOptionsController.m */,
+				424A100E150CCC72000F31EA /* SortOptionsController.xib */,
 			);
 			path = "App GUI";
 			sourceTree = "<group>";
@@ -2458,6 +2472,9 @@
 				42CB0B07150BEABD003E5959 /* GMapIconEditorBg@2x.png in Resources */,
 				42CB0B08150BEABD003E5959 /* GMapIconEditorBg.png in Resources */,
 				42CB0B0E150BFE97003E5959 /* GMapIconEditor.xib in Resources */,
+				424A1010150CCC73000F31EA /* SortOptionsController.xib in Resources */,
+				424A1015150CD86B000F31EA /* calendarSortIcon.png in Resources */,
+				424A1016150CD86B000F31EA /* AlphabeticSortIcon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2801,6 +2818,7 @@
 				42B235FF14FAB9DF00094484 /* SrvcTicket.m in Sources */,
 				42BEDDB71502629A008C8DCC /* GMapIcon.m in Sources */,
 				42CB0B0D150BFE97003E5959 /* GMapIconEditor.m in Sources */,
+				424A100F150CCC73000F31EA /* SortOptionsController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -112,7 +112,7 @@
     self.navigationItem.rightBarButtonItem=saveBtn;
     [saveBtn release];
     
-    self.scrollView.contentSize = CGSizeMake(320, 645); //self.allIconsImage.frame.size;
+    self.scrollView.contentSize = self.allIconsImage.frame.size;
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"GMapIconEditorBg.png"]];
     
 }
