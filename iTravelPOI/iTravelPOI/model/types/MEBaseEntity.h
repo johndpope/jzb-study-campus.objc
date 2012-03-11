@@ -82,6 +82,9 @@ static const NSString *SyncStatusType_Names[8]={
 - (void) markAsDeleted;
 - (void) unmarkAsDeleted;
 
+// "Marca" como actualizado
+- (void) touchAsUpdated;
+
 
 // Representa en XML el contenido de la entidad
 - (NSString *) toXmlString;

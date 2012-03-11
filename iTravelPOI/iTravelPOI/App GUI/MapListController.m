@@ -24,14 +24,21 @@
 #pragma mark -
 #pragma mark MapListController PRIVATE interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface MapListController()
+@interface MapListController() <MapEditorDelegate, SortOptionsControllerDelegate>
 
 @property (nonatomic, retain) IBOutlet UITableView *mapTableView;
+@property (retain, nonatomic) IBOutlet UIButton *sortMethodButton;
+@property (retain, nonatomic) IBOutlet UIButton *sortOrderButton;
+
 
 @property (nonatomic, readonly) NSManagedObjectContext *moContext;
 @property (nonatomic, retain)   NSArray *maps;
+@property (nonatomic, assign)   SORTING_METHOD sortedBy;
+@property (nonatomic, assign)   SORTING_ORDER  sortOrder;
+
 
 @property (nonatomic, retain) WEPopoverController *sortMapPopover;
+
 
 
 - (IBAction) createAndEditMapAction:(id)sender;
@@ -50,12 +57,17 @@
 #pragma mark MapListController implementation
 //---------------------------------------------------------------------------------------------------------------------
 @implementation MapListController
+@synthesize sortOrderButton = _sortOrderButton;
+@synthesize sortMethodButton = _sortMethodButton;
+@synthesize sortOrder = _sortOrder;
 
 
 @synthesize mapTableView = _mapTableView;
 
 @synthesize moContext = _moContext;
 @synthesize maps = _maps;
+@synthesize sortedBy = _sortedBy;
+
 
 @synthesize sortMapPopover = _sortMapPopover;
 
@@ -79,10 +91,12 @@
 {
     [_maps release];
     [_moContext release];
+    
     [_sortMapPopover release];
     
     [_mapTableView release];
-    
+    [_sortOrderButton release];
+    [_sortMethodButton release];
     
     [super dealloc];
 }
@@ -135,14 +149,18 @@
     // Se registra para saber si hubo cambios en el modelo desde otros ViewControllers
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelHasChanged:) name:@"ModelHasChangedNotification" object:nil];
     
-    // [[NSNotificationCenter defaultCenter] postNotificationName:@"ModelHasChangedNotification" object:self userInfo:(NSDictionary *)nil];
-    
+    // Pone el orden por defecto de la lista
+    self.sortedBy = SORT_BY_NAME;
+    self.sortOrder = SORT_DESCENDING;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)viewDidUnload
 {
     self.mapTableView = nil;
+    [self setSortOrderButton:nil];
+    [self setSortMethodButton:nil];
+    
     self.maps = nil;
     [_moContext release];
     _moContext = nil;
@@ -150,6 +168,7 @@
     
     // Se deregistra de las notificaciones
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
     
     [super viewDidUnload];
 }
@@ -217,17 +236,38 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (IBAction)sortMapPopoverAction:(UIBarButtonItem *)sender {
+- (IBAction)sortOrderButtonAction:(UIButton *)sender {
     
+    self.sortOrder = (self.sortOrder==SORT_ASCENDING ? SORT_DESCENDING : SORT_ASCENDING);
+    
+    UIImage *img = nil;
+    switch (self.sortOrder) {
+        case SORT_ASCENDING:
+            img = [UIImage imageNamed:@"sortAscending.png"];
+            break;
+            
+        case SORT_DESCENDING:
+            img = [UIImage imageNamed:@"sortDescending.png"];
+            break;
+            
+    }
+    [self.sortOrderButton setImage:img forState:UIControlStateNormal];
+    [self loadMapListData];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (IBAction)sortMapPopoverAction:(UIButton *)sender {
+    
+    // El tamaño debe ser, como minimo, de 16x28 para que se vea bien el popover
     if (self.sortMapPopover && self.sortMapPopover.popoverVisible) {
-        [self.sortMapPopover dismissPopoverAnimated:YES];
+        [self.sortMapPopover dismissPopoverAnimated:NO];
         self.sortMapPopover = nil;
     } else {
         
         if(!self.sortMapPopover) {
             
             SortOptionsController *sortOptionsController = [[SortOptionsController alloc] initWithNibName:@"SortOptionsController" bundle:nil];
-            //showModeController.delegate = self;
+            sortOptionsController.delegate = self;
             
             self.sortMapPopover = [[[WEPopoverController alloc] initWithContentViewController:sortOptionsController] autorelease];
             self.sortMapPopover.containerViewProperties = [self.sortMapPopover improvedContainerViewProperties];
@@ -237,16 +277,50 @@
             [sortOptionsController release];
         }
         
-        CGRect btnFrame = {150, 250, 50, 1};
+        CGRect btnFrame = {self.view.frame.size.width/2-25, self.mapTableView.frame.origin.y + self.mapTableView.frame.size.height, 50, 1};
         [self.sortMapPopover presentPopoverFromRect:btnFrame 
-                                              inView:self.view 
-                            permittedArrowDirections:UIPopoverArrowDirectionDown
-                                            animated:YES];
+                                             inView:self.view 
+                           permittedArrowDirections:UIPopoverArrowDirectionDown
+                                           animated:NO];
     }
     
     
     
 }
+
+
+
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark SortOptionsController delegate
+//---------------------------------------------------------------------------------------------------------------------
+- (void) sortMethodSelected:(SORTING_METHOD)sortedBy {
+    
+    [self.sortMapPopover dismissPopoverAnimated:NO];
+    self.sortMapPopover = nil;
+    
+    if(self.sortedBy!=sortedBy) {
+        UIImage *img = nil;
+        switch (sortedBy) {
+            case SORT_BY_NAME:
+                img = [UIImage imageNamed:@"alphabeticSortIcon.png"];
+                break;
+                
+            case SORT_BY_CREATING_DATE:
+                img = [UIImage imageNamed:@"createdSortIcon.png"];
+                break;
+                
+            case SORT_BY_UPDATING_DATE:
+                img = [UIImage imageNamed:@"modifiedSortIcon.png"];
+                break;
+        }
+        [self.sortMethodButton setImage:img forState:UIControlStateNormal];
+        
+        self.sortedBy = sortedBy;
+        [self loadMapListData];
+    }
+}
+
 
 
 //*********************************************************************************************************************
@@ -275,6 +349,7 @@
     }
     
     // Se recarga entera por si hubo un cambio de nombre y afecta al orden
+    // YA NO HACE FALTA PORQUE LA NOTIFICACION DE CAMBIO HABRA BORRADO LA LISTA DE MAPAS
     //[self loadMapListData];
 }
 
@@ -385,7 +460,7 @@
     [activityIndicator release];
     
     // Lanzamos la carga de los mapas
-    [[ModelService sharedInstance] getUserMapList:self.moContext callback:^(NSArray *maps, NSError *error) {
+    [[ModelService sharedInstance] getUserMapList:self.moContext orderBy:self.sortedBy sortOrder:self.sortOrder callback:^(NSArray *maps, NSError *error) {
         
         // Paramos el indicador de actividad
         UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *)self.navigationItem.rightBarButtonItem.customView;

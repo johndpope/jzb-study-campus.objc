@@ -37,6 +37,7 @@
 
 - (IBAction)saveAction:(id)sender;
 - (void) showIconSelector;
+- (void) setSaveEnableState;
 
 
 - (void) registerForKeyboardNotifications;
@@ -194,7 +195,7 @@
     self.mapDescription.text = self.tempDesc;
     self.activeField = nil;
     
-    self.navigationItem.rightBarButtonItem.enabled = [self.tempName length]>0;
+    [self setSaveEnableState];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -224,6 +225,13 @@
     
     if(self.delegate) {
         
+        // Algo se estaba editando
+        if(self.activeField) {
+            self.tempName = self.mapName.text;
+            self.tempDesc = self.mapDescription.text;
+        }
+        
+        
         // Si es nuevo lo crea
         if(!self.map) {
             self.map = [self.delegate mapEditorCreateMapInstance];
@@ -233,6 +241,9 @@
         self.map.name = self.tempName;
         self.map.desc = self.tempDesc;
         self.map.icon = self.tempIcon;
+        
+        // Marca la fecha de modificacion
+        [self.map touchAsUpdated];
         
         // Avisa del cambio
         [self.delegate mapEditorSave:self map:self.map];
@@ -249,12 +260,8 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)mapNameChangedAction:(id)sender {
-    
-    if([self.mapName.text length]>2 && [self.mapName.text hasPrefix:@"@"]) {
-        self.navigationItem.rightBarButtonItem.enabled = true;
-    } else {
-        self.navigationItem.rightBarButtonItem.enabled = false;
-    }
+
+    [self setSaveEnableState];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -382,5 +389,15 @@
     [iconEditor release];
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (void) setSaveEnableState {
+    
+    if([self.mapName.text length]>2 && [self.mapName.text hasPrefix:@"@"]) {
+        self.navigationItem.rightBarButtonItem.enabled = true;
+    } else {
+        self.navigationItem.rightBarButtonItem.enabled = false;
+    }
+    
+}
 
 @end

@@ -14,7 +14,7 @@
 #pragma mark -
 #pragma mark MapListController interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface MapListController : UIViewController <MapEditorDelegate> {
+@interface MapListController : UIViewController {
 }
 
 @end

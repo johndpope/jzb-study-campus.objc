@@ -29,6 +29,12 @@ typedef enum {
     SORT_BY_UPDATING_DATE
 } SORTING_METHOD;
 
+typedef enum {
+    SORT_ASCENDING = YES,
+    SORT_DESCENDING = NO
+} SORTING_ORDER;
+
+
 
 typedef void (^TBlock_getUserMapListFinished)(NSArray *maps, NSError *error);
 typedef void (^TBlock_getFlatElemensInMapFinished)(NSArray *elements, NSError *error);
@@ -67,7 +73,7 @@ typedef void (^TBlock_getCategorizedElemensInMapFinished)(NSArray *elements, NSE
 
 - (NSManagedObjectContext *) initContext;
 
-- (SRVC_ASYNCHRONOUS) getUserMapList:(NSManagedObjectContext *)ctx callback:(TBlock_getUserMapListFinished) callbackBlock;
+- (SRVC_ASYNCHRONOUS) getUserMapList:(NSManagedObjectContext *)ctx orderBy:(SORTING_METHOD)orderBy sortOrder:(SORTING_ORDER)sortOrder callback:(TBlock_getUserMapListFinished) callbackBlock;
 
 - (NSArray *) getAllCategoriesInMap:(MEMap *)map orderBy:(SORTING_METHOD)orderBy;
 

@@ -185,6 +185,12 @@
 #pragma mark -
 #pragma mark General PUBLIC methods
 //---------------------------------------------------------------------------------------------------------------------
+- (void) touchAsUpdated {
+    [super touchAsUpdated];
+    [self.map touchAsUpdated];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 - (void) markAsDeleted {
     
     [super markAsDeleted];

@@ -23,7 +23,7 @@
 - (NSURL *) _applicationDocumentsDirectory;
 
 
-- (NSArray *) _getUserMapList:(NSManagedObjectContext *)ctx error:(NSError **)error;
+- (NSArray *) _getUserMapList:(NSManagedObjectContext *)ctx orderBy:(SORTING_METHOD)orderBy  sortOrder:(SORTING_ORDER)sortOrder error:(NSError **)error;
 - (NSArray *) _getFlatElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy error:(NSError **)error ;
 - (NSArray *) _getCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy error:(NSError **)error;
 
@@ -107,7 +107,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (SRVC_ASYNCHRONOUS) getUserMapList:(NSManagedObjectContext *)ctx callback:(TBlock_getUserMapListFinished) callbackBlock {
+- (SRVC_ASYNCHRONOUS) getUserMapList:(NSManagedObjectContext *)ctx orderBy:(SORTING_METHOD)orderBy sortOrder:(SORTING_ORDER)sortOrder callback:(TBlock_getUserMapListFinished) callbackBlock {
     
     NSLog(@"ModelService - Async - getUserMapList");
     
@@ -122,7 +122,7 @@
     // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
     dispatch_async(_ModelServiceQueue,^(void){
         NSError *error = nil;
-        NSArray *maps = [[ModelService sharedInstance] _getUserMapList:ctx error:&error];
+        NSArray *maps = [[ModelService sharedInstance] _getUserMapList:ctx orderBy:orderBy sortOrder:sortOrder error:&error];
         
         // Avisamos al llamante de que ya se ha actualizado el mapa solicitado
         dispatch_async(caller_queue, ^(void){
@@ -274,7 +274,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (NSArray *) _getUserMapList:(NSManagedObjectContext *)ctx error:(NSError **)error {
+- (NSArray *) _getUserMapList:(NSManagedObjectContext *)ctx orderBy:(SORTING_METHOD)orderBy  sortOrder:(SORTING_ORDER)sortOrder error:(NSError **)error {
     
     NSLog(@"ModelService - _getUserMapList");
 
@@ -287,10 +287,23 @@
     [request setPredicate:predicate];
     
     // Estable el orden del resultado
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc]
-                                        initWithKey:@"name" ascending:YES];
+    NSSortDescriptor *sortDescriptor;
+    switch (orderBy) {
+        case SORT_BY_CREATING_DATE:
+            sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"ts_created" ascending:sortOrder];
+            break;
+
+        case SORT_BY_UPDATING_DATE:
+            sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"ts_updated" ascending:sortOrder];
+            break;
+            
+        default:
+            sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:sortOrder];
+            break;
+    }
     [request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
     [sortDescriptor release];
+
     
     // Realiza la busqueda
     NSError *_err = nil;
