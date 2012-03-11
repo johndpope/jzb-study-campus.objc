@@ -14,8 +14,10 @@
 #pragma mark -
 #pragma mark PRIVATE CONSTANTS and C-Methods definitions
 //---------------------------------------------------------------------------------------------------------------------
+#define ICON_OFFSET 2.5
 #define ICON_SIZE 45.0
 #define ICONS_PER_ROW 7
+#define ICON_ROWS 14
 
 
 
@@ -35,7 +37,7 @@
 
 - (void) loadGMapIconInfoList;
 - (NSString *) urlFromIndex:(unsigned) index;
-- (unsigned) indexFromURL:(NSString *) url;
+- (void) scrollToSelectedIcon:(NSString *) url;
 
 @end
 
@@ -51,6 +53,9 @@
 @synthesize selectedImage = _selectedImage;
 @synthesize allIconsImage = _allIconsImage;
 @synthesize scrollView = _scrollView;
+
+@synthesize gmapIcon = _gmapIcon;
+@synthesize delegate = _delegate;
 
 
 
@@ -73,6 +78,8 @@
     [_selectedImage release];
     [_scrollView release];
     [_allIconsImage release];
+    
+    [_gmapIcon release];
     
     [super dealloc];
 }
@@ -105,8 +112,9 @@
     self.navigationItem.rightBarButtonItem=saveBtn;
     [saveBtn release];
     
-    self.scrollView.contentSize = CGSizeMake(320, 635); //self.allIconsImage.frame.size;
+    self.scrollView.contentSize = CGSizeMake(320, 645); //self.allIconsImage.frame.size;
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"GMapIconEditorBg.png"]];
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -116,7 +124,24 @@
     [self setScrollView:nil];
     [self setAllIconsImage:nil];
     
+    [self setGmapIcon:nil];
+    [self setDelegate:nil];
+    
     [super viewDidUnload];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) viewWillAppear:(BOOL)animated {
+    
+    [super viewWillAppear:animated];
+    
+    self.selectedImage.image = self.gmapIcon.image;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self scrollToSelectedIcon:self.gmapIcon.url];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -133,21 +158,34 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)saveAction:(id)sender {
     
-    //    if(self.delegate) {
-    //    }
+    if(self.delegate) {
+        [self.delegate saveNewIcon:self iconToSave:self.gmapIcon];
+    }
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)imageTappedAction:(id)sender {
     
+    
+    // Esto hace falta porque el TapGestureRecognized se ha puesto al nivel de toda la vista
+    // porque, por alguna razon, no reconocia las ultimas filas (del tamaño de la "solapa" superior)
     CGPoint EndPoint = [sender locationInView:self.allIconsImage];
-
-    NSLog(@"%f,%f",EndPoint.x,EndPoint.y);
-    /*
-    unsigned index = ceil((EndPoint.x-2.5)/ICON_SIZE)-1 + ICONS_PER_ROW * (ceil((EndPoint.y-2.5)/ICON_SIZE)-1);
-    NSString *url = [self urlFromIndex:index];
-    NSLog(@"%u %@",index, url);
-     */
+    
+    if(EndPoint.y >= self.scrollView.contentOffset.y) {
+        int xPos = floor((EndPoint.x-ICON_OFFSET)/ICON_SIZE);
+        int yPos = floor((EndPoint.y-ICON_OFFSET)/ICON_SIZE);
+        
+        if(xPos>=0 && xPos<ICONS_PER_ROW && yPos>=0 && yPos<ICON_ROWS) {
+            unsigned index = xPos + yPos * ICONS_PER_ROW;
+            NSString *url = [self urlFromIndex:index];
+            
+            self.gmapIcon = [GMapIcon iconForURL:url];
+            self.selectedImage.image = self.gmapIcon.image;
+            
+            self.navigationItem.rightBarButtonItem.enabled = YES;
+        }
+    }
+    
 }
 
 
@@ -197,16 +235,28 @@ static NSDictionary *urlForIndex = nil;
     if(indexForURL==nil) {
         [self loadGMapIconInfoList];
     }
-    return [indexForURL objectAtIndex:index];
+    
+    if(index < [indexForURL count])
+        return [indexForURL objectAtIndex:index];
+    else
+        return  nil;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (unsigned) indexFromURL:(NSString *) url {
+- (void) scrollToSelectedIcon:(NSString *) url {
     
-    if(urlForIndex==nil) {
-        [self loadGMapIconInfoList];
+    if(url) {
+        if(urlForIndex==nil) {
+            [self loadGMapIconInfoList];
+        }
+        
+        NSNumber *index = nil;
+        index = [urlForIndex valueForKey:url];
+        if(index) {
+            unsigned yPos = ICON_OFFSET + ICON_SIZE * [index unsignedIntValue] / ICONS_PER_ROW;
+            [self.scrollView scrollRectToVisible:CGRectMake(0, yPos, ICON_SIZE, ICON_SIZE) animated:YES];
+        }
     }
-    return [(NSNumber *)[urlForIndex valueForKey:url] unsignedIntValue];
 }
 
 @end

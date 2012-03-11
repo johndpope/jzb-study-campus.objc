@@ -9,7 +9,7 @@
 #import "MapListController.h"
 #import "ModelService.h"
 #import "PointListController.h"
-#import "IconEditor.h"
+#import "GMapIconEditor.h"
 #import "SVProgressHUD.h"
 #import "TDBadgedCell.h"
 

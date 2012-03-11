@@ -16,7 +16,8 @@
 #pragma mark -
 #pragma mark MapEditorController PRIVATE interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface MapEditorController() 
+@interface MapEditorController() <UITextFieldDelegate, UITextViewDelegate, GMapIconEditorDelegate>
+
 
 @property (retain, nonatomic) IBOutlet UIImageView *imageIcon;
 @property (nonatomic, retain) IBOutlet UITextField *mapName;
@@ -193,7 +194,7 @@
     self.mapDescription.text = self.tempDesc;
     self.activeField = nil;
     
-    [self mapNameChangedAction:nil];
+    self.navigationItem.rightBarButtonItem.enabled = [self.tempName length]>0;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -222,11 +223,18 @@
 - (IBAction)saveAction:(id)sender {
     
     if(self.delegate) {
+        
+        // Si es nuevo lo crea
         if(!self.map) {
             self.map = [self.delegate mapEditorCreateMapInstance];
         }
-        self.map.name = self.mapName.text;
-        self.map.desc = self.mapDescription.text;
+        
+        // Asigna valores
+        self.map.name = self.tempName;
+        self.map.desc = self.tempDesc;
+        self.map.icon = self.tempIcon;
+        
+        // Avisa del cambio
         [self.delegate mapEditorSave:self map:self.map];
     }
 }
@@ -250,15 +258,16 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void)textFieldDidBeginEditing:(UITextField *)textField {
-    //[textField setInputAccessoryView:self.editToolBar];
+- (BOOL) textFieldShouldBeginEditing:(UITextField *)textField {
     self.activeField = textField;
+    return YES;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [self.activeField resignFirstResponder];
     self.activeField = nil;
+    self.tempName = textField.text;
     return YES;
 }
 
@@ -273,22 +282,19 @@
 - (IBAction)editToolBarOKAction:(id)sender {
     [self.activeField resignFirstResponder];
     self.activeField = nil;
+    self.tempDesc = self.mapDescription.text;
 }
 
 
 
 //*********************************************************************************************************************
 #pragma mark -
-#pragma mark PRIVATE methods
+#pragma mark GMapIconEditorDelegate handling methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) showIconSelector {
-    
-    self.tempName = self.mapName.text;
-    self.tempDesc = self.mapDescription.text;
-    
-    GMapIconEditor *gmapIconEditor = [[GMapIconEditor alloc] initWithNibName:@"GMapIconEditor" bundle:nil];
-    [self.navigationController pushViewController:gmapIconEditor animated:YES];
-    [gmapIconEditor release];
+- (void) saveNewIcon:(GMapIconEditor *)sender iconToSave:(GMapIcon *)icon {
+
+    self.tempIcon = icon;
+    [self.navigationController popViewControllerAnimated:true];
 }
 
 
@@ -359,5 +365,22 @@
     self.scrollView.frame = CGRectMake(0, 0, frWidth, frHeight);
     [UIView commitAnimations];
 }
+
+
+
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark PRIVATE methods
+//---------------------------------------------------------------------------------------------------------------------
+- (void) showIconSelector {
+    
+    GMapIconEditor *iconEditor = [[GMapIconEditor alloc] initWithNibName:@"GMapIconEditor" bundle:nil];
+    iconEditor.gmapIcon = self.tempIcon;
+    iconEditor.delegate = self;
+    
+    [self.navigationController pushViewController:iconEditor animated:YES];
+    [iconEditor release];
+}
+
 
 @end

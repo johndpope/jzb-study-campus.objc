@@ -31,7 +31,7 @@
 #pragma mark -
 #pragma mark MapEditorController interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface MapEditorController : UIViewController <UITextFieldDelegate, UITextViewDelegate> {
+@interface MapEditorController : UIViewController {
 }
 
 @property (nonatomic, assign) id <MapEditorDelegate> delegate;

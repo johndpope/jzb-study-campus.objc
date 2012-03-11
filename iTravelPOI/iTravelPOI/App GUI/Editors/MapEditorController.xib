@@ -263,7 +263,9 @@
 				<reference key="IBUIBackgroundColor" ref="922359836"/>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 			</object>
-			<object class="IBUITapGestureRecognizer" id="63544565"/>
+			<object class="IBUITapGestureRecognizer" id="63544565">
+				<bool key="IBUICancelsTouchesInView">NO</bool>
+			</object>
 		</object>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
 			<object class="NSMutableArray" key="connectionRecords">
