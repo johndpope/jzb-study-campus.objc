@@ -8,7 +8,6 @@
 
 #import "PointListController.h"
 #import "SortOptionsController.h"
-#import "ModelService.h"
 #import "SVProgressHUD.h"
 #import "TDBadgedCell.h"
 #import "WEPopoverController.h"
@@ -25,11 +24,9 @@
 @property (retain, nonatomic) IBOutlet UITableView *itemsTableView;
 @property (retain, nonatomic) IBOutlet UIButton *sortMethodButton;
 @property (retain, nonatomic) IBOutlet UIButton *sortOrderButton;
+@property (retain, nonatomic) IBOutlet UIButton *categorizedFlatButton;
 
 @property (nonatomic, retain) WEPopoverController *sortMapPopover;
-
-@property (nonatomic, assign)   SORTING_METHOD sortedBy;
-@property (nonatomic, assign)   SORTING_ORDER  sortOrder;
 
 @property (nonatomic, retain) NSArray *mapItems;
 
@@ -39,7 +36,11 @@
 
 
 - (void) loadMapItemsListData;
-- (void) showMapItemEditorFor:(MEBaseEntity *)entityToView;
+- (void) showPointListControllerForEntity:(MEMapElement *)entityToView;
+- (void) showMapItemEditorFor:(MEMapElement *)entityToView;
+- (void) updateShowModeImage;
+- (void) updateSortOrderImage;
+- (void) updateSortMethodImage;
 - (void) showErrorToUser:(NSString *)errorMsg;
 
 
@@ -60,10 +61,11 @@
 
 @synthesize map = _map;
 @synthesize filteringCategories = _filteringCategories;
-@synthesize showMode = _showMode;
+@synthesize categorizedFlatButton = _categorizedFlatButton;
 
 @synthesize sortMapPopover = _sortMapPopover;
 
+@synthesize showMode = _showMode;
 @synthesize sortOrder = _sortOrder;
 @synthesize sortedBy = _sortedBy;
 
@@ -90,6 +92,7 @@
     [_itemsTableView release];
     [_sortMethodButton release];
     [_sortOrderButton release];
+    [_categorizedFlatButton release];
     
     [_map release];
     [_filteringCategories release];
@@ -153,9 +156,6 @@
     // Se registra para saber si hubo cambios en el modelo desde otros ViewControllers
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelHasChanged:) name:@"ModelHasChangedNotification" object:nil];
 
-    // Pone el orden por defecto de la lista
-    self.sortedBy = SORT_BY_NAME;
-    self.sortOrder = SORT_DESCENDING;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -164,6 +164,7 @@
     [self setItemsTableView:nil];
     [self setSortMethodButton:nil];
     [self setSortOrderButton:nil];
+    [self setCategorizedFlatButton:nil];
 
     [self setMap:nil];
     [self setFilteringCategories:nil];
@@ -176,6 +177,14 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     [super viewDidUnload];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self updateShowModeImage];
+    [self updateSortMethodImage];
+    [self updateSortOrderImage];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -220,22 +229,18 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+- (IBAction)categorizedFlatButtonAction:(UIButton *)sender {
+    
+    self.showMode = (self.showMode==SHOW_CATEGORIZED ? SHOW_FLAT : SHOW_CATEGORIZED);
+    [self updateShowModeImage];
+    [self loadMapItemsListData];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 - (IBAction)sortOrderButtonAction:(UIButton *)sender {
     
     self.sortOrder = (self.sortOrder==SORT_ASCENDING ? SORT_DESCENDING : SORT_ASCENDING);
-    
-    UIImage *img = nil;
-    switch (self.sortOrder) {
-        case SORT_ASCENDING:
-            img = [UIImage imageNamed:@"sortAscending.png"];
-            break;
-            
-        case SORT_DESCENDING:
-            img = [UIImage imageNamed:@"sortDescending.png"];
-            break;
-            
-    }
-    [self.sortOrderButton setImage:img forState:UIControlStateNormal];
+    [self updateSortOrderImage];
     [self loadMapItemsListData];
 }
 
@@ -279,25 +284,9 @@
     
     [self.sortMapPopover dismissPopoverAnimated:NO];
     self.sortMapPopover = nil;
-    
     if(self.sortedBy!=sortedBy) {
-        UIImage *img = nil;
-        switch (sortedBy) {
-            case SORT_BY_NAME:
-                img = [UIImage imageNamed:@"alphabeticSortIcon.png"];
-                break;
-                
-            case SORT_BY_CREATING_DATE:
-                img = [UIImage imageNamed:@"createdSortIcon.png"];
-                break;
-                
-            case SORT_BY_UPDATING_DATE:
-                img = [UIImage imageNamed:@"modifiedSortIcon.png"];
-                break;
-        }
-        [self.sortMethodButton setImage:img forState:UIControlStateNormal];
-        
         self.sortedBy = sortedBy;
+        [self updateSortMethodImage];
         [self loadMapItemsListData];
     }
 }
@@ -308,7 +297,7 @@
 #pragma mark -
 #pragma mark PointCatEditor delegate
 //---------------------------------------------------------------------------------------------------------------------
-- (MEBaseEntity *) createNewInstanceForMap:(MEMap *)map isPoint:(BOOL)isPoint {
+- (MEMapElement *) createNewInstanceForMap:(MEMap *)map isPoint:(BOOL)isPoint {
     if(isPoint) {
         return [MEPoint insertNewInMap:map];
     } else {
@@ -317,22 +306,25 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) pointCatEditCancel:(PointCatEditorController *)sender {
-    NSLog(@"pointCatEditCancel");
-    [self.navigationController dismissModalViewControllerAnimated:YES];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) pointCatEditSave:(PointCatEditorController *)sender entity:(MEBaseEntity *)entity {
+- (void) pointCatEditorSave:(PointCatEditorController *)sender entity:(MEMapElement *)entity {
     
     NSLog(@"pointCatEditSave");
     
-    [self.navigationController dismissModalViewControllerAnimated:YES];
-    
+    // Marca la entidad como modificada
     entity.changed = true;
-    [entity commitChanges]; // AQUI HAY UN CONFLICTO CON EL TOUCH AS UPDATED
     
-    [self loadMapItemsListData];
+    // Almacena los cambios
+    NSError *error = [entity commitChanges];
+    if(error) {
+        [self showErrorToUser:@"Error saving map entity info"];
+    }
+    
+    // Se recarga entera por si hubo un cambio de nombre y afecta al orden
+    // YA NO HACE FALTA PORQUE LA NOTIFICACION DE CAMBIO HABRA BORRADO LA LISTA DE MAPAS
+    // [self loadMapItemsListData];
+    
+    // Sale de la pantalla de edicion
+    [self.navigationController popViewControllerAnimated:true];
 }
 
 
@@ -360,7 +352,7 @@
     
     static NSString *mapViewIdentifier = @"PointCatCellView";
     
-    MEBaseEntity *entity = [self.mapItems objectAtIndex:indexPath.row];
+    MEMapElement *entity = [self.mapItems objectAtIndex:indexPath.row];
     
     TDBadgedCell *cell = (TDBadgedCell *)[tableView dequeueReusableCellWithIdentifier:mapViewIdentifier];
     if (cell == nil) {
@@ -391,11 +383,11 @@
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         
         // Delete the row from the data source
-        MEBaseEntity *entity = [self.mapItems objectAtIndex:indexPath.row];
+        MEMapElement *entity = [self.mapItems objectAtIndex:indexPath.row];
         
         // Marca la entidad como borrada y a su mapa como modificado
+        entity.map.changed=YES;
         [entity markAsDeleted];
-        [[entity map] touchAsUpdated];
         
         NSError *error = [entity commitChanges];
         if(error) {
@@ -424,26 +416,12 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 
-    MEBaseEntity *entity = [self.mapItems objectAtIndex:indexPath.row];
-    
-    if([entity isKindOfClass:[MECategory class]]) {
-        PointListController *pointListController = [[PointListController alloc] initWithNibName:@"PointListController" bundle:nil];
-        pointListController.map = self.map;
-        if(self.filteringCategories) {
-            NSMutableArray *fcats = [NSMutableArray arrayWithArray:self.filteringCategories];
-            [fcats addObject:entity];
-            pointListController.filteringCategories = [[fcats copy] autorelease];
-        } else {
-            pointListController.filteringCategories = [NSArray arrayWithObject:entity];
-        }
-        pointListController.showMode = self.showMode;
-        [self.navigationController pushViewController:pointListController animated:YES];
-        [pointListController release];
-    }
-    
+    MEMapElement *entity = [self.mapItems objectAtIndex:indexPath.row];
+    [self showPointListControllerForEntity:entity];
 }
 
 
+ 
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark PRIVATE methods
@@ -475,7 +453,7 @@
     };
     
     // lanzamos la carga de los elementos del mapa
-    if(self.showMode == showFlat) {
+    if(self.showMode == SHOW_FLAT) {
         [[ModelService sharedInstance] getFlatElemensInMap:self.map 
                                              forCategories:self.filteringCategories
                                                    orderBy:self.sortedBy 
@@ -491,7 +469,33 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) showMapItemEditorFor:(MEBaseEntity *)entityToView {
+- (void) showPointListControllerForEntity:(MEMapElement *)entityToView {
+    
+    if([entityToView isKindOfClass:[MECategory class]]) {
+        PointListController *pointListController = [[PointListController alloc] initWithNibName:@"PointListController" bundle:nil];
+
+        pointListController.map = self.map;
+        
+        if(self.filteringCategories) {
+            NSMutableArray *fcats = [NSMutableArray arrayWithArray:self.filteringCategories];
+            [fcats addObject:entityToView];
+            pointListController.filteringCategories = [[fcats copy] autorelease];
+        } else {
+            pointListController.filteringCategories = [NSArray arrayWithObject:entityToView];
+        }
+        
+        pointListController.showMode = self.showMode;
+        pointListController.sortedBy = self.sortedBy;
+        pointListController.sortOrder = self.sortOrder;
+        
+        [self.navigationController pushViewController:pointListController animated:YES];
+        [pointListController release];
+    }
+    
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) showMapItemEditorFor:(MEMapElement *)entityToView {
     
     PointCatEditorController *pointCatEditor = [[PointCatEditorController alloc] initWithNibName:@"PointCatEditorController" bundle:nil];
     pointCatEditor.delegate = self;
@@ -499,6 +503,60 @@
     pointCatEditor.entity = entityToView;
     [self.navigationController pushViewController:pointCatEditor animated:YES];
     [pointCatEditor release];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) updateShowModeImage {
+    
+    UIImage *img = nil;
+    switch (self.showMode) {
+        case SHOW_CATEGORIZED:
+            img = [UIImage imageNamed:@"showCategorized.png"];
+            break;
+            
+        case SHOW_FLAT:
+            img = [UIImage imageNamed:@"showFlat.png"];
+            break;
+            
+    }
+    [self.categorizedFlatButton setImage:img forState:UIControlStateNormal];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) updateSortOrderImage {
+    
+    UIImage *img = nil;
+    switch (self.sortOrder) {
+        case SORT_ASCENDING:
+            img = [UIImage imageNamed:@"sortAscending.png"];
+            break;
+            
+        case SORT_DESCENDING:
+            img = [UIImage imageNamed:@"sortDescending.png"];
+            break;
+            
+    }
+    [self.sortOrderButton setImage:img forState:UIControlStateNormal];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) updateSortMethodImage {
+    
+    UIImage *img = nil;
+    switch (self.sortedBy) {
+        case SORT_BY_NAME:
+            img = [UIImage imageNamed:@"alphabeticSortIcon.png"];
+            break;
+            
+        case SORT_BY_CREATING_DATE:
+            img = [UIImage imageNamed:@"createdSortIcon.png"];
+            break;
+            
+        case SORT_BY_UPDATING_DATE:
+            img = [UIImage imageNamed:@"modifiedSortIcon.png"];
+            break;
+    }
+    [self.sortMethodButton setImage:img forState:UIControlStateNormal];
 }
 
 //---------------------------------------------------------------------------------------------------------------------

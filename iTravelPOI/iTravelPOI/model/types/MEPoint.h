@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-#import "MEBaseEntity.h"
+#import "MEMapElement.h"
 
 
 @class MEMap, MECategory;
@@ -19,12 +19,11 @@
 #pragma mark -
 #pragma mark MEPoint interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface MEPoint : MEBaseEntity 
+@interface MEPoint : MEMapElement 
 
 @property (nonatomic, assign)   double lng;
 @property (nonatomic, assign)   double lat;
 
-@property (nonatomic, retain)   MEMap * map;
 @property (nonatomic, retain)   NSSet* categories;
 
 @property (nonatomic, readonly) BOOL   isExtInfo;

@@ -55,7 +55,6 @@
 @dynamic _i_lng;
 @dynamic _i_lat;
 
-@dynamic map;
 @dynamic categories;
 
 @synthesize isTemp = _isTemp;
@@ -184,12 +183,6 @@
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark General PUBLIC methods
-//---------------------------------------------------------------------------------------------------------------------
-- (void) touchAsUpdated {
-    [super touchAsUpdated];
-    [self.map touchAsUpdated];
-}
-
 //---------------------------------------------------------------------------------------------------------------------
 - (void) markAsDeleted {
     

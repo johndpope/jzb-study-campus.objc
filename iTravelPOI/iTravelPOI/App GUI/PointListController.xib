@@ -83,7 +83,7 @@
 								</object>
 								<object class="NSCustomResource" key="IBUINormalImage">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">config.png</string>
+									<string key="NSResourceName">showCategorized.png</string>
 								</object>
 								<object class="IBUIFontDescription" key="IBUIFontDescription" id="441621927">
 									<int key="type">2</int>
@@ -136,7 +136,7 @@
 								<reference key="IBUINormalTitleShadowColor" ref="769413507"/>
 								<object class="NSCustomResource" key="IBUINormalImage">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">sortDescending.png</string>
+									<string key="NSResourceName">sortAscending.png</string>
 								</object>
 								<reference key="IBUIFontDescription" ref="441621927"/>
 								<reference key="IBUIFont" ref="879454792"/>
@@ -247,6 +247,14 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">categorizedFlatButton</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="385561102"/>
+					</object>
+					<int key="connectionID">24</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">delegate</string>
 						<reference key="source" ref="211953752"/>
 						<reference key="destination" ref="372490531"/>
@@ -260,6 +268,33 @@
 						<reference key="destination" ref="372490531"/>
 					</object>
 					<int key="connectionID">20</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">sortOrderButtonAction:</string>
+						<reference key="source" ref="914032770"/>
+						<reference key="destination" ref="372490531"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">21</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">sortMapPopoverAction:</string>
+						<reference key="source" ref="88215029"/>
+						<reference key="destination" ref="372490531"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">22</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">categorizedFlatButtonAction:</string>
+						<reference key="source" ref="385561102"/>
+						<reference key="destination" ref="372490531"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">23</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -394,7 +429,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">20</int>
+			<int key="maxID">24</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>
@@ -403,8 +438,8 @@
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="alphabeticSortIcon.png">{32, 32}</string>
-			<string key="config.png">{32, 32}</string>
-			<string key="sortDescending.png">{32, 32}</string>
+			<string key="showCategorized.png">{32, 32}</string>
+			<string key="sortAscending.png">{32, 32}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">933</string>
 	</data>

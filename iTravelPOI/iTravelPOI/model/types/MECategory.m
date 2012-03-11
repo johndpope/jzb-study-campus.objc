@@ -45,7 +45,6 @@
 @implementation MECategory
 
 
-@dynamic map;
 @dynamic points;
 @dynamic categories;
 @dynamic subcategories;
@@ -153,12 +152,6 @@
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark General PUBLIC methods
-//---------------------------------------------------------------------------------------------------------------------
-- (void) touchAsUpdated {
-    [super touchAsUpdated];
-    [self.map touchAsUpdated];
-}
-
 //---------------------------------------------------------------------------------------------------------------------
 - (void) markAsDeleted {
     

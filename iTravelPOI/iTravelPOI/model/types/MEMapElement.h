@@ -1,20 +1,22 @@
 //
-//  MapListController.h
+//  MEMapElement.h
 //  iTravelPOI
 //
-//  Created by jzarzuela on 18/02/12.
-//  Copyright 2012 __MyCompanyName__. All rights reserved.
+//  Created by JZarzuela on 11/03/12.
+//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import "MapEditorController.h"
+#import "MEBaseEntity.h"
+
+@class MEMap;
 
 
 //*********************************************************************************************************************
 #pragma mark -
-#pragma mark MapListController interface definition
+#pragma mark MEMapElement interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface MapListController : UIViewController 
+@interface MEMapElement : MEBaseEntity
 
+@property (nonatomic, retain) MEMap * map;
 
 @end

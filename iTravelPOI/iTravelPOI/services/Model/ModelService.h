@@ -10,6 +10,7 @@
 #import "SrvcTicket.h"
 #import "MEBaseEntity.h"
 #import "MEMap.h"
+#import "MEBaseEntity.h"
 #import "MECategory.h"
 #import "MEPoint.h"
 

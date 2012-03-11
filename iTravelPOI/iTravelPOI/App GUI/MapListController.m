@@ -43,6 +43,7 @@
 - (void) modelHasChanged:(NSNotification *)notification;
 
 - (void) loadMapListData;
+- (void) showPointListControllerForMap:(MEMap *)mapToView;
 - (void) showMapEditorFor:(MEMap *)mapToView;
 - (void) showErrorToUser:(NSString *)errorMsg;
 
@@ -149,7 +150,7 @@
     
     // Pone el orden por defecto de la lista
     self.sortedBy = SORT_BY_NAME;
-    self.sortOrder = SORT_DESCENDING;
+    self.sortOrder = SORT_ASCENDING;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -335,20 +336,21 @@
     
     NSLog(@"mapEditorSave");
     
-    [self.navigationController popViewControllerAnimated:true];
-    
     // Marca el mapa como modificado
     map.changed = true;
     
     // Almacena los cambios
     NSError *error = [map commitChanges];
     if(error) {
-        [self showErrorToUser:@"Error saving local maps"];
+        [self showErrorToUser:@"Error saving map info"];
     }
     
     // Se recarga entera por si hubo un cambio de nombre y afecta al orden
     // YA NO HACE FALTA PORQUE LA NOTIFICACION DE CAMBIO HABRA BORRADO LA LISTA DE MAPAS
     //[self loadMapListData];
+
+    // Sale de la pantalla de edicion
+    [self.navigationController popViewControllerAnimated:true];
 }
 
 
@@ -434,14 +436,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     MEMap *map = [self.maps objectAtIndex:indexPath.row];
-    NSManagedObjectContext *ctx = [[ModelService sharedInstance] initContext];
-    MEMap *mapToView = (MEMap *)[ctx objectWithID:[map objectID]];
-    
-    PointListController *pointListController = [[PointListController alloc] initWithNibName:@"PointListController" bundle:nil];
-    pointListController.map = mapToView;
-    pointListController.filteringCategories = nil;
-    [self.navigationController pushViewController:pointListController animated:YES];
-    [pointListController release];
+    [self showPointListControllerForMap:map];
 }
 
 
@@ -473,6 +468,20 @@
             [self.mapTableView reloadData];
         }
     }];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) showPointListControllerForMap:(MEMap *)mapToView {
+    
+    NSManagedObjectContext *ctx = [[ModelService sharedInstance] initContext];
+    MEMap *mapCopy = (MEMap *)[ctx objectWithID:[mapToView objectID]];
+    
+    PointListController *pointListController = [[PointListController alloc] initWithNibName:@"PointListController" bundle:nil];
+    pointListController.map = mapCopy;
+    pointListController.filteringCategories = nil;
+    [self.navigationController pushViewController:pointListController animated:YES];
+    [pointListController release];
+
 }
 
 //---------------------------------------------------------------------------------------------------------------------

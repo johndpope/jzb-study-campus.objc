@@ -24,14 +24,14 @@
     MECategory *category;
 }
 
-- (id) initWithCategory:(MECategory *)cat forEntity:(MEBaseEntity *)entity;
+- (id) initWithCategory:(MECategory *)cat forEntity:(MEMapElement *)entity;
 
 @end
 
 @implementation TCatListItemInfo
 
 //---------------------------------------------------------------------------------------------------------------------
-- (id) initWithCategory:(MECategory *)cat forEntity:(MEBaseEntity *)entity {
+- (id) initWithCategory:(MECategory *)cat forEntity:(MEMapElement *)entity {
     
     self = [super init];
     if (self) {
@@ -253,12 +253,6 @@ NSString * _getIconURLFromIndex(int n) {
 
 
 
-//---------------------------------------------------------------------------------------------------------------------
-- (IBAction)cancelAction:(id)sender {
-    if(self.delegate) {
-        [self.delegate pointCatEditCancel:self];
-    }
-}
 
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)saveAction:(id)sender {
@@ -289,7 +283,7 @@ NSString * _getIconURLFromIndex(int n) {
         }
         
         // Avisa a su delegate de que se debe salvar la entidad actualizada
-        [self.delegate pointCatEditSave:self entity:self.entity];
+        [self.delegate pointCatEditorSave:self entity:self.entity];
     }
 }
 

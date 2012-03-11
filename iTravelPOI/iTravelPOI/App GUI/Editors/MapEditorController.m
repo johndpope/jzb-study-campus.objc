@@ -242,9 +242,6 @@
         self.map.desc = self.tempDesc;
         self.map.icon = self.tempIcon;
         
-        // Marca la fecha de modificacion
-        [self.map touchAsUpdated];
-        
         // Avisa del cambio
         [self.delegate mapEditorSave:self map:self.map];
     }

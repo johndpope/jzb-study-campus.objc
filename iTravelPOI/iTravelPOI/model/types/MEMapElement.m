@@ -1,38 +1,43 @@
 //
-//  PointListController.h
+//  MEMapElement.m
 //  iTravelPOI
 //
 //  Created by JZarzuela on 11/03/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "ModelService.h"
-#import <UIKit/UIKit.h>
+#import "MEMapElement.h"
+#import "MEMap.h"
 
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark MEMapElement implementation
+//---------------------------------------------------------------------------------------------------------------------
+@implementation MEMapElement
+
+
+@dynamic map;
 
 
 //*********************************************************************************************************************
 #pragma mark -
-#pragma mark PRIVATE CONSTANTS and C-Methods definitions
+#pragma mark initialization & finalization
 //---------------------------------------------------------------------------------------------------------------------
-typedef enum {
-    SHOW_CATEGORIZED = 0,
-    SHOW_FLAT = 1
-} PointListShowMode;
-
+- (void)dealloc {
+    [super dealloc];
+}
 
 
 //*********************************************************************************************************************
 #pragma mark -
-#pragma mark PointListController interface definition
+#pragma mark Getter/Setter methods
 //---------------------------------------------------------------------------------------------------------------------
-@interface PointListController : UIViewController
+- (void) setChanged:(BOOL)value {
+    [super setChanged:value];
+    if(value) {
+        self.map.changed=YES;
+    }
+}
 
-@property (nonatomic, retain) MEMap *map;
-@property (nonatomic, retain) NSArray *filteringCategories;
-
-@property (nonatomic, assign) PointListShowMode showMode;
-@property (nonatomic, assign) SORTING_METHOD    sortedBy;
-@property (nonatomic, assign) SORTING_ORDER     sortOrder;
 
 @end

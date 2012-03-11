@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MEBaseEntity.h"
+#import "MEMapElement.h"
 #import "MEMap.h"
 
 
@@ -18,9 +18,8 @@
 //---------------------------------------------------------------------------------------------------------------------
 @protocol PointCatEditorDelegate <NSObject>
 
-- (MEBaseEntity *) createNewInstanceForMap:(MEMap *)map isPoint:(BOOL)isPoint;
-- (void) pointCatEditCancel:(PointCatEditorController *)sender;
-- (void) pointCatEditSave:(PointCatEditorController *)sender entity:(MEBaseEntity *)entity;
+- (MEMapElement *) createNewInstanceForMap:(MEMap *)map isPoint:(BOOL)isPoint;
+- (void) pointCatEditorSave:(PointCatEditorController *)sender entity:(MEMapElement *)entity;
 
 @end
 
@@ -30,7 +29,7 @@
 @interface PointCatEditorController : UIViewController <UITableViewDelegate, UITableViewDataSource> {
 }
 
-@property (nonatomic, assign) MEBaseEntity * entity;
+@property (nonatomic, assign) MEMapElement * entity;
 @property (nonatomic, assign) MEMap *map;
 
 @property (nonatomic, assign) id <PointCatEditorDelegate> delegate;
