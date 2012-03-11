@@ -2,30 +2,45 @@
 //  PointListController.m
 //  iTravelPOI
 //
-//  Created by jzarzuela on 19/02/12.
-//  Copyright 2012 __MyCompanyName__. All rights reserved.
+//  Created by JZarzuela on 11/03/12.
+//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
 #import "PointListController.h"
-#import "PointCatEditorController.h"
-#import "ShowModeController.h"
+#import "SortOptionsController.h"
 #import "ModelService.h"
-#import "WEPopoverController.h"
-#import "UIBarButtonItem+WEPopover.h" 
-#import "TDBadgedCell.h"
 #import "SVProgressHUD.h"
+#import "TDBadgedCell.h"
+#import "WEPopoverController.h"
+#import "PointCatEditorController.h"
 
 
 
 //*********************************************************************************************************************
+#pragma mark -
+#pragma mark PointListController PRIVATE interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface PointListController ()
+@interface PointListController() <SortOptionsControllerDelegate, PointCatEditorDelegate>
 
-@property (nonatomic, retain) NSArray * elements;
-@property (nonatomic, retain) WEPopoverController *popoverShowMode;
+@property (retain, nonatomic) IBOutlet UITableView *itemsTableView;
+@property (retain, nonatomic) IBOutlet UIButton *sortMethodButton;
+@property (retain, nonatomic) IBOutlet UIButton *sortOrderButton;
 
-- (IBAction)createNewEntityAction:(id)sender;
-- (void) reloadElements;
+@property (nonatomic, retain) WEPopoverController *sortMapPopover;
+
+@property (nonatomic, assign)   SORTING_METHOD sortedBy;
+@property (nonatomic, assign)   SORTING_ORDER  sortOrder;
+
+@property (nonatomic, retain) NSArray *mapItems;
+
+
+- (IBAction) createAndEditItemAction:(id)sender;
+- (void) modelHasChanged:(NSNotification *)notification;
+
+
+- (void) loadMapItemsListData;
+- (void) showMapItemEditorFor:(MEBaseEntity *)entityToView;
+- (void) showErrorToUser:(NSString *)errorMsg;
 
 
 @end
@@ -33,22 +48,36 @@
 
 
 //*********************************************************************************************************************
+#pragma mark -
+#pragma mark PointListController implementation
 //---------------------------------------------------------------------------------------------------------------------
 @implementation PointListController
 
+
+@synthesize itemsTableView = _itemsTableView;
+@synthesize sortMethodButton = _sortMethodButton;
+@synthesize sortOrderButton = _sortOrderButton;
 
 @synthesize map = _map;
 @synthesize filteringCategories = _filteringCategories;
 @synthesize showMode = _showMode;
 
-@synthesize elements = _elements;
-@synthesize popoverShowMode = _popoverShowMode;
+@synthesize sortMapPopover = _sortMapPopover;
+
+@synthesize sortOrder = _sortOrder;
+@synthesize sortedBy = _sortedBy;
+
+@synthesize mapItems = _mapItems;
 
 
+
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark initialization & finalization
 //---------------------------------------------------------------------------------------------------------------------
-- (id)initWithStyle:(UITableViewStyle)style
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithStyle:style];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
     }
@@ -56,11 +85,18 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void)dealloc {
+- (void)dealloc
+{
+    [_itemsTableView release];
+    [_sortMethodButton release];
+    [_sortOrderButton release];
+    
     [_map release];
     [_filteringCategories release];
-    [_elements release];
-    [_popoverShowMode release];
+
+    [_sortMapPopover release];
+    
+    [_mapItems release];
 
     [super dealloc];
 }
@@ -76,25 +112,21 @@
 
 
 
-//=====================================================================================================================
-#pragma mark - View lifecycle
-//=====================================================================================================================
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark Getter/Setter methods
+//---------------------------------------------------------------------------------------------------------------------
 
 
 
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark View lifecycle
 //---------------------------------------------------------------------------------------------------------------------
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    self.navigationItem.backBarButtonItem = self.editButtonItem;
-    //    leftBarButtonItem = self.editButtonItem;
-    
-    
+
     // Inicializa el resto de la vista
     if(self.filteringCategories) {
         NSMutableString *names = [NSMutableString string];
@@ -109,60 +141,52 @@
     } else {
         self.title = self.map.name;
     }
+
     
-    // Creamos el boton de crear nuevos elementos
-    UIBarButtonItem *createMapBtn = [[UIBarButtonItem alloc]  initWithBarButtonSystemItem:UIBarButtonSystemItemCompose 
-                                                                                   target:self 
-                                                                                   action:@selector(createNewEntityAction:)];
-    self.navigationItem.rightBarButtonItem=createMapBtn;
-    [createMapBtn release];
+    // Creamos el boton para crear o editar mapas
+    UIBarButtonItem *createItemBtn = [[UIBarButtonItem alloc]  initWithBarButtonSystemItem:UIBarButtonSystemItemCompose 
+                                                                                    target:self 
+                                                                                    action:@selector(createAndEditItemAction:)];
+    self.navigationItem.rightBarButtonItem=createItemBtn;
+    [createItemBtn release];
     
-    
-    // Creamos el boton de ver flat o categorized
-    UIBarButtonItem *showModeBtn = [[UIBarButtonItem alloc]  initWithBarButtonSystemItem:UIBarButtonSystemItemOrganize
-                                                                                  target:self 
-                                                                                  action:@selector(changeShowModeAction:)];
-    [self setToolbarItems:[NSArray arrayWithObject:showModeBtn]];
-    [showModeBtn release];
+    // Se registra para saber si hubo cambios en el modelo desde otros ViewControllers
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelHasChanged:) name:@"ModelHasChangedNotification" object:nil];
+
+    // Pone el orden por defecto de la lista
+    self.sortedBy = SORT_BY_NAME;
+    self.sortOrder = SORT_DESCENDING;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)viewDidUnload
-{
+{   
+    [self setItemsTableView:nil];
+    [self setSortMethodButton:nil];
+    [self setSortOrderButton:nil];
+
+    [self setMap:nil];
+    [self setFilteringCategories:nil];
+
+    [self setSortMapPopover:nil];
+    
+    [self setMapItems:nil];
+
+    // Se deregistra de las notificaciones
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    if(!self.elements) {
-        // Lanzamos la busqueda de los mapas y los mostramos
-        [SVProgressHUD showWithStatus:@"Loading elements info"];
-        [self reloadElements];
-    }
-    
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)viewDidAppear:(BOOL)animated
-{
+- (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-}
+    
+    // Si no estan cargados los mapas de una iteracion previa los volvemos a cargar
+    if(!self.mapItems) {
+        [self loadMapItemsListData];
+    }
 
-//---------------------------------------------------------------------------------------------------------------------
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -173,110 +197,116 @@
 }
 
 
-//=====================================================================================================================
-#pragma mark - Internal Event Handlers
-//=====================================================================================================================
-
-
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark Internal Event Handlers
 //---------------------------------------------------------------------------------------------------------------------
-- (void) reloadElements {
+- (IBAction) createAndEditItemAction:(id)sender {
     
-        if(self.showMode == showFlat) {
-            [[ModelService sharedInstance] getFlatElemensInMap:self.map 
-                                                 forCategories:self.filteringCategories
-                                                       orderBy:SORT_BY_NAME 
-                                                      callback:^(NSArray *elements, NSError *error) {
-                                                          if(error) {
-                                                              [SVProgressHUD dismissWithError:@"Error loading elements info" afterDelay:2];
-                                                          } else {
-                                                              [SVProgressHUD dismiss];
-                                                              self.elements = elements;
-                                                              [self.tableView reloadData];
-                                                          }
-                                                      }];
-        } else {
-            //    forCategory:[self.filteringCategories lastObject]
-            [[ModelService sharedInstance] getCategorizedElemensInMap:self.map 
-                                                        forCategories:self.filteringCategories
-                                                              orderBy:SORT_BY_NAME 
-                                                             callback:^(NSArray *elements, NSError *error) {
-                                                                 if(error) {
-                                                                     [SVProgressHUD dismissWithError:@"Error loading elements info" afterDelay:2];
-                                                                 } else {
-                                                                     [SVProgressHUD dismiss];
-                                                                     self.elements = elements;
-                                                                     [self.tableView reloadData];
-                                                                 }
-                                                             }];
-        }
+    [self showMapItemEditorFor:nil];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (IBAction)createNewEntityAction:(id)sender {
+- (void) modelHasChanged:(NSNotification *)notification {
     
-    PointCatEditorController *entityEditor = [[PointCatEditorController alloc] initWithNibName:@"PointCatEditorController" bundle:nil];
+    // Puesto que el contenido del modelo ha cambiado deberiamos invalidar lo que se esta mostrando y pedirlo de nuevo
+    // ¿Que pasa si se llama cuando no estamos en pantalla?
+    // ¿Que pasa si se pone a "nul" y si esta en pantalla?
     
-    entityEditor.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-    
-    entityEditor.delegate = self;
-    entityEditor.map = self.map;
-    
-    //    [self.navigationController pushViewController:mapEditor animated:YES];
-    [self.navigationController presentModalViewController:entityEditor animated:YES];
-    [entityEditor release];
+    // self.maps = nil;
+    // [self loadMapListData];
+    NSLog(@"modelHasChanged");
+    self.mapItems=nil;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) changeShowMode:(PointListShowMode) mode {
+- (IBAction)sortOrderButtonAction:(UIButton *)sender {
     
-    if(self.showMode!=mode) {
-        
-        // Guardamos nuevo modo
-        self.showMode = mode;
-        
-        // Lanzamos la busqueda de los mapas y los mostramos 
-        [SVProgressHUD showWithStatus:@"Loading elements info"];
-        [self reloadElements];
+    self.sortOrder = (self.sortOrder==SORT_ASCENDING ? SORT_DESCENDING : SORT_ASCENDING);
+    
+    UIImage *img = nil;
+    switch (self.sortOrder) {
+        case SORT_ASCENDING:
+            img = [UIImage imageNamed:@"sortAscending.png"];
+            break;
+            
+        case SORT_DESCENDING:
+            img = [UIImage imageNamed:@"sortDescending.png"];
+            break;
+            
     }
-    
-    if(self.popoverShowMode) {
-        [self.popoverShowMode dismissPopoverAnimated:YES];
-        self.popoverShowMode = nil;
-    }
-    
-    
+    [self.sortOrderButton setImage:img forState:UIControlStateNormal];
+    [self loadMapItemsListData];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (IBAction)changeShowModeAction:(id)sender {
+- (IBAction)sortMapPopoverAction:(UIButton *)sender {
     
-    if (self.popoverShowMode && self.popoverShowMode.popoverVisible) {
-        [self.popoverShowMode dismissPopoverAnimated:YES];
-        self.popoverShowMode = nil;
+    // El tamaño debe ser, como minimo, de 16x28 para que se vea bien el popover
+    if (self.sortMapPopover && self.sortMapPopover.popoverVisible) {
+        [self.sortMapPopover dismissPopoverAnimated:NO];
+        self.sortMapPopover = nil;
     } else {
         
-        if(!self.popoverShowMode) {
+        if(!self.sortMapPopover) {
             
-            ShowModeController *showModeController = [[ShowModeController alloc] initWithNibName:@"showModeController" bundle:nil];
-            showModeController.delegate = self;
+            SortOptionsController *sortOptionsController = [[SortOptionsController alloc] initWithNibName:@"SortOptionsController" bundle:nil];
+            sortOptionsController.delegate = self;
             
-            self.popoverShowMode = [[[WEPopoverController alloc] initWithContentViewController:showModeController] autorelease];
-            self.popoverShowMode.containerViewProperties = [self.popoverShowMode improvedContainerViewProperties];
-            self.popoverShowMode.popoverContentSize = showModeController.view.frame.size;
+            self.sortMapPopover = [[[WEPopoverController alloc] initWithContentViewController:sortOptionsController] autorelease];
+            self.sortMapPopover.containerViewProperties = [self.sortMapPopover improvedContainerViewProperties];
             
-            [showModeController release];
+            self.sortMapPopover.popoverContentSize = sortOptionsController.view.frame.size;
+            
+            [sortOptionsController release];
         }
         
-        CGRect btnFrame = {0, self.tableView.frame.size.height, 50, 1};
-        [self.popoverShowMode presentPopoverFromRect:btnFrame 
-                                              inView:self.tableView 
-                            permittedArrowDirections:UIPopoverArrowDirectionDown
-                                            animated:YES];
+        CGRect btnFrame = {self.view.frame.size.width/2-25, self.itemsTableView.frame.origin.y + self.itemsTableView.frame.size.height, 50, 1};
+        [self.sortMapPopover presentPopoverFromRect:btnFrame 
+                                             inView:self.view 
+                           permittedArrowDirections:UIPopoverArrowDirectionDown
+                                           animated:NO];
     }
-    
-    
 }
 
+
+
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark SortOptionsController delegate
+//---------------------------------------------------------------------------------------------------------------------
+- (void) sortMethodSelected:(SORTING_METHOD)sortedBy {
+    
+    [self.sortMapPopover dismissPopoverAnimated:NO];
+    self.sortMapPopover = nil;
+    
+    if(self.sortedBy!=sortedBy) {
+        UIImage *img = nil;
+        switch (sortedBy) {
+            case SORT_BY_NAME:
+                img = [UIImage imageNamed:@"alphabeticSortIcon.png"];
+                break;
+                
+            case SORT_BY_CREATING_DATE:
+                img = [UIImage imageNamed:@"createdSortIcon.png"];
+                break;
+                
+            case SORT_BY_UPDATING_DATE:
+                img = [UIImage imageNamed:@"modifiedSortIcon.png"];
+                break;
+        }
+        [self.sortMethodButton setImage:img forState:UIControlStateNormal];
+        
+        self.sortedBy = sortedBy;
+        [self loadMapItemsListData];
+    }
+}
+
+
+
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark PointCatEditor delegate
 //---------------------------------------------------------------------------------------------------------------------
 - (MEBaseEntity *) createNewInstanceForMap:(MEMap *)map isPoint:(BOOL)isPoint {
     if(isPoint) {
@@ -300,20 +330,16 @@
     [self.navigationController dismissModalViewControllerAnimated:YES];
     
     entity.changed = true;
-    [entity commitChanges];
+    [entity commitChanges]; // AQUI HAY UN CONFLICTO CON EL TOUCH AS UPDATED
     
-    [self reloadElements];
+    [self loadMapItemsListData];
 }
 
 
 
-
-//=====================================================================================================================
-#pragma mark - Table view data source
-//=====================================================================================================================
-
-
-
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark Table view data source
 //---------------------------------------------------------------------------------------------------------------------
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -325,7 +351,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [self.elements count];
+    return [self.mapItems count];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -334,7 +360,7 @@
     
     static NSString *mapViewIdentifier = @"PointCatCellView";
     
-    MEBaseEntity *entity = [self.elements objectAtIndex:indexPath.row];
+    MEBaseEntity *entity = [self.mapItems objectAtIndex:indexPath.row];
     
     TDBadgedCell *cell = (TDBadgedCell *)[tableView dequeueReusableCellWithIdentifier:mapViewIdentifier];
     if (cell == nil) {
@@ -360,78 +386,45 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
-
-//---------------------------------------------------------------------------------------------------------------------
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
+        
         // Delete the row from the data source
-        MEBaseEntity *entity = [self.elements objectAtIndex:indexPath.row];
+        MEBaseEntity *entity = [self.mapItems objectAtIndex:indexPath.row];
+        
+        // Marca la entidad como borrada y a su mapa como modificado
         [entity markAsDeleted];
-        [entity commitChanges];
+        [[entity map] touchAsUpdated];
+        
+        NSError *error = [entity commitChanges];
+        if(error) {
+            NSLog(@"Error saving context when deleting an item: %@ / %@", error, [error userInfo]);
+            [self showErrorToUser:@"Error deleting map item"];
+        }
+        
         // No se puede hacer "facil" por el tema de la categorizacion
-        [self reloadElements];
+        [self loadMapItemsListData];
     }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
+
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
-
-//---------------------------------------------------------------------------------------------------------------------
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
 
 
-
-//=====================================================================================================================
-#pragma mark - Table view delegate
-//=====================================================================================================================
-
-
-
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark Table view data delegate
 //---------------------------------------------------------------------------------------------------------------------
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
     
-    PointCatEditorController *pointCatEditor = [[PointCatEditorController alloc] initWithNibName:@"PointCatEditorController" bundle:nil];
-    
-    pointCatEditor.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-    
-    pointCatEditor.delegate = self;
-    pointCatEditor.map = self.map;
-    pointCatEditor.entity = [self.elements objectAtIndex:indexPath.row];
-    
-    //    [self.navigationController pushViewController:mapEditor animated:YES];
-    [self.navigationController presentModalViewController:pointCatEditor animated:YES];
-    [pointCatEditor release];
+    [self showMapItemEditorFor:[self.mapItems objectAtIndex:indexPath.row]];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    MEBaseEntity *entity = [self.elements objectAtIndex:indexPath.row];
+
+    MEBaseEntity *entity = [self.mapItems objectAtIndex:indexPath.row];
     
     if([entity isKindOfClass:[MECategory class]]) {
         PointListController *pointListController = [[PointListController alloc] initWithNibName:@"PointListController" bundle:nil];
@@ -447,6 +440,71 @@
         [self.navigationController pushViewController:pointListController animated:YES];
         [pointListController release];
     }
+    
+}
+
+
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark PRIVATE methods
+//---------------------------------------------------------------------------------------------------------------------
+- (void) loadMapItemsListData {
+    
+    // Pone un indicador de actividad
+    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+    self.navigationItem.rightBarButtonItem.customView = activityIndicator;
+    [activityIndicator startAnimating];
+    [activityIndicator release];
+    
+
+    // Este sera el bloque de codigo a ejecutar
+    TBlock_getElementListInMapFinished myCallback = ^(NSArray *elements, NSError *error) {
+
+        // Paramos el indicador de actividad
+        UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *)self.navigationItem.rightBarButtonItem.customView;
+        [activityIndicator stopAnimating];
+        
+        // Si hay un error lo indica. En otro caso, recarga la tabla con los mapas
+        if(error) {
+            [self showErrorToUser:@"Error loading map's elements info"];
+        } else {
+            self.navigationItem.rightBarButtonItem.customView = nil;
+            self.mapItems = elements;
+            [self.itemsTableView reloadData];
+        }
+    };
+    
+    // lanzamos la carga de los elementos del mapa
+    if(self.showMode == showFlat) {
+        [[ModelService sharedInstance] getFlatElemensInMap:self.map 
+                                             forCategories:self.filteringCategories
+                                                   orderBy:self.sortedBy 
+                                                  callback:myCallback];
+    } else {
+        //    forCategory:[self.filteringCategories lastObject]
+        [[ModelService sharedInstance] getCategorizedElemensInMap:self.map 
+                                                    forCategories:self.filteringCategories
+                                                          orderBy:self.sortedBy
+                                                         callback:myCallback];
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) showMapItemEditorFor:(MEBaseEntity *)entityToView {
+    
+    PointCatEditorController *pointCatEditor = [[PointCatEditorController alloc] initWithNibName:@"PointCatEditorController" bundle:nil];
+    pointCatEditor.delegate = self;
+    pointCatEditor.map = self.map;
+    pointCatEditor.entity = entityToView;
+    [self.navigationController pushViewController:pointCatEditor animated:YES];
+    [pointCatEditor release];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) showErrorToUser:(NSString *)errorMsg {
+    [SVProgressHUD showWithStatus:@""];
+    [SVProgressHUD dismissWithError:errorMsg afterDelay:2];
 }
 
 

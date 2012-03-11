@@ -159,7 +159,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (SRVC_ASYNCHRONOUS) getFlatElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getFlatElemensInMapFinished)callbackBlock {
+- (SRVC_ASYNCHRONOUS) getFlatElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getElementListInMapFinished)callbackBlock {
     
     NSLog(@"ModelService - Async - getFlatElemensInMap");
     
@@ -184,7 +184,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (SRVC_ASYNCHRONOUS) getCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getCategorizedElemensInMapFinished)callbackBlock {
+- (SRVC_ASYNCHRONOUS) getCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getElementListInMapFinished)callbackBlock {
     
     NSLog(@"ModelService - Async - getCategorizedElemensInMap");
     

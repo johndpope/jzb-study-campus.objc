@@ -37,8 +37,7 @@ typedef enum {
 
 
 typedef void (^TBlock_getUserMapListFinished)(NSArray *maps, NSError *error);
-typedef void (^TBlock_getFlatElemensInMapFinished)(NSArray *elements, NSError *error);
-typedef void (^TBlock_getCategorizedElemensInMapFinished)(NSArray *elements, NSError *error);
+typedef void (^TBlock_getElementListInMapFinished)(NSArray *elements, NSError *error);
 
 
 
@@ -77,8 +76,8 @@ typedef void (^TBlock_getCategorizedElemensInMapFinished)(NSArray *elements, NSE
 
 - (NSArray *) getAllCategoriesInMap:(MEMap *)map orderBy:(SORTING_METHOD)orderBy;
 
-- (SRVC_ASYNCHRONOUS) getFlatElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getFlatElemensInMapFinished) callbackBlock;
-- (SRVC_ASYNCHRONOUS) getCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getCategorizedElemensInMapFinished) callbackBlock;
+- (SRVC_ASYNCHRONOUS) getFlatElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getElementListInMapFinished) callbackBlock;
+- (SRVC_ASYNCHRONOUS) getCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getElementListInMapFinished) callbackBlock;
 
 
 

@@ -2,30 +2,35 @@
 //  PointListController.h
 //  iTravelPOI
 //
-//  Created by jzarzuela on 19/02/12.
-//  Copyright 2012 __MyCompanyName__. All rights reserved.
+//  Created by JZarzuela on 11/03/12.
+//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import "PointCatEditorController.h"
 #import "MEMap.h"
-#import "MECategory.h"
+#import <UIKit/UIKit.h>
 
+
+
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark PRIVATE CONSTANTS and C-Methods definitions
+//---------------------------------------------------------------------------------------------------------------------
 typedef enum {
     showCategorized = 0,
     showFlat = 1
 } PointListShowMode;
 
+
+
 //*********************************************************************************************************************
+#pragma mark -
+#pragma mark PointListController interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface PointListController : UITableViewController <PointCatEditorDelegate> {
-    
-}
+@interface PointListController : UIViewController
 
 @property (nonatomic, retain) MEMap *map;
 @property (nonatomic, retain) NSArray *filteringCategories;
 @property (nonatomic, assign) PointListShowMode showMode;
 
-- (void) changeShowMode:(PointListShowMode) mode;
 
 @end
