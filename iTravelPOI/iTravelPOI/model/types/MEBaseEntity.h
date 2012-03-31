@@ -52,6 +52,7 @@ static const NSString *SyncStatusType_Names[8]={
 @property (nonatomic, assign)   BOOL changed;
 @property (nonatomic, readonly) BOOL isLocal;
 @property (nonatomic, assign)   SyncStatusType syncStatus;
+@property (nonatomic, readonly) BOOL isMarkedAsDeleted;
 
 
 
@@ -81,6 +82,7 @@ static const NSString *SyncStatusType_Names[8]={
 // Quitar la marca no restaura las relaciones que antes existian
 - (void) markAsDeleted;
 - (void) unmarkAsDeleted;
+- (BOOL) isMarkedAsDeleted;
 
 
 // Representa en XML el contenido de la entidad

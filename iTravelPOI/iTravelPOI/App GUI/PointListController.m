@@ -454,13 +454,13 @@
     
     // lanzamos la carga de los elementos del mapa
     if(self.showMode == SHOW_FLAT) {
-        [[ModelService sharedInstance] getFlatElemensInMap:self.map 
+        [[ModelService sharedInstance] asyncGetFlatElemensInMap:self.map 
                                              forCategories:self.filteringCategories
                                                    orderBy:self.sortedBy 
                                                   callback:myCallback];
     } else {
         //    forCategory:[self.filteringCategories lastObject]
-        [[ModelService sharedInstance] getCategorizedElemensInMap:self.map 
+        [[ModelService sharedInstance] asyncGetCategorizedElemensInMap:self.map 
                                                     forCategories:self.filteringCategories
                                                           orderBy:self.sortedBy
                                                          callback:myCallback];

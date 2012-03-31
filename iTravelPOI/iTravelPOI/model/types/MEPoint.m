@@ -76,7 +76,13 @@
 #pragma mark CLASS methods
 //---------------------------------------------------------------------------------------------------------------------
 + (NSEntityDescription *) pointEntity:(NSManagedObjectContext *) ctx {
-    NSEntityDescription * _pointEntity = [NSEntityDescription entityForName:@"MEPoint" inManagedObjectContext:ctx];
+
+    NSEntityDescription * _pointEntity = nil;
+    if(ctx) {
+        _pointEntity = [NSEntityDescription entityForName:@"MEPoint" inManagedObjectContext:ctx];
+    } else {
+        _pointEntity = [[ModelService sharedInstance] getEntityDescriptionForName:@"MEPoint"];
+    }
     return _pointEntity;
 }
 
@@ -186,7 +192,10 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void) markAsDeleted {
     
+    // Lo marca como borrado desde la clase base
     [super markAsDeleted];
+
+    // Se borra como punto activo y se almacena como punto borrado
     [self.map removePoint:self];
     [self.map addDeletedPoint:self];
 }
@@ -194,7 +203,10 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void) unmarkAsDeleted {
     
+    // Quita la marca de borrado desde la clase base
     [super unmarkAsDeleted];
+
+    // Se borra como punto eliminado y se almacena de nuevo como punto activo
     [self.map removeDeletedPoint:self];
     [self.map addPoint:self];
 }

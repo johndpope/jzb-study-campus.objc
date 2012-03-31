@@ -72,14 +72,19 @@ typedef void (^TBlock_getElementListInMapFinished)(NSArray *elements, NSError *e
 //---------------------------------------------------------------------------------------------------------------------
 
 - (NSManagedObjectContext *) initContext;
-
-- (SRVC_ASYNCHRONOUS) getUserMapList:(NSManagedObjectContext *)ctx orderBy:(SORTING_METHOD)orderBy sortOrder:(SORTING_ORDER)sortOrder callback:(TBlock_getUserMapListFinished) callbackBlock;
+- (NSEntityDescription *) getEntityDescriptionForName:(NSString *)entityName;
 
 - (NSArray *) getAllCategoriesInMap:(MEMap *)map orderBy:(SORTING_METHOD)orderBy;
 
-- (SRVC_ASYNCHRONOUS) getFlatElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getElementListInMapFinished) callbackBlock;
-- (SRVC_ASYNCHRONOUS) getCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getElementListInMapFinished) callbackBlock;
+// Asynchronous methods
+- (SRVC_ASYNCHRONOUS) asyncGetUserMapList:(NSManagedObjectContext *)ctx orderBy:(SORTING_METHOD)orderBy sortOrder:(SORTING_ORDER)sortOrder callback:(TBlock_getUserMapListFinished) callbackBlock;
+- (SRVC_ASYNCHRONOUS) asyncGetFlatElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getElementListInMapFinished) callbackBlock;
+- (SRVC_ASYNCHRONOUS) asyncGetCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getElementListInMapFinished) callbackBlock;
 
+// Synchrouns methods
+- (NSArray *) getUserMapList:(NSManagedObjectContext *)ctx orderBy:(SORTING_METHOD)orderBy  sortOrder:(SORTING_ORDER)sortOrder error:(NSError **)error;
+- (NSArray *) getFlatElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy error:(NSError **)error ;
+- (NSArray *) getCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy error:(NSError **)error;
 
 
 @end

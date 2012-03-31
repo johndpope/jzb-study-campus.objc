@@ -47,8 +47,6 @@
 #pragma mark -
 #pragma mark MECategory general INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) markAsDeleted;
-- (void) unmarkAsDeleted;
 - (void) updateToRemoteETag;
 
 - (BOOL) recursiveContainsSubCategory:(MECategory *)subCat;

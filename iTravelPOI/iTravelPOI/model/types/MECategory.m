@@ -69,7 +69,12 @@
 #pragma mark CLASS methods
 //---------------------------------------------------------------------------------------------------------------------
 + (NSEntityDescription *) categoryEntity:(NSManagedObjectContext *) ctx {
-    NSEntityDescription * _categoryEntity = [NSEntityDescription entityForName:@"MECategory" inManagedObjectContext:ctx];
+    NSEntityDescription * _categoryEntity = nil;
+    if(ctx) {
+        _categoryEntity = [NSEntityDescription entityForName:@"MECategory" inManagedObjectContext:ctx];
+    } else {
+        _categoryEntity = [[ModelService sharedInstance] getEntityDescriptionForName:@"MECategory"];
+    }
     return _categoryEntity;
 }
 
@@ -155,7 +160,10 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void) markAsDeleted {
     
+    // Lo marca como borrado desde la clase base
     [super markAsDeleted];
+    
+    // Se borra como categoria activoa y se almacena como categoria borrada
     [self.map removeCategory:self];
     [self.map addDeletedCategory:self];
 }
@@ -163,7 +171,10 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void) unmarkAsDeleted {
     
+    // Quita la marca de borrado desde la clase base
     [super unmarkAsDeleted];
+    
+    // Se borra como categoria eliminada y se almacena de nuevo como categoria activa
     [self.map removeDeletedCategory:self];
     [self.map addCategory:self];
 }

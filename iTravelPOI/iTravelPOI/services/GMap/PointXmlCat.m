@@ -6,11 +6,15 @@
 //  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
+#import "PointXmlCat.h"
+
+#import "GMapIcon.h"
+
 #import "GDataXMLNode.h"
 #import "RegexKitLite.h"
-
-#import "PointXmlCat.h"
 #import "NSDataExtensions.h"
+
+#import "JavaStringCat.h"
 
 
 #define EXT_INFO_PREFIX @"extended_Info:"
@@ -40,9 +44,10 @@ NSString* _cleanHTML(NSString *str) {
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (NSString *) nodeStringValue: (NSString *)xpath fromNode:(GDataXMLNode*)node defValue:(NSString *)defValue {
+- (NSString *) nodeStringValue: (NSString *)xpath fromNode:(GDataXMLNode*)node defValue:(NSString *)defValue ns:(NSDictionary *)ns {
     
-    NSArray *children = [node nodesForXPath:xpath namespaces:nil error:nil];
+    NSError *error = nil;
+    NSArray *children = [node nodesForXPath:xpath namespaces:ns error:&error];
     if([children count]>0) {
         NSString *val = [[children objectAtIndex:0] stringValue]; 
         return val;
@@ -55,9 +60,9 @@ NSString* _cleanHTML(NSString *str) {
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (NSString *) nodeStringCleanValue: (NSString *)xpath fromNode:(GDataXMLNode*)node defValue:(NSString *)defValue {
+- (NSString *) nodeStringCleanValue: (NSString *)xpath fromNode:(GDataXMLNode*)node defValue:(NSString *)defValue  ns:(NSDictionary *)ns {
     
-    return _cleanHTML([self nodeStringValue:xpath fromNode:node defValue:defValue]);
+    return _cleanHTML([self nodeStringValue:xpath fromNode:node defValue:defValue ns:ns]);
     
 }
 
@@ -80,8 +85,8 @@ NSString* _cleanHTML(NSString *str) {
     s_idCounter++;
     NSString *styleID = [NSString stringWithFormat:@"Style-%u-%u",time(0L), s_idCounter];
     [kmlStr appendFormat:@"<Style id=\"%@\"><IconStyle><Icon><href>", styleID];
-    if(self.iconURL) {
-        [kmlStr appendString:self.iconURL];
+    if(self.icon.url) {
+        [kmlStr appendString:self.icon.url];
     }
     [kmlStr appendString:@"</href></Icon></IconStyle></Style>"];
     
@@ -96,35 +101,51 @@ NSString* _cleanHTML(NSString *str) {
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) setKmlBlob:(NSString *) value {
-    
+
+    // Si no hay nada que parsear retorna
     if(value==nil) {
         return;
     }
     
-    NSError *error;
-    GDataXMLNode *doc = [[[GDataXMLDocument alloc] initWithXMLString:value options:0 error: &error] autorelease];
+    
+    // Parsea el XML que esta en el BLOB KML del elemento
+    NSError *error = nil;
+    GDataXMLDocument *doc = [[[GDataXMLDocument alloc] initWithXMLString:value options:0 error: &error] autorelease];
     if(doc==nil) {
         // Un error en el XML
         NSLog(@"PointXmlCat - setKmlBlob - Error parsing KML content: %@, %@", error, [error userInfo]);
         return;
     }
+    GDataXMLNode *rootNode = [doc rootElement];
     
-    NSString *str;
     
-    str=[self nodeStringValue: @"/Placemark/name/text()" fromNode:doc defValue:@""];
+    // Captura el NameSpace que tiene el nodo raiz (SOLO UNO)
+    NSDictionary *namespaces = nil;
+    for(GDataXMLNode *ns in [[doc rootElement] namespaces]) {
+        namespaces = [NSDictionary dictionaryWithObject:[ns stringValue] forKey:@"NSX"];
+    }
+
+    // Busca los diferentes valores
+    NSString *str = nil;
+    NSString *xpathExpr = nil;
+    
+    xpathExpr = namespaces ? @"/NSX:Placemark/NSX:name/text()" : @"/Placemark/name/text()";
+    str=[self nodeStringValue: xpathExpr fromNode:rootNode defValue:@"" ns:namespaces];
     self.name = str;
     
-    str=[self nodeStringCleanValue: @"/Placemark/description/text()" fromNode:doc defValue:@""];
+    xpathExpr = namespaces ? @"/NSX:Placemark/NSX:description/text()" : @"/Placemark/description/text()";
+    str=[self nodeStringCleanValue: xpathExpr fromNode:rootNode defValue:@"" ns:namespaces];
     self.desc = str;
     
-    str=[self nodeStringValue: @"/Placemark/Style/IconStyle/Icon/href/text()" fromNode:doc defValue:nil];
-    if(str){
-        self.iconURL = str;
-    } else {
-        self.iconURL = @"el icono por defecto";
+    xpathExpr = namespaces ? @"/NSX:Placemark/NSX:Style/NSX:IconStyle/NSX:Icon/NSX:href/text()" : @"/Placemark/Style/IconStyle/Icon/href/text()";
+    str=[self nodeStringValue: xpathExpr fromNode:rootNode defValue:nil ns:namespaces];
+    if(!str || [str length] == 0) {
+        str = [MEPoint defaultIconURL];
     }
+    self.icon = [GMapIcon iconForURL:str];
     
-    str=[self nodeStringValue: @"/Placemark/Point/coordinates/text()" fromNode:doc defValue:@""];
+    xpathExpr = namespaces ? @"/NSX:Placemark/NSX:Point/NSX:coordinates/text()" : @"/Placemark/Point/coordinates/text()";
+    str=[self nodeStringValue: xpathExpr fromNode:rootNode defValue:@"" ns:namespaces];
     if(!str || [str length] == 0) {
         self.lng = 0.0; // Valores por defecto???
         self.lat = 0.0;
@@ -152,7 +173,7 @@ NSString* _cleanHTML(NSString *str) {
     [catData addObject: cat.GID];
     [catData addObject: cat.name];
     [catData addObject: cat.desc];
-    [catData addObject: cat.iconURL];
+    [catData addObject: cat.icon.url];
     [catData addObject: [NSNumber numberWithBool:cat.changed]];
     //[catData addObject: cat.wasDeleted];
     [catData addObject: cat.syncETag];
@@ -174,7 +195,7 @@ NSString* _cleanHTML(NSString *str) {
     cat.GID        = [catData objectAtIndex:0];
     cat.name       = [catData objectAtIndex:1];
     cat.desc       = [catData objectAtIndex:2];
-    cat.iconURL    = [catData objectAtIndex:3];
+    cat.icon       = [GMapIcon iconForURL:[catData objectAtIndex:3]];
     cat.changed    = [[catData objectAtIndex:4] boolValue];
     cat.syncETag   = [catData objectAtIndex:5];
     cat.syncStatus = ST_Sync_OK;
@@ -203,7 +224,7 @@ NSString* _cleanHTML(NSString *str) {
     
     // ********* Escribe informacion del mapa *********
     NSMutableArray *mapData = [[[NSMutableArray alloc] init] autorelease];
-    [mapData addObject: self.map.iconURL];
+    [mapData addObject: self.map.icon.url];
     [data addObject:[[mapData copy] autorelease]];
     
     
@@ -267,7 +288,7 @@ NSString* _cleanHTML(NSString *str) {
     if(!self.isExtInfo) {
         return false;
     }
-
+    
     // Si el texto no tiene el formato adecuado no hace nada
     if(![value hasPrefix:EXT_INFO_PREFIX]) {
         return false;
@@ -300,7 +321,7 @@ NSString* _cleanHTML(NSString *str) {
     
     // ********* Lee informacion del mapa *********
     NSArray *mapData = [data objectAtIndex:0];
-    self.map.iconURL = [mapData objectAtIndex:1];
+    self.map.icon    = [GMapIcon iconForURL:[mapData objectAtIndex:1]];
     
     
     // ********* Lee la informacion de las categorias *********

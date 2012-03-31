@@ -22,11 +22,6 @@
 
 - (NSURL *) _applicationDocumentsDirectory;
 
-
-- (NSArray *) _getUserMapList:(NSManagedObjectContext *)ctx orderBy:(SORTING_METHOD)orderBy  sortOrder:(SORTING_ORDER)sortOrder error:(NSError **)error;
-- (NSArray *) _getFlatElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy error:(NSError **)error ;
-- (NSArray *) _getCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy error:(NSError **)error;
-
 - (NSSet *) __getAllCategorizedPoints:(MEMap *)map forCategories:(NSArray *)categories;
 - (NSSet *) __getAllCategoriesForPoints:(NSSet *)points excludedCategories:(NSArray *)excludedCats inMap:(MEMap *)map;
 - (NSSet *) __filterSubcategories:(NSSet *)categories;
@@ -64,7 +59,7 @@
     dispatch_release(_ModelServiceQueue);
     [_psCoordinator release];
     [_moModel release];
-
+    
     [super dealloc];
 }
 
@@ -95,7 +90,7 @@
 - (NSManagedObjectContext *) initContext {
     
     NSLog(@"ModelService - initContext");
-
+    
     NSPersistentStoreCoordinator *coor = self.psCoordinator;
     if(coor!=nil) {
         NSManagedObjectContext * ctx = [[NSManagedObjectContext alloc] init];
@@ -107,31 +102,13 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (SRVC_ASYNCHRONOUS) getUserMapList:(NSManagedObjectContext *)ctx orderBy:(SORTING_METHOD)orderBy sortOrder:(SORTING_ORDER)sortOrder callback:(TBlock_getUserMapListFinished) callbackBlock {
+- (NSEntityDescription *) getEntityDescriptionForName:(NSString *)entityName {
     
-    NSLog(@"ModelService - Async - getUserMapList");
+    NSDictionary *entities = [self.moModel entitiesByName];
     
-    // Si no hay nadie esperando no hacemos nada
-    if(callbackBlock==nil) {
-        return;
-    }
-    
-    // Se apunta la cola en la que deberá dar la respuesta de callback
-    dispatch_queue_t caller_queue = dispatch_get_current_queue();
-    
-    // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
-    dispatch_async(_ModelServiceQueue,^(void){
-        NSError *error = nil;
-        NSArray *maps = [[ModelService sharedInstance] _getUserMapList:ctx orderBy:orderBy sortOrder:sortOrder error:&error];
-        
-        // Avisamos al llamante de que ya se ha actualizado el mapa solicitado
-        dispatch_async(caller_queue, ^(void){
-            callbackBlock(maps, error);
-        });
-    });
-    
+    NSEntityDescription *entity = [entities objectForKey:entityName];
+    return entity;
 }
-
 //---------------------------------------------------------------------------------------------------------------------
 - (NSArray *) getAllCategoriesInMap:(MEMap *)map orderBy:(SORTING_METHOD)orderBy {
     
@@ -159,7 +136,33 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (SRVC_ASYNCHRONOUS) getFlatElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getElementListInMapFinished)callbackBlock {
+- (SRVC_ASYNCHRONOUS) asyncGetUserMapList:(NSManagedObjectContext *)ctx orderBy:(SORTING_METHOD)orderBy sortOrder:(SORTING_ORDER)sortOrder callback:(TBlock_getUserMapListFinished) callbackBlock {
+    
+    NSLog(@"ModelService - Async - getUserMapList");
+    
+    // Si no hay nadie esperando no hacemos nada
+    if(callbackBlock==nil) {
+        return;
+    }
+    
+    // Se apunta la cola en la que deberá dar la respuesta de callback
+    dispatch_queue_t caller_queue = dispatch_get_current_queue();
+    
+    // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
+    dispatch_async(_ModelServiceQueue,^(void){
+        NSError *error = nil;
+        NSArray *maps = [[ModelService sharedInstance] getUserMapList:ctx orderBy:orderBy sortOrder:sortOrder error:&error];
+        
+        // Avisamos al llamante de que ya se ha actualizado el mapa solicitado
+        dispatch_async(caller_queue, ^(void){
+            callbackBlock(maps, error);
+        });
+    });
+    
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (SRVC_ASYNCHRONOUS) asyncGetFlatElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getElementListInMapFinished)callbackBlock {
     
     NSLog(@"ModelService - Async - getFlatElemensInMap");
     
@@ -174,7 +177,7 @@
     // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
     dispatch_async(_ModelServiceQueue,^(void) {
         NSError *error = nil;
-        NSArray *elements = [[ModelService sharedInstance] _getFlatElemensInMap:map forCategories:categories orderBy:orderBy error:&error];
+        NSArray *elements = [[ModelService sharedInstance] getFlatElemensInMap:map forCategories:categories orderBy:orderBy error:&error];
         
         // Avisamos al llamante de que ya se ha actualizado el mapa solicitado
         dispatch_async(caller_queue, ^(void){
@@ -184,7 +187,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (SRVC_ASYNCHRONOUS) getCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getElementListInMapFinished)callbackBlock {
+- (SRVC_ASYNCHRONOUS) asyncGetCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy callback:(TBlock_getElementListInMapFinished)callbackBlock {
     
     NSLog(@"ModelService - Async - getCategorizedElemensInMap");
     
@@ -199,7 +202,7 @@
     // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
     dispatch_async(_ModelServiceQueue,^(void){
         NSError *error = nil;
-        NSArray *elements = [[ModelService sharedInstance] _getCategorizedElemensInMap:map forCategories:categories orderBy:orderBy error:&error];
+        NSArray *elements = [[ModelService sharedInstance] getCategorizedElemensInMap:map forCategories:categories orderBy:orderBy error:&error];
         
         // Avisamos al llamante de que ya se ha actualizado el mapa solicitado
         dispatch_async(caller_queue, ^(void){
@@ -210,80 +213,17 @@
     
 }
 
-
-
-//*********************************************************************************************************************
-#pragma mark -
-#pragma mark Getter/Setter methods
 //---------------------------------------------------------------------------------------------------------------------
-- (NSPersistentStoreCoordinator *) psCoordinator {
-    
-    if(_psCoordinator!=nil) {
-        return _psCoordinator;
-    }
-    
-    NSLog(@"ModelService - Creating psCoordinator");
-    
-    NSManagedObjectModel * model = self.moModel;
-    if(model!=nil) {
-        
-        NSURL *storeURL =  [[self _applicationDocumentsDirectory ] URLByAppendingPathComponent:CD_SLQLITE_FNAME];
-        NSLog(@"ModelService - storeURL = %@",storeURL);
-        
-        
-        _psCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: model];
-        if(_psCoordinator!=nil) {
-            NSError *error = nil;
-            if(![_psCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
-                NSLog(@"ModelService - Error creating NSPersistentStoreCoordinator: %@, %@", error, [error userInfo]);
-                [_psCoordinator release];
-                _psCoordinator = nil;
-            }
-        }
-    }
-    
-    return _psCoordinator;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSManagedObjectModel *) moModel {
-    
-    if(_moModel!=nil) {
-        return _moModel;
-    }
-    
-    NSLog(@"ModelService - Creating moModel");
-    
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:CD_MODEL_NAME withExtension:@"momd"];
-    _moModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
-    if(_moModel==nil) {
-        NSLog(@"ModelService - Error creating the NSManagedObjectModel");
-    }
-    
-    return _moModel;
-}
-
-
-
-//*********************************************************************************************************************
-#pragma mark -
-#pragma mark PRIVATE methods
-//---------------------------------------------------------------------------------------------------------------------
-- (NSURL *) _applicationDocumentsDirectory {
-    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSArray *) _getUserMapList:(NSManagedObjectContext *)ctx orderBy:(SORTING_METHOD)orderBy  sortOrder:(SORTING_ORDER)sortOrder error:(NSError **)error {
+- (NSArray *) getUserMapList:(NSManagedObjectContext *)ctx orderBy:(SORTING_METHOD)orderBy  sortOrder:(SORTING_ORDER)sortOrder error:(NSError **)error {
     
     NSLog(@"ModelService - _getUserMapList");
-
+    
     // Crea la peticion
     NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
     [request setEntity:[MEMap mapEntity:ctx]];
     
     // Establece el predicado de busqueda
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(_i_wasDeleted = 0)"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(i_wasDeleted = 0)"];
     [request setPredicate:predicate];
     
     // Estable el orden del resultado
@@ -292,7 +232,7 @@
         case SORT_BY_CREATING_DATE:
             sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"ts_created" ascending:sortOrder];
             break;
-
+            
         case SORT_BY_UPDATING_DATE:
             sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"ts_updated" ascending:sortOrder];
             break;
@@ -303,7 +243,7 @@
     }
     [request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
     [sortDescriptor release];
-
+    
     
     // Realiza la busqueda
     NSError *_err = nil;
@@ -314,7 +254,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (NSArray *) _getFlatElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy error:(NSError **)error {
+- (NSArray *) getFlatElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy error:(NSError **)error {
     
     NSLog(@"ModelService - _getFlatElemensInMap");
     
@@ -383,7 +323,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (NSArray *) _getCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy error:(NSError **)error {
+- (NSArray *) getCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories orderBy:(SORTING_METHOD)orderBy error:(NSError **)error {
     
     NSLog(@"ModelService - _getCategorizedElemensInMap");
     
@@ -423,6 +363,69 @@
     [allElements addObjectsFromArray:sortedPoints];
     
     return allElements;
+}
+
+
+
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark Getter/Setter methods
+//---------------------------------------------------------------------------------------------------------------------
+- (NSPersistentStoreCoordinator *) psCoordinator {
+    
+    if(_psCoordinator!=nil) {
+        return _psCoordinator;
+    }
+    
+    NSLog(@"ModelService - Creating psCoordinator");
+    
+    NSManagedObjectModel * model = self.moModel;
+    if(model!=nil) {
+        
+        NSURL *storeURL =  [[self _applicationDocumentsDirectory ] URLByAppendingPathComponent:CD_SLQLITE_FNAME];
+        NSLog(@"ModelService - storeURL = %@",storeURL);
+        
+        
+        _psCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: model];
+        if(_psCoordinator!=nil) {
+            NSError *error = nil;
+            if(![_psCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
+                NSLog(@"ModelService - Error creating NSPersistentStoreCoordinator: %@, %@", error, [error userInfo]);
+                [_psCoordinator release];
+                _psCoordinator = nil;
+            }
+        }
+    }
+    
+    return _psCoordinator;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSManagedObjectModel *) moModel {
+    
+    if(_moModel!=nil) {
+        return _moModel;
+    }
+    
+    NSLog(@"ModelService - Creating moModel");
+    
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:CD_MODEL_NAME withExtension:@"momd"];
+    _moModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+    if(_moModel==nil) {
+        NSLog(@"ModelService - Error creating the NSManagedObjectModel");
+    }
+    
+    return _moModel;
+}
+
+
+
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark PRIVATE methods
+//---------------------------------------------------------------------------------------------------------------------
+- (NSURL *) _applicationDocumentsDirectory {
+    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
 //---------------------------------------------------------------------------------------------------------------------

@@ -33,6 +33,7 @@
 
 @property (nonatomic, retain) NSString * i_iconURL;
 @property (nonatomic, retain) NSNumber * i_changed;
+@property (nonatomic, retain) NSNumber * i_wasDeleted;
 
 
 + (NSString *) _calcRemoteCategoryETag;
@@ -62,6 +63,8 @@
 @dynamic ts_created;
 @dynamic ts_updated;
 @dynamic i_changed;
+@dynamic i_wasDeleted;
+
 
 @synthesize syncStatus = _syncStatus;
 
@@ -170,10 +173,19 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) markAsDeleted {
+    // Lo marca como borrado
+    self.i_wasDeleted = [NSNumber numberWithBool:YES];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) unmarkAsDeleted {
+    // Quita marca como borrado
+    self.i_wasDeleted = [NSNumber numberWithBool:NO];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL) isMarkedAsDeleted {
+    return [self.i_wasDeleted boolValue];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -216,6 +228,7 @@
     self.syncStatus = ST_Sync_OK;
     self.ts_created = [NSDate date];
     self.ts_updated = [NSDate date];
+    self.i_wasDeleted = [NSNumber numberWithBool:NO];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -240,6 +253,7 @@
     [sbuf appendFormat:@"%@<icon>%@</icon>\n", ident, self.i_iconURL];
     [sbuf appendFormat:@"%@<ts_created>%@</ts_created>\n", ident, self.ts_created];
     [sbuf appendFormat:@"%@<ts_updated>%@</ts_updated>\n", ident, self.ts_updated];
+    [sbuf appendFormat:@"%@<wasDeleted>%d</wasDeleted>\n", ident, self.isMarkedAsDeleted];
 }
 
 

@@ -22,8 +22,6 @@
 //---------------------------------------------------------------------------------------------------------------------
 @interface MEMap : MEBaseEntity
 
-@property (nonatomic, assign) BOOL wasDeleted;
-
 @property (nonatomic, retain) NSSet* points;
 @property (nonatomic, retain) NSSet* categories;
 
@@ -51,9 +49,6 @@
 #pragma mark -
 #pragma mark MEMap general INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) markAsDeleted;
-- (void) unmarkAsDeleted;
-
 // Limpia el estado de sincronizacion y borrar DEFINITIVAMENTE los elementos marcados como borrados
 - (void) markAsSynchronized;
 - (void) removeAllPointsAndCategories;

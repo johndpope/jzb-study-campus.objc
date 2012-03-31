@@ -22,13 +22,9 @@
     self.syncETag = other.syncETag;
     self.name = other.name;
     self.desc = other.desc;
-    if(other.wasDeleted) {
-        [self markAsDeleted];
-    } else {
-        [self unmarkAsDeleted];
-    }
+    // No hace nada con el "esta borrado"!!!
     self.changed = other.changed;
-    self.iconURL = other.iconURL;
+    self.icon = other.icon;
     self.ts_created = other.ts_created;
     self.ts_updated = other.ts_updated;
     self.syncStatus = other.syncStatus;

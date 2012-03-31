@@ -402,6 +402,14 @@
 		42CB0B08150BEABD003E5959 /* GMapIconEditorBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 42CB0B06150BEABD003E5959 /* GMapIconEditorBg.png */; };
 		42CB0B0D150BFE97003E5959 /* GMapIconEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CB0B0B150BFE97003E5959 /* GMapIconEditor.m */; };
 		42CB0B0E150BFE97003E5959 /* GMapIconEditor.xib in Resources */ = {isa = PBXBuildFile; fileRef = 42CB0B0C150BFE97003E5959 /* GMapIconEditor.xib */; };
+		42D783A81525E973000F0725 /* GMapService.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D783A11525E973000F0725 /* GMapService.m */; };
+		42D783AB1525E973000F0725 /* PointXmlCat.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D783A71525E973000F0725 /* PointXmlCat.m */; };
+		42D783B2152603F2000F0725 /* GMapSyncWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D783B1152603F2000F0725 /* GMapSyncWrapper.m */; };
+		42D783BC1526203C000F0725 /* CollectionMerger.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D783B51526203C000F0725 /* CollectionMerger.m */; };
+		42D783BD1526203C000F0725 /* MergeEntityCat.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D783B71526203C000F0725 /* MergeEntityCat.m */; };
+		42D783BE1526203C000F0725 /* SyncService.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D783B91526203C000F0725 /* SyncService.m */; };
+		42D783C31526457E000F0725 /* GeneralConfigController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D783C11526457D000F0725 /* GeneralConfigController.m */; };
+		42D783C41526457E000F0725 /* GeneralConfigController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 42D783C21526457E000F0725 /* GeneralConfigController.xib */; };
 		42ED53D614FA4183006AD5AB /* MEBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 42ED53D514FA4183006AD5AB /* MEBaseEntity.m */; };
 /* End PBXBuildFile section */
 
@@ -1160,6 +1168,21 @@
 		42CB0B0B150BFE97003E5959 /* GMapIconEditor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapIconEditor.m; sourceTree = "<group>"; };
 		42CB0B0C150BFE97003E5959 /* GMapIconEditor.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GMapIconEditor.xib; sourceTree = "<group>"; };
 		42CEC46214FA43AF00837C64 /* MEBaseEntity_Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEBaseEntity_Protected.h; sourceTree = "<group>"; };
+		42D783A01525E973000F0725 /* GMapService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMapService.h; sourceTree = "<group>"; };
+		42D783A11525E973000F0725 /* GMapService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapService.m; sourceTree = "<group>"; };
+		42D783A61525E973000F0725 /* PointXmlCat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointXmlCat.h; sourceTree = "<group>"; };
+		42D783A71525E973000F0725 /* PointXmlCat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointXmlCat.m; sourceTree = "<group>"; };
+		42D783B0152603F1000F0725 /* GMapSyncWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMapSyncWrapper.h; sourceTree = "<group>"; };
+		42D783B1152603F2000F0725 /* GMapSyncWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapSyncWrapper.m; sourceTree = "<group>"; };
+		42D783B41526203C000F0725 /* CollectionMerger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionMerger.h; sourceTree = "<group>"; };
+		42D783B51526203C000F0725 /* CollectionMerger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionMerger.m; sourceTree = "<group>"; };
+		42D783B61526203C000F0725 /* MergeEntityCat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MergeEntityCat.h; sourceTree = "<group>"; };
+		42D783B71526203C000F0725 /* MergeEntityCat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MergeEntityCat.m; sourceTree = "<group>"; };
+		42D783B81526203C000F0725 /* SyncService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyncService.h; sourceTree = "<group>"; };
+		42D783B91526203C000F0725 /* SyncService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyncService.m; sourceTree = "<group>"; };
+		42D783C01526457D000F0725 /* GeneralConfigController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeneralConfigController.h; sourceTree = "<group>"; };
+		42D783C11526457D000F0725 /* GeneralConfigController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneralConfigController.m; sourceTree = "<group>"; };
+		42D783C21526457E000F0725 /* GeneralConfigController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GeneralConfigController.xib; sourceTree = "<group>"; };
 		42ED53D414FA4183006AD5AB /* MEBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEBaseEntity.h; sourceTree = "<group>"; };
 		42ED53D514FA4183006AD5AB /* MEBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MEBaseEntity.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1232,6 +1255,9 @@
 		427CD94D15058363003048EE /* __malos_pendientes__ */ = {
 			isa = PBXGroup;
 			children = (
+				42D783C01526457D000F0725 /* GeneralConfigController.h */,
+				42D783C11526457D000F0725 /* GeneralConfigController.m */,
+				42D783C21526457E000F0725 /* GeneralConfigController.xib */,
 				427CD94F15058377003048EE /* Editors */,
 			);
 			name = __malos_pendientes__;
@@ -1501,6 +1527,8 @@
 			children = (
 				42B235FD14FAB9DE00094484 /* SrvcTicket.h */,
 				42B235FE14FAB9DE00094484 /* SrvcTicket.m */,
+				42D783B31526203C000F0725 /* Sync */,
+				42D7839F1525E973000F0725 /* GMap */,
 				42BFABDC14EFE5BB00604B90 /* Model */,
 			);
 			name = services;
@@ -2409,6 +2437,32 @@
 			name = icons;
 			sourceTree = "<group>";
 		};
+		42D7839F1525E973000F0725 /* GMap */ = {
+			isa = PBXGroup;
+			children = (
+				42D783A01525E973000F0725 /* GMapService.h */,
+				42D783A11525E973000F0725 /* GMapService.m */,
+				42D783A61525E973000F0725 /* PointXmlCat.h */,
+				42D783A71525E973000F0725 /* PointXmlCat.m */,
+				42D783B0152603F1000F0725 /* GMapSyncWrapper.h */,
+				42D783B1152603F2000F0725 /* GMapSyncWrapper.m */,
+			);
+			path = GMap;
+			sourceTree = "<group>";
+		};
+		42D783B31526203C000F0725 /* Sync */ = {
+			isa = PBXGroup;
+			children = (
+				42D783B41526203C000F0725 /* CollectionMerger.h */,
+				42D783B51526203C000F0725 /* CollectionMerger.m */,
+				42D783B61526203C000F0725 /* MergeEntityCat.h */,
+				42D783B71526203C000F0725 /* MergeEntityCat.m */,
+				42D783B81526203C000F0725 /* SyncService.h */,
+				42D783B91526203C000F0725 /* SyncService.m */,
+			);
+			path = Sync;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2511,6 +2565,7 @@
 				423593D2150D3BAC00596B2E /* PointListController.xib in Resources */,
 				4286A67E150D6B0500BC8701 /* showCategorized.png in Resources */,
 				4286A67F150D6B0500BC8701 /* showFlat.png in Resources */,
+				42D783C41526457E000F0725 /* GeneralConfigController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2855,6 +2910,13 @@
 				424A100F150CCC73000F31EA /* SortOptionsController.m in Sources */,
 				423593D1150D3BAC00596B2E /* PointListController.m in Sources */,
 				4286A676150D591800BC8701 /* MEMapElement.m in Sources */,
+				42D783A81525E973000F0725 /* GMapService.m in Sources */,
+				42D783AB1525E973000F0725 /* PointXmlCat.m in Sources */,
+				42D783B2152603F2000F0725 /* GMapSyncWrapper.m in Sources */,
+				42D783BC1526203C000F0725 /* CollectionMerger.m in Sources */,
+				42D783BD1526203C000F0725 /* MergeEntityCat.m in Sources */,
+				42D783BE1526203C000F0725 /* SyncService.m in Sources */,
+				42D783C31526457E000F0725 /* GeneralConfigController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

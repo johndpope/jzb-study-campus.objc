@@ -8,8 +8,11 @@
 
 #import "MapListController.h"
 #import "ModelService.h"
+
 #import "PointListController.h"
 #import "SortOptionsController.h"
+#import "GeneralConfigController.h"
+
 #import "SVProgressHUD.h"
 #import "TDBadgedCell.h"
 #import "WEPopoverController.h"
@@ -25,6 +28,7 @@
 @interface MapListController() <MapEditorDelegate, SortOptionsControllerDelegate>
 
 @property (nonatomic, retain) IBOutlet UITableView *mapTableView;
+@property (retain, nonatomic) IBOutlet UIButton *configButton;
 @property (retain, nonatomic) IBOutlet UIButton *sortMethodButton;
 @property (retain, nonatomic) IBOutlet UIButton *sortOrderButton;
 
@@ -45,6 +49,7 @@
 - (void) loadMapListData;
 - (void) showPointListControllerForMap:(MEMap *)mapToView;
 - (void) showMapEditorFor:(MEMap *)mapToView;
+- (void) showConfigWindow;
 - (void) showErrorToUser:(NSString *)errorMsg;
 
 @end
@@ -56,6 +61,9 @@
 #pragma mark MapListController implementation
 //---------------------------------------------------------------------------------------------------------------------
 @implementation MapListController
+
+
+@synthesize configButton = _configButton;
 @synthesize sortOrderButton = _sortOrderButton;
 @synthesize sortMethodButton = _sortMethodButton;
 @synthesize sortOrder = _sortOrder;
@@ -97,6 +105,7 @@
     [_sortOrderButton release];
     [_sortMethodButton release];
     
+    [_configButton release];
     [super dealloc];
 }
 
@@ -169,6 +178,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     
+    [self setConfigButton:nil];
     [super viewDidUnload];
 }
 
@@ -232,6 +242,11 @@
     // [self loadMapListData];
     NSLog(@"modelHasChanged");
     self.maps=nil;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (IBAction)configButtonAction:(UIButton *)sender {
+    [self showConfigWindow];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -453,7 +468,7 @@
     [activityIndicator release];
     
     // Lanzamos la carga de los mapas
-    [[ModelService sharedInstance] getUserMapList:self.moContext orderBy:self.sortedBy sortOrder:self.sortOrder callback:^(NSArray *maps, NSError *error) {
+    [[ModelService sharedInstance] asyncGetUserMapList:self.moContext orderBy:self.sortedBy sortOrder:self.sortOrder callback:^(NSArray *maps, NSError *error) {
         
         // Paramos el indicador de actividad
         UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *)self.navigationItem.rightBarButtonItem.customView;
@@ -492,6 +507,15 @@
     mapEditor.map = mapToView;
     [self.navigationController pushViewController:mapEditor animated:YES];
     [mapEditor release];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) showConfigWindow {
+    
+    GeneralConfigController *configWindow = [[GeneralConfigController alloc] initWithNibName:@"GeneralConfigController" bundle:nil];
+    //configWindow.delegate = self;
+    [self.navigationController pushViewController:configWindow animated:YES];
+    [configWindow release];
 }
 
 //---------------------------------------------------------------------------------------------------------------------

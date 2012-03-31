@@ -34,7 +34,6 @@
 #pragma mark -
 #pragma mark MEPoint CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-
 + (NSEntityDescription *) pointEntity:(NSManagedObjectContext *) ctx;
 
 + (NSString *) defaultIconURL;
@@ -53,8 +52,6 @@
 #pragma mark -
 #pragma mark MEPoint general INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) markAsDeleted;
-- (void) unmarkAsDeleted;
 
 
 

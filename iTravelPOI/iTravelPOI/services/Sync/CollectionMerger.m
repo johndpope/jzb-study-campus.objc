@@ -15,7 +15,7 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
-MEBaseEntity * _createNewLocalEntity(MEMap *localMap, MEBaseEntity *remoteEntity);
+MEBaseEntity * _createNewLocalEntity(NSManagedObjectContext *moContext, MEMap *localMap, MEBaseEntity *remoteEntity);
 BOOL _needToBeUpdatedAfterCreateLocally(MEBaseEntity *item1, MEBaseEntity *item2);
 
 
@@ -45,10 +45,10 @@ BOOL _needToBeUpdatedAfterCreateLocally(MEBaseEntity *item1, MEBaseEntity *item2
 
 
 //---------------------------------------------------------------------------------------------------------------------
-MEBaseEntity * _createNewLocalEntity(MEMap *localMap, MEBaseEntity *remoteEntity) {
-    
+MEBaseEntity * _createNewLocalEntity(NSManagedObjectContext *moContext, MEMap *localMap, MEBaseEntity *remoteEntity) {
+
     if([remoteEntity isKindOfClass: [MEMap class]]) {
-        return [MEMap insertNew];
+        return [MEMap insertNew:moContext];
     } else if([remoteEntity isKindOfClass: [MECategory class]]) {
         return [MECategory insertNewInMap:localMap];
     } else if([remoteEntity isKindOfClass: [MEPoint class]]) {
@@ -82,7 +82,9 @@ BOOL _needToBeUpdatedAfterCreateLocally(MEBaseEntity *item1, MEBaseEntity *item2
 // Busca elementos existentes en ambos para actualizar [Quien depende de info de cambios]
 // [Debe ser el ultimo por cambios de dependencias contra algo nuevo que crean los anteriores]
 // [En teoria, lo creado en pasos previos deberia dar OK en este y no hacer nada]
-+ (NSArray *) merge:(NSArray *)locals remotes:(NSArray * )remotes inLocalMap:(MEMap *)localMap {
++ (NSArray *) merge:(NSArray *)locals remotes:(NSArray * )remotes 
+         inLocalMap:(MEMap *)localMap 
+          moContext:(NSManagedObjectContext *)moContext {
     
     NSMutableArray *newAddedEntities = [NSMutableArray array];
     
@@ -94,7 +96,7 @@ BOOL _needToBeUpdatedAfterCreateLocally(MEBaseEntity *item1, MEBaseEntity *item2
         MEBaseEntity *localEntity = [MEBaseEntity searchByGID:remoteEntity.GID inArray:locals];
         
         // Solo procesa los nuevos
-        if(localEntity != nil && !localEntity.wasDeleted) {
+        if(localEntity != nil && !localEntity.isMarkedAsDeleted) {
             continue;
         }
         
@@ -102,7 +104,7 @@ BOOL _needToBeUpdatedAfterCreateLocally(MEBaseEntity *item1, MEBaseEntity *item2
         if(localEntity == nil) {
             // Se crea una nueva entidad local desde la remota
             NSLog(@"Sync: Creating local entity from remote: %@",remoteEntity.name);
-            MEBaseEntity *newLocal = _createNewLocalEntity(localMap, remoteEntity);
+            MEBaseEntity *newLocal = _createNewLocalEntity(moContext, localMap, remoteEntity);
             [newLocal mergeFrom:remoteEntity withConflit:false];
             newLocal.syncStatus = ST_Sync_Create_Local;
             [newAddedEntities addObject:newLocal];
@@ -134,7 +136,7 @@ BOOL _needToBeUpdatedAfterCreateLocally(MEBaseEntity *item1, MEBaseEntity *item2
     for(MEBaseEntity *localEntity in locals) {
         
         // No procesa los elementos locales borrados
-        if(localEntity.wasDeleted) {
+        if(localEntity.isMarkedAsDeleted) {
             continue;
         }
         
@@ -172,7 +174,7 @@ BOOL _needToBeUpdatedAfterCreateLocally(MEBaseEntity *item1, MEBaseEntity *item2
     for(MEBaseEntity *localEntity in locals) {
         
         // No procesa los elementos locales borrados
-        if(localEntity.wasDeleted) {
+        if(localEntity.isMarkedAsDeleted) {
             continue;
         }
         

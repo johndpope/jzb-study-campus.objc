@@ -27,9 +27,6 @@
 @interface MEMap () 
 
 
-@property (nonatomic, retain) NSNumber * _i_wasDeleted;
-
-
 @end
 
 
@@ -40,14 +37,11 @@
 //---------------------------------------------------------------------------------------------------------------------
 @implementation MEMap
 
-@dynamic _i_wasDeleted;
 @dynamic points;
 @dynamic categories;
 @dynamic extInfo;
 @dynamic deletedPoints;
 @dynamic deletedCategories;
-
-@synthesize wasDeleted = _wasDeleted;
 
 
 
@@ -66,8 +60,13 @@
 #pragma mark CLASS methods
 //---------------------------------------------------------------------------------------------------------------------
 + (NSEntityDescription *) mapEntity:(NSManagedObjectContext *)ctx {
-    
-    NSEntityDescription *_mapEntity = [NSEntityDescription entityForName:@"MEMap" inManagedObjectContext:ctx];
+        
+    NSEntityDescription * _mapEntity = nil;
+    if(ctx) {
+        _mapEntity = [NSEntityDescription entityForName:@"MEMap" inManagedObjectContext:ctx];
+    } else {
+        _mapEntity = [[ModelService sharedInstance] getEntityDescriptionForName:@"MEMap"];
+    }
     return _mapEntity;
 }
 
@@ -107,23 +106,12 @@
 
 //*********************************************************************************************************************
 #pragma mark -
-#pragma mark Getter/Setter methods
-//---------------------------------------------------------------------------------------------------------------------
-- (BOOL) wasDeleted {
-    return [self._i_wasDeleted boolValue];
-}
-
-
-//*********************************************************************************************************************
-#pragma mark -
 #pragma mark General PUBLIC methods
 //---------------------------------------------------------------------------------------------------------------------
 - (void) markAsDeleted {
     
+    // Lo marca como borrado desde la clase base
     [super markAsDeleted];
-    
-    // Lo marca como borrado
-    self._i_wasDeleted = [NSNumber numberWithBool:YES];
     
     // "recuerda" sus elementos para eliminarlos luego
     NSSet *allPoints = [NSSet setWithSet:self.points];
@@ -156,8 +144,9 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) unmarkAsDeleted {
+
+    // Quita la marca de borrado desde la clase base
     [super unmarkAsDeleted];
-    self._i_wasDeleted = [NSNumber numberWithBool:NO];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -211,7 +200,6 @@
 - (void) resetEntity
 {
     [super resetEntity];
-    self._i_wasDeleted = [NSNumber numberWithBool:NO];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -220,9 +208,7 @@
     unsigned nextIdent = (unsigned)[ident length]+2;
     
     [super _xmlStringBody:sbuf ident:ident];
-    
-    [sbuf appendFormat:@"%@<wasDeleted>%d</wasDeleted>\n", ident, self.wasDeleted];
-    
+        
     //--- Categories ---
     if([self.categories count] == 0) {
         [sbuf appendFormat:@"%@<categories/>\n",ident];

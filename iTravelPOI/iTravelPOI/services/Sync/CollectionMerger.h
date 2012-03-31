@@ -16,6 +16,8 @@
     
 }
 
-+ (NSArray *) merge:(NSArray *)locals remotes:(NSArray * )remotes inLocalMap:(MEMap *)localMap;
++ (NSArray *) merge:(NSArray *)locals remotes:(NSArray *)remotes 
+         inLocalMap:(MEMap *)localMap 
+          moContext:(NSManagedObjectContext *)moContext;
 
 @end
