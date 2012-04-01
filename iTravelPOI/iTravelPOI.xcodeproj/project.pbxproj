@@ -67,6 +67,7 @@
 		42AC3F4514F9001800E5DECB /* PointCatEditorController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 42AC3F4114F9001800E5DECB /* PointCatEditorController.xib */; };
 		42B235FC14FAAEC400094484 /* cabeceras.txt in Resources */ = {isa = PBXBuildFile; fileRef = 42B235FB14FAAEC300094484 /* cabeceras.txt */; };
 		42B235FF14FAB9DF00094484 /* SrvcTicket.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B235FE14FAB9DE00094484 /* SrvcTicket.m */; };
+		42B6D7BA1528E722004F1B01 /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B6D7B91528E722004F1B01 /* GTMNSString+HTML.m */; };
 		42BEDDB71502629A008C8DCC /* GMapIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BEDDB61502629A008C8DCC /* GMapIcon.m */; };
 		42BFAAA914EFE32000604B90 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BFAAA814EFE32000604B90 /* UIKit.framework */; };
 		42BFAAAB14EFE32000604B90 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BFAAAA14EFE32000604B90 /* Foundation.framework */; };
@@ -493,6 +494,9 @@
 		42B235FB14FAAEC300094484 /* cabeceras.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cabeceras.txt; sourceTree = "<group>"; };
 		42B235FD14FAB9DE00094484 /* SrvcTicket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SrvcTicket.h; sourceTree = "<group>"; };
 		42B235FE14FAB9DE00094484 /* SrvcTicket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SrvcTicket.m; sourceTree = "<group>"; };
+		42B6D7B81528E722004F1B01 /* GTMNSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "GTMNSString+HTML.h"; path = "Others/GTMNSString+HTML.h"; sourceTree = "<group>"; };
+		42B6D7B91528E722004F1B01 /* GTMNSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "GTMNSString+HTML.m"; path = "Others/GTMNSString+HTML.m"; sourceTree = "<group>"; };
+		42B6D7BB1528E7A0004F1B01 /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTMDefines.h; path = Others/GTMDefines.h; sourceTree = "<group>"; };
 		42BEDDB51502629A008C8DCC /* GMapIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMapIcon.h; sourceTree = "<group>"; };
 		42BEDDB61502629A008C8DCC /* GMapIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapIcon.m; sourceTree = "<group>"; };
 		42BFAAA414EFE32000604B90 /* iTravelPOIs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iTravelPOIs.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1293,6 +1297,7 @@
 		42AC3EF214F8FFB000E5DECB /* utils */ = {
 			isa = PBXGroup;
 			children = (
+				42B6D7B71528E6FC004F1B01 /* Others */,
 				42AC3EF314F8FFB000E5DECB /* GUI */,
 				42AC3F1614F8FFB000E5DECB /* JZB-Categories */,
 				42AC3F1914F8FFB000E5DECB /* NSDataExtensions */,
@@ -1411,6 +1416,16 @@
 				42AC3F0C14F8FFB000E5DECB /* popoverBgSimple.png */,
 			);
 			name = simple;
+			sourceTree = "<group>";
+		};
+		42B6D7B71528E6FC004F1B01 /* Others */ = {
+			isa = PBXGroup;
+			children = (
+				42B6D7B81528E722004F1B01 /* GTMNSString+HTML.h */,
+				42B6D7B91528E722004F1B01 /* GTMNSString+HTML.m */,
+				42B6D7BB1528E7A0004F1B01 /* GTMDefines.h */,
+			);
+			name = Others;
 			sourceTree = "<group>";
 		};
 		42BEDDAE15025E52008C8DCC /* icons */ = {
@@ -2917,6 +2932,7 @@
 				42D783BD1526203C000F0725 /* MergeEntityCat.m in Sources */,
 				42D783BE1526203C000F0725 /* SyncService.m in Sources */,
 				42D783C31526457E000F0725 /* GeneralConfigController.m in Sources */,
+				42B6D7BA1528E722004F1B01 /* GTMNSString+HTML.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

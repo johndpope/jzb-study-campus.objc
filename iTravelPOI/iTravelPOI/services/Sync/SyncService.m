@@ -180,7 +180,6 @@
     // Añade a  la lista de mapas locales recien creados (vacios) para copiarles la información del mapa remoto origen
     NSMutableArray *allMaps = [NSMutableArray arrayWithArray:localMaps];
     [allMaps addObjectsFromArray:addedMaps];
-    [localMaps release];
     localMaps = allMaps;
     
     

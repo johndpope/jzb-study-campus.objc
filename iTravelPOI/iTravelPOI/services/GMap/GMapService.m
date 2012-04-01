@@ -536,7 +536,7 @@
     GDataEntryMapFeature *featureEntryUptd;
     NSError *error;
     
-    NSLog(@"  ---> Sync Point: %@ - %@",point.name, SyncStatusType_Names[point.syncStatus]);
+    NSLog(@"  ---> Sync Point: %@ - %@", SyncStatusType_Names[point.syncStatus], point.name);
     featureEntryOrig = [GMapService __create_FeedFeatureEntry_fromMEPoint:point];
     if(!featureEntryOrig) {
         return false;

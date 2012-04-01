@@ -95,8 +95,8 @@ BOOL _needToBeUpdatedAfterCreateLocally(MEBaseEntity *item1, MEBaseEntity *item2
         
         MEBaseEntity *localEntity = [MEBaseEntity searchByGID:remoteEntity.GID inArray:locals];
         
-        // Solo procesa los nuevos
-        if(localEntity != nil && !localEntity.isMarkedAsDeleted) {
+        // Si existe el elemento local y no esta marcado como borrado continua
+        if(localEntity != nil && localEntity.isMarkedAsDeleted == NO) {
             continue;
         }
         
@@ -142,7 +142,7 @@ BOOL _needToBeUpdatedAfterCreateLocally(MEBaseEntity *item1, MEBaseEntity *item2
         
         MEBaseEntity *remoteEntity = [MEBaseEntity searchByGID:localEntity.GID inArray:remotes];
         
-        // Solo procesa los nuevos
+        // Si la entidad remota existe continua
         if(remoteEntity != nil) {
             continue;
         }
@@ -180,13 +180,13 @@ BOOL _needToBeUpdatedAfterCreateLocally(MEBaseEntity *item1, MEBaseEntity *item2
         
         MEBaseEntity *remoteEntity = [MEBaseEntity searchByGID:localEntity.GID inArray:remotes];
         
-        // Solo procesa lo existente
+        // Solo procesa si ambas entidades existen
         if(remoteEntity == nil) {
             continue;
         }
         
         // Quien termina actualizado depende de la marca de modificado y los ETAGs
-        if(localEntity.changed) {
+        if(localEntity.changed == NO) {
             if([localEntity.syncETag isEqualToString:remoteEntity.syncETag]) {
                 // No hay que hacer nada porque los dos son iguales
                 NSLog(@"Sync: Nothing to be done as both are equals: %@",localEntity.name);

@@ -14,6 +14,8 @@
 #import "RegexKitLite.h"
 #import "NSDataExtensions.h"
 
+#import "GTMNSString+HTML.h"
+
 #import "JavaStringCat.h"
 
 
@@ -29,7 +31,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 NSString* _cleanHTML(NSString *str) {
     
-    NSMutableString *cleanStr = [[NSMutableString string] autorelease];
+    NSMutableString *cleanStr = [NSMutableString string];
     NSArray  *listItems = [str componentsSeparatedByRegex:@"<[^<>]*>"];    
     for(int n=0;n<[listItems count];n++) {
         NSString *item = [listItems objectAtIndex: n];
@@ -38,7 +40,7 @@ NSString* _cleanHTML(NSString *str) {
         }
     }
     
-    return [[cleanStr copy] autorelease];
+    return cleanStr;
     
 }
 
@@ -94,7 +96,7 @@ NSString* _cleanHTML(NSString *str) {
     [kmlStr appendFormat:@"%lf, %lf, 0.0",self.lng, self.lat];
     [kmlStr appendString:@"</coordinates></Point></Placemark>"];
     
-    return [[kmlStr copy] autorelease];
+    return kmlStr;
     
 }
 
@@ -131,11 +133,11 @@ NSString* _cleanHTML(NSString *str) {
     
     xpathExpr = namespaces ? @"/NSX:Placemark/NSX:name/text()" : @"/Placemark/name/text()";
     str=[self nodeStringValue: xpathExpr fromNode:rootNode defValue:@"" ns:namespaces];
-    self.name = str;
+    self.name = [str gtm_stringByUnescapingFromHTML];
     
     xpathExpr = namespaces ? @"/NSX:Placemark/NSX:description/text()" : @"/Placemark/description/text()";
     str=[self nodeStringCleanValue: xpathExpr fromNode:rootNode defValue:@"" ns:namespaces];
-    self.desc = str;
+    self.desc = [str gtm_stringByUnescapingFromHTML];
     
     xpathExpr = namespaces ? @"/NSX:Placemark/NSX:Style/NSX:IconStyle/NSX:Icon/NSX:href/text()" : @"/Placemark/Style/IconStyle/Icon/href/text()";
     str=[self nodeStringValue: xpathExpr fromNode:rootNode defValue:nil ns:namespaces];
@@ -165,7 +167,7 @@ NSString* _cleanHTML(NSString *str) {
 - (void) _putInArray:(NSMutableArray *)data category:(MECategory *)cat {
     
     // La informacion, para que sea muy compacta, se escribe en un NSArray de tipos basicos
-    NSMutableArray *catData = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray *catData = [NSMutableArray array];
     
     // Como esto es para persistir en GMap y no en el SQLite local, no se almacena lo siguiente:
     //  wasDeleted = false
@@ -181,7 +183,7 @@ NSString* _cleanHTML(NSString *str) {
     [catData addObject: cat.ts_created];
     [catData addObject: cat.ts_updated];
     
-    [data addObject:[[catData copy] autorelease]];
+    [data addObject:catData];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -215,60 +217,60 @@ NSString* _cleanHTML(NSString *str) {
     
     
     // La informacion, para que sea muy compacta, se escribe en un NSArray de tipos basicos
-    NSMutableArray *data = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray *data = [NSMutableArray array];
     
     // Para las categorias se calcula y usa su INDEX en vez del GID para ahorrar espacio
-    NSMutableDictionary *catIndexDic = [[NSMutableDictionary dictionary] autorelease];
+    NSMutableDictionary *catIndexDic = [NSMutableDictionary dictionary];
     unsigned short catIndex = 0;
     
     
     // ********* Escribe informacion del mapa *********
-    NSMutableArray *mapData = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray *mapData = [NSMutableArray array];
     [mapData addObject: self.map.icon.url];
-    [data addObject:[[mapData copy] autorelease]];
+    [data addObject:mapData];
     
     
     // ********* Escribe la informacion de las categorias *********
-    NSMutableArray *catsData = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray *catsData = [NSMutableArray array];
     for(MECategory *cat in self.map.categories) {
         [catIndexDic setObject:[NSNumber numberWithUnsignedShort:catIndex++] forKey:cat.GID];
         [self _putInArray:catsData category:cat];
     }
-    [data addObject:[[catsData copy] autorelease]];
+    [data addObject:catsData];
     
     
     // ********* Escribe la informacion de points y subcategories de cada categoria *********
-    NSMutableArray *linksData = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray *linksData = [NSMutableArray array];
     for(MECategory *cat in self.map.categories) {
         
-        NSMutableArray *oneLinkData = [[[NSMutableArray alloc] init] autorelease];
+        NSMutableArray *oneLinkData = [NSMutableArray array];
         
         // El index de la categoria padre
         [oneLinkData addObject:[catIndexDic objectForKey:cat.GID]];
         
         // Los puntos
-        NSMutableArray *pointsData = [[[NSMutableArray alloc] init] autorelease];
+        NSMutableArray *pointsData = [NSMutableArray array];
         for(MEPoint *point in cat.points) {
             [pointsData addObject:point.GID];
         }
-        [oneLinkData addObject: [[pointsData copy] autorelease]];
+        [oneLinkData addObject: pointsData];
         
         // Las subcategorias
-        NSMutableArray *subCatsData = [[[NSMutableArray alloc] init] autorelease];
+        NSMutableArray *subCatsData = [NSMutableArray array];
         for(MECategory *subCat in cat.subcategories) {
             [subCatsData addObject:[catIndexDic objectForKey:subCat.GID]];
         }
-        [oneLinkData addObject: [[subCatsData copy] autorelease]];
+        [oneLinkData addObject: subCatsData];
         
         // Añade esta entrada a la lista de enlaces
-        [linksData addObject: [[oneLinkData copy] autorelease]];
+        [linksData addObject: oneLinkData];
     }
-    [data addObject: [[linksData copy] autorelease]];
+    [data addObject: linksData];
     
     
     // ********** AHORA LOS COMPRIME Y LO PONE EN BASE64 **********
-    NSError *error;
-    NSData *binData = [NSPropertyListSerialization dataWithPropertyList:[[data copy] autorelease] 
+    NSError *error = nil;
+    NSData *binData = [NSPropertyListSerialization dataWithPropertyList:data 
                                                                  format:NSPropertyListBinaryFormat_v1_0 
                                                                 options:0 
                                                                   error:&error];
@@ -276,7 +278,7 @@ NSString* _cleanHTML(NSString *str) {
     NSString *b64Info = [gzData b64Encoding];
     
     // ********** Establece la informacion en el punto **********
-    self.desc= [[[NSString alloc] initWithFormat:@"%@%@",EXT_INFO_PREFIX,b64Info] autorelease];
+    self.desc= [NSString stringWithFormat:@"%@%@",EXT_INFO_PREFIX,b64Info];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -300,7 +302,7 @@ NSString* _cleanHTML(NSString *str) {
     value = [value substringFromIndex:[EXT_INFO_PREFIX length]];
     NSData *gzData = [NSData dataWithB64EncodedString:value]; 
     NSData *binData = [gzData gzipInflate];
-    NSError *error;
+    NSError *error=nil;
     NSArray *data = [NSPropertyListSerialization propertyListWithData: binData
                                                               options:0
                                                                format:nil
@@ -316,12 +318,12 @@ NSString* _cleanHTML(NSString *str) {
     
     
     // Para las categorias se calculo y uso su INDEX en vez del GID para ahorrar espacio
-    NSMutableArray *catsByIndexArray = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray *catsByIndexArray = [NSMutableArray array];
     
     
     // ********* Lee informacion del mapa *********
     NSArray *mapData = [data objectAtIndex:0];
-    self.map.icon    = [GMapIcon iconForURL:[mapData objectAtIndex:1]];
+    self.map.icon    = [GMapIcon iconForURL:[mapData objectAtIndex:0]];
     
     
     // ********* Lee la informacion de las categorias *********
