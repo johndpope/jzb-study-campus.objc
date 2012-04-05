@@ -8,6 +8,7 @@
 
 #import "SyncService.h"
 
+#import "MapsComparer.h"
 #import "CollectionMerger.h"
 #import "MergeEntityCat.h"
 
@@ -21,10 +22,10 @@
 //---------------------------------------------------------------------------------------------------------------------
 @interface SyncService ()
 
-- (void) _syncMapsInCtx:(NSManagedObjectContext *)moContext error:(NSError **)error;
+- (NSMutableArray *) _compareMapsInCtx:(NSManagedObjectContext *)moContext error:(NSError **)error;
+- (void)             _syncMapsInCtx:(NSManagedObjectContext *)moContext compItems:(NSArray *)compItems error:(NSError **)error;
 
 - (void) _syncLocalMap:(MEMap *) localMap withRemote:(MEMap *)remoteMap inCtx:(NSManagedObjectContext *)moContext error:(NSError **)error;
-- (void) _syncLocalMaps:(NSArray *)localMaps withRemotes:(NSArray *)remoteMaps inCtx:(NSManagedObjectContext *)moContext error:(NSError **)error;
 
 @end
 
@@ -81,7 +82,33 @@
 #pragma mark -
 #pragma mark General PUBLIC methods
 //---------------------------------------------------------------------------------------------------------------------
-- (SRVC_ASYNCHRONOUS) syncMapsInCtx:(NSManagedObjectContext *)moContext callback:(TBlock_SyncFinished)callbackBlock {
+- (SRVC_ASYNCHRONOUS) compareMapsInCtx:(NSManagedObjectContext *) moContext callback:(TBlock_compareMapsFinished)callbackBlock {
+    
+    NSLog(@"SyncService - Async - compareMapsInCtx");
+    
+    // Si no hay nadie esperando no hacemos nada
+    if(callbackBlock==nil) {
+        return;
+    }
+    
+    // Se apunta la cola en la que deberá dar la respuesta de callback
+    dispatch_queue_t caller_queue = dispatch_get_current_queue();
+    
+    // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
+    dispatch_async(_SyncServiceQueue,^(void){
+        NSError *error = nil;
+        NSMutableArray *compItems = [[SyncService sharedInstance] _compareMapsInCtx:moContext error:&error];
+        
+        // Avisamos al llamante de que ya tenemos la lista con los mapas
+        dispatch_async(caller_queue, ^(void){
+            callbackBlock(compItems, error);
+        });
+    });
+    
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (SRVC_ASYNCHRONOUS) syncMapsInCtx:(NSManagedObjectContext *) moContext compItems:(NSArray *)compItems callback:(TBlock_SyncMapsFinished)callbackBlock {
     
     NSLog(@"SyncService - Async - syncMapsInCtx");
     
@@ -96,7 +123,7 @@
     // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
     dispatch_async(_SyncServiceQueue,^(void){
         NSError *error = nil;
-        [[SyncService sharedInstance] _syncMapsInCtx:moContext error:&error];
+        [[SyncService sharedInstance] _syncMapsInCtx:moContext compItems:compItems error:&error];
         
         // Avisamos al llamante de que ya tenemos la lista con los mapas
         dispatch_async(caller_queue, ^(void){
@@ -112,30 +139,114 @@
 #pragma mark -
 #pragma mark PRIVATE methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) _syncMapsInCtx:(NSManagedObjectContext *)moContext error:(NSError **)error {
-
-    NSLog(@"SyncService - _syncMapsInCtx");
+- (NSMutableArray *) _compareMapsInCtx:(NSManagedObjectContext *) moContext error:(NSError **)error {
     
-    // Se deberia dar feedback de lo que se anda haciendo al GUI
+    NSLog(@"SyncService - _compareMapsInCtx");
     
+    
+    // Consigue la lista de los mapas locales
     NSArray *localMaps = [[ModelService sharedInstance] getUserMapList:moContext orderBy:SORT_BY_NAME sortOrder:SORT_ASCENDING error:error];
     if(*error) {
         // Ha habido un error al recuperar los mapas locales
         NSLog(@"error: %@", *error);
-        return;
+        return nil;
     }
     
+    // Consigue la lista de los mapas remotos (logandose antes)
     [[GMapService sharedInstance] loginWithUser:@"jzarzuela@gmail.com" password:@"#webweb1971"];
-    
     NSArray *remoteMaps = [[GMapService sharedInstance] fetchUserMapList:error];
     if(*error) {
         // Ha habido un error al recuperar los mapas remotos
         NSLog(@"error: %@", *error);
-        return;
+        return nil;
     }
     
-    // No se pasa el &error???
-    [self _syncLocalMaps:localMaps withRemotes:remoteMaps inCtx:moContext error:error];
+    
+    // Mezcla las diferencias entre las dos listas de mapas
+    NSArray *compItems = [MapsComparer compareLocals:localMaps remoteMaps:remoteMaps];
+    
+    // Algoritmo de comparacion para ordenar los elementos segun el nombre
+    NSComparator comparator = ^NSComparisonResult(id obj1, id obj2) {
+        MapsCompareItem *ce1 = obj1;
+        MapsCompareItem *ce2 = obj2;
+        NSString *name1 = ce1.localMap ? ce1.localMap.name : ce1.remoteMap.name;
+        NSString *name2 = ce2.localMap ? ce2.localMap.name : ce2.remoteMap.name;
+        return [name1 compare:name2];
+    };
+    
+    // Las ordena y retorna
+    NSArray *sortedCompItems = [compItems sortedArrayUsingComparator:comparator];
+    return [NSMutableArray arrayWithArray:sortedCompItems];
+    
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _syncMapsInCtx:(NSManagedObjectContext *)moContext compItems:(NSArray *)compItems error:(NSError **)error {
+    
+    NSLog(@"SyncService - _syncMapsInCtx");
+    
+    // Se deberia dar feedback de lo que se anda haciendo al GUI
+    
+    // Itera la lista de items comparados que nos han pasado
+    for(MapsCompareItem *compItem in compItems) {
+        
+        *error = nil;
+        
+        MEMap *localMap = compItem.localMap;
+        MEMap *remoteMap = compItem.remoteMap;
+        
+        switch (compItem.syncStatus) {
+                
+                // -----------------------------------------------------
+            case ST_Sync_Create_Local:
+                localMap = [MEMap insertNew:moContext];
+                [localMap mergeFrom:remoteMap withConflit:false];
+                [[GMapService sharedInstance] fetchMapData:remoteMap error:error];
+                [self _syncLocalMap:localMap withRemote:remoteMap inCtx:moContext error:error];
+                break;
+                
+                // -----------------------------------------------------
+            case ST_Sync_Create_Remote:
+                for(MEPoint *point in localMap.points) {
+                    point.syncStatus = ST_Sync_Create_Remote;
+                }
+                for(MECategory *cat in localMap.categories) {
+                    cat.syncStatus = ST_Sync_Create_Remote;
+                }
+                [[GMapService sharedInstance] createNewEmptyGMap:localMap error:error];
+                [[GMapService sharedInstance] updateGMap:localMap error:error];
+                break;
+                
+                // -----------------------------------------------------
+            case ST_Sync_Delete_Remote:
+                [[GMapService sharedInstance] deleteGMap:localMap error:error];
+                break;
+                
+                // -----------------------------------------------------
+            case ST_Sync_Update_Local:
+            case ST_Sync_Update_Remote:
+                if(localMap.isDeleted) {
+                    [localMap unmarkAsDeleted];
+                }
+                [localMap mergeFrom:remoteMap withConflit:false];
+                [[GMapService sharedInstance] fetchMapData:remoteMap error:error];
+                [self _syncLocalMap:localMap withRemote:remoteMap inCtx:moContext error:error];
+                [[GMapService sharedInstance] updateGMap:localMap error:error];
+                break;
+                
+            default:
+                break;
+        }
+        
+        // Elimina del modelo local todo lo que este marcado como borrado
+        if(localMap.isMarkedAsDeleted) {
+            [localMap deleteFromModel];
+        }
+        
+        // Graba los cambios en el mapa local
+        [compItem.localMap markAsSynchronized];
+        [localMap commitChanges];
+    }
     
 }
 
@@ -164,81 +275,6 @@
     NSString *xml = leip.desc;
     [leip mergeFrom:reip withConflit:true]; 
     leip.desc = xml;
-    
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _syncLocalMaps:(NSArray *)localMaps withRemotes:(NSArray *)remoteMaps inCtx:(NSManagedObjectContext *)moContext error:(NSError **)error {
-    
-    NSLog(@"SyncService - _syncLocalMaps");
-    
-    
-    // Mecla las diferencias entre las dos listas de mapas
-    NSArray *addedMaps = [CollectionMerger merge:localMaps remotes:remoteMaps inLocalMap:nil moContext:moContext];
-    
-    
-    // Añade a  la lista de mapas locales recien creados (vacios) para copiarles la información del mapa remoto origen
-    NSMutableArray *allMaps = [NSMutableArray arrayWithArray:localMaps];
-    [allMaps addObjectsFromArray:addedMaps];
-    localMaps = allMaps;
-    
-    
-    // Itera la lista de mapas actualizando su estado
-    for(MEMap *localMap in localMaps) {
-        
-        MEMap *remoteMap;
-        
-        switch (localMap.syncStatus) {
-                
-                // -----------------------------------------------------
-            case ST_Sync_Create_Local:
-                remoteMap = [MEBaseEntity searchByGID:localMap.GID inArray:remoteMaps];
-                [[GMapService sharedInstance] fetchMapData:remoteMap error:error];
-                [self _syncLocalMap:localMap withRemote:remoteMap inCtx:moContext error:error];
-                [localMap commitChanges];
-                break;
-                
-                // -----------------------------------------------------
-            case ST_Sync_Create_Remote:
-                for(MEPoint *point in localMap.points) {
-                    point.syncStatus = ST_Sync_Create_Remote;
-                }
-                for(MECategory *cat in localMap.categories) {
-                    cat.syncStatus = ST_Sync_Create_Remote;
-                }
-                [[GMapService sharedInstance] createNewEmptyGMap:localMap error:error];
-                [[GMapService sharedInstance] updateGMap:localMap error:error];
-                break;
-                
-                // -----------------------------------------------------
-            case ST_Sync_Delete_Remote:
-                [[GMapService sharedInstance] deleteGMap:localMap error:error];
-                break;
-                
-                // -----------------------------------------------------
-            case ST_Sync_Update_Local:
-            case ST_Sync_Update_Remote:
-                remoteMap = [MEBaseEntity searchByGID:localMap.GID inArray:remoteMaps];
-                [[GMapService sharedInstance] fetchMapData:remoteMap error:error];
-                [self _syncLocalMap:localMap withRemote:remoteMap inCtx:moContext error:error];
-                [[GMapService sharedInstance] updateGMap:localMap error:error];
-                [localMap commitChanges];
-                break;
-                
-            default:
-                break;
-        }
-    }
-    
-    // Elimina del modelo local todo lo que este marcado como borrado
-    for(MEMap *localMap in localMaps) {
-        if(localMap.isMarkedAsDeleted) {
-            [localMap deleteFromModel];
-        } else {
-            [localMap markAsSynchronized];
-        }
-        [localMap commitChanges];
-    }
     
 }
 

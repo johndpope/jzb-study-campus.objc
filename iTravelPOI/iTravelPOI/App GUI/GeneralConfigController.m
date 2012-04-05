@@ -10,6 +10,12 @@
 
 #import "SyncService.h"
 #import "ModelService.h"
+#import "MapsComparer.h"
+#import "MEBaseEntity.h"
+
+#import "SVProgressHUD.h"
+#import "TDBadgedCell.h"
+#import "WEPopoverController.h"
 
 
 
@@ -19,8 +25,15 @@
 //---------------------------------------------------------------------------------------------------------------------
 @interface GeneralConfigController()
 
-@property (nonatomic, readonly) NSManagedObjectContext *moContext;
+@property (retain, nonatomic) IBOutlet UITableView *tableView;
+@property (retain, nonatomic) IBOutlet UIButton *syncButton;
 
+@property (nonatomic, readonly) NSManagedObjectContext *moContext;
+@property (nonatomic, retain)   NSMutableArray *compItems;
+
+
+- (void) loadCompMapsListData;
+- (void) showErrorToUser:(NSString *)errorMsg;
 
 @end
 
@@ -31,8 +44,12 @@
 #pragma mark GeneralConfigController implementation
 //---------------------------------------------------------------------------------------------------------------------
 @implementation GeneralConfigController
+@synthesize tableView = _tableView;
+@synthesize syncButton = _syncButton;
 
 @synthesize moContext = _moContext;
+@synthesize compItems = _compItems;
+
 
 
 //*********************************************************************************************************************
@@ -52,7 +69,10 @@
 - (void)dealloc
 {
     [_moContext release];
+    [_compItems release];
 
+    [_tableView release];
+    [_syncButton release];
     [super dealloc];
 }
 
@@ -92,6 +112,13 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void)viewDidUnload
 {
+    [_moContext release];
+    _moContext = nil;
+    self.compItems = nil;
+    
+    [self setTableView:nil];
+    [self setSyncButton:nil];
+    
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -108,11 +135,10 @@
 {
     [super viewDidAppear:animated];
     
-    // Sincroniza los mapas
-    [[SyncService sharedInstance] syncMapsInCtx:self.moContext callback:^(NSError *error) {
-        // codigo de gestion del error aqui;
-        // Habría que salvar los cambios y, de alguna forma, hacer que se recarguen datos en otras ventanas
-    }];
+    // Si no estan cargados los items de comparacion de una iteracion previa los volvemos a cargar
+    if(!self.compItems) {
+        [self loadCompMapsListData];
+    }
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -139,15 +165,123 @@
 #pragma mark -
 #pragma mark Internal Event Handlers
 //---------------------------------------------------------------------------------------------------------------------
+- (IBAction)syncButtonAction:(UIButton *)sender {
+}
+
 
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark SortOptionsController delegate
 //---------------------------------------------------------------------------------------------------------------------
 
+
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark Table view data source
+//---------------------------------------------------------------------------------------------------------------------
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    // Return the number of sections.
+    return 1;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    // Return the number of rows in the section.
+    return [self.compItems count];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    static NSString *compItemViewIdentifier = @"CompItemCellView";
+    
+    MapsCompareItem *compItem = [self.compItems objectAtIndex:indexPath.row];
+    
+    UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:compItemViewIdentifier];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:compItemViewIdentifier];
+        cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+    }
+    
+    MEMap *map = compItem.localMap ? compItem.localMap : compItem.remoteMap;
+    cell.textLabel.text = map.name;
+    cell.detailTextLabel.text = SyncStatusType_Names[compItem.syncStatus];//map.desc;
+    cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;	
+    cell.imageView.image = map.icon.image;
+    
+    return cell;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        
+        [self.compItems removeObjectAtIndex:indexPath.row];
+        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    }   
+}
+
+
+
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark Table view data delegate
+//---------------------------------------------------------------------------------------------------------------------
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+    
+    //    [self showMapEditorFor:[self.maps objectAtIndex:indexPath.row]];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    //    MEMap *map = [self.maps objectAtIndex:indexPath.row];
+    //    [self showPointListControllerForMap:map];
+}
+
+
+
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark PRIVATE methods
 //---------------------------------------------------------------------------------------------------------------------
+- (void) loadCompMapsListData {
+    
+    // Pone un indicador de actividad
+    /*
+    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+    self.navigationItem.rightBarButtonItem.customView = activityIndicator;
+    [activityIndicator startAnimating];
+    [activityIndicator release];
+    */
+    
+    // Calcula la información con los cambios en los mapas
+    [[SyncService sharedInstance] compareMapsInCtx:self.moContext callback:^(NSMutableArray *compItems, NSError *error) {
+        
+        // Paramos el indicador de actividad
+        /*
+        UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *)self.navigationItem.rightBarButtonItem.customView;
+        [activityIndicator stopAnimating];
+        */
+        
+        // Si hay un error lo indica. En otro caso, recarga la tabla con la informacion
+        if(error) {
+            [self showErrorToUser:@"Error loading local maps"];
+        } else {
+            //self.navigationItem.rightBarButtonItem.customView = nil;
+            self.compItems = compItems;
+            [self.tableView reloadData];
+        }
+    }];
+}
 
+//---------------------------------------------------------------------------------------------------------------------
+- (void) showErrorToUser:(NSString *)errorMsg {
+    [SVProgressHUD showWithStatus:@""];
+    [SVProgressHUD dismissWithError:errorMsg afterDelay:2];
+}
 @end

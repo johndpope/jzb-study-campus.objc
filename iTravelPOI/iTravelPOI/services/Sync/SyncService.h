@@ -16,7 +16,8 @@
 #pragma mark -
 #pragma mark Enumeration & definitions
 //---------------------------------------------------------------------------------------------------------------------
-typedef void (^TBlock_SyncFinished)(NSError *error);
+typedef void (^TBlock_SyncMapsFinished)(NSError *error);
+typedef void (^TBlock_compareMapsFinished)(NSMutableArray *compItems, NSError *error);
 
 
 
@@ -44,7 +45,8 @@ typedef void (^TBlock_SyncFinished)(NSError *error);
 #pragma mark -
 #pragma mark ModelService INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (SRVC_ASYNCHRONOUS) syncMapsInCtx:(NSManagedObjectContext *) moContext callback:(TBlock_SyncFinished)callbackBlock;
+- (SRVC_ASYNCHRONOUS) compareMapsInCtx:(NSManagedObjectContext *) moContext callback:(TBlock_compareMapsFinished)callbackBlock;
+- (SRVC_ASYNCHRONOUS) syncMapsInCtx:(NSManagedObjectContext *) moContext compItems:(NSArray *)compItems callback:(TBlock_SyncMapsFinished)callbackBlock;
 
 
 @end
