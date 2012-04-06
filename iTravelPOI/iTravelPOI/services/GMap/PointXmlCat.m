@@ -76,13 +76,13 @@ NSString* _cleanHTML(NSString *str) {
     
     NSMutableString *kmlStr = [NSMutableString string];
     
-    [kmlStr appendString:@"<Placemark><name>"];
-    [kmlStr appendString:self.name];
-    [kmlStr appendString:@"</name><description>"];
+    [kmlStr appendString:@"<Placemark><name><![CDATA["];
+    [kmlStr appendString:[self.name gtm_stringByEscapingForAsciiHTML]];
+    [kmlStr appendString:@"]]></name><description><![CDATA["];
     if(self.desc) {
-        [kmlStr appendString:self.desc];
+        [kmlStr appendString:[self.desc gtm_stringByEscapingForAsciiHTML]];
     }
-    [kmlStr appendString:@"</description>"];
+    [kmlStr appendString:@"]]></description>"];
     
     s_idCounter++;
     NSString *styleID = [NSString stringWithFormat:@"Style-%u-%u",time(0L), s_idCounter];
@@ -108,7 +108,6 @@ NSString* _cleanHTML(NSString *str) {
     if(value==nil) {
         return;
     }
-    
     
     // Parsea el XML que esta en el BLOB KML del elemento
     NSError *error = nil;

@@ -15,7 +15,7 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (NSUInteger) indexOf: (NSString *)str {
+- (NSInteger) indexOf: (NSString *)str {
     NSRange r = [self rangeOfString:str options:0];
     if(r.length>0) 
         return r.location;
@@ -24,7 +24,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (NSUInteger) indexOf: (NSString *)str startIndex: (NSUInteger) p1 {
+- (NSInteger) indexOf: (NSString *)str startIndex: (NSUInteger) p1 {
     NSRange r = [self rangeOfString:str options:0 range: (NSRange){p1, [self length]-p1}];
     if(r.length>0) 
         return r.location;
@@ -33,7 +33,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (NSUInteger) lastIndexOf: (NSString *)str {
+- (NSInteger) lastIndexOf: (NSString *)str {
     NSRange r = [self rangeOfString:str options:NSBackwardsSearch];
     if(r.length>0) 
         return r.location;
@@ -42,7 +42,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (NSUInteger) lastIndexOf: (NSString *)str startIndex: (NSUInteger) p1 {
+- (NSInteger) lastIndexOf: (NSString *)str startIndex: (NSUInteger) p1 {
     return [self rangeOfString:str options:NSBackwardsSearch range: (NSRange){p1, [self length]-p1}].location;
 }
 

@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SrvcTicket.h"
+#import "BaseService-Protected.h"
 #import "MEMap.h"
 
 
@@ -25,11 +25,7 @@ typedef void (^TBlock_compareMapsFinished)(NSMutableArray *compItems, NSError *e
 #pragma mark -
 #pragma mark SyncService interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface SyncService : NSObject {
-@private
-    dispatch_queue_t _SyncServiceQueue;
-    
-}
+@interface SyncService : BaseService 
 
 
 

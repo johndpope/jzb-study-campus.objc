@@ -32,6 +32,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void)awakeFromNib
 {
+    
     // Inicializa la persistencia de los datos
     NSManagedObjectContext *ctx = [[ModelService sharedInstance] initContext];
     if(!ctx) {

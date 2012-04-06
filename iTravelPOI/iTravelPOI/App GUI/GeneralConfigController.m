@@ -10,7 +10,7 @@
 
 #import "SyncService.h"
 #import "ModelService.h"
-#import "MapsComparer.h"
+#import "MEComparer.h"
 #import "MEBaseEntity.h"
 
 #import "SVProgressHUD.h"
@@ -33,6 +33,8 @@
 
 
 - (void) loadCompMapsListData;
+- (void) syncMapsListData;
+
 - (void) showErrorToUser:(NSString *)errorMsg;
 
 @end
@@ -166,6 +168,8 @@
 #pragma mark Internal Event Handlers
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)syncButtonAction:(UIButton *)sender {
+    
+    [self syncMapsListData];
 }
 
 
@@ -198,7 +202,7 @@
     
     static NSString *compItemViewIdentifier = @"CompItemCellView";
     
-    MapsCompareItem *compItem = [self.compItems objectAtIndex:indexPath.row];
+    MECompareTuple *tuple = [self.compItems objectAtIndex:indexPath.row];
     
     UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:compItemViewIdentifier];
     if (cell == nil) {
@@ -206,9 +210,9 @@
         cell.selectionStyle = UITableViewCellSelectionStyleBlue;
     }
     
-    MEMap *map = compItem.localMap ? compItem.localMap : compItem.remoteMap;
+    MEMap *map = (MEMap *)(tuple.localEntity ? tuple.localEntity : tuple.remoteEntity);
     cell.textLabel.text = map.name;
-    cell.detailTextLabel.text = SyncStatusType_Names[compItem.syncStatus];//map.desc;
+    cell.detailTextLabel.text = SyncStatusType_Names[tuple.syncStatus];//map.desc;
     cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;	
     cell.imageView.image = map.icon.image;
     
@@ -273,8 +277,51 @@
             [self showErrorToUser:@"Error loading local maps"];
         } else {
             //self.navigationItem.rightBarButtonItem.customView = nil;
-            self.compItems = compItems;
+            
+            // Algoritmo de comparacion para ordenar los elementos segun el nombre
+            NSComparator comparator = ^NSComparisonResult(id obj1, id obj2) {
+                MECompareTuple *ct1 = obj1;
+                MECompareTuple *ct2 = obj2;
+                NSString *name1 = ct1.localEntity ? ct1.localEntity.name : ct1.remoteEntity.name;
+                NSString *name2 = ct2.localEntity ? ct2.localEntity.name : ct2.remoteEntity.name;
+                return [name1 compare:name2];
+            };
+            
+            // Ordena y refresca la tabla
+            self.compItems = [NSMutableArray arrayWithArray:[compItems sortedArrayUsingComparator:comparator]];
             [self.tableView reloadData];
+        }
+    }];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) syncMapsListData {
+    
+    // Pone un indicador de actividad
+    /*
+     UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+     self.navigationItem.rightBarButtonItem.customView = activityIndicator;
+     [activityIndicator startAnimating];
+     [activityIndicator release];
+     */
+    
+    // Sincroniza la información con los cambios en los mapas
+    [[SyncService sharedInstance] syncMapsInCtx:self.moContext compItems:self.compItems callback:^(NSError *error) {
+        
+        // Paramos el indicador de actividad
+        /*
+         UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *)self.navigationItem.rightBarButtonItem.customView;
+         [activityIndicator stopAnimating];
+         */
+        
+        // Si hay un error lo indica. En otro caso, recarga la tabla con la informacion
+        if(error) {
+            [self showErrorToUser:@"Error loading local maps"];
+        } else {
+            //self.navigationItem.rightBarButtonItem.customView = nil;
+
+            // Manda volver a calcular si hay cambios????
+            [self loadCompMapsListData];
         }
     }];
 }

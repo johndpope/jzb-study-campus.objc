@@ -16,8 +16,11 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) mergeFrom:(MEBaseEntity *) other withConflit:(BOOL) thereWasConflit {
+- (void) mergeFrom:(MEBaseEntity *) other withConflict:(BOOL) thereWasConflit {
     
+    // Retorna si no hay desde quien mergerar
+    if(other == nil) return;
+
     self.GID = other.GID;
     self.syncETag = other.syncETag;
     self.name = other.name;
@@ -43,9 +46,12 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 // Copia SOLO los datos. NO las categorias. Se sincroniza de "abajo" (puntos) hacia "arriba" (cats)
-- (void) mergeFrom:(MEPoint *) other withConflit:(BOOL) thereWasConflit {
+- (void) mergeFrom:(MEPoint *) other withConflict:(BOOL) thereWasConflit {
 
-    [super mergeFrom:other withConflit:thereWasConflit];
+    // Retorna si no hay desde quien mergerar
+    if(other == nil) return;
+    
+    [super mergeFrom:other withConflict:thereWasConflit];
 
     self.lat = other.lat;
     self.lng = other.lng;
@@ -61,9 +67,12 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 // Copia los datos, los puntos y las subcategorias, pero NO HACIA "arriba". Eso su cat "padre"
-- (void) mergeFrom:(MECategory *) other withConflit:(BOOL) thereWasConflit {
+- (void) mergeFrom:(MECategory *) other withConflict:(BOOL) thereWasConflit {
     
-    [super mergeFrom:other withConflit:thereWasConflit];
+    // Retorna si no hay desde quien mergerar
+    if(other == nil) return;
+
+    [super mergeFrom:other withConflict:thereWasConflit];
     
     MEMap *myMap = self.map;
   
@@ -119,9 +128,12 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) mergeFrom:(MEMap *) other withConflit:(BOOL) thereWasConflit {
+- (void) mergeFrom:(MEMap *) other withConflict:(BOOL) thereWasConflit {
     
-    [super mergeFrom:other withConflit:thereWasConflit];
+    // Retorna si no hay desde quien mergerar
+    if(other == nil) return;
+
+    [super mergeFrom:other withConflict:thereWasConflit];
     
 }
 

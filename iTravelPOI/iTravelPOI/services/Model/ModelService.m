@@ -48,7 +48,6 @@
 {
     self = [super init];
     if (self) {
-        _ModelServiceQueue = dispatch_queue_create("ModelServiceAsyncQueue", NULL);
     }
     
     return self;
@@ -56,7 +55,6 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)dealloc {
-    dispatch_release(_ModelServiceQueue);
     [_psCoordinator release];
     [_moModel release];
     
@@ -78,7 +76,6 @@
         _globalModelInstance = [[self alloc] init];
     });
 	return _globalModelInstance;
-    
 }
 
 
@@ -149,7 +146,7 @@
     dispatch_queue_t caller_queue = dispatch_get_current_queue();
     
     // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
-    dispatch_async(_ModelServiceQueue,^(void){
+    dispatch_async(self.serviceQueue, ^(void){
         NSError *error = nil;
         NSArray *maps = [[ModelService sharedInstance] getUserMapList:ctx orderBy:orderBy sortOrder:sortOrder error:&error];
         
@@ -175,7 +172,7 @@
     dispatch_queue_t caller_queue = dispatch_get_current_queue();
     
     // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
-    dispatch_async(_ModelServiceQueue,^(void) {
+    dispatch_async(self.serviceQueue, ^(void) {
         NSError *error = nil;
         NSArray *elements = [[ModelService sharedInstance] getFlatElemensInMap:map forCategories:categories orderBy:orderBy error:&error];
         
@@ -200,7 +197,7 @@
     dispatch_queue_t caller_queue = dispatch_get_current_queue();
     
     // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
-    dispatch_async(_ModelServiceQueue,^(void){
+    dispatch_async(self.serviceQueue, ^(void){
         NSError *error = nil;
         NSArray *elements = [[ModelService sharedInstance] getCategorizedElemensInMap:map forCategories:categories orderBy:orderBy error:&error];
         

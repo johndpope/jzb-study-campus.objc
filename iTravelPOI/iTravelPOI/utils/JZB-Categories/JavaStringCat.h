@@ -14,11 +14,11 @@
 @interface NSString (JavaStringCat)
 
 // Retorna NSNotFound en caso de no encontrar nada
-- (NSUInteger) indexOf: (NSString *)str;
-- (NSUInteger) indexOf: (NSString *)str startIndex: (NSUInteger) p1;
+- (NSInteger) indexOf: (NSString *)str;
+- (NSInteger) indexOf: (NSString *)str startIndex: (NSUInteger) p1;
 
-- (NSUInteger) lastIndexOf: (NSString *)str;
-- (NSUInteger) lastIndexOf: (NSString *)str startIndex: (NSUInteger) p1;
+- (NSInteger) lastIndexOf: (NSString *)str;
+- (NSInteger) lastIndexOf: (NSString *)str startIndex: (NSUInteger) p1;
 
 
 - (NSString *) subStrFrom: (NSUInteger)p1;

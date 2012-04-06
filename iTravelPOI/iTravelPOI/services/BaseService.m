@@ -1,51 +1,53 @@
 //
-//  MergeEntityCat.h
-//  CDTest
+//  BaseService.m
+//  iTravelPOI
 //
-//  Created by jzarzuela on 06/02/12.
-//  Copyright 2012 __MyCompanyName__. All rights reserved.
+//  Created by JZarzuela on 06/04/12.
+//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import "MEBaseEntity.h"
-#import "MEPoint.h"
-#import "MECategory.h"
-#import "MEMap.h"
+#import "BaseService-Protected.h"
 
 
 //*********************************************************************************************************************
+#pragma mark -
+#pragma mark ModelService implementation
 //---------------------------------------------------------------------------------------------------------------------
-@interface MEBaseEntity (MergeMEBaseEntityCat)
+@implementation BaseService
 
-- (void) mergeFrom:(MEBaseEntity *) other withConflict:(BOOL) thereWasConflit;
-
-@end
+@synthesize serviceQueue = _serviceQueue;
 
 
 //*********************************************************************************************************************
+#pragma mark -
+#pragma mark initialization & finalization
 //---------------------------------------------------------------------------------------------------------------------
-@interface MEPoint (MergeMEPointCat)
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        NSString *serviceClassName = [[self class] description];
+        _serviceQueue = dispatch_queue_create([serviceClassName UTF8String], NULL);
+    }
+    
+    return self;
+}
 
-- (void) mergeFrom:(MEPoint *) other withConflict:(BOOL) thereWasConflit;
+//---------------------------------------------------------------------------------------------------------------------
+- (void)dealloc {
+    dispatch_release(_serviceQueue);
+    [super dealloc];
+}
 
-@end
 
 
 //*********************************************************************************************************************
+#pragma mark -
+#pragma mark Protected methods
 //---------------------------------------------------------------------------------------------------------------------
-@interface MECategory (MergeMECategoryCat)
+- (dispatch_queue_t) serviceQueue {
+    return _serviceQueue;
+}
 
-- (void) mergeFrom:(MECategory *) other withConflict:(BOOL) thereWasConflit;
 
 @end
-
-
-//*********************************************************************************************************************
-//---------------------------------------------------------------------------------------------------------------------
-@interface MEMap (MergeMEMapCat)
-
-- (void) mergeFrom:(MEMap *) other withConflict:(BOOL) thereWasConflit;
-
-@end
-
-

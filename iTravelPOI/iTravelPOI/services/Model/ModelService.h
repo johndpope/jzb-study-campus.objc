@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SrvcTicket.h"
+#import "BaseService-Protected.h"
 #import "MEBaseEntity.h"
 #import "MEMap.h"
 #import "MEBaseEntity.h"
@@ -46,9 +46,8 @@ typedef void (^TBlock_getElementListInMapFinished)(NSArray *elements, NSError *e
 #pragma mark -
 #pragma mark ModelService interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface ModelService : NSObject {
+@interface ModelService : BaseService {
 @private
-    dispatch_queue_t _ModelServiceQueue;
     
     NSPersistentStoreCoordinator * _psCoordinator;
     NSManagedObjectModel * _moModel;

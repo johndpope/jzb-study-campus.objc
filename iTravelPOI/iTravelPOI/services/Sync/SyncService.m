@@ -8,8 +8,8 @@
 
 #import "SyncService.h"
 
-#import "MapsComparer.h"
-#import "CollectionMerger.h"
+#import "DelegateMapCompare.h"
+#import "DelegateMapMerge.h"
 #import "MergeEntityCat.h"
 
 #import "ModelService.h"
@@ -25,8 +25,6 @@
 - (NSMutableArray *) _compareMapsInCtx:(NSManagedObjectContext *)moContext error:(NSError **)error;
 - (void)             _syncMapsInCtx:(NSManagedObjectContext *)moContext compItems:(NSArray *)compItems error:(NSError **)error;
 
-- (void) _syncLocalMap:(MEMap *) localMap withRemote:(MEMap *)remoteMap inCtx:(NSManagedObjectContext *)moContext error:(NSError **)error;
-
 @end
 
 
@@ -36,28 +34,6 @@
 #pragma mark ModelService implementation
 //---------------------------------------------------------------------------------------------------------------------
 @implementation SyncService
-
-
-
-//*********************************************************************************************************************
-#pragma mark -
-#pragma mark initialization & finalization
-//---------------------------------------------------------------------------------------------------------------------
-- (id)init
-{
-    self = [super init];
-    if (self) {
-        _SyncServiceQueue = dispatch_queue_create("SyncServiceAsyncQueue", NULL);
-    }
-    
-    return self;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)dealloc {
-    dispatch_release(_SyncServiceQueue);
-    [super dealloc];
-}
 
 
 
@@ -95,7 +71,7 @@
     dispatch_queue_t caller_queue = dispatch_get_current_queue();
     
     // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
-    dispatch_async(_SyncServiceQueue,^(void){
+    dispatch_async(self.serviceQueue, ^(void){
         NSError *error = nil;
         NSMutableArray *compItems = [[SyncService sharedInstance] _compareMapsInCtx:moContext error:&error];
         
@@ -121,7 +97,7 @@
     dispatch_queue_t caller_queue = dispatch_get_current_queue();
     
     // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
-    dispatch_async(_SyncServiceQueue,^(void){
+    dispatch_async(self.serviceQueue, ^(void){
         NSError *error = nil;
         [[SyncService sharedInstance] _syncMapsInCtx:moContext compItems:compItems error:&error];
         
@@ -163,20 +139,14 @@
     
     
     // Mezcla las diferencias entre las dos listas de mapas
-    NSArray *compItems = [MapsComparer compareLocals:localMaps remoteMaps:remoteMaps];
+    DelegateMapCompare *delegate = [[DelegateMapCompare alloc] init];
+    [MEComparer compareLocals:localMaps remotes:remoteMaps compDelegate:delegate];
+    NSMutableArray *compItems = delegate.compItems;
+    [delegate release];
     
-    // Algoritmo de comparacion para ordenar los elementos segun el nombre
-    NSComparator comparator = ^NSComparisonResult(id obj1, id obj2) {
-        MapsCompareItem *ce1 = obj1;
-        MapsCompareItem *ce2 = obj2;
-        NSString *name1 = ce1.localMap ? ce1.localMap.name : ce1.remoteMap.name;
-        NSString *name2 = ce2.localMap ? ce2.localMap.name : ce2.remoteMap.name;
-        return [name1 compare:name2];
-    };
     
-    // Las ordena y retorna
-    NSArray *sortedCompItems = [compItems sortedArrayUsingComparator:comparator];
-    return [NSMutableArray arrayWithArray:sortedCompItems];
+    // Retorna lo calculado
+    return compItems;
     
 }
 
@@ -184,97 +154,19 @@
 - (void) _syncMapsInCtx:(NSManagedObjectContext *)moContext compItems:(NSArray *)compItems error:(NSError **)error {
     
     NSLog(@"SyncService - _syncMapsInCtx");
-    
-    // Se deberia dar feedback de lo que se anda haciendo al GUI
+
+    // Crea el delegate que procesara las tuplas
+    DelegateMapMerge *delegate = [[DelegateMapMerge alloc] init];
+    delegate.moContext = moContext;
     
     // Itera la lista de items comparados que nos han pasado
-    for(MapsCompareItem *compItem in compItems) {
-        
-        *error = nil;
-        
-        MEMap *localMap = compItem.localMap;
-        MEMap *remoteMap = compItem.remoteMap;
-        
-        switch (compItem.syncStatus) {
-                
-                // -----------------------------------------------------
-            case ST_Sync_Create_Local:
-                localMap = [MEMap insertNew:moContext];
-                [localMap mergeFrom:remoteMap withConflit:false];
-                [[GMapService sharedInstance] fetchMapData:remoteMap error:error];
-                [self _syncLocalMap:localMap withRemote:remoteMap inCtx:moContext error:error];
-                break;
-                
-                // -----------------------------------------------------
-            case ST_Sync_Create_Remote:
-                for(MEPoint *point in localMap.points) {
-                    point.syncStatus = ST_Sync_Create_Remote;
-                }
-                for(MECategory *cat in localMap.categories) {
-                    cat.syncStatus = ST_Sync_Create_Remote;
-                }
-                [[GMapService sharedInstance] createNewEmptyGMap:localMap error:error];
-                [[GMapService sharedInstance] updateGMap:localMap error:error];
-                break;
-                
-                // -----------------------------------------------------
-            case ST_Sync_Delete_Remote:
-                [[GMapService sharedInstance] deleteGMap:localMap error:error];
-                break;
-                
-                // -----------------------------------------------------
-            case ST_Sync_Update_Local:
-            case ST_Sync_Update_Remote:
-                if(localMap.isDeleted) {
-                    [localMap unmarkAsDeleted];
-                }
-                [localMap mergeFrom:remoteMap withConflit:false];
-                [[GMapService sharedInstance] fetchMapData:remoteMap error:error];
-                [self _syncLocalMap:localMap withRemote:remoteMap inCtx:moContext error:error];
-                [[GMapService sharedInstance] updateGMap:localMap error:error];
-                break;
-                
-            default:
-                break;
-        }
-        
-        // Elimina del modelo local todo lo que este marcado como borrado
-        if(localMap.isMarkedAsDeleted) {
-            [localMap deleteFromModel];
-        }
-        
-        // Graba los cambios en el mapa local
-        [compItem.localMap markAsSynchronized];
-        [localMap commitChanges];
+    for(MECompareTuple *tuple in compItems) {
+        [delegate processTuple:tuple];
+        // Se deberia dar feedback de lo que se anda haciendo al GUI
+        // Hay que comprobar el error en cada iteracion
     }
     
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _syncLocalMap:(MEMap *) localMap withRemote:(MEMap *)remoteMap inCtx:(NSManagedObjectContext *)moContext error:(NSError **)error {
-    
-    NSLog(@"SyncService - _syncLocalMap [%@ - %@] witn [%@ - %@]", localMap.name, localMap.GID, remoteMap.name, remoteMap.GID);
-    
-    // Mezcla primero los puntos de ambos mapas sobre el mapa local
-    NSMutableArray *allLocalPoints = [NSMutableArray arrayWithArray:[localMap.points allObjects]];
-    [allLocalPoints addObjectsFromArray:[localMap.deletedPoints allObjects]];
-    NSMutableArray *allRemotePoints = [NSMutableArray arrayWithArray:[remoteMap.points allObjects]];
-    [allRemotePoints addObjectsFromArray:[remoteMap.deletedPoints allObjects]];
-    [CollectionMerger merge:allLocalPoints remotes:allRemotePoints inLocalMap:localMap moContext:moContext];
-    
-    // A continuación, mezcla las categorias. Pero primero las ordena poniendo primero a quien es subcategoria de otro
-    NSMutableArray *allLocalCats = [NSMutableArray arrayWithArray:[MECategory sortCategorized:localMap.categories]];
-    [allLocalCats addObjectsFromArray:[localMap.deletedCategories allObjects]];
-    NSMutableArray *allRemoteCats = [NSMutableArray arrayWithArray:[MECategory sortCategorized:remoteMap.categories]]; 
-    [allRemoteCats addObjectsFromArray:[remoteMap.deletedCategories allObjects]];
-    [CollectionMerger merge:allLocalCats remotes:allRemoteCats inLocalMap:localMap moContext:moContext];
-    
-    // Por ultimo el ExtInfoPoint
-    MEPoint *leip = localMap.extInfo;
-    MEPoint *reip = remoteMap.extInfo;
-    NSString *xml = leip.desc;
-    [leip mergeFrom:reip withConflit:true]; 
-    leip.desc = xml;
+    [delegate release];
     
 }
 

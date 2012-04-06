@@ -1,44 +1,44 @@
 //
-//  SrvcTicket.m
+//  DelegateMapCompare.m
 //  iTravelPOI
 //
-//  Created by jzarzuela on 26/02/12.
-//  Copyright 2012 __MyCompanyName__. All rights reserved.
+//  Created by JZarzuela on 06/04/12.
+//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "SrvcTicket.h"
+#import "DelegateMapCompare.h"
 
 
 //*********************************************************************************************************************
-#pragma mark -
-#pragma mark SrvcTicket implementation
 //---------------------------------------------------------------------------------------------------------------------
-@implementation SrvcTicket
+@implementation DelegateMapCompare
+
+
+@synthesize  compItems = _compItems;
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (id)init {
+- (id)init
+{
     self = [super init];
     if (self) {
-        _isCancelled = false;
+        self.compItems = [NSMutableArray array];
     }
+    
     return self;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)dealloc
 {
+    [_compItems release];
     [super dealloc];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) cancel {
-    _isCancelled = true;
-}
+- (void) processTuple:(MECompareTuple *) tuple {
 
-//---------------------------------------------------------------------------------------------------------------------
-- (BOOL) isCancelled {
-    return _isCancelled;
+    [self.compItems addObject:tuple];
 }
 
 

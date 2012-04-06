@@ -57,7 +57,6 @@
 {
     self = [super init];
     if (self) {
-        _GMapServiceQueue = dispatch_queue_create("GMapServiceAsyncQueue", NULL);
         self.service = [[GMapSyncWrapper alloc] init];
     }
     
@@ -69,8 +68,6 @@
 {
     [self.service release];
     [self.loggedUser_ID release];
-    
-    dispatch_release(_GMapServiceQueue);
     
     [super dealloc];
 }
@@ -135,7 +132,7 @@
     dispatch_queue_t caller_queue = dispatch_get_current_queue();
     
     // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
-    dispatch_async(_GMapServiceQueue,^(void){
+    dispatch_async(self.serviceQueue, ^(void){
         NSError *error = nil;
         NSArray *maps = [[GMapService sharedInstance] fetchUserMapList:&error];
         
@@ -162,7 +159,7 @@
     dispatch_queue_t caller_queue = dispatch_get_current_queue();
     
     // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
-    dispatch_async(_GMapServiceQueue,^(void){
+    dispatch_async(self.serviceQueue, ^(void){
         NSError *error = nil;
         [[GMapService sharedInstance] fetchMapData:map error:&error];
         
@@ -187,7 +184,7 @@
     dispatch_queue_t caller_queue = dispatch_get_current_queue();
     
     // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
-    dispatch_async(_GMapServiceQueue,^(void){
+    dispatch_async(self.serviceQueue, ^(void){
         NSError *error = nil;
         [[GMapService sharedInstance] createNewEmptyGMap:map error:&error];
         
@@ -212,7 +209,7 @@
     dispatch_queue_t caller_queue = dispatch_get_current_queue();
     
     // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
-    dispatch_async(_GMapServiceQueue,^(void){
+    dispatch_async(self.serviceQueue, ^(void){
         NSError *error = nil;
         [[GMapService sharedInstance] deleteGMap:map error:&error];
         
@@ -237,7 +234,7 @@
     dispatch_queue_t caller_queue = dispatch_get_current_queue();
     
     // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
-    dispatch_async(_GMapServiceQueue,^(void){
+    dispatch_async(self.serviceQueue, ^(void){
         NSError *error = nil;
         [[GMapService sharedInstance] updateGMap:map error:&error];
         
@@ -532,9 +529,11 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL) __processPoint:(MEPoint *) point inMap:(MEMap *) map {
     
-    GDataEntryMapFeature *featureEntryOrig;
-    GDataEntryMapFeature *featureEntryUptd;
-    NSError *error;
+    GDataEntryMapFeature *featureEntryOrig = nil;
+    GDataEntryMapFeature *featureEntryUptd = nil;
+    
+    
+    NSError *error = nil;
     
     NSLog(@"  ---> Sync Point: %@ - %@", SyncStatusType_Names[point.syncStatus], point.name);
     featureEntryOrig = [GMapService __create_FeedFeatureEntry_fromMEPoint:point];
@@ -565,7 +564,9 @@
     }
     
     if(!error) {
-        [GMapService __fill_MEPoint:point withFeedFeatureEntry:featureEntryUptd];
+        if(featureEntryUptd) {
+            [GMapService __fill_MEPoint:point withFeedFeatureEntry:featureEntryUptd];
+        }
         return true;
     } else {
         NSLog(@"  >> Sync Error: %@ / %@", error, [error userInfo]);
@@ -625,7 +626,7 @@
     
     GDataEntryMapFeature *newEntry = [GDataEntryMapFeature featureEntryWithTitle:point.name];
     
-    NSError *error;
+    NSError *error = nil;
     NSString *kmlStr = point.kmlBlob;
     NSXMLElement *kmlElem = [[[NSXMLElement alloc] initWithXMLString:kmlStr error:&error] autorelease];
     if (kmlElem) {

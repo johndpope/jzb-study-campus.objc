@@ -1,29 +1,37 @@
 //
-//  CollectionMerger.m
-//  WCDTest
+//  MapEntitiesComparer.m
+//  iTravelPOI
 //
-//  Created by jzarzuela on 16/02/12.
-//  Copyright 2012 __MyCompanyName__. All rights reserved.
+//  Created by JZarzuela on 06/04/12.
+//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "CollectionMerger.h"
-#import "MEBaseEntity.h"
-#import "MEMap.h"
-#import "MECategory.h"
-#import "MEPoint.h"
-#import "MergeEntityCat.h"
-
-
-//---------------------------------------------------------------------------------------------------------------------
-MEBaseEntity * _createNewLocalEntity(NSManagedObjectContext *moContext, MEMap *localMap, MEBaseEntity *remoteEntity);
-BOOL _needToBeUpdatedAfterCreateLocally(MEBaseEntity *item1, MEBaseEntity *item2);
-
-
+#import "MEComparer.h"
 
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
-@implementation CollectionMerger
+@implementation MECompareTuple
+
+@synthesize localEntity = _localEntity;
+@synthesize remoteEntity = _remoteEntity;
+@synthesize syncStatus = _syncStatus;
+@synthesize withConflict =_withConflict;
+
+//---------------------------------------------------------------------------------------------------------------------
++ tupleForLocal:(MEBaseEntity *) local 
+        remote:(MEBaseEntity *)  remote 
+    syncStatus:(SyncStatusType)  syncStatus
+   withConflict:(BOOL)           withConflict {
+    
+    MECompareTuple *tuple = [[[MECompareTuple alloc] init] autorelease];
+    tuple.localEntity = local;
+    tuple.remoteEntity = remote;
+    tuple.syncStatus = syncStatus;
+    tuple.withConflict = withConflict;
+    
+    return tuple;
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 - (id)init
@@ -39,54 +47,23 @@ BOOL _needToBeUpdatedAfterCreateLocally(MEBaseEntity *item1, MEBaseEntity *item2
 //---------------------------------------------------------------------------------------------------------------------
 - (void)dealloc
 {
+    [_localEntity release];
+    [_remoteEntity release];
     [super dealloc];
 }
 
+@end
+
+
+
+//*********************************************************************************************************************
+//---------------------------------------------------------------------------------------------------------------------
+@implementation MEComparer
+
 
 
 //---------------------------------------------------------------------------------------------------------------------
-MEBaseEntity * _createNewLocalEntity(NSManagedObjectContext *moContext, MEMap *localMap, MEBaseEntity *remoteEntity) {
-
-    if([remoteEntity isKindOfClass: [MEMap class]]) {
-        return [MEMap insertNew:moContext];
-    } else if([remoteEntity isKindOfClass: [MECategory class]]) {
-        return [MECategory insertNewInMap:localMap];
-    } else if([remoteEntity isKindOfClass: [MEPoint class]]) {
-        return [MEPoint insertNewInMap:localMap];
-    } else {
-        return nil;
-    }
-    
-}
-
-// ----------------------------------------------------------------------------------------------------
-BOOL _needToBeUpdatedAfterCreateLocally(MEBaseEntity *item1, MEBaseEntity *item2) {
-    
-    // Solo comprueba que las categorias terminan teniendo el mismo numero de subelementos
-    if([item1 isKindOfClass:[MECategory class]]) {
-        MECategory *c1 = (MECategory *)item1;
-        MECategory *c2 = (MECategory *)item2;
-        BOOL eq1 = [c1.points count] == [c2.points count];
-        BOOL eq2 = [c1.subcategories count] == [c2.subcategories count];
-        return eq1 && eq2;
-    }else {
-        return false;
-    }
-}
-
-
-//---------------------------------------------------------------------------------------------------------------------
-// Pasos:
-// Busca elementos remotos nuevos a crear en local [o borrar en remoto]
-// Busca elementos locales nuevos a crear en remoto [o borrar en local]
-// Busca elementos existentes en ambos para actualizar [Quien depende de info de cambios]
-// [Debe ser el ultimo por cambios de dependencias contra algo nuevo que crean los anteriores]
-// [En teoria, lo creado en pasos previos deberia dar OK en este y no hacer nada]
-+ (NSArray *) merge:(NSArray *)locals remotes:(NSArray * )remotes 
-         inLocalMap:(MEMap *)localMap 
-          moContext:(NSManagedObjectContext *)moContext {
-    
-    NSMutableArray *newAddedEntities = [NSMutableArray array];
++ (void) compareLocals:(NSArray *)locals remotes:(NSArray *)remotes compDelegate:(id <MEComparerDelegate>)compDelegate {
     
     
     // ----------------------------------------------------------------------------------------------------
@@ -103,29 +80,23 @@ BOOL _needToBeUpdatedAfterCreateLocally(MEBaseEntity *item1, MEBaseEntity *item2
         // El que se hace dependera de si existio previamente en local y fue borrada
         if(localEntity == nil) {
             // Se crea una nueva entidad local desde la remota
-            NSLog(@"Sync: Creating local entity from remote: %@",remoteEntity.name);
-            MEBaseEntity *newLocal = _createNewLocalEntity(moContext, localMap, remoteEntity);
-            [newLocal mergeFrom:remoteEntity withConflit:false];
-            newLocal.syncStatus = ST_Sync_Create_Local;
-            [newAddedEntities addObject:newLocal];
-            // Si no quedaron iguales, porque faltaban dependencias, hay que actualizar el remoto tambien
-            if(_needToBeUpdatedAfterCreateLocally(newLocal, remoteEntity)){
-                NSLog(@"Sync: Created local entity differs from the original remote and the later must be updated: %@",remoteEntity.name);
-                newLocal.syncStatus = ST_Sync_Update_Remote;
-            }
+            NSLog(@"Sync: Create new local entity from remote: %@",remoteEntity.name);
+            [compDelegate processTuple:[MECompareTuple tupleForLocal:localEntity remote:remoteEntity 
+                                                          syncStatus:ST_Sync_Create_Local withConflict:false]];
         } else {
             // La entidad local fue borrada
             if([localEntity.syncETag isEqualToString:remoteEntity.syncETag]) {
                 // Puesto que tienen el mismo ETAG se borra la entidad remota
                 NSLog(@"Sync: Delete remote as it wasn't modified and local was deleted: %@",remoteEntity.name);
-                localEntity.syncStatus = ST_Sync_Delete_Remote;
-            }else {
+                [compDelegate processTuple:[MECompareTuple tupleForLocal:localEntity remote:remoteEntity 
+                                                              syncStatus:ST_Sync_Delete_Remote withConflict:false]];
+            } else {
                 // CONFLICTO: Se borró la entidad local y se modifico la remota
                 // RESOLUCION: Se regenera la entidad local desde la remota.
                 // Se manda actualizar la entidad remota
-                [localEntity unmarkAsDeleted];
-                [localEntity mergeFrom:remoteEntity withConflit:true];
-                localEntity.syncStatus = ST_Sync_Update_Remote;
+                NSLog(@"Sync: Update remote entity because it was modified and local was deleted: %@",remoteEntity.name);
+                [compDelegate processTuple:[MECompareTuple tupleForLocal:localEntity remote:remoteEntity 
+                                                              syncStatus:ST_Sync_Update_Remote withConflict:true]];
             }
         }
     }
@@ -151,19 +122,21 @@ BOOL _needToBeUpdatedAfterCreateLocally(MEBaseEntity *item1, MEBaseEntity *item2
         if(localEntity.isLocal) {
             // Crea la entidad remota desde la local
             NSLog(@"Sync: Create new remote from local: %@",localEntity.name);
-            localEntity.syncStatus = ST_Sync_Create_Remote;
+            [compDelegate processTuple:[MECompareTuple tupleForLocal:localEntity remote:remoteEntity 
+                                                          syncStatus:ST_Sync_Create_Remote withConflict:false]];
         }
         else {
             if(localEntity.changed) {
                 // CONFLICTO: La entidad remota fue borrada pero la local se modificó
                 // RESOLUCION: Recrear la entidad remota desde la local de nuevo
                 NSLog(@"Sync: Remote entity created again from local because the later was changed: %@",localEntity.name);
-                localEntity.syncStatus = ST_Sync_Create_Remote;
+                [compDelegate processTuple:[MECompareTuple tupleForLocal:localEntity remote:remoteEntity 
+                                                              syncStatus:ST_Sync_Create_Remote withConflict:true]];
             } else {
                 // Borra la entidad local puesto que no fue modificada y la remota ya no existe
-                NSLog(@"Sync: Local entity deleted as it wasn't modifies and remote was deleted previously: %@",localEntity.name);
-                localEntity.syncStatus = ST_Sync_Delete_Local;
-                [localEntity markAsDeleted];
+                NSLog(@"Sync: Delete Local entity as it wasn't modified and remote was deleted previously: %@",localEntity.name);
+                [compDelegate processTuple:[MECompareTuple tupleForLocal:localEntity remote:remoteEntity 
+                                                              syncStatus:ST_Sync_Delete_Local withConflict:false]];
             }
         }
     }
@@ -190,36 +163,31 @@ BOOL _needToBeUpdatedAfterCreateLocally(MEBaseEntity *item1, MEBaseEntity *item2
             if([localEntity.syncETag isEqualToString:remoteEntity.syncETag]) {
                 // No hay que hacer nada porque los dos son iguales
                 NSLog(@"Sync: Nothing to be done as both are equals: %@",localEntity.name);
-                localEntity.syncStatus = ST_Sync_OK;
+                [compDelegate processTuple:[MECompareTuple tupleForLocal:localEntity remote:remoteEntity 
+                                                              syncStatus:ST_Sync_OK withConflict:false]];
             }else {
                 // Actualizamos la entidad local desde la remota
-                NSLog(@"Sync: Local entity has to be updated from remote: %@",localEntity.name);
-                [localEntity mergeFrom:remoteEntity withConflit:false];
-                localEntity.syncStatus = ST_Sync_Update_Local;
+                NSLog(@"Sync: Update local entity from remote: %@",localEntity.name);
+                [compDelegate processTuple:[MECompareTuple tupleForLocal:localEntity remote:remoteEntity 
+                                                              syncStatus:ST_Sync_Update_Local withConflict:false]];
             }
-        }else {
+        } else {
             if([localEntity.syncETag isEqualToString:remoteEntity.syncETag]) {
                 // Actualiza la entidad remota desde la local
-                NSLog(@"Sync: Remote entity has to be updated from local: %@",localEntity.name);
-                localEntity.syncStatus = ST_Sync_Update_Remote;
+                NSLog(@"Sync: Update remote entity from local: %@",localEntity.name);
+                [compDelegate processTuple:[MECompareTuple tupleForLocal:localEntity remote:remoteEntity 
+                                                              syncStatus:ST_Sync_Update_Remote withConflict:false]];
             } else {
                 // CONFLICTO: Las dos entidades tienen actualizaciones
                 // RESOLUCION: Prevalecen los cambios remotos y la entidad local se actualiza
                 // Para equilibrar los cambios (por si faltasen elementos referenciados) la entidad remota tambien se actualiza
-                [localEntity mergeFrom:remoteEntity withConflit:true];
-                localEntity.syncStatus = ST_Sync_Update_Remote;
+                [compDelegate processTuple:[MECompareTuple tupleForLocal:localEntity remote:remoteEntity 
+                                                              syncStatus:ST_Sync_Update_Remote withConflict:true]];
             }
         }
     }
     
-    // Retorna la lista de entidades creadas
-    return [[newAddedEntities copy] autorelease];
-    
 }
-
-
-
-
 
 
 @end

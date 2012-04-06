@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SrvcTicket.h"
+#import "BaseService-Protected.h"
 #import "MEBaseEntity.h"
 #import "MEMap.h"
 #import "MEBaseEntity.h"
@@ -30,11 +30,7 @@ typedef void (^TBlock_UpdateMapDataFinished)(MEMap *map, NSError *error);
 #pragma mark -
 #pragma mark GMapService interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface GMapService : NSObject {
-@private
-    dispatch_queue_t _GMapServiceQueue;
-    
-}
+@interface GMapService : BaseService
 
 
 //---------------------------------------------------------------------------------------------------------------------
