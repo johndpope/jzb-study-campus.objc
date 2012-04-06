@@ -1487,7 +1487,8 @@
 			isa = PBXGroup;
 			children = (
 				421A338514F01F1B00968EB6 /* Resources */,
-				42BFAB3414EFE40D00604B90 /* HeadLess Code */,
+				42BFAB9614EFE4AD00604B90 /* services */,
+				42BFAB8A14EFE4AD00604B90 /* model */,
 				42BFABF714EFE73F00604B90 /* App GUI */,
 				42BFAAB914EFE32000604B90 /* iTravelPOIAppDelegate.h */,
 				42BFAABA14EFE32000604B90 /* iTravelPOIAppDelegate.m */,
@@ -1508,16 +1509,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		42BFAB3414EFE40D00604B90 /* HeadLess Code */ = {
-			isa = PBXGroup;
-			children = (
-				42BFAB8A14EFE4AD00604B90 /* model */,
-				42BFAB9614EFE4AD00604B90 /* services */,
-			);
-			name = "HeadLess Code";
-			path = ..;
-			sourceTree = "<group>";
-		};
 		42BFAB8A14EFE4AD00604B90 /* model */ = {
 			isa = PBXGroup;
 			children = (
@@ -1525,8 +1516,7 @@
 				42BEDDAE15025E52008C8DCC /* icons */,
 				42BFAB8C14EFE4AD00604B90 /* types */,
 			);
-			name = model;
-			path = iTravelPOI/model;
+			path = model;
 			sourceTree = "<group>";
 		};
 		42BFAB8C14EFE4AD00604B90 /* types */ = {
@@ -1557,8 +1547,7 @@
 				42D7839F1525E973000F0725 /* GMap */,
 				42BFABDC14EFE5BB00604B90 /* Model */,
 			);
-			name = services;
-			path = iTravelPOI/services;
+			path = services;
 			sourceTree = "<group>";
 		};
 		42BFABDC14EFE5BB00604B90 /* Model */ = {

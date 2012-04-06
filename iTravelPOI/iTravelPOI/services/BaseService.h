@@ -14,6 +14,8 @@
 //---------------------------------------------------------------------------------------------------------------------
 #define SRVC_ASYNCHRONOUS void
 
+typedef id   (^TBlock_asyncMainCode)(NSError **error);
+typedef void (^TBlock_asyncCallbackCode)(id result, NSError *error);
 
 
 //*********************************************************************************************************************
@@ -25,7 +27,6 @@
     dispatch_queue_t _serviceQueue;
     
 }
-
 
 
 @end

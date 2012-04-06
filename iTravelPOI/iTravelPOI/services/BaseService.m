@@ -46,6 +46,7 @@
 #pragma mark Protected methods
 //---------------------------------------------------------------------------------------------------------------------
 - (dispatch_queue_t) serviceQueue {
+    
     return _serviceQueue;
 }
 

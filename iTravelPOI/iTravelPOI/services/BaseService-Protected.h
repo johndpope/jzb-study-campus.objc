@@ -15,6 +15,8 @@
 //---------------------------------------------------------------------------------------------------------------------
 @interface BaseService()
 
+
 @property (nonatomic, assign, readonly) dispatch_queue_t serviceQueue;
+
 
 @end

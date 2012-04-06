@@ -72,7 +72,7 @@
 {
     [_moContext release];
     [_compItems release];
-
+    
     [_tableView release];
     [_syncButton release];
     [super dealloc];
@@ -257,20 +257,20 @@
     
     // Pone un indicador de actividad
     /*
-    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-    self.navigationItem.rightBarButtonItem.customView = activityIndicator;
-    [activityIndicator startAnimating];
-    [activityIndicator release];
-    */
+     UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+     self.navigationItem.rightBarButtonItem.customView = activityIndicator;
+     [activityIndicator startAnimating];
+     [activityIndicator release];
+     */
     
     // Calcula la información con los cambios en los mapas
     [[SyncService sharedInstance] compareMapsInCtx:self.moContext callback:^(NSMutableArray *compItems, NSError *error) {
         
         // Paramos el indicador de actividad
         /*
-        UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *)self.navigationItem.rightBarButtonItem.customView;
-        [activityIndicator stopAnimating];
-        */
+         UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *)self.navigationItem.rightBarButtonItem.customView;
+         [activityIndicator stopAnimating];
+         */
         
         // Si hay un error lo indica. En otro caso, recarga la tabla con la informacion
         if(error) {
@@ -319,7 +319,7 @@
             [self showErrorToUser:@"Error loading local maps"];
         } else {
             //self.navigationItem.rightBarButtonItem.customView = nil;
-
+            
             // Manda volver a calcular si hay cambios????
             [self loadCompMapsListData];
         }
