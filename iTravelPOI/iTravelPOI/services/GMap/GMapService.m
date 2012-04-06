@@ -276,7 +276,7 @@
         // ************************************************************************************
         
         
-        MEMap *map = [MEMap insertTmpNew];
+        MEMap *map = [MEMap map];
         [GMapService __fill_MEMap:map withFeedMapEntry: mapEntry];
         
         [mapList addObject:map];
@@ -317,9 +317,9 @@
         // Creamos y parseamos la informacion del punto
         MEPoint *point;
         if([MEPoint isExtInfoName:[[featureEntry title] stringValue]]){
-            point = [MEPoint insertTmpEmptyExtInfoInMap:map];
+            point = [MEPoint extInfoInMap:map];
         }else {
-            point = [MEPoint insertTmpNewInMap:map];
+            point = [MEPoint pointInMap:map];
         }
         [GMapService __fill_MEPoint:point withFeedFeatureEntry:featureEntry];
     }

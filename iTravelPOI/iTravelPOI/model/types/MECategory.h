@@ -31,13 +31,11 @@
 #pragma mark -
 #pragma mark MECategory CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
++ (MECategory *) categoryInMap:(MEMap *)ownerMap;
 
-+ (NSEntityDescription *) categoryEntity:(NSManagedObjectContext *) ctx;
++ (NSString *) calcRemoteCategotyETag;
 
 + (NSString *) defaultIconURL;
-
-+ (MECategory *) insertNewInMap:(MEMap *)ownerMap;
-+ (MECategory *) insertTmpNewInMap:(MEMap *)ownerMap;
 
 + (NSArray *)sortCategorized:(NSSet *)categories;
 

@@ -31,17 +31,14 @@
 //---------------------------------------------------------------------------------------------------------------------
 @interface MEBaseEntity () 
 
-@property (nonatomic, retain) NSString * i_iconURL;
-@property (nonatomic, retain) NSNumber * i_changed;
-@property (nonatomic, retain) NSNumber * i_wasDeleted;
-
-
-+ (NSString *) _calcRemoteCategoryETag;
 + (NSUInteger) _getNextIdCounter;
 
 - (NSString *) _calcLocalETag;
 - (NSString *) _calcLocalGID;
 - (NSString *) _classTypeToString;
+
+
+@property (nonatomic,assign) BOOL i_wasDeleted;
 
 
 @end
@@ -55,26 +52,45 @@
 @implementation MEBaseEntity
 
 
-@dynamic GID;
-@dynamic syncETag;
-@dynamic name;
-@dynamic desc;
-@dynamic i_iconURL;
-@dynamic ts_created;
-@dynamic ts_updated;
-@dynamic i_changed;
-@dynamic i_wasDeleted;
-
-
+@synthesize GID = _GID;
+@synthesize syncETag = _syncETag;
+@synthesize name = _name;
+@synthesize desc = _desc;
+@synthesize icon = _icon;
+@synthesize ts_created = _ts_created;
+@synthesize ts_updated = _ts_updated;
+@synthesize changed = _changed;
+@synthesize isLocal = _isLocal;
 @synthesize syncStatus = _syncStatus;
+@synthesize isMarkedAsDeleted = _isMarkedAsDeleted;
+
+@synthesize i_wasDeleted = _i_wasDeleted;
 
 
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark initialization & finalization
 //---------------------------------------------------------------------------------------------------------------------
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        [self resetEntity];
+    }
+    
+    return self;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 - (void)dealloc {
-    [_gmapIcon release];
+
+    [_GID release];
+    [_syncETag release];
+    [_name release];
+    [_desc release];
+    [_icon release];
+    [_ts_created release];
+    [_ts_updated release];
     
     [super dealloc];
 }
@@ -83,11 +99,6 @@
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark CLASS methods
-//---------------------------------------------------------------------------------------------------------------------
-+ (NSString *) calcRemoteCategotyETag {
-    return [MEBaseEntity _calcRemoteCategoryETag];
-}
-
 //---------------------------------------------------------------------------------------------------------------------
 + (id) searchByGID:(NSString *)gid inArray:(NSArray *)collection {
     
@@ -109,33 +120,10 @@
 #pragma mark -
 #pragma mark Getter/Setter methods
 //---------------------------------------------------------------------------------------------------------------------
-- (BOOL) changed {
-    return [self.i_changed boolValue];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
 - (void) setChanged:(BOOL)value {
     
     self.ts_updated = [NSDate date];
-    self.i_changed = [NSNumber numberWithBool:value];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (GMapIcon *) icon {
-    if(!_gmapIcon) {
-        _gmapIcon = [[GMapIcon iconForURL:self.i_iconURL] retain];
-    }
-    return _gmapIcon;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) setIcon:(GMapIcon *)icon {
-    
-    if(!_gmapIcon) {
-        [_gmapIcon release];
-    }
-    _gmapIcon = [icon retain];
-    self.i_iconURL = icon.url;
+    _changed = value;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -150,42 +138,24 @@
 #pragma mark General PUBLIC methods
 //---------------------------------------------------------------------------------------------------------------------
 - (NSError *) commitChanges {
-    
-    NSManagedObjectContext *ctx = [self managedObjectContext];
-    NSError *error = nil;
-    if(ctx!=nil && [ctx hasChanges]) {
-        if(![ctx save:&error]){
-            NSLog(@"Error saving NSManagedContext: %@, %@", error, [error userInfo]);
-        }
-    }
-    
-    // Notifica de cambios en el modelo
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"ModelHasChangedNotification" object:nil userInfo:(NSDictionary *)nil];
-    
-    // Retorna la condicion de error
-    return error;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) deleteFromModel {
-    [[self managedObjectContext] deleteObject:self];
+    return nil;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) markAsDeleted {
     // Lo marca como borrado
-    self.i_wasDeleted = [NSNumber numberWithBool:YES];
+    self.i_wasDeleted = true;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) unmarkAsDeleted {
     // Quita marca como borrado
-    self.i_wasDeleted = [NSNumber numberWithBool:NO];
+    self.i_wasDeleted = false;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL) isMarkedAsDeleted {
-    return [self.i_wasDeleted boolValue];
+    return self.i_wasDeleted;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -222,13 +192,13 @@
     self.GID = [self _calcLocalGID]; 
     self.name = @"";
     self.desc = @"";
-    self.i_iconURL = [[self class] defaultIconURL];
+    self.icon = [GMapIcon iconForURL:[[self class] defaultIconURL]];
     self.changed = false;
     self.syncETag = [self _calcLocalETag];
     self.syncStatus = ST_Sync_OK;
     self.ts_created = [NSDate date];
     self.ts_updated = [NSDate date];
-    self.i_wasDeleted = [NSNumber numberWithBool:NO];
+    self.i_wasDeleted = false;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -250,7 +220,7 @@
     [sbuf appendFormat:@"%@<syncStatus>%@</syncStatus>\n", ident, SyncStatusType_Names[self.syncStatus]];
     [sbuf appendFormat:@"%@<changed>%d</changed>\n", ident, self.changed];
     [sbuf appendFormat:@"%@<description>%@</description>\n", ident, self.desc];
-    [sbuf appendFormat:@"%@<icon>%@</icon>\n", ident, self.i_iconURL];
+    [sbuf appendFormat:@"%@<icon>%@</icon>\n", ident, self.icon.url];
     [sbuf appendFormat:@"%@<ts_created>%@</ts_created>\n", ident, self.ts_created];
     [sbuf appendFormat:@"%@<ts_updated>%@</ts_updated>\n", ident, self.ts_updated];
     [sbuf appendFormat:@"%@<wasDeleted>%d</wasDeleted>\n", ident, self.isMarkedAsDeleted];

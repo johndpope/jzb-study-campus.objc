@@ -6,11 +6,11 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
+#import "MEMapElement_Protected.h"
 #import "MEPoint.h"
 #import "MECategory.h"
 #import "MEMap.h"
 #import "MEBaseEntity_Protected.h"
-#import "ModelService.h"
 
 
 
@@ -33,12 +33,6 @@
 @interface MEPoint () 
 
 
-@property (nonatomic, assign) BOOL isTemp;
-
-@property (nonatomic, retain) NSNumber* _i_lng;
-@property (nonatomic, retain) NSNumber* _i_lat;
-
-
 - (void) resetExtInfo;
 
 
@@ -52,12 +46,12 @@
 //---------------------------------------------------------------------------------------------------------------------
 @implementation MEPoint
 
-@dynamic _i_lng;
-@dynamic _i_lat;
+@synthesize lng = _lng;
+@synthesize lat = _lat;
 
-@dynamic categories;
+@synthesize categories = _categories;
 
-@synthesize isTemp = _isTemp;
+@synthesize isExtInfo = _isExtInfo;
 
 
 
@@ -65,7 +59,20 @@
 #pragma mark -
 #pragma mark initialization & finalization
 //---------------------------------------------------------------------------------------------------------------------
-- (void)dealloc {
+- (id)init
+{
+    self = [super init];
+    if (self) {
+    }
+    
+    return self;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void)dealloc 
+{
+    [_categories release];
+    
     [super dealloc];
 }
 
@@ -75,77 +82,27 @@
 #pragma mark -
 #pragma mark CLASS methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (NSEntityDescription *) pointEntity:(NSManagedObjectContext *) ctx {
-
-    NSEntityDescription * _pointEntity = nil;
-    if(ctx) {
-        _pointEntity = [NSEntityDescription entityForName:@"MEPoint" inManagedObjectContext:ctx];
-    } else {
-        _pointEntity = [[ModelService sharedInstance] getEntityDescriptionForName:@"MEPoint"];
-    }
-    return _pointEntity;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
 + (NSString *) defaultIconURL {
     return DEFAULT_POINT_ICON_URL;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (MEPoint *) insertNewInMap:(MEMap *)ownerMap {
++ (MEPoint *) pointInMap:(MEMap *)ownerMap {
     
-    NSManagedObjectContext * ctx = [ownerMap managedObjectContext];
-    if(ctx) 
-    {
-        MEPoint *newPoint = (MEPoint *)[[NSManagedObject alloc] initWithEntity:[MEPoint pointEntity:ctx] insertIntoManagedObjectContext:ctx];
-        newPoint.isTemp = false;
-        [newPoint resetEntity];
-        [ownerMap addPoint:newPoint];
-        return newPoint;
-    }
-    else {
-        return nil;
-    }
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-+ (MEPoint *) insertTmpNewInMap:(MEMap *)ownerMap {
-    
-    MEPoint *newPoint = (MEPoint *)[[NSManagedObject alloc] initWithEntity:[MEPoint pointEntity:nil] insertIntoManagedObjectContext:nil];
-    newPoint.isTemp = true;
+    MEPoint *newPoint = [[MEPoint alloc] init];
     [newPoint resetEntity];
     [ownerMap addPoint:newPoint];
     return [newPoint autorelease];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (MEPoint *) insertEmptyExtInfoInMap:(MEMap *)ownerMap {
++ (MEPoint *) extInfoInMap:(MEMap *)ownerMap {
     
-    NSManagedObjectContext * ctx = [ownerMap managedObjectContext];
-    if(ctx) 
-    {
-        MEPoint *extInfo = (MEPoint *)[[NSManagedObject alloc] initWithEntity:[MEPoint pointEntity:ctx] insertIntoManagedObjectContext:ctx];
-        extInfo.isTemp = false;
-        [extInfo resetEntity];
-        [extInfo resetExtInfo];
-        ownerMap.extInfo= extInfo;
-        extInfo.map = ownerMap;
-        return extInfo;
-    }
-    else {
-        return nil;
-    }
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-+ (MEPoint *) insertTmpEmptyExtInfoInMap:(MEMap *)ownerMap {
-    
-    MEPoint *extInfo = (MEPoint *)[[NSManagedObject alloc] initWithEntity:[MEPoint pointEntity:nil] insertIntoManagedObjectContext:nil];
-    extInfo.isTemp = true;
+    MEPoint *extInfo = [[MEPoint alloc] init];
     [extInfo resetEntity];
     [extInfo resetExtInfo];
     ownerMap.extInfo = extInfo;
-    extInfo.map = ownerMap;
+    [extInfo setMapOwner:ownerMap];
     return [extInfo autorelease];
 }
 
@@ -160,30 +117,17 @@
 #pragma mark -
 #pragma mark Getter/Setter methods
 //---------------------------------------------------------------------------------------------------------------------
-- (double) lng {
-    return [self._i_lng doubleValue];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (double) lat {
-    return [self._i_lat doubleValue];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) setLng:(double)lng {
-    self._i_lng = [NSNumber numberWithDouble:lng];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) setLat:(double)lat {
-    self._i_lat = [NSNumber numberWithDouble:lat];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
 - (BOOL) isExtInfo {
     return [self.name isEqualToString:EXT_INFO_POINT_NAME];
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (NSSet *) categories {
+    if(!_categories) {
+        _categories = [[NSMutableSet alloc] init];
+    }
+    return _categories;
+}
 
 
 //*********************************************************************************************************************
@@ -194,7 +138,7 @@
     
     // Lo marca como borrado desde la clase base
     [super markAsDeleted];
-
+    
     // Se borra como punto activo y se almacena como punto borrado
     [self.map removePoint:self];
     [self.map addDeletedPoint:self];
@@ -205,7 +149,7 @@
     
     // Quita la marca de borrado desde la clase base
     [super unmarkAsDeleted];
-
+    
     // Se borra como punto eliminado y se almacena de nuevo como punto activo
     [self.map removeDeletedPoint:self];
     [self.map addPoint:self];
@@ -278,77 +222,38 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void)addCategory:(MECategory *)value {    
-    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"categories"] addObject:value];
-    [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-    [changedObjects release];
+- (void)addCategory:(MECategory *)value {
     
-    if(self.isTemp && ![value.points containsObject:self]) [value addPoint: self];
+    [(NSMutableSet *)self.categories addObject:value];
+    if(![value.points containsObject:self]) [value addPoint: self];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removeCategory:(MECategory *)value {
-    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"categories"] removeObject:value];
-    [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-    [changedObjects release];
-    
-    if(self.isTemp && [value.points containsObject:self]) [value removePoint: self];
+    [(NSMutableSet *)self.categories removeObject:value];
+    if([value.points containsObject:self]) [value removePoint: self];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)addCategories:(NSSet *)value {    
-    [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
-    [[self primitiveValueForKey:@"categories"] unionSet:value];
-    [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
-    
-    if(self.isTemp) {
-        for(MECategory *entity in value) {
-            if(![entity.points containsObject:self]) {
-                [entity addPoint: self];
-            }
-        }
+    for(MECategory *entity in value) {
+        [self addCategory:entity];
     }
-    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removeCategories:(NSSet *)value {
-    [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
-    [[self primitiveValueForKey:@"categories"] minusSet:value];
-    [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
-    
-    if(self.isTemp) {
-        for(MECategory *entity in value) {
-            if([entity.points containsObject:self]) {
-                [entity removePoint: self];
-            }
-        }
+    for(MECategory *entity in value) {
+        [self removeCategory:entity];
     }
-    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removeAllCategories {
     
     NSSet *allCategories = [[NSSet alloc] initWithSet:self.categories];
-    [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:allCategories];
-    [[self primitiveValueForKey:@"categories"] minusSet:allCategories];
-    [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:allCategories];
-    
-    if(self.isTemp) {
-        for(MECategory *entity in allCategories) {
-            if([entity.points containsObject:self]) {
-                [entity removePoint: self];
-            }
-        }
-    }
-    
+    [self removeCategories:allCategories];
     [allCategories release];
-    
 }
 
 

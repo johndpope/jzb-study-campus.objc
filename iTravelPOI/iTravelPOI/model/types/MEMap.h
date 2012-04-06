@@ -22,13 +22,13 @@
 //---------------------------------------------------------------------------------------------------------------------
 @interface MEMap : MEBaseEntity
 
-@property (nonatomic, retain) NSSet* points;
-@property (nonatomic, retain) NSSet* categories;
+@property (nonatomic, retain, readonly) NSSet* points;
+@property (nonatomic, retain, readonly) NSSet* categories;
 
 @property (nonatomic, retain) MEPoint * extInfo;
 
-@property (nonatomic, retain) NSSet* deletedPoints;
-@property (nonatomic, retain) NSSet* deletedCategories;
+@property (nonatomic, retain, readonly) NSSet* deletedPoints;
+@property (nonatomic, retain, readonly) NSSet* deletedCategories;
 
 
 
@@ -36,12 +36,9 @@
 #pragma mark -
 #pragma mark MEMap CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (NSEntityDescription *) mapEntity:(NSManagedObjectContext *)ctx;
++ (MEMap *) map;
 
 + (NSString *) defaultIconURL;
-
-+ (MEMap *) insertNew:(NSManagedObjectContext *) ctx;
-+ (MEMap *) insertTmpNew;
 
 
 
@@ -49,10 +46,16 @@
 #pragma mark -
 #pragma mark MEMap general INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
+
+// Persiste los cambios
+- (NSError *) commitChanges;
+
 // Limpia el estado de sincronizacion y borrar DEFINITIVAMENTE los elementos marcados como borrados
 - (void) markAsSynchronized;
 - (void) removeAllPointsAndCategories;
 
+// Necesario para evitar leer todos los puntos de todos los mapas
+- (NSUInteger) cachedPointsCount;
 
 
 //---------------------------------------------------------------------------------------------------------------------

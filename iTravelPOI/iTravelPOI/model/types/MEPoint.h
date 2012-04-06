@@ -34,15 +34,11 @@
 #pragma mark -
 #pragma mark MEPoint CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (NSEntityDescription *) pointEntity:(NSManagedObjectContext *) ctx;
++ (MEPoint *) pointInMap:(MEMap *)ownerMap;
 
 + (NSString *) defaultIconURL;
 
-+ (MEPoint *) insertNewInMap:(MEMap *)ownerMap;
-+ (MEPoint *) insertTmpNewInMap:(MEMap *)ownerMap;
-
-+ (MEPoint *) insertEmptyExtInfoInMap:(MEMap *)map;
-+ (MEPoint *) insertTmpEmptyExtInfoInMap:(MEMap *)map;
++ (MEPoint *) extInfoInMap:(MEMap *)map;
 
 + (BOOL) isExtInfoName:(NSString *) aName;
 
@@ -60,6 +56,7 @@
 #pragma mark MEPoint "categories" INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
 - (MECategory *) categoryByGID:(NSString *)gid;
+
 - (void)addCategory:(MECategory *)value ;    
 - (void)removeCategory:(MECategory *)value ;
 - (void)addCategories:(NSSet *)value ;    

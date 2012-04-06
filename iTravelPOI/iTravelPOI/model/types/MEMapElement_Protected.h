@@ -6,20 +6,17 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "MEBaseEntity.h"
+#import "MEMapElement.h"
 
 @class MEMap;
 
 
 //*********************************************************************************************************************
 #pragma mark -
-#pragma mark MEMapElement interface definition
+#pragma mark MEBaseEntity PROTECTED methods definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface MEMapElement : MEBaseEntity
+@interface MEMapElement(ProtectedMethods)
 
-@property (nonatomic, assign, readonly) MEMap * map;
-
-// Persiste los cambios
-- (NSError *) commitChanges;
+- (void) setMapOwner:(MEMap *)map;
 
 @end

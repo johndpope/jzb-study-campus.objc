@@ -7,6 +7,7 @@
 //
 
 
+#import "MEMapElement_Protected.h"
 #import "MECategory.h"
 #import "MECategory.h"
 #import "MEMap.h"
@@ -30,10 +31,6 @@
 //---------------------------------------------------------------------------------------------------------------------
 @interface MECategory () 
 
-
-@property (nonatomic, assign) BOOL isTemp;
-
-
 @end
 
 
@@ -45,11 +42,9 @@
 @implementation MECategory
 
 
-@dynamic points;
-@dynamic categories;
-@dynamic subcategories;
-
-@synthesize isTemp = _isTemp;
+@synthesize points = _points;
+@synthesize categories = _categories;
+@synthesize subcategories = _subcategories;
 @synthesize t_displayCount = _t_displayCount;
 
 
@@ -58,7 +53,22 @@
 #pragma mark -
 #pragma mark initialization & finalization
 //---------------------------------------------------------------------------------------------------------------------
-- (void)dealloc {
+- (id)init
+{
+    self = [super init];
+    if (self) {
+    }
+    
+    return self;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void)dealloc 
+{
+    [_points release];
+    [_categories release];
+    [_subcategories release];
+    
     [super dealloc];
 }
 
@@ -68,14 +78,8 @@
 #pragma mark -
 #pragma mark CLASS methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (NSEntityDescription *) categoryEntity:(NSManagedObjectContext *) ctx {
-    NSEntityDescription * _categoryEntity = nil;
-    if(ctx) {
-        _categoryEntity = [NSEntityDescription entityForName:@"MECategory" inManagedObjectContext:ctx];
-    } else {
-        _categoryEntity = [[ModelService sharedInstance] getEntityDescriptionForName:@"MECategory"];
-    }
-    return _categoryEntity;
++ (NSString *) calcRemoteCategotyETag {
+    return [MEBaseEntity _calcRemoteCategoryETag];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -84,27 +88,9 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (MECategory *) insertNewInMap:(MEMap *)ownerMap {
++ (MECategory *) categoryInMap:(MEMap *)ownerMap {
     
-    NSManagedObjectContext * ctx = [ownerMap managedObjectContext];
-    if(ctx) 
-    {
-        MECategory *newCat = (MECategory *)[[NSManagedObject alloc] initWithEntity:[MECategory categoryEntity:ctx] insertIntoManagedObjectContext:ctx];
-        newCat.isTemp = false;
-        [newCat resetEntity];
-        [ownerMap addCategory:newCat];
-        return newCat;
-    } else {
-        return nil;
-    }
-    
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-+ (MECategory *) insertTmpNewInMap:(MEMap *)ownerMap {
-    
-    MECategory *newCat = (MECategory *)[[NSManagedObject alloc] initWithEntity:[MECategory categoryEntity:nil] insertIntoManagedObjectContext:nil];
-    newCat.isTemp = true;
+    MECategory *newCat = [[MECategory alloc] init];
     [newCat resetEntity];
     [ownerMap addCategory:newCat];
     return [newCat autorelease];
@@ -151,6 +137,28 @@
 #pragma mark -
 #pragma mark Getter/Setter methods
 //---------------------------------------------------------------------------------------------------------------------
+- (NSSet *) points {
+    if(!_points) {
+        _points = [[NSMutableSet alloc] init];
+    }
+    return _points;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSSet *) categories {
+    if(!_categories) {
+        _categories = [[NSMutableSet alloc] init];
+    }
+    return _categories;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSSet *) subcategories {
+    if(!_subcategories) {
+        _subcategories = [[NSMutableSet alloc] init];
+    }
+    return _subcategories;
+}
 
 
 
@@ -181,7 +189,7 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) updateToRemoteETag {
-    self.syncETag = [MEBaseEntity calcRemoteCategotyETag];
+    self.syncETag = [MEBaseEntity _calcRemoteCategoryETag];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -322,73 +330,35 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)addPoint:(MEPoint *)value {
-    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"points"] addObject:value];
-    [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-    [changedObjects release];
-    
-    if(self.isTemp && ![value.categories containsObject:self]) [value addCategory: self];
+    [(NSMutableSet *)self.points addObject:value];
+    if(![value.categories containsObject:self]) [value addCategory: self];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removePoint:(MEPoint *)value {
-    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"points"] removeObject:value];
-    [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-    [changedObjects release];
-    
-    if(self.isTemp && [value.categories containsObject:self]) [value removeCategory: self];
+    [(NSMutableSet *)self.points removeObject:value];
+    if([value.categories containsObject:self]) [value removeCategory: self];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)addPoints:(NSSet *)value {    
-    [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
-    [[self primitiveValueForKey:@"points"] unionSet:value];
-    [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
-    
-    if(self.isTemp) {
-        for(MEPoint *entity in value) {
-            if(![entity.categories containsObject:self]) {
-                [entity addCategory: self];
-            }
-        }
+    for(MEPoint *entity in value) {
+        [self addPoint:entity];
     }
-    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removePoints:(NSSet *)value {
-    [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
-    [[self primitiveValueForKey:@"points"] minusSet:value];
-    [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
-    
-    if(self.isTemp) {
-        for(MEPoint *entity in value) {
-            if([entity.categories containsObject:self]) {
-                [entity removeCategory: self];
-            }
-        }
+    for(MEPoint *entity in value) {
+        [self removePoint:entity];
     }
-    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removeAllPoints {
-    
-    NSSet *allPoints = [NSSet setWithSet:self.points];
-    [self willChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:allPoints];
-    [[self primitiveValueForKey:@"points"] minusSet:allPoints];
-    [self didChangeValueForKey:@"points" withSetMutation:NSKeyValueMinusSetMutation usingObjects:allPoints];
-    
-    if(self.isTemp) {
-        for(MEPoint *entity in allPoints) {
-            if([entity.categories containsObject:self]) {
-                [entity removeCategory: self];
-            }
-        }
-    }
+    NSSet *allPoints = [[NSSet alloc] initWithSet:self.points];
+    [self removePoints:allPoints];
+    [allPoints release];
 }
 
 
@@ -408,73 +378,38 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)addSubcategory:(MECategory *)value {    
-    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    [self willChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"subcategories"] addObject:value];
-    [self didChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-    [changedObjects release];
-    
-    if(self.isTemp && ![value.categories containsObject:self]) [value addCategory: self];
+    [(NSMutableSet *)self.subcategories addObject:value];
+    if(![value.categories containsObject:self]) [value addCategory: self];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removeSubcategory:(MECategory *)value {
-    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    [self willChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"subcategories"] removeObject:value];
-    [self didChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-    [changedObjects release];
-    
-    if(self.isTemp && [value.categories containsObject:self]) [value removeCategory: self];
+    [(NSMutableSet *)self.subcategories removeObject:value];
+    if([value.categories containsObject:self]) [value removeCategory: self];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)addSubcategories:(NSSet *)value {    
-    [self willChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
-    [[self primitiveValueForKey:@"subcategories"] unionSet:value];
-    [self didChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
-    
-    if(self.isTemp) {
-        for(MECategory *entity in value) {
-            if(![entity.categories containsObject:self]) {
-                [entity addCategory: self];
-            }
-        }
+    for(MECategory *entity in value) {
+        [self addSubcategory:entity];
     }
-    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removeSubcategories:(NSSet *)value {
-    [self willChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
-    [[self primitiveValueForKey:@"subcategories"] minusSet:value];
-    [self didChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
-    
-    if(self.isTemp) {
-        for(MECategory *entity in value) {
-            if([entity.categories containsObject:self]) {
-                [entity removeCategory: self];
-            }
-        }
+    for(MECategory *entity in value) {
+        [self removeSubcategory:entity];
     }
-    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removeAllSubcategories {
     
-    NSSet *allSubcategories = [NSSet setWithSet:self.subcategories];
-    [self willChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:allSubcategories];
-    [[self primitiveValueForKey:@"subcategories"] minusSet:allSubcategories];
-    [self didChangeValueForKey:@"subcategories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:allSubcategories];
-    
-    if(self.isTemp) {
-        for(MECategory *entity in allSubcategories) {
-            if([entity.categories containsObject:self]) {
-                [entity removeCategory: self];
-            }
-        }
+    NSSet *allSubcategories = [[NSSet alloc] initWithSet:self.subcategories];
+    for(MECategory *entity in allSubcategories) {
+        [self removeSubcategory:entity];
     }
+    [allSubcategories release];
 }
 
 
@@ -494,73 +429,37 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)addCategory:(MECategory *)value {    
-    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"categories"] addObject:value];
-    [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-    [changedObjects release];
-    
-    if(self.isTemp && ![value.subcategories containsObject:self]) [value addSubcategory: self];
+    [(NSMutableSet *)self.categories addObject:value];
+    if(![value.subcategories containsObject:self]) [value addSubcategory: self];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removeCategory:(MECategory *)value {
-    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"categories"] removeObject:value];
-    [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-    [changedObjects release];
-    
-    if(self.isTemp && [value.subcategories containsObject:self]) [value removeSubcategory: self];
+    [(NSMutableSet *)self.categories removeObject:value];
+    if([value.subcategories containsObject:self]) [value removeSubcategory: self];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)addCategories:(NSSet *)value {    
-    [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
-    [[self primitiveValueForKey:@"categories"] unionSet:value];
-    [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
-    
-    if(self.isTemp) {
-        for(MECategory *entity in value) {
-            if(![entity.subcategories containsObject:self]) {
-                [entity addSubcategory: self];
-            }
-        }
+    for(MECategory *entity in value) {
+        [self addCategory:entity];
     }
-    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removeCategories:(NSSet *)value {
-    [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
-    [[self primitiveValueForKey:@"categories"] minusSet:value];
-    [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
-    
-    if(self.isTemp) {
-        for(MECategory *entity in value) {
-            if([entity.subcategories containsObject:self]) {
-                [entity removeSubcategory: self];
-            }
-        }
+    for(MECategory *entity in value) {
+        [self removeCategory:entity];
     }
-    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)removeAllCategories {
-    
-    NSSet *allCategories = [NSSet setWithSet:self.categories];
-    [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:allCategories];
-    [[self primitiveValueForKey:@"categories"] minusSet:allCategories];
-    [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:allCategories];
-    
-    if(self.isTemp) {
-        for(MECategory *entity in allCategories) {
-            if([entity.subcategories containsObject:self]) {
-                [entity removeSubcategory: self];
-            }
-        }
+    NSSet *allCategories = [[NSSet alloc] initWithSet:self.categories];
+    for(MECategory *entity in allCategories) {
+        [self removeCategory:entity];
     }
+    [allCategories release];
 }
 
 

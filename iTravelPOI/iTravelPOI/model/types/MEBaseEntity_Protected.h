@@ -16,6 +16,8 @@
 @interface MEBaseEntity(ProtectedMethods)
 
 // Metodos para poder ser utilizados por subclases
++ (NSString *) _calcRemoteCategoryETag;
+
 - (void) resetEntity;
 
 - (void) _xmlStringBody: (NSMutableString*) sb ident:(NSString *) ident;

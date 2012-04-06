@@ -37,10 +37,7 @@ static const NSString *SyncStatusType_Names[8]={
 #pragma mark -
 #pragma mark MEBaseEntity interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface MEBaseEntity : NSManagedObject {
-@private
-    GMapIcon *_gmapIcon;
-}
+@interface MEBaseEntity : NSManagedObject 
 
 @property (nonatomic, retain)   NSString * GID;
 @property (nonatomic, retain)   NSString * syncETag;
@@ -49,9 +46,11 @@ static const NSString *SyncStatusType_Names[8]={
 @property (nonatomic, retain)   GMapIcon * icon;
 @property (nonatomic, retain)   NSDate * ts_created;
 @property (nonatomic, retain)   NSDate * ts_updated;
+
 @property (nonatomic, assign)   BOOL changed;
-@property (nonatomic, readonly) BOOL isLocal;
 @property (nonatomic, assign)   SyncStatusType syncStatus;
+
+@property (nonatomic, readonly) BOOL isLocal;
 @property (nonatomic, readonly) BOOL isMarkedAsDeleted;
 
 
@@ -60,11 +59,10 @@ static const NSString *SyncStatusType_Names[8]={
 #pragma mark -
 #pragma mark MEBaseEntity CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (NSString *) calcRemoteCategotyETag;
-
 + (id) searchByGID:(NSString *)gid inArray:(NSArray *)collection;
 
 + (NSString *) defaultIconURL;
+
 
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -72,11 +70,9 @@ static const NSString *SyncStatusType_Names[8]={
 #pragma mark MEBaseEntity INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
 
-// A llamar para persistir una entidad recien creada DESPUES que se rellene su informacion adecuadamente
+// Persiste los cambios
 - (NSError *) commitChanges;
 
-// Necesario para borrar DEFINITIVAMENTE una entidad del modelo
-- (void) deleteFromModel;
 
 // "Marca" la entidad como borrada y elimina sus relaciones con otras entidades.
 // Quitar la marca no restaura las relaciones que antes existian
