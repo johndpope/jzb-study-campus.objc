@@ -49,6 +49,10 @@
 #pragma mark MEPoint general INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
 
+// Lee y escribe la informacion a un diccionario
+- (void) readFromDictionary:(NSDictionary *)dic;
+- (void) writeToDictionary:(NSDictionary *)dic;
+
 
 
 //---------------------------------------------------------------------------------------------------------------------

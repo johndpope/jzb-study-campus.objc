@@ -18,7 +18,14 @@
 // Metodos para poder ser utilizados por subclases
 + (NSString *) _calcRemoteCategoryETag;
 
+
 - (void) resetEntity;
+
+
+// Lee y escribe la informacion a un diccionario
+- (void) readFromDictionary:(NSDictionary *)dic;
+- (void) writeToDictionary:(NSMutableDictionary *)dic;
+
 
 - (void) _xmlStringBody: (NSMutableString*) sb ident:(NSString *) ident;
 - (void) _xmlStringBTag: (NSMutableString*) sb ident:(NSString *) ident;

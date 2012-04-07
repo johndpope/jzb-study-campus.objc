@@ -22,8 +22,8 @@
 //---------------------------------------------------------------------------------------------------------------------
 @interface SyncService ()
 
-- (NSMutableArray *) _compareMapsInCtx:(NSManagedObjectContext *)moContext error:(NSError **)error;
-- (void)             _syncMapsInCtx:(NSManagedObjectContext *)moContext compItems:(NSArray *)compItems error:(NSError **)error;
+- (NSMutableArray *) _compareMaps:(NSError **)error;
+- (void)             _syncMaps:(NSArray *)compItems error:(NSError **)error;
 
 @end
 
@@ -58,7 +58,7 @@
 #pragma mark -
 #pragma mark General PUBLIC methods
 //---------------------------------------------------------------------------------------------------------------------
-- (SRVC_ASYNCHRONOUS) compareMapsInCtx:(NSManagedObjectContext *) moContext callback:(TBlock_compareMapsFinished)callbackBlock {
+- (SRVC_ASYNCHRONOUS) compareMaps:(TBlock_compareMapsFinished)callbackBlock {
     
     NSLog(@"SyncService - Async - compareMapsInCtx");
     
@@ -73,7 +73,7 @@
     // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
     dispatch_async(self.serviceQueue, ^(void){
         NSError *error = nil;
-        NSMutableArray *compItems = [[SyncService sharedInstance] _compareMapsInCtx:moContext error:&error];
+        NSMutableArray *compItems = [[SyncService sharedInstance] _compareMaps:&error];
         
         // Avisamos al llamante de que ya tenemos la lista con los mapas
         dispatch_async(caller_queue, ^(void){
@@ -84,7 +84,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (SRVC_ASYNCHRONOUS) syncMapsInCtx:(NSManagedObjectContext *) moContext compItems:(NSArray *)compItems callback:(TBlock_SyncMapsFinished)callbackBlock {
+- (SRVC_ASYNCHRONOUS) syncMaps:(NSArray *)compItems callback:(TBlock_SyncMapsFinished)callbackBlock {
     
     NSLog(@"SyncService - Async - syncMapsInCtx");
     
@@ -99,7 +99,7 @@
     // Hacemos el trabajo en otro hilo porque podría ser pesado y así evitamos bloqueos del llamante (GUI)
     dispatch_async(self.serviceQueue, ^(void){
         NSError *error = nil;
-        [[SyncService sharedInstance] _syncMapsInCtx:moContext compItems:compItems error:&error];
+        [[SyncService sharedInstance] _syncMaps:compItems error:&error];
         
         // Avisamos al llamante de que ya tenemos la lista con los mapas
         dispatch_async(caller_queue, ^(void){
@@ -115,13 +115,13 @@
 #pragma mark -
 #pragma mark PRIVATE methods
 //---------------------------------------------------------------------------------------------------------------------
-- (NSMutableArray *) _compareMapsInCtx:(NSManagedObjectContext *) moContext error:(NSError **)error {
+- (NSMutableArray *) _compareMaps:(NSError **)error {
     
     NSLog(@"SyncService - _compareMapsInCtx");
     
     
     // Consigue la lista de los mapas locales
-    NSArray *localMaps = [[ModelService sharedInstance] getUserMapList:moContext orderBy:SORT_BY_NAME sortOrder:SORT_ASCENDING error:error];
+    NSArray *localMaps = [[ModelService sharedInstance] getUserMapList:error];
     if(*error) {
         // Ha habido un error al recuperar los mapas locales
         NSLog(@"error: %@", *error);
@@ -151,13 +151,12 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) _syncMapsInCtx:(NSManagedObjectContext *)moContext compItems:(NSArray *)compItems error:(NSError **)error {
+- (void) _syncMaps:(NSArray *)compItems error:(NSError **)error {
     
     NSLog(@"SyncService - _syncMapsInCtx");
 
     // Crea el delegate que procesara las tuplas
     DelegateMapMerge *delegate = [[DelegateMapMerge alloc] init];
-    delegate.moContext = moContext;
     
     // Itera la lista de items comparados que nos han pasado
     for(MECompareTuple *tuple in compItems) {

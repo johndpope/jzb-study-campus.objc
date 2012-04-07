@@ -18,14 +18,14 @@
 #pragma mark MEMap PRIVATE CONSTANTS and C-Methods definitions
 //---------------------------------------------------------------------------------------------------------------------
 #define DEFAULT_MAP_ICON_URL   @"http://maps.google.com/mapfiles/ms/micons/blue-dot.png"
-
+#define BODY_ALREADY_READ     -1
 
 
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark MEMap PRIVATE interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface MEMap () 
+@interface MEMap ()
 
 @property (nonatomic, assign) NSUInteger i_cachedPointCount;
 
@@ -47,6 +47,7 @@
 @synthesize deletedCategories = _deletedCategories;
 
 @synthesize i_cachedPointCount = _i_cachedPointCount;
+@synthesize persistentID = _persistentID;
 
 
 
@@ -58,6 +59,12 @@
 {
     self = [super init];
     if (self) {
+        _points = [[NSMutableSet alloc] init];
+        _categories = [[NSMutableSet alloc] init];
+        _deletedPoints = [[NSMutableSet alloc] init];
+        _deletedCategories = [[NSMutableSet alloc] init];
+        _i_cachedPointCount = BODY_ALREADY_READ;
+        _persistentID = nil;
     }
     
     return self;
@@ -71,6 +78,7 @@
     [_extInfo release];
     [_deletedPoints release];
     [_deletedCategories release];
+    [_persistentID release];
     
     [super dealloc];
 }
@@ -100,36 +108,6 @@
 #pragma mark -
 #pragma mark GETTER y SETTER methods
 //---------------------------------------------------------------------------------------------------------------------
-- (NSSet *) points {
-    if(!_points) {
-        _points = [[NSMutableSet alloc] init];
-    }
-    return _points;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSSet *) categories {
-    if(!_categories) {
-        _categories = [[NSMutableSet alloc] init];
-    }
-    return _categories;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSSet *) deletedPoints {
-    if(!_deletedPoints) {
-        _deletedPoints = [[NSMutableSet alloc] init];
-    }
-    return _deletedPoints;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSSet *) deletedCategories {
-    if(!_deletedCategories) {
-        _deletedCategories = [[NSMutableSet alloc] init];
-    }
-    return _deletedCategories;
-}
 
 
 
@@ -204,7 +182,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (NSUInteger) cachedPointsCount {
     
-    if(self.points) {
+    if(self.cachedPointsCount == BODY_ALREADY_READ) {
         return [self.points count];
     } else {
         return self.i_cachedPointCount;
@@ -220,6 +198,184 @@
 - (void) resetEntity
 {
     [super resetEntity];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) writeHeader:(NSMutableDictionary *)dict {
+    [self writeToDictionary:dict];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) readHeader:(NSDictionary *)dict {
+    [self readFromDictionary:dict];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) writeData:(NSMutableDictionary *)dict {
+    
+    // Graba los puntos del mapa (SOLO los datos, SIN sus relaciones)
+    NSMutableArray *pointList = [NSMutableArray array];
+    for(MEPoint *point in self.points) {
+        NSMutableDictionary *pointDict = [NSMutableDictionary dictionary];
+        [point writeToDictionary:pointDict];
+        [pointList addObject:pointDict];
+    }
+    [dict setValue:pointList forKey:@"PointList"];
+    
+    
+    // Graba las categorias del mapa (SOLO los datos, SIN sus relaciones)
+    NSMutableArray *catList = [NSMutableArray array];
+    for(MECategory *cat in self.categories) {
+        NSMutableDictionary *catDict = [NSMutableDictionary dictionary];
+        [cat writeToDictionary:catDict];
+        [catList addObject:catDict];
+    }
+    [dict setValue:catList forKey:@"CategoryList"];
+    
+    
+    // Graba los puntos borrados del mapa (SOLO los datos, SIN sus relaciones)
+    NSMutableArray *delPointList = [NSMutableArray array];
+    for(MEPoint *point in self.deletedPoints) {
+        NSMutableDictionary *pointDict = [NSMutableDictionary dictionary];
+        [point writeToDictionary:pointDict];
+        [pointList addObject:pointDict];
+    }
+    [dict setValue:delPointList forKey:@"DeletedPointList"];
+    
+    
+    // Graba las categorias borradas del mapa (SOLO los datos, SIN sus relaciones)
+    NSMutableArray *delCatList = [NSMutableArray array];
+    for(MECategory *cat in self.deletedCategories) {
+        NSMutableDictionary *catDict = [NSMutableDictionary dictionary];
+        [cat writeToDictionary:catDict];
+        [catList addObject:catDict];
+    }
+    [dict setValue:delCatList forKey:@"DeletedCategoryList"];
+    
+    
+    // Graba la informacion extendida
+    NSMutableDictionary *extPointDict = [NSMutableDictionary dictionary];
+    [self.extInfo writeToDictionary:extPointDict];
+    [dict setValue:extPointDict forKey:@"ExtPointInfo"];
+    
+    
+    // Graba las relaciones de las categorias con los puntos y sus subcategorias
+    NSMutableArray *catRelList = [NSMutableArray array];
+    for(MECategory *cat in self.categories) {
+        
+        NSMutableArray *pointRelList = [NSMutableArray array];
+        for(MEPoint *point in cat.points) {
+            [pointRelList addObject:point.GID];
+        }
+        
+        NSMutableArray *subcatRelList = [NSMutableArray array];
+        for(MECategory *subcat in cat.subcategories) {
+            [subcatRelList addObject:subcat.GID];
+        }
+        
+        NSMutableDictionary *catRelInfoDict = [NSMutableDictionary dictionary];
+        [catRelInfoDict setValue:cat.GID       forKey:@"GID"];
+        [catRelInfoDict setValue:pointRelList  forKey:@"points"];
+        [catRelInfoDict setValue:subcatRelList forKey:@"categories"];
+        
+        [catRelList addObject:catRelInfoDict];
+    }
+    [dict setValue:catRelList forKey:@"CategoryRelationships"];
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) readData:(NSDictionary *)dict {
+    
+    _i_cachedPointCount = BODY_ALREADY_READ;
+    
+    [self removeAllPoints];
+    [self removeAllCategories];
+    [self removeAllDeletedPoints];
+    [self removeAllDeletedCategories];
+    
+    
+    // Lee los puntos del mapa (SOLO los datos, SIN sus relaciones)
+    NSArray *pointList = [dict valueForKey:@"PointList"];
+    for(NSDictionary *pointDict in pointList) {
+        MEPoint *point = [MEPoint pointInMap:self];
+        [point readFromDictionary:pointDict];
+    }
+    
+    
+    // Lee las categorias del mapa (SOLO los datos, SIN sus relaciones)
+    NSArray *catList = [dict valueForKey:@"CategoryList"];
+    for(NSDictionary *catDict in catList) {
+        MECategory *cat = [MECategory categoryInMap:self];
+        [cat readFromDictionary:catDict];
+    }
+    
+    
+    // Lee los puntos borrados del mapa (SOLO los datos, SIN sus relaciones)
+    NSArray *delPointList = [dict valueForKey:@"DeletedPointList"];
+    for(NSDictionary *delPointDict in delPointList) {
+        MEPoint *point = [MEPoint pointInMap:nil];
+        [point readFromDictionary:delPointDict];
+        [self addDeletedPoint:point];
+    }
+    
+    
+    // Lee las categorias borradas del mapa (SOLO los datos, SIN sus relaciones)
+    NSArray *delCatList = [dict valueForKey:@"DeletedCategoryList"];
+    for(NSDictionary *delCatDict in delCatList) {
+        MECategory *cat = [MECategory categoryInMap:nil];
+        [cat readFromDictionary:delCatDict];
+        [self addDeletedCategory:cat];
+    }
+    
+    
+    // Lee la informacion extendida
+    MEPoint *extPoint = [MEPoint pointInMap:nil];
+    NSDictionary *extPointDict = [dict valueForKey:@"ExtPointInfo"];
+    [extPoint readFromDictionary:extPointDict];
+    self.extInfo = extPoint;
+    
+    
+    // Lee las relaciones de las categorias con los puntos y sus subcategorias
+    NSArray *catRelList = [dict valueForKey:@"CategoryRelationships"];
+    for(NSDictionary *catRelInfoDict in catRelList) {
+        
+        NSString *catGID = [catRelInfoDict valueForKey:@"GID"];
+        MECategory *cat = [self categoryByGID:catGID];
+        
+        NSArray *pointRelList = [catRelInfoDict valueForKey:@"points"];
+        for(NSString *pointGID in pointRelList) {
+            MEPoint *point = [self pointByGID:pointGID];
+            [cat addPoint:point];
+        }
+        
+        NSArray *subcatRelList = [catRelInfoDict valueForKey:@"categories"];
+        for(NSString *subcatGID in subcatRelList) {
+            MECategory *subCat = [self categoryByGID:subcatGID];
+            [cat addSubcategory:subCat];
+        }
+    }
+    
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) readFromDictionary:(NSDictionary *)dic {
+    
+    [super readFromDictionary:dic];
+    
+    
+    NSNumber *tCachedPointsCount = [dic valueForKey:@"CachedPointsCount"];
+    self.i_cachedPointCount = [tCachedPointsCount unsignedIntValue];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) writeToDictionary:(NSMutableDictionary *)dic {
+    
+    // Datos de cabecera
+    [super writeToDictionary:dic];
+    
+    NSNumber *tCachedPointsCount = [NSNumber numberWithUnsignedInt:self.i_cachedPointCount];
+    [dic setValue:tCachedPointsCount forKey:@"CachedPointsCount"];
 }
 
 //---------------------------------------------------------------------------------------------------------------------

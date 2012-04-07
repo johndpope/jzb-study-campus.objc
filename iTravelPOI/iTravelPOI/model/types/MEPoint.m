@@ -161,6 +161,30 @@
 #pragma mark -
 #pragma mark PROTECTED methods
 //---------------------------------------------------------------------------------------------------------------------
+- (void) readFromDictionary:(NSDictionary *)dic {
+    
+    [super readFromDictionary:dic];
+    
+    NSNumber *tLng = [dic valueForKey:@"Lng"];
+    NSNumber *tLat = [dic valueForKey:@"Lat"];
+    
+    self.lng = [tLng doubleValue];
+    self.lat = [tLat doubleValue];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) writeToDictionary:(NSMutableDictionary *)dic {
+    
+    [super writeToDictionary:dic];
+    
+    NSNumber *tLng = [NSNumber numberWithDouble:self.lng];
+    NSNumber *tLat = [NSNumber numberWithDouble:self.lat];
+    
+    [dic setValue:tLng forKey:@"Lng"];
+    [dic setValue:tLat forKey:@"lat"];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 - (void) resetEntity {
     
     [super resetEntity];

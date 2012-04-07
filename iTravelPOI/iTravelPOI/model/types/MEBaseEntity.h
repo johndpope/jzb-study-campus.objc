@@ -32,6 +32,18 @@ static const NSString *SyncStatusType_Names[8]={
 };
 
 
+typedef enum {
+    ME_SORT_BY_NAME = 0,
+    ME_SORT_BY_CREATING_DATE = 1,
+    ME_SORT_BY_UPDATING_DATE = 2
+} ME_SORTING_METHOD;
+
+typedef enum {
+    ME_SORT_ASCENDING = 0,
+    ME_SORT_DESCENDING = 1
+} ME_SORTING_ORDER;
+
+
 
 //*********************************************************************************************************************
 #pragma mark -
@@ -60,6 +72,8 @@ static const NSString *SyncStatusType_Names[8]={
 #pragma mark MEBaseEntity CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
 + (id) searchByGID:(NSString *)gid inArray:(NSArray *)collection;
+
++ (NSArray *) sortMEArray:(NSArray *)elements orderBy:(ME_SORTING_METHOD)orderBy sortOrder:(ME_SORTING_ORDER)sortOrder;
 
 + (NSString *) defaultIconURL;
 

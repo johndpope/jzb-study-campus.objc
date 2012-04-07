@@ -11,6 +11,7 @@
 #import "MEBaseEntity.h"
 #import "MECategory.h"
 #import "MEPoint.h"
+#import "PersistentElement.h"
 
 
 @class MECategory, MEPoint;
@@ -20,7 +21,8 @@
 #pragma mark -
 #pragma mark MEMap interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface MEMap : MEBaseEntity
+@interface MEMap : MEBaseEntity <PersistentElement>
+
 
 @property (nonatomic, retain, readonly) NSSet* points;
 @property (nonatomic, retain, readonly) NSSet* categories;
@@ -46,6 +48,10 @@
 #pragma mark -
 #pragma mark MEMap general INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
+
+// Lee y escribe la informacion a un diccionario
+- (void) readFromDictionary:(NSDictionary *)dic;
+- (void) writeToDictionary:(NSDictionary *)dic;
 
 // Persiste los cambios
 - (NSError *) commitChanges;

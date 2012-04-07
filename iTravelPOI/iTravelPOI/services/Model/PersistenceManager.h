@@ -1,13 +1,13 @@
 //
-//  ModelService.h
-//  CDTest
+//  PersistenceManager.h
+//  iTravelPOI
 //
-//  Created by Snow Leopard User on 03/02/12.
-//  Copyright 2012 __MyCompanyName__. All rights reserved.
+//  Created by JZarzuela on 07/04/12.
+//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
-#import "BaseService-Protected.h"
+
 #import "MEMap.h"
 
 
@@ -16,33 +16,44 @@
 #pragma mark -
 #pragma mark Enumeration & definitions
 //---------------------------------------------------------------------------------------------------------------------
-typedef void (^TBlock_SyncMapsFinished)(NSError *error);
-typedef void (^TBlock_compareMapsFinished)(NSMutableArray *compItems, NSError *error);
+#define MY_CONSTANT @"a constant"
+
+typedef enum {
+    XSORT_ASCENDING = YES,
+    XSORT_DESCENDING = NO
+} XSORTING_ORDER;
+
+typedef NSString * (^TBlock_blockDefinition)(NSArray *p1, NSError *error);
 
 
 
 //*********************************************************************************************************************
 #pragma mark -
-#pragma mark SyncService interface definition
+#pragma mark Interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface SyncService : BaseService 
+@interface PersistenceManager : NSObject 
 
 
-
-//---------------------------------------------------------------------------------------------------------------------
-#pragma mark -
-#pragma mark ModelService CLASS public methods
-//---------------------------------------------------------------------------------------------------------------------
-+ (SyncService *)sharedInstance;
+@property (nonatomic, readonly) NSError *lastError;
 
 
 
 //---------------------------------------------------------------------------------------------------------------------
 #pragma mark -
-#pragma mark ModelService INSTANCE public methods
+#pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (SRVC_ASYNCHRONOUS) compareMaps:(TBlock_compareMapsFinished)callbackBlock;
-- (SRVC_ASYNCHRONOUS) syncMaps:(NSArray *)compItems callback:(TBlock_SyncMapsFinished)callbackBlock;
++ (PersistenceManager *)sharedInstance;
+
+
+//---------------------------------------------------------------------------------------------------------------------
+#pragma mark -
+#pragma mark INSTANCE public methods
+//---------------------------------------------------------------------------------------------------------------------
+- (NSArray *) listMapHeaders;
+
+- (BOOL) loadMapData:(MEMap *)map;
+- (BOOL) saveMap:(MEMap *)map;
+- (BOOL) removeMap:(MEMap *)map;
 
 
 @end

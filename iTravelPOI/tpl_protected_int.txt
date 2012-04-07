@@ -1,48 +1,45 @@
-//
-//  ModelService.h
-//  CDTest
-//
-//  Created by Snow Leopard User on 03/02/12.
-//  Copyright 2012 __MyCompanyName__. All rights reserved.
-//
-
 #import <Foundation/Foundation.h>
-#import "BaseService-Protected.h"
-#import "MEMap.h"
+#import "__name__.h"
 
 
 
 //*********************************************************************************************************************
 #pragma mark -
-#pragma mark Enumeration & definitions
+#pragma mark PROTECTED Enumeration & definitions
 //---------------------------------------------------------------------------------------------------------------------
-typedef void (^TBlock_SyncMapsFinished)(NSError *error);
-typedef void (^TBlock_compareMapsFinished)(NSMutableArray *compItems, NSError *error);
+#define MY_PROT_CONSTANT @"a constant"
+
+typedef enum {
+    P_SORT_ASCENDING = YES,
+    P_SORT_DESCENDING = NO
+} PROT_SORTING_ORDER;
+
+typedef NSString * (^TBlock_prot_blockDefinition)(NSArray *p1, NSError *error);
 
 
 
 //*********************************************************************************************************************
 #pragma mark -
-#pragma mark SyncService interface definition
+#pragma mark PROTECTED Interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface SyncService : BaseService 
+@interface __name__(Protected)
 
 
-
-//---------------------------------------------------------------------------------------------------------------------
-#pragma mark -
-#pragma mark ModelService CLASS public methods
-//---------------------------------------------------------------------------------------------------------------------
-+ (SyncService *)sharedInstance;
-
+@property (nonatomic, retain) NSString *protectedPropety;
 
 
 //---------------------------------------------------------------------------------------------------------------------
 #pragma mark -
-#pragma mark ModelService INSTANCE public methods
+#pragma mark CLASS protected methods
 //---------------------------------------------------------------------------------------------------------------------
-- (SRVC_ASYNCHRONOUS) compareMaps:(TBlock_compareMapsFinished)callbackBlock;
-- (SRVC_ASYNCHRONOUS) syncMaps:(NSArray *)compItems callback:(TBlock_SyncMapsFinished)callbackBlock;
++ (void) protectedClassMethod;
+
+
+//---------------------------------------------------------------------------------------------------------------------
+#pragma mark -
+#pragma mark INSTANCE protected methods
+//---------------------------------------------------------------------------------------------------------------------
+- (void) protectedMethod;
 
 
 @end

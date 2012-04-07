@@ -34,12 +34,7 @@
 {
     
     // Inicializa la persistencia de los datos
-    NSManagedObjectContext *ctx = [[ModelService sharedInstance] initContext];
-    if(!ctx) {
-        NSLog(@"Error: data core can't be initialized");
-    }
-    [ctx release];
-
+    //?????????
 }
 
 //---------------------------------------------------------------------------------------------------------------------

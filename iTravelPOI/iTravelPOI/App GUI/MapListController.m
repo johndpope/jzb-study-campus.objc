@@ -8,6 +8,7 @@
 
 #import "MapListController.h"
 #import "ModelService.h"
+#import "MEBaseEntity.h"
 
 #import "PointListController.h"
 #import "SortOptionsController.h"
@@ -33,10 +34,9 @@
 @property (retain, nonatomic) IBOutlet UIButton *sortOrderButton;
 
 
-@property (nonatomic, readonly) NSManagedObjectContext *moContext;
 @property (nonatomic, retain)   NSArray *maps;
-@property (nonatomic, assign)   SORTING_METHOD sortedBy;
-@property (nonatomic, assign)   SORTING_ORDER  sortOrder;
+@property (nonatomic, assign)   ME_SORTING_METHOD sortedBy;
+@property (nonatomic, assign)   ME_SORTING_ORDER  sortOrder;
 
 
 @property (nonatomic, retain) WEPopoverController *sortMapPopover;
@@ -71,7 +71,6 @@
 
 @synthesize mapTableView = _mapTableView;
 
-@synthesize moContext = _moContext;
 @synthesize maps = _maps;
 @synthesize sortedBy = _sortedBy;
 
@@ -97,7 +96,6 @@
 - (void)dealloc
 {
     [_maps release];
-    [_moContext release];
     
     [_sortMapPopover release];
     
@@ -124,12 +122,6 @@
 #pragma mark -
 #pragma mark Getter/Setter methods
 //---------------------------------------------------------------------------------------------------------------------
-- (NSManagedObjectContext *) moContext {
-    if(!_moContext) {
-        _moContext = [[ModelService sharedInstance] initContext];
-    }
-    return _moContext;
-}
 
 
 
@@ -170,8 +162,6 @@
     [self setSortMethodButton:nil];
     
     self.maps = nil;
-    [_moContext release];
-    _moContext = nil;
     self.sortMapPopover = nil;
     
     // Se deregistra de las notificaciones
@@ -343,7 +333,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (MEMap *) mapEditorCreateMapInstance {
     NSLog(@"mapEditorCreateMapInstance");
-    return [MEMap insertNew:self.moContext];
+    return [MEMap insertNew:nil];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -468,7 +458,7 @@
     [activityIndicator release];
     
     // Lanzamos la carga de los mapas
-    [[ModelService sharedInstance] asyncGetUserMapList:self.moContext orderBy:self.sortedBy sortOrder:self.sortOrder callback:^(NSArray *maps, NSError *error) {
+    [[ModelService sharedInstance] asyncGetUserMapListOrderBy:self.sortedBy sortOrder:self.sortOrder callback:^(NSArray *maps, NSError *error) {
         
         // Paramos el indicador de actividad
         UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *)self.navigationItem.rightBarButtonItem.customView;

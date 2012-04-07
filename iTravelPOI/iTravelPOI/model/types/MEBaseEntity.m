@@ -111,6 +111,39 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
++ (NSArray *) sortMEArray:(NSArray *)elements orderBy:(ME_SORTING_METHOD)orderBy sortOrder:(ME_SORTING_ORDER)sortOrder {
+    
+    // Algoritmo de comparacion para ordenar los elementos segun se especifique
+    NSComparator comparator = ^NSComparisonResult(id obj1, id obj2) {
+        
+        MEBaseEntity *e1, *e2;
+        
+        if(sortOrder == ME_SORT_ASCENDING) {
+            e1 = obj1;
+            e2 = obj2;
+        } else {
+            e1 = obj2;
+            e2 = obj1;
+        }
+        
+        switch (orderBy) {
+            case ME_SORT_BY_CREATING_DATE:
+                return [e1.ts_created compare:e2.ts_created];
+                
+            case ME_SORT_BY_UPDATING_DATE:
+                return [e1.ts_updated compare:e2.ts_updated];
+                
+            default:
+                return [e1.name compare:e2.name];
+        }
+    };
+    
+    // retorna el array ordenado
+    return [elements sortedArrayUsingComparator:comparator];
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 + (NSString *) defaultIconURL {
     return DEFAULT_ICON_URL;
 }
@@ -199,6 +232,46 @@
     self.ts_created = [NSDate date];
     self.ts_updated = [NSDate date];
     self.i_wasDeleted = false;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) readFromDictionary:(NSDictionary *)dic {
+    
+    self.GID              = [dic valueForKey:@"GID"];
+    self.syncETag         = [dic valueForKey:@"syncETag"];
+    self.name             = [dic valueForKey:@"name"];
+    self.desc             = [dic valueForKey:@"desc"];
+    NSString *tIconURL    = [dic valueForKey:@"iconURL"];
+    self.ts_created       = [dic valueForKey:@"ts_created"];
+    self.ts_updated       = [dic valueForKey:@"ts_updated"];
+    NSNumber *tChanged    = [dic valueForKey:@"changed"];
+    NSNumber *tSyncStatus = [dic valueForKey:@"syncStatus"];
+    NSNumber *tWasDeleted = [dic valueForKey:@"i_wasDeleted"];
+    
+    self.icon = [GMapIcon iconForURL:tIconURL];
+    self.changed = [tChanged boolValue];
+    self.syncStatus = [tSyncStatus intValue];
+    self.i_wasDeleted = [tWasDeleted boolValue];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) writeToDictionary:(NSMutableDictionary *)dic {
+    
+    NSString *tIconURL    = self.icon.url;
+    NSNumber *tChanged    = [NSNumber numberWithBool:self.changed];
+    NSNumber *tSyncStatus = [NSNumber numberWithInt:self.syncStatus];
+    NSNumber *tWasDeleted = [NSNumber numberWithBool:self.i_wasDeleted];
+    
+    [dic setValue:self.GID        forKey:@"GID"];
+    [dic setValue:self.syncETag   forKey:@"syncETag"];
+    [dic setValue:self.name       forKey:@"name"];
+    [dic setValue:self.desc       forKey:@"desc"];
+    [dic setValue:tIconURL        forKey:@"iconURL"];
+    [dic setValue:self.ts_created forKey:@"ts_created"];
+    [dic setValue:self.ts_updated forKey:@"ts_updated"];
+    [dic setValue:tChanged        forKey:@"changed"];
+    [dic setValue:tSyncStatus     forKey:@"syncStatus"];
+    [dic setValue:tWasDeleted     forKey:@"i_wasDeleted"];
 }
 
 //---------------------------------------------------------------------------------------------------------------------

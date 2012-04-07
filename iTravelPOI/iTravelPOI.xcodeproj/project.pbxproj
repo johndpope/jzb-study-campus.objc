@@ -31,9 +31,13 @@
 		42940E3614FA38AA00E11EBD /* MEMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 42940E3514FA38AA00E11EBD /* MEMap.m */; };
 		42940E3914FA38AB00E11EBD /* MEPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 42940E3814FA38AB00E11EBD /* MEPoint.m */; };
 		42940E3C14FA38AB00E11EBD /* MECategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 42940E3B14FA38AB00E11EBD /* MECategory.m */; };
+		429F105A1530591F003292AF /* PersistenceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 429F10591530591F003292AF /* PersistenceManager.m */; };
 		429F521D150387EF00C67427 /* GMapIcons.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 429F521C150387EF00C67427 /* GMapIcons.bundle */; };
 		429F52201503BFF500C67427 /* allGMapIcons.png in Resources */ = {isa = PBXBuildFile; fileRef = 429F521E1503BFF300C67427 /* allGMapIcons.png */; };
 		429F52211503BFF500C67427 /* allGMapIconsInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 429F521F1503BFF400C67427 /* allGMapIconsInfo.plist */; };
+		42A4C417153037EA00C36AC1 /* tpl_implementation.txt in Resources */ = {isa = PBXBuildFile; fileRef = 42A4C414153037EA00C36AC1 /* tpl_implementation.txt */; };
+		42A4C418153037EA00C36AC1 /* tpl_interface.txt in Resources */ = {isa = PBXBuildFile; fileRef = 42A4C415153037EA00C36AC1 /* tpl_interface.txt */; };
+		42A4C419153037EA00C36AC1 /* tpl_protected_int.txt in Resources */ = {isa = PBXBuildFile; fileRef = 42A4C416153037EA00C36AC1 /* tpl_protected_int.txt */; };
 		42AC3F2014F8FFB000E5DECB /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 42AC3EF514F8FFB000E5DECB /* SVProgressHUD.bundle */; };
 		42AC3F2114F8FFB000E5DECB /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 42AC3EF714F8FFB000E5DECB /* SVProgressHUD.m */; };
 		42AC3F2214F8FFB000E5DECB /* TDBadgedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 42AC3EFA14F8FFB000E5DECB /* TDBadgedCell.m */; };
@@ -65,9 +69,7 @@
 		42AC3F4314F9001800E5DECB /* MapEditorController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 42AC3F3E14F9001800E5DECB /* MapEditorController.xib */; };
 		42AC3F4414F9001800E5DECB /* PointCatEditorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42AC3F4014F9001800E5DECB /* PointCatEditorController.m */; };
 		42AC3F4514F9001800E5DECB /* PointCatEditorController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 42AC3F4114F9001800E5DECB /* PointCatEditorController.xib */; };
-		42B235FC14FAAEC400094484 /* cabeceras.txt in Resources */ = {isa = PBXBuildFile; fileRef = 42B235FB14FAAEC300094484 /* cabeceras.txt */; };
 		42B38DF0152F4D8B008CD4C2 /* BaseService.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B38DEF152F4D8A008CD4C2 /* BaseService.m */; };
-		42B38DFA152F75BF008CD4C2 /* ModelService 2.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B38DF9152F75BF008CD4C2 /* ModelService 2.m */; };
 		42B6D7BA1528E722004F1B01 /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B6D7B91528E722004F1B01 /* GTMNSString+HTML.m */; };
 		42B94341152EFDA0005CC75B /* DelegateMapCompare.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B94340152EFDA0005CC75B /* DelegateMapCompare.m */; };
 		42B94344152EFDC3005CC75B /* DelegateMapMerge.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B94343152EFDC2005CC75B /* DelegateMapMerge.m */; };
@@ -448,9 +450,15 @@
 		42940E3814FA38AB00E11EBD /* MEPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MEPoint.m; sourceTree = "<group>"; };
 		42940E3A14FA38AB00E11EBD /* MECategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MECategory.h; sourceTree = "<group>"; };
 		42940E3B14FA38AB00E11EBD /* MECategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MECategory.m; sourceTree = "<group>"; };
+		429F10581530591F003292AF /* PersistenceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersistenceManager.h; sourceTree = "<group>"; };
+		429F10591530591F003292AF /* PersistenceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersistenceManager.m; sourceTree = "<group>"; };
+		429F105B153097CB003292AF /* PersistentElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersistentElement.h; sourceTree = "<group>"; };
 		429F521C150387EF00C67427 /* GMapIcons.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = GMapIcons.bundle; sourceTree = "<group>"; };
 		429F521E1503BFF300C67427 /* allGMapIcons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = allGMapIcons.png; sourceTree = "<group>"; };
 		429F521F1503BFF400C67427 /* allGMapIconsInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = allGMapIconsInfo.plist; sourceTree = "<group>"; };
+		42A4C414153037EA00C36AC1 /* tpl_implementation.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tpl_implementation.txt; sourceTree = "<group>"; };
+		42A4C415153037EA00C36AC1 /* tpl_interface.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tpl_interface.txt; sourceTree = "<group>"; };
+		42A4C416153037EA00C36AC1 /* tpl_protected_int.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tpl_protected_int.txt; sourceTree = "<group>"; };
 		42AC3EF514F8FFB000E5DECB /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVProgressHUD.bundle; sourceTree = "<group>"; };
 		42AC3EF614F8FFB000E5DECB /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
 		42AC3EF714F8FFB000E5DECB /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
@@ -494,12 +502,9 @@
 		42AC3F3F14F9001800E5DECB /* PointCatEditorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PointCatEditorController.h; path = Editors/PointCatEditorController.h; sourceTree = "<group>"; };
 		42AC3F4014F9001800E5DECB /* PointCatEditorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PointCatEditorController.m; path = Editors/PointCatEditorController.m; sourceTree = "<group>"; };
 		42AC3F4114F9001800E5DECB /* PointCatEditorController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PointCatEditorController.xib; path = Editors/PointCatEditorController.xib; sourceTree = "<group>"; };
-		42B235FB14FAAEC300094484 /* cabeceras.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cabeceras.txt; sourceTree = "<group>"; };
 		42B38DEE152F4D89008CD4C2 /* BaseService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseService.h; sourceTree = "<group>"; };
 		42B38DEF152F4D8A008CD4C2 /* BaseService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseService.m; sourceTree = "<group>"; };
 		42B38DF5152F567F008CD4C2 /* BaseService-Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "BaseService-Protected.h"; sourceTree = "<group>"; };
-		42B38DF8152F75BF008CD4C2 /* ModelService 2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ModelService 2.h"; sourceTree = "<group>"; };
-		42B38DF9152F75BF008CD4C2 /* ModelService 2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ModelService 2.m"; sourceTree = "<group>"; };
 		42B38DFC152F8FFC008CD4C2 /* MEMapElement_Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MEMapElement_Protected.h; sourceTree = "<group>"; };
 		42B6D7B81528E722004F1B01 /* GTMNSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "GTMNSString+HTML.h"; path = "Others/GTMNSString+HTML.h"; sourceTree = "<group>"; };
 		42B6D7B91528E722004F1B01 /* GTMNSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "GTMNSString+HTML.m"; path = "Others/GTMNSString+HTML.m"; sourceTree = "<group>"; };
@@ -1453,7 +1458,9 @@
 		42BFAA9914EFE31F00604B90 = {
 			isa = PBXGroup;
 			children = (
-				42B235FB14FAAEC300094484 /* cabeceras.txt */,
+				42A4C415153037EA00C36AC1 /* tpl_interface.txt */,
+				42A4C416153037EA00C36AC1 /* tpl_protected_int.txt */,
+				42A4C414153037EA00C36AC1 /* tpl_implementation.txt */,
 				42BFB0D214EFEFC700604B90 /* GData Sources */,
 				42AC3EF214F8FFB000E5DECB /* utils */,
 				42BFAAB014EFE32000604B90 /* iTravelPOI */,
@@ -1555,10 +1562,11 @@
 		42BFABDC14EFE5BB00604B90 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				42B38DF8152F75BF008CD4C2 /* ModelService 2.h */,
-				42B38DF9152F75BF008CD4C2 /* ModelService 2.m */,
 				42BFABDD14EFE5BB00604B90 /* ModelService.h */,
 				42BFABDE14EFE5BB00604B90 /* ModelService.m */,
+				429F105B153097CB003292AF /* PersistentElement.h */,
+				429F10581530591F003292AF /* PersistenceManager.h */,
+				429F10591530591F003292AF /* PersistenceManager.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2567,7 +2575,6 @@
 				42AC3F3914F8FFB000E5DECB /* RegexKitLite-4.0.pdf in Resources */,
 				42AC3F4314F9001800E5DECB /* MapEditorController.xib in Resources */,
 				42AC3F4514F9001800E5DECB /* PointCatEditorController.xib in Resources */,
-				42B235FC14FAAEC400094484 /* cabeceras.txt in Resources */,
 				429F521D150387EF00C67427 /* GMapIcons.bundle in Resources */,
 				429F52201503BFF500C67427 /* allGMapIcons.png in Resources */,
 				429F52211503BFF500C67427 /* allGMapIconsInfo.plist in Resources */,
@@ -2591,6 +2598,9 @@
 				4286A67E150D6B0500BC8701 /* showCategorized.png in Resources */,
 				4286A67F150D6B0500BC8701 /* showFlat.png in Resources */,
 				42D783C41526457E000F0725 /* GeneralConfigController.xib in Resources */,
+				42A4C417153037EA00C36AC1 /* tpl_implementation.txt in Resources */,
+				42A4C418153037EA00C36AC1 /* tpl_interface.txt in Resources */,
+				42A4C419153037EA00C36AC1 /* tpl_protected_int.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2945,7 +2955,7 @@
 				42B94347152EFDEC005CC75B /* DelegateMapEntityMerger.m in Sources */,
 				42B9434A152EFEF8005CC75B /* MEComparer.m in Sources */,
 				42B38DF0152F4D8B008CD4C2 /* BaseService.m in Sources */,
-				42B38DFA152F75BF008CD4C2 /* ModelService 2.m in Sources */,
+				429F105A1530591F003292AF /* PersistenceManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
