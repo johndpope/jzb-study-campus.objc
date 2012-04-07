@@ -150,8 +150,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelHasChanged:) name:@"ModelHasChangedNotification" object:nil];
     
     // Pone el orden por defecto de la lista
-    self.sortedBy = SORT_BY_NAME;
-    self.sortOrder = SORT_ASCENDING;
+    self.sortedBy = ME_SORT_BY_NAME;
+    self.sortOrder = ME_SORT_ASCENDING;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -242,15 +242,15 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)sortOrderButtonAction:(UIButton *)sender {
     
-    self.sortOrder = (self.sortOrder==SORT_ASCENDING ? SORT_DESCENDING : SORT_ASCENDING);
+    self.sortOrder = (self.sortOrder==ME_SORT_ASCENDING ? ME_SORT_DESCENDING : ME_SORT_ASCENDING);
     
     UIImage *img = nil;
     switch (self.sortOrder) {
-        case SORT_ASCENDING:
+        case ME_SORT_ASCENDING:
             img = [UIImage imageNamed:@"sortAscending.png"];
             break;
             
-        case SORT_DESCENDING:
+        case ME_SORT_DESCENDING:
             img = [UIImage imageNamed:@"sortDescending.png"];
             break;
             
@@ -298,7 +298,7 @@
 #pragma mark -
 #pragma mark SortOptionsController delegate
 //---------------------------------------------------------------------------------------------------------------------
-- (void) sortMethodSelected:(SORTING_METHOD)sortedBy {
+- (void) sortMethodSelected:(ME_SORTING_METHOD)sortedBy {
     
     [self.sortMapPopover dismissPopoverAnimated:NO];
     self.sortMapPopover = nil;
@@ -306,15 +306,15 @@
     if(self.sortedBy!=sortedBy) {
         UIImage *img = nil;
         switch (sortedBy) {
-            case SORT_BY_NAME:
+            case ME_SORT_BY_NAME:
                 img = [UIImage imageNamed:@"alphabeticSortIcon.png"];
                 break;
                 
-            case SORT_BY_CREATING_DATE:
+            case ME_SORT_BY_CREATING_DATE:
                 img = [UIImage imageNamed:@"createdSortIcon.png"];
                 break;
                 
-            case SORT_BY_UPDATING_DATE:
+            case ME_SORT_BY_UPDATING_DATE:
                 img = [UIImage imageNamed:@"modifiedSortIcon.png"];
                 break;
         }
@@ -333,7 +333,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (MEMap *) mapEditorCreateMapInstance {
     NSLog(@"mapEditorCreateMapInstance");
-    return [MEMap insertNew:nil];
+    return [MEMap map];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -458,7 +458,7 @@
     [activityIndicator release];
     
     // Lanzamos la carga de los mapas
-    [[ModelService sharedInstance] asyncGetUserMapListOrderBy:self.sortedBy sortOrder:self.sortOrder callback:^(NSArray *maps, NSError *error) {
+    [[ModelService sharedInstance] asyncGetUserMapList:^(NSArray *maps, NSError *error) {
         
         // Paramos el indicador de actividad
         UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *)self.navigationItem.rightBarButtonItem.customView;
@@ -478,11 +478,8 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void) showPointListControllerForMap:(MEMap *)mapToView {
     
-    NSManagedObjectContext *ctx = [[ModelService sharedInstance] initContext];
-    MEMap *mapCopy = (MEMap *)[ctx objectWithID:[mapToView objectID]];
-    
     PointListController *pointListController = [[PointListController alloc] initWithNibName:@"PointListController" bundle:nil];
-    pointListController.map = mapCopy;
+    pointListController.map = mapToView;
     pointListController.filteringCategories = nil;
     [self.navigationController pushViewController:pointListController animated:YES];
     [pointListController release];

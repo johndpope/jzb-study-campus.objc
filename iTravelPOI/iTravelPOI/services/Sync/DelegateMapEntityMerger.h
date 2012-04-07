@@ -14,7 +14,6 @@
 //---------------------------------------------------------------------------------------------------------------------
 @interface DelegateMapEntityMerger : NSObject <MEComparerDelegate>
 
-@property (nonatomic, retain) NSManagedObjectContext * moContext;
 @property (nonatomic, retain) MEMap * localMap;
 
 @property (nonatomic, retain) NSMutableArray * items;

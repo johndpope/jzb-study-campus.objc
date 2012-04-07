@@ -28,7 +28,6 @@
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
 @property (retain, nonatomic) IBOutlet UIButton *syncButton;
 
-@property (nonatomic, readonly) NSManagedObjectContext *moContext;
 @property (nonatomic, retain)   NSMutableArray *compItems;
 
 
@@ -49,7 +48,6 @@
 @synthesize tableView = _tableView;
 @synthesize syncButton = _syncButton;
 
-@synthesize moContext = _moContext;
 @synthesize compItems = _compItems;
 
 
@@ -70,7 +68,6 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void)dealloc
 {
-    [_moContext release];
     [_compItems release];
     
     [_tableView release];
@@ -93,12 +90,6 @@
 #pragma mark -
 #pragma mark Getter/Setter methods
 //---------------------------------------------------------------------------------------------------------------------
-- (NSManagedObjectContext *) moContext {
-    if(!_moContext) {
-        _moContext = [[ModelService sharedInstance] initContext];
-    }
-    return _moContext;
-}
 
 
 
@@ -114,8 +105,6 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void)viewDidUnload
 {
-    [_moContext release];
-    _moContext = nil;
     self.compItems = nil;
     
     [self setTableView:nil];
@@ -264,7 +253,7 @@
      */
     
     // Calcula la información con los cambios en los mapas
-    [[SyncService sharedInstance] compareMapsInCtx:self.moContext callback:^(NSMutableArray *compItems, NSError *error) {
+    [[SyncService sharedInstance] compareMaps:^(NSMutableArray *compItems, NSError *error) {
         
         // Paramos el indicador de actividad
         /*
@@ -306,7 +295,7 @@
      */
     
     // Sincroniza la información con los cambios en los mapas
-    [[SyncService sharedInstance] syncMapsInCtx:self.moContext compItems:self.compItems callback:^(NSError *error) {
+    [[SyncService sharedInstance] syncMaps:self.compItems callback:^(NSError *error) {
         
         // Paramos el indicador de actividad
         /*

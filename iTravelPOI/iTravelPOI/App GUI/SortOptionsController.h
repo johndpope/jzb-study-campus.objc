@@ -17,7 +17,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 @protocol SortOptionsControllerDelegate <NSObject>
 
-- (void) sortMethodSelected:(SORTING_METHOD)sortedBy;
+- (void) sortMethodSelected:(ME_SORTING_METHOD)sortedBy;
 
 @end  
 

@@ -239,7 +239,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)sortOrderButtonAction:(UIButton *)sender {
     
-    self.sortOrder = (self.sortOrder==SORT_ASCENDING ? SORT_DESCENDING : SORT_ASCENDING);
+    self.sortOrder = (self.sortOrder==ME_SORT_ASCENDING ? ME_SORT_DESCENDING : ME_SORT_ASCENDING);
     [self updateSortOrderImage];
     [self loadMapItemsListData];
 }
@@ -280,7 +280,7 @@
 #pragma mark -
 #pragma mark SortOptionsController delegate
 //---------------------------------------------------------------------------------------------------------------------
-- (void) sortMethodSelected:(SORTING_METHOD)sortedBy {
+- (void) sortMethodSelected:(ME_SORTING_METHOD)sortedBy {
     
     [self.sortMapPopover dismissPopoverAnimated:NO];
     self.sortMapPopover = nil;
@@ -299,9 +299,9 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (MEMapElement *) createNewInstanceForMap:(MEMap *)map isPoint:(BOOL)isPoint {
     if(isPoint) {
-        return [MEPoint insertNewInMap:map];
+        return [MEPoint pointInMap:map];
     } else {
-        return [MECategory insertNewInMap:map];
+        return [MECategory categoryInMap:map];
     }
 }
 
@@ -456,13 +456,11 @@
     if(self.showMode == SHOW_FLAT) {
         [[ModelService sharedInstance] asyncGetFlatElemensInMap:self.map 
                                              forCategories:self.filteringCategories
-                                                   orderBy:self.sortedBy 
                                                   callback:myCallback];
     } else {
         //    forCategory:[self.filteringCategories lastObject]
         [[ModelService sharedInstance] asyncGetCategorizedElemensInMap:self.map 
                                                     forCategories:self.filteringCategories
-                                                          orderBy:self.sortedBy
                                                          callback:myCallback];
     }
 
@@ -527,11 +525,11 @@
     
     UIImage *img = nil;
     switch (self.sortOrder) {
-        case SORT_ASCENDING:
+        case ME_SORT_ASCENDING:
             img = [UIImage imageNamed:@"sortAscending.png"];
             break;
             
-        case SORT_DESCENDING:
+        case ME_SORT_DESCENDING:
             img = [UIImage imageNamed:@"sortDescending.png"];
             break;
             
@@ -544,15 +542,15 @@
     
     UIImage *img = nil;
     switch (self.sortedBy) {
-        case SORT_BY_NAME:
+        case ME_SORT_BY_NAME:
             img = [UIImage imageNamed:@"alphabeticSortIcon.png"];
             break;
             
-        case SORT_BY_CREATING_DATE:
+        case ME_SORT_BY_CREATING_DATE:
             img = [UIImage imageNamed:@"createdSortIcon.png"];
             break;
             
-        case SORT_BY_UPDATING_DATE:
+        case ME_SORT_BY_UPDATING_DATE:
             img = [UIImage imageNamed:@"modifiedSortIcon.png"];
             break;
     }

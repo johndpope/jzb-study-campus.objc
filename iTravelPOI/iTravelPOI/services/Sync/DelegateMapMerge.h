@@ -14,7 +14,6 @@
 //---------------------------------------------------------------------------------------------------------------------
 @interface DelegateMapMerge : NSObject <MEComparerDelegate>
 
-@property (nonatomic, retain) NSManagedObjectContext * moContext;
 @property (nonatomic, assign) NSError *error;
 
 - (void) processTuple:(MECompareTuple *) tuple;

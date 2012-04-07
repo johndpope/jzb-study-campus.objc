@@ -32,7 +32,7 @@ typedef enum {
 @property (nonatomic, retain) NSArray *filteringCategories;
 
 @property (nonatomic, assign) PointListShowMode showMode;
-@property (nonatomic, assign) SORTING_METHOD    sortedBy;
-@property (nonatomic, assign) SORTING_ORDER     sortOrder;
+@property (nonatomic, assign) ME_SORTING_METHOD    sortedBy;
+@property (nonatomic, assign) ME_SORTING_ORDER     sortOrder;
 
 @end

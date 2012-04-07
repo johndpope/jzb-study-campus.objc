@@ -14,7 +14,7 @@
 
 //*********************************************************************************************************************
 //---------------------------------------------------------------------------------------------------------------------
-MEBaseEntity * _createNewLocalEntity(NSManagedObjectContext *moContext, MEMap *localMap, MEBaseEntity *remoteEntity);
+MEBaseEntity * _createNewLocalEntity(MEMap *localMap, MEBaseEntity *remoteEntity);
 BOOL _needToBeUpdatedAfterCreateLocally(MEBaseEntity *item1, MEBaseEntity *item2);
 
 
@@ -24,7 +24,6 @@ BOOL _needToBeUpdatedAfterCreateLocally(MEBaseEntity *item1, MEBaseEntity *item2
 @implementation DelegateMapEntityMerger
 
 
-@synthesize moContext = _moContext;
 @synthesize localMap = _localMap;
 @synthesize items = _items;
 
@@ -43,7 +42,6 @@ BOOL _needToBeUpdatedAfterCreateLocally(MEBaseEntity *item1, MEBaseEntity *item2
 //---------------------------------------------------------------------------------------------------------------------
 - (void)dealloc
 {
-    [_moContext release];
     [_localMap release];
     [_items release];
     [super dealloc];
@@ -62,7 +60,7 @@ BOOL _needToBeUpdatedAfterCreateLocally(MEBaseEntity *item1, MEBaseEntity *item2
             // -----------------------------------------------------
         case ST_Sync_Create_Local:
             
-            tuple.localEntity = _createNewLocalEntity(self.moContext, self.localMap, tuple.remoteEntity);
+            tuple.localEntity = _createNewLocalEntity(self.localMap, tuple.remoteEntity);
             [tuple.localEntity mergeFrom:tuple.remoteEntity withConflict:false];
             tuple.localEntity.syncStatus = ST_Sync_Create_Local;
             
@@ -118,14 +116,14 @@ BOOL _needToBeUpdatedAfterCreateLocally(MEBaseEntity *item1, MEBaseEntity *item2
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-MEBaseEntity * _createNewLocalEntity(NSManagedObjectContext *moContext, MEMap *localMap, MEBaseEntity *remoteEntity) {
+MEBaseEntity * _createNewLocalEntity(MEMap *localMap, MEBaseEntity *remoteEntity) {
     
     if([remoteEntity isKindOfClass: [MEMap class]]) {
-        return [MEMap insertNew:moContext];
+        return [MEMap map];
     } else if([remoteEntity isKindOfClass: [MECategory class]]) {
-        return [MECategory insertNewInMap:localMap];
+        return [MECategory categoryInMap:localMap];
     } else if([remoteEntity isKindOfClass: [MEPoint class]]) {
-        return [MEPoint insertNewInMap:localMap];
+        return [MEPoint pointInMap:localMap];
     } else {
         return nil;
     }

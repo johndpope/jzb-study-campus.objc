@@ -33,7 +33,6 @@
 @implementation DelegateMapMerge
 
 
-@synthesize moContext = _moContext;
 @synthesize error = _error;
 @synthesize meMerger = _meMerger;
 
@@ -53,7 +52,6 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void)dealloc
 {
-    [_moContext release];
     [_meMerger release];
     [super dealloc];
 }
@@ -81,7 +79,7 @@
             
             // -----------------------------------------------------
         case ST_Sync_Create_Local:
-            localMap = [MEMap insertNew:self.moContext];
+            localMap = [MEMap map];
             [localMap mergeFrom:remoteMap withConflict:false];
             [[GMapService sharedInstance] fetchMapData:remoteMap error:&_error];
             [self _syncLocalMap:localMap withRemote:remoteMap];
@@ -139,7 +137,6 @@
     NSLog(@"SyncService - _syncLocalMap [%@ - %@] witn [%@ - %@]", localMap.name, localMap.GID, remoteMap.name, remoteMap.GID);
     
     // Prepara el delegate
-    self.meMerger.moContext = self.moContext;
     self.meMerger.localMap = localMap;
 
     // Mezcla primero los puntos de ambos mapas sobre el mapa local

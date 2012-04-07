@@ -19,10 +19,6 @@
 
 @property (nonatomic, assign, readonly) MEMap * map;
 
-// Lee y escribe la informacion a un diccionario
-- (void) readFromDictionary:(NSDictionary *)dic;
-- (void) writeToDictionary:(NSDictionary *)dic;
-
 // Persiste los cambios
 - (NSError *) commitChanges;
 

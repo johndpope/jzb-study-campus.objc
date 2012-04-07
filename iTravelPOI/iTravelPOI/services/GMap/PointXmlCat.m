@@ -328,7 +328,7 @@ NSString* _cleanHTML(NSString *str) {
     // ********* Lee la informacion de las categorias *********
     NSArray *catsData = [data objectAtIndex:1];
     for(NSArray *itemData in catsData) {
-        MECategory *cat = [MECategory insertTmpNewInMap:self.map];
+        MECategory *cat = [MECategory categoryInMap:self.map];
         [self _getFromArray:itemData category:cat];
         [self.map addCategory:cat];
         [catsByIndexArray addObject:cat];

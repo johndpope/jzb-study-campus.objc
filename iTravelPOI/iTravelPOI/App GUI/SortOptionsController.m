@@ -82,17 +82,17 @@
 #pragma mark Internal Event Handlers
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)sortByUpdateTimeAction:(id)sender {
-    [self.delegate sortMethodSelected:SORT_BY_UPDATING_DATE];
+    [self.delegate sortMethodSelected:ME_SORT_BY_UPDATING_DATE];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)sortByCreationTime:(id)sender {
-    [self.delegate sortMethodSelected:SORT_BY_CREATING_DATE];
+    [self.delegate sortMethodSelected:ME_SORT_BY_CREATING_DATE];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)sortByNameAction:(id)sender {
-    [self.delegate sortMethodSelected:SORT_BY_NAME];
+    [self.delegate sortMethodSelected:ME_SORT_BY_NAME];
 }
 
 
