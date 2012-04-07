@@ -18,6 +18,7 @@
 @required
 
 @property (nonatomic, retain) NSString *persistentID;
+@property (nonatomic, assign) BOOL dataRead;
 
 - (void) writeHeader:(NSMutableDictionary *)dict;
 - (void) writeData:(NSMutableDictionary *)dict;

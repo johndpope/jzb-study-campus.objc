@@ -314,7 +314,7 @@
     entity.changed = true;
     
     // Almacena los cambios
-    NSError *error = [entity commitChanges];
+    NSError *error = [[ModelService sharedInstance] storeMap:entity.map];
     if(error) {
         [self showErrorToUser:@"Error saving map entity info"];
     }
@@ -389,7 +389,7 @@
         entity.map.changed=YES;
         [entity markAsDeleted];
         
-        NSError *error = [entity commitChanges];
+        NSError *error = [[ModelService sharedInstance] storeMap:entity.map];
         if(error) {
             NSLog(@"Error saving context when deleting an item: %@ / %@", error, [error userInfo]);
             [self showErrorToUser:@"Error deleting map item"];

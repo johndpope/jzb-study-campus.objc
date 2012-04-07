@@ -7,6 +7,7 @@
 //
 
 #import "MEMapElement_Protected.h"
+#import "MEBaseEntity_Protected.h"
 #import "MEMap.h"
 
 
@@ -52,8 +53,18 @@
 #pragma mark -
 #pragma mark General PUBLIC methods
 //---------------------------------------------------------------------------------------------------------------------
-- (NSError *) commitChanges {
-    return [self.map commitChanges];
+
+
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark PROTECTED methods
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _xmlStringBody: (NSMutableString*) sbuf ident:(NSString *) ident {
+    
+    [super _xmlStringBody:sbuf ident:ident];
+    
+    // --- Map name ---
+    [sbuf appendFormat:@"%@<map>%@</map>\n",ident, self.map.name];
 }
 
 

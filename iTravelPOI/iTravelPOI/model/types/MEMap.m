@@ -9,7 +9,6 @@
 #import "MEMap.h"
 #import "MEBaseEntity_Protected.h"
 #import "MEMapElement_Protected.h"
-#import "ModelService.h"
 
 
 
@@ -18,7 +17,6 @@
 #pragma mark MEMap PRIVATE CONSTANTS and C-Methods definitions
 //---------------------------------------------------------------------------------------------------------------------
 #define DEFAULT_MAP_ICON_URL   @"http://maps.google.com/mapfiles/ms/micons/blue-dot.png"
-#define BODY_ALREADY_READ     -1
 
 
 //*********************************************************************************************************************
@@ -48,6 +46,7 @@
 
 @synthesize i_cachedPointCount = _i_cachedPointCount;
 @synthesize persistentID = _persistentID;
+@synthesize dataRead = _dataRead;
 
 
 
@@ -63,7 +62,8 @@
         _categories = [[NSMutableSet alloc] init];
         _deletedPoints = [[NSMutableSet alloc] init];
         _deletedCategories = [[NSMutableSet alloc] init];
-        _i_cachedPointCount = BODY_ALREADY_READ;
+        _i_cachedPointCount = 0;
+        _dataRead = false;
         _persistentID = nil;
     }
     
@@ -135,11 +135,6 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (NSError *) commitChanges {
-    //kkkk    
-}
-
-//---------------------------------------------------------------------------------------------------------------------
 - (void) removeAllPointsAndCategories {
     [self removeAllPoints];
     [self removeAllCategories];
@@ -182,7 +177,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (NSUInteger) cachedPointsCount {
     
-    if(self.cachedPointsCount == BODY_ALREADY_READ) {
+    if(self.dataRead) {
         return [self.points count];
     } else {
         return self.i_cachedPointCount;
@@ -287,8 +282,6 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void) readData:(NSDictionary *)dict {
     
-    _i_cachedPointCount = BODY_ALREADY_READ;
-    
     [self removeAllPoints];
     [self removeAllCategories];
     [self removeAllDeletedPoints];
@@ -365,7 +358,7 @@
     
     
     NSNumber *tCachedPointsCount = [dic valueForKey:@"CachedPointsCount"];
-    self.i_cachedPointCount = [tCachedPointsCount unsignedIntValue];
+    self.i_cachedPointCount = [tCachedPointsCount intValue];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -374,7 +367,7 @@
     // Datos de cabecera
     [super writeToDictionary:dic];
     
-    NSNumber *tCachedPointsCount = [NSNumber numberWithUnsignedInt:self.i_cachedPointCount];
+    NSNumber *tCachedPointsCount = [NSNumber numberWithInt:[self.points count]];
     [dic setValue:tCachedPointsCount forKey:@"CachedPointsCount"];
 }
 

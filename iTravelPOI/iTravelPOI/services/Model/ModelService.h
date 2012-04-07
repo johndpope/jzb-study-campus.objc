@@ -47,6 +47,13 @@ typedef void (^TBlock_getElementListInMapFinished)(NSArray *elements, NSError *e
 #pragma mark ModelService INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
 
+// persiste y elimina el mapa indicado
+- (NSError *) storeMap:(MEMap *)map;
+- (NSError *) removeMap:(MEMap *)map;
+
+// Carga la informacion de los puntos si no lo habia hecho ya
+- (NSError *) loadMapData:(MEMap *)map;
+
 // Asynchronous methods
 - (SRVC_ASYNCHRONOUS) asyncGetUserMapList:(TBlock_getUserMapListFinished) callbackBlock;
 - (SRVC_ASYNCHRONOUS) asyncGetFlatElemensInMap:(MEMap *)map forCategories:(NSArray *)categories callback:(TBlock_getElementListInMapFinished) callbackBlock;

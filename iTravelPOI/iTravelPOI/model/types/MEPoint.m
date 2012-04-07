@@ -206,9 +206,6 @@
     
     [super _xmlStringBody:sbuf ident:ident];
     
-    // --- Map name ---
-    [sbuf appendFormat:@"%@<map>%@</map>\n",ident, self.map.name];
-    
     // --- Coordinates ---
     [sbuf appendFormat:@"%@<coordinates>%lf, %lf, 0</coordinates>\n",ident, self.lng, self.lat];
     

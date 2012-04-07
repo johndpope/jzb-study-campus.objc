@@ -87,6 +87,8 @@
             
             // -----------------------------------------------------
         case ST_Sync_Create_Remote:
+            _error = [[ModelService sharedInstance] loadMapData:localMap];
+            
             for(MEPoint *point in localMap.points) {
                 point.syncStatus = ST_Sync_Create_Remote;
             }
@@ -100,7 +102,7 @@
             // -----------------------------------------------------
         case ST_Sync_Delete_Local:
             [localMap markAsDeleted];
-            [localMap deleteFromModel];
+            _error = [[ModelService sharedInstance] removeMap:localMap];
             break;
             
             // -----------------------------------------------------
@@ -111,7 +113,8 @@
             // -----------------------------------------------------
         case ST_Sync_Update_Local:
         case ST_Sync_Update_Remote:
-            if(localMap.isDeleted) {
+            _error = [[ModelService sharedInstance] loadMapData:localMap];
+            if(localMap.isMarkedAsDeleted) {
                 [localMap unmarkAsDeleted];
             }
             [localMap mergeFrom:remoteMap withConflict:false];
@@ -126,7 +129,7 @@
     
     // Graba los cambios en el mapa local
     [localMap markAsSynchronized];
-    [localMap commitChanges];
+    _error = [[ModelService sharedInstance] storeMap:localMap];
     
 }
 
@@ -138,7 +141,7 @@
     
     // Prepara el delegate
     self.meMerger.localMap = localMap;
-
+    
     // Mezcla primero los puntos de ambos mapas sobre el mapa local
     NSMutableArray *allLocalPoints = [NSMutableArray arrayWithArray:[localMap.points allObjects]];
     [allLocalPoints addObjectsFromArray:[localMap.deletedPoints allObjects]];

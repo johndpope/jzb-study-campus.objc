@@ -260,9 +260,6 @@
     
     [super _xmlStringBody:sbuf ident:ident];
     
-    // --- Map name ---
-    [sbuf appendFormat:@"%@<map>%@</map>\n",ident, self.map.name];
-    
     //--- Points ---
     if([self.points count] == 0) {
         [sbuf appendFormat:@"%@<points/>\n",ident];

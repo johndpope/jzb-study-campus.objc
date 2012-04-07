@@ -345,7 +345,7 @@
     map.changed = true;
     
     // Almacena los cambios
-    NSError *error = [map commitChanges];
+    NSError *error = [[ModelService sharedInstance] storeMap:map];
     if(error) {
         [self showErrorToUser:@"Error saving map info"];
     }
@@ -393,7 +393,7 @@
     cell.textLabel.text = map.name;
     cell.detailTextLabel.text = map.desc;
     cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;	
-    cell.badgeString = [NSString stringWithFormat:@"%03u", [map.points count]];
+    cell.badgeString = [NSString stringWithFormat:@"%03u", map.cachedPointsCount];
     //cell.badgeColor = [UIColor colorWithRed:0.792 green:0.197 blue:0.219 alpha:1.000];
     cell.badgeColor = [UIColor colorWithRed:0.197 green:0.592 blue:0.219 alpha:1.000];
     cell.badge.radius = 9;
@@ -409,19 +409,19 @@
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         
         MEMap *mapToRemove = [self.maps objectAtIndex:indexPath.row];
-        
-        NSMutableArray *marray = [NSMutableArray arrayWithArray:self.maps];
-        [marray removeObjectAtIndex:indexPath.row];
-        self.maps = [[marray copy] autorelease];
-        
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-        
+
+        // Lo marca como borrado y lo almacena
         [mapToRemove markAsDeleted];
-        NSError *error = [mapToRemove commitChanges];
+        NSError *error = [[ModelService sharedInstance] storeMap:mapToRemove];
         if(error) {
             NSLog(@"Error saving context when deleting an item: %@ / %@", error, [error userInfo]);
             [self showErrorToUser:@"Error deleting map"];
         }
+        
+        // Manda recargar la lista para que tenga los cambios
+        // Cuando hay muchos elementos queda feo porque pone la lista al principio
+        // Es debido a que borra la lista al ser notificado de cambios
+        [self loadMapListData];
         
     }   
 }
@@ -468,8 +468,18 @@
         if(error) {
             [self showErrorToUser:@"Error loading local maps"];
         } else {
+            
+            // Filtra los mapas marcados como borrados
+            NSMutableArray *filteredMaps = [NSMutableArray array];
+            for(MEMap *map in maps) {
+                if(!map.isMarkedAsDeleted) {
+                    [filteredMaps addObject:map];
+                }
+            }
+            
+            // Los establece como valor para la tabla
             self.navigationItem.rightBarButtonItem.customView = nil;
-            self.maps = maps;
+            self.maps = filteredMaps;
             [self.mapTableView reloadData];
         }
     }];

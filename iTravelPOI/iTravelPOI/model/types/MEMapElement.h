@@ -19,7 +19,4 @@
 
 @property (nonatomic, assign, readonly) MEMap * map;
 
-// Persiste los cambios
-- (NSError *) commitChanges;
-
 @end

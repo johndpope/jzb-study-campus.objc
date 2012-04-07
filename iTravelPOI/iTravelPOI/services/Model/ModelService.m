@@ -76,6 +76,59 @@
 #pragma mark -
 #pragma mark General PUBLIC methods
 //---------------------------------------------------------------------------------------------------------------------
+- (NSError *) storeMap:(MEMap *)map {
+    
+    NSLog(@"ModelService - storeMap [%@]", map.name);
+    
+    if(![[PersistenceManager sharedInstance] saveMap:map]) {
+        NSError *error = [PersistenceManager sharedInstance].lastError;
+        NSLog(@"Error storing map data (%@): %@", map.name, error);
+        return error;
+    }
+    
+    // Notifica de cambios en el modelo
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ModelHasChangedNotification" object:nil userInfo:(NSDictionary *)nil];
+    
+    // Retorna sin error
+    return nil;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSError *) removeMap:(MEMap *)map {
+    
+    NSLog(@"ModelService - removeMap [%@]", map.name);
+    
+    if(![[PersistenceManager sharedInstance] removeMap:map]) {
+        NSError *error = [PersistenceManager sharedInstance].lastError;
+        NSLog(@"Error storing map data (%@): %@", map.name, error);
+        return error;
+    }
+    
+    // Notifica de cambios en el modelo
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ModelHasChangedNotification" object:nil userInfo:(NSDictionary *)nil];
+    
+    // Retorna sin error
+    return nil;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSError *) loadMapData:(MEMap *)map {
+    
+    NSLog(@"ModelService - loadMapData");
+    
+    // Solo se la informacion del mapa si hace falta
+    if(map.persistentID!=nil && !map.dataRead) {
+        if(![[PersistenceManager sharedInstance] loadMapData:map]) {
+            return [PersistenceManager sharedInstance].lastError;
+        }
+    }
+    
+    // No hubo errores
+    return nil;
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------
 - (SRVC_ASYNCHRONOUS) asyncGetUserMapList:(TBlock_getUserMapListFinished) callbackBlock {
     
     NSLog(@"ModelService - Async - getUserMapListOrderBy");
@@ -158,7 +211,7 @@
     
     NSLog(@"ModelService - _getUserMapList");
     
-    
+    // Lee los mapas del usuario
     *error = nil;
     NSArray *mapList = [[PersistenceManager sharedInstance] listMapHeaders];
     if(!mapList) {
@@ -172,6 +225,13 @@
 - (NSArray *) getFlatElemensInMap:(MEMap *)map forCategories:(NSArray *)categories error:(NSError **)error {
     
     NSLog(@"ModelService - _getFlatElemensInMap");
+    
+    
+    // Hay que leer los datos del mapa si no lo estaban ya
+    *error = [self loadMapData:map];
+    if(*error) {
+        return nil;
+    }
     
     
     // Se retorna desde el mapa si no se han especificado categorias filtro
@@ -218,6 +278,13 @@
 - (NSArray *) getCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories error:(NSError **)error {
     
     NSLog(@"ModelService - _getCategorizedElemensInMap");
+    
+    
+    // Hay que leer los datos del mapa si no lo estaban ya
+    *error = [self loadMapData:map];
+    if(*error) {
+        return nil;
+    }
     
     
     // Consigue el conjunto de puntos para el filtro y las categorias del este

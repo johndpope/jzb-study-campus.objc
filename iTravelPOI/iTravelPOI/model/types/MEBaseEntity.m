@@ -170,11 +170,6 @@
 #pragma mark -
 #pragma mark General PUBLIC methods
 //---------------------------------------------------------------------------------------------------------------------
-- (NSError *) commitChanges {
-    return nil;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
 - (void) markAsDeleted {
     // Lo marca como borrado
     self.i_wasDeleted = true;

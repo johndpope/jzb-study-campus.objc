@@ -96,7 +96,7 @@ BOOL _needToBeUpdatedAfterCreateLocally(MEBaseEntity *item1, MEBaseEntity *item2
             
             // -----------------------------------------------------
         case ST_Sync_Update_Remote:
-            if(tuple.localEntity.isDeleted) {
+            if(tuple.localEntity.isMarkedAsDeleted) {
                 [tuple.localEntity unmarkAsDeleted];
             }
             if(tuple.withConflict) {

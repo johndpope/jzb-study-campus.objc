@@ -30,6 +30,8 @@
 @property (nonatomic, retain) NSURL *mapDataFolder;
 
 - (NSString *) _calcPersistentID;
+- (NSString *) _persistentIDFromFileName:(NSString *)fileName;
+
 - (BOOL)       _saveMapHeader:(MEMap *)map;
 - (BOOL)       _saveMapData:(MEMap *)map;
 - (MEMap *)    _loadMapFromHeader:(NSString *)mapHeaderFileName;
@@ -90,10 +92,6 @@
 	return _globalPersistenceManagerInstance;
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-+ (void) privateClassMethod {
-    
-}
 
 
 //*********************************************************************************************************************
@@ -121,7 +119,7 @@
             }
         }
         
-        _mapDataFolder = mapDataDir;
+        _mapDataFolder = [[mapDataDir absoluteURL] retain];
     }
     
     return _mapDataFolder;
@@ -133,6 +131,8 @@
 #pragma mark General PUBLIC methods
 //---------------------------------------------------------------------------------------------------------------------
 - (NSArray *) listMapHeaders {
+    
+    NSLog(@"PersistenceManager - listMapHeaders");
     
     // Limpia el error anterior
     _lastError = nil;
@@ -159,7 +159,7 @@
                 NSLog(@"Error reading content of Map Header (%@) : %@", item, _lastError);
                 return nil;
             } else {
-                map.persistentID = @"hola";
+                map.persistentID = [self _persistentIDFromFileName:item];
                 [mapList addObject:map];
             }
         }
@@ -171,6 +171,8 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL) loadMapData:(MEMap *)map {
     
+    NSLog(@"PersistenceManager - loadMapData");
+    
     if(!map.persistentID) {
         _lastError = [NSError errorWithDomain:@"Map doesn't have a persistence ID" code:1000 userInfo:nil];
         return false;
@@ -181,6 +183,7 @@
         return false;
     }
     
+    map.dataRead = true;
     return true;
     
 }
@@ -188,19 +191,17 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL) saveMap:(MEMap *)map {
     
+    NSLog(@"PersistenceManager - saveMap");
+    
     if(!map.persistentID) {
         map.persistentID = [self _calcPersistentID];
     }
     
-    NSMutableDictionary *headerDict = [NSMutableDictionary dictionary];
-    [map writeHeader:headerDict];
     if(![self _saveMapHeader:map]) {
         NSLog(@"Error saving content of Map Header (%@) : %@", map.name, _lastError);
         return false;
     }
     
-    NSMutableDictionary *dataDict = [NSMutableDictionary dictionary];
-    [map writeData:dataDict];
     if(![self _saveMapData:map]) {
         NSLog(@"Error saving content of Map Data (%@) : %@", map.name, _lastError);
         return false;
@@ -211,6 +212,8 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL) removeMap:(MEMap *)map {
+    
+    NSLog(@"PersistenceManager - removeMap");
     return false;   
 }
 
@@ -223,11 +226,18 @@
 - (MEMap *) _loadMapFromHeader:(NSString *)mapHeaderFileName {
     
     @try {
-        NSDictionary *mapHeaderDict = [NSDictionary dictionaryWithContentsOfFile:mapHeaderFileName];
-        MEMap *map = [MEMap map];
-        [map readHeader:mapHeaderDict];
-        
-        return map;
+        NSString *fullFileURL = [NSString stringWithFormat:@"%@/%@", self.mapDataFolder, mapHeaderFileName];
+        NSURL *mapHeaderFileURL = [NSURL URLWithString:fullFileURL];
+
+        NSDictionary *mapHeaderDict = [NSDictionary dictionaryWithContentsOfURL:mapHeaderFileURL];
+        if(mapHeaderDict) {
+            MEMap *map = [MEMap map];
+            [map readHeader:mapHeaderDict];
+            return map;
+        } else {
+            _lastError = [NSError errorWithDomain:@"Error loading map header" code:1000 userInfo:nil];
+            return nil;
+        }
     }
     @catch (NSException *exception) {
         _lastError = [NSError errorWithDomain:exception.name code:100 userInfo:exception.userInfo];
@@ -240,11 +250,16 @@
     
     @try {
         
-        NSString *fileName = [NSString stringWithFormat:@"%@%@", map.persistentID, EXT_MAP_DATA];
-        NSURL *mapDataFileURL = [NSURL URLWithString:fileName relativeToURL:self.mapDataFolder];
-
+        NSString *fullFileURL = [NSString stringWithFormat:@"%@/%@%@", self.mapDataFolder, map.persistentID, EXT_MAP_DATA];
+        NSURL *mapDataFileURL = [NSURL URLWithString:fullFileURL];
+        
         NSDictionary *mapDataDict = [NSDictionary dictionaryWithContentsOfURL:mapDataFileURL];
-        [map readData:mapDataDict];
+        if(mapDataDict) {
+            [map readData:mapDataDict];
+        } else {
+            _lastError = [NSError errorWithDomain:@"Error loading map data" code:1000 userInfo:nil];
+            return false;
+        }
         
         return true;
     }
@@ -262,11 +277,14 @@
         
         NSMutableDictionary *mapHeaderDict = [NSMutableDictionary dictionary];
         [map writeHeader:mapHeaderDict];
-         
-        NSString *fileName = [NSString stringWithFormat:@"%@%@", map.persistentID, EXT_MAP_HEADER];
-        NSURL *mapHeaderFileURL = [NSURL URLWithString:fileName relativeToURL:self.mapDataFolder];
         
-        [mapHeaderDict writeToURL:mapHeaderFileURL atomically:YES];
+        NSString *fullFileURL = [NSString stringWithFormat:@"%@/%@%@", self.mapDataFolder, map.persistentID, EXT_MAP_HEADER];
+        NSURL *mapHeaderFileURL = [NSURL URLWithString:fullFileURL];
+        
+        if(![mapHeaderDict writeToURL:mapHeaderFileURL atomically:YES]) {
+            _lastError = [NSError errorWithDomain:@"Error writing map header" code:1000 userInfo:nil];
+            return false;
+        }
         
         return true;
     }
@@ -285,10 +303,13 @@
         NSMutableDictionary *mapDataDict = [NSMutableDictionary dictionary];
         [map writeData:mapDataDict];
         
-        NSString *fileName = [NSString stringWithFormat:@"%@%@", map.persistentID, EXT_MAP_DATA];
-        NSURL *mapDataFileURL = [NSURL URLWithString:fileName relativeToURL:self.mapDataFolder];
+        NSString *fullFileURL = [NSString stringWithFormat:@"%@/%@%@", self.mapDataFolder, map.persistentID, EXT_MAP_DATA];
+        NSURL *mapDataFileURL = [NSURL URLWithString:fullFileURL];
         
-        [mapDataDict writeToURL:mapDataFileURL atomically:YES];
+        if(![mapDataDict writeToURL:mapDataFileURL atomically:YES]) {
+            _lastError = [NSError errorWithDomain:@"Error writing map data" code:1000 userInfo:nil];
+            return false;
+        }
         
         return true;
     }
@@ -311,6 +332,13 @@
     return s_idCounter++;
 }
 
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSString *) _persistentIDFromFileName:(NSString *)fileName {
+    
+    NSString * pID = [fileName subStrFrom:0 to:[fileName length]-[EXT_MAP_HEADER length]];
+    return pID;
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 - (NSString *) _calcPersistentID {

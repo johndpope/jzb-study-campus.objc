@@ -53,8 +53,6 @@
 - (void) readFromDictionary:(NSDictionary *)dic;
 - (void) writeToDictionary:(NSDictionary *)dic;
 
-// Persiste los cambios
-- (NSError *) commitChanges;
 
 // Limpia el estado de sincronizacion y borrar DEFINITIVAMENTE los elementos marcados como borrados
 - (void) markAsSynchronized;

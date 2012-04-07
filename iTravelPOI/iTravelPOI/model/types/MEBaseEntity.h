@@ -49,7 +49,7 @@ typedef enum {
 #pragma mark -
 #pragma mark MEBaseEntity interface definition
 //---------------------------------------------------------------------------------------------------------------------
-@interface MEBaseEntity : NSManagedObject 
+@interface MEBaseEntity : NSObject 
 
 @property (nonatomic, retain)   NSString * GID;
 @property (nonatomic, retain)   NSString * syncETag;
@@ -83,10 +83,6 @@ typedef enum {
 #pragma mark -
 #pragma mark MEBaseEntity INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
-
-// Persiste los cambios
-- (NSError *) commitChanges;
-
 
 // "Marca" la entidad como borrada y elimina sus relaciones con otras entidades.
 // Quitar la marca no restaura las relaciones que antes existian
