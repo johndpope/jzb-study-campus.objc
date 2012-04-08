@@ -75,7 +75,8 @@
             // -----------------------------------------------------
         case ST_Sync_OK:
             // No hay que hacer nada
-            break;
+            // RETORNA SIN HACER NADA
+            return;
             
             // -----------------------------------------------------
         case ST_Sync_Create_Local:

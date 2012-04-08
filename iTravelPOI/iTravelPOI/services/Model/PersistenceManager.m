@@ -193,15 +193,18 @@
     
     NSLog(@"PersistenceManager - saveMap");
     
+    // Si no tiene ID de persistencia le asigna una
     if(!map.persistentID) {
         map.persistentID = [self _calcPersistentID];
     }
     
+    // Almacena los datos de cabecera
     if(![self _saveMapHeader:map]) {
         NSLog(@"Error saving content of Map Header (%@) : %@", map.name, _lastError);
         return false;
     }
     
+    // Almacenar los datos del contenido
     if(![self _saveMapData:map]) {
         NSLog(@"Error saving content of Map Data (%@) : %@", map.name, _lastError);
         return false;
@@ -214,7 +217,7 @@
 - (BOOL) removeMap:(MEMap *)map {
     
     NSLog(@"PersistenceManager - removeMap");
-        
+    
     if(map.persistentID == nil) {
         
         // No fue persistido, luego no hay que borrar nada
