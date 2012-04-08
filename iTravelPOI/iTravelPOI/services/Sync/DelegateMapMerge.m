@@ -102,11 +102,11 @@
             // -----------------------------------------------------
         case ST_Sync_Delete_Local:
             [localMap markAsDeleted];
-            _error = [[ModelService sharedInstance] removeMap:localMap];
             break;
             
             // -----------------------------------------------------
         case ST_Sync_Delete_Remote:
+            [localMap markAsDeleted];
             [[GMapService sharedInstance] deleteGMap:localMap error:&_error];
             break;
             
@@ -127,9 +127,13 @@
             break;
     }
     
-    // Graba los cambios en el mapa local
-    [localMap markAsSynchronized];
-    _error = [[ModelService sharedInstance] storeMap:localMap];
+    // Graba los cambios en el mapa local o lo borra definitivamente
+    if(localMap.isMarkedAsDeleted) {
+        _error = [[ModelService sharedInstance] removeMap:localMap];
+    } else {
+        [localMap markAsSynchronized];
+        _error = [[ModelService sharedInstance] storeMap:localMap];
+    }
     
 }
 

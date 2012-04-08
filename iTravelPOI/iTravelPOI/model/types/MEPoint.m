@@ -102,7 +102,6 @@
     [extInfo resetEntity];
     [extInfo resetExtInfo];
     ownerMap.extInfo = extInfo;
-    [extInfo setMapOwner:ownerMap];
     return [extInfo autorelease];
 }
 

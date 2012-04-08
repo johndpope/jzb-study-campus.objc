@@ -353,7 +353,7 @@
     // Se recarga entera por si hubo un cambio de nombre y afecta al orden
     // YA NO HACE FALTA PORQUE LA NOTIFICACION DE CAMBIO HABRA BORRADO LA LISTA DE MAPAS
     //[self loadMapListData];
-
+    
     // Sale de la pantalla de edicion
     [self.navigationController popViewControllerAnimated:true];
 }
@@ -409,12 +409,18 @@
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         
         MEMap *mapToRemove = [self.maps objectAtIndex:indexPath.row];
-
+        
         // Lo marca como borrado y lo almacena
-        [mapToRemove markAsDeleted];
-        NSError *error = [[ModelService sharedInstance] storeMap:mapToRemove];
+        NSError *error = nil;
+        if(mapToRemove.isLocal) {
+            error = [[ModelService sharedInstance] removeMap:mapToRemove];
+        } else {
+            [mapToRemove markAsDeleted];
+            error = [[ModelService sharedInstance] storeMap:mapToRemove];
+        }
+        
         if(error) {
-            NSLog(@"Error saving context when deleting an item: %@ / %@", error, [error userInfo]);
+            NSLog(@"Error deleting map: %@ / %@", mapToRemove, error);
             [self showErrorToUser:@"Error deleting map"];
         }
         
@@ -493,7 +499,7 @@
     pointListController.filteringCategories = nil;
     [self.navigationController pushViewController:pointListController animated:YES];
     [pointListController release];
-
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------

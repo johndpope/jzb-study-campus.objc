@@ -108,6 +108,13 @@
 #pragma mark -
 #pragma mark GETTER y SETTER methods
 //---------------------------------------------------------------------------------------------------------------------
+- (void) setExtInfo:(MEPoint *)point {
+    if(_extInfo) {
+        [_extInfo release];
+    }
+    _extInfo = [point retain];
+    [point setMapOwner:self];
+}
 
 
 

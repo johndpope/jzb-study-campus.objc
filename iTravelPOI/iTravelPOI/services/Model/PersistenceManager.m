@@ -214,7 +214,42 @@
 - (BOOL) removeMap:(MEMap *)map {
     
     NSLog(@"PersistenceManager - removeMap");
-    return false;   
+        
+    if(map.persistentID == nil) {
+        
+        // No fue persistido, luego no hay que borrar nada
+        return true;
+        
+    } else {
+        
+        NSString *fullFilePath;
+        NSURL *mapFileURL;
+        
+        NSError *errorHeader = nil;
+        NSError *errorData = nil;
+        BOOL allOK = true;
+        
+        // Lo elimina del alamacen
+        NSFileManager *fileMngr = [NSFileManager defaultManager];
+        
+        // Borra el fichero de cabecera
+        fullFilePath = [NSString stringWithFormat:@"%@/%@%@", self.mapDataFolder, map.persistentID, EXT_MAP_HEADER];
+        mapFileURL = [NSURL URLWithString:fullFilePath];
+        allOK &= [fileMngr removeItemAtURL:mapFileURL error:&errorHeader];
+        
+        // Borra el fichero de datos
+        fullFilePath = [NSString stringWithFormat:@"%@/%@%@", self.mapDataFolder, map.persistentID, EXT_MAP_DATA];
+        mapFileURL = [NSURL URLWithString:fullFilePath];
+        allOK &= [fileMngr removeItemAtURL:mapFileURL error:&errorData];
+        
+        // Si algo fallo se apunta el error
+        if(!allOK) {
+            _lastError = errorHeader ? errorHeader : errorData;
+            NSLog(@"Error removing content of Map Data (%@) : %@", map.name, _lastError);
+        }
+        
+        return allOK;   
+    }
 }
 
 
@@ -228,7 +263,7 @@
     @try {
         NSString *fullFileURL = [NSString stringWithFormat:@"%@/%@", self.mapDataFolder, mapHeaderFileName];
         NSURL *mapHeaderFileURL = [NSURL URLWithString:fullFileURL];
-
+        
         NSDictionary *mapHeaderDict = [NSDictionary dictionaryWithContentsOfURL:mapHeaderFileURL];
         if(mapHeaderDict) {
             MEMap *map = [MEMap map];
