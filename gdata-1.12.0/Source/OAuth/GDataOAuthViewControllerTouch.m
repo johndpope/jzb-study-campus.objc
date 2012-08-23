@@ -289,7 +289,7 @@ finishedWithAuth:(GDataOAuthAuthentication *)auth
   [backButton setTitleColor:normalColor forState:UIControlStateNormal];
   [backButton setTitleColor:dimColor forState:UIControlStateDisabled];
   [backButton oauthCompatibilitySetTitleShadowOffset:CGSizeMake(0, -2)];
-  NSString *backTriangle = [NSString stringWithFormat:@"%C", 0x25C0];
+  NSString *backTriangle = [NSString stringWithFormat:@"%d", 0x25C0];
   [backButton setTitle:backTriangle forState:UIControlStateNormal];
   [backButton addTarget:webView
                  action:@selector(goBack)
@@ -305,7 +305,7 @@ finishedWithAuth:(GDataOAuthAuthentication *)auth
   [forwardButton setTitleColor:normalColor forState:UIControlStateNormal];
   [forwardButton setTitleColor:dimColor forState:UIControlStateDisabled];
   [forwardButton oauthCompatibilitySetTitleShadowOffset:CGSizeMake(0, -2)];
-  NSString *forwardTriangle = [NSString stringWithFormat:@"%C", 0x25B6];
+  NSString *forwardTriangle = [NSString stringWithFormat:@"%d", 0x25B6];
   [forwardButton setTitle:forwardTriangle forState:UIControlStateNormal];
   [forwardButton addTarget:webView
                     action:@selector(goForward)

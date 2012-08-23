@@ -217,19 +217,19 @@ static NSMutableDictionary *gQualifiedNameMap = nil;
     // if we've not previously cached declarations for this class,
     // add the declarations now
     Class currClass = [self class];
-    NSDictionary *prevExtnDecls = [extensionDeclarationsCache_ objectForKey:currClass];
+    NSDictionary *prevExtnDecls = [extensionDeclarationsCache_ objectForKey:(id <NSCopying>)currClass];
     if (prevExtnDecls == nil) {
       [self addExtensionDeclarations];
     }
 
-    NSArray *prevAttrDecls = [attributeDeclarationsCache_ objectForKey:currClass];
+    NSArray *prevAttrDecls = [attributeDeclarationsCache_ objectForKey:(id <NSCopying>)currClass];
     if (prevAttrDecls == nil) {
       [self addParseDeclarations];
       // if any parse declarations are added, attributeDeclarations_ will be set
       // to the cached copy of this object's attribute decls
     } else {
       GDATA_DEBUG_ASSERT(attributeDeclarations_ == nil, @"attrDecls previously set");
-      attributeDeclarations_ = [prevAttrDecls retain];
+      attributeDeclarations_ = [[NSMutableArray arrayWithArray:prevAttrDecls ] retain];
     }
 
     [self parseExtensionsForElement:element];
@@ -1741,18 +1741,18 @@ objectDescriptionIfNonNil:(id)obj
   NSMutableDictionary *extensionDeclarationsCache = [self extensionDeclarationsCache];
   GDATA_DEBUG_ASSERT(extensionDeclarationsCache != nil, @"missing extnDecls");
 
-  NSMutableDictionary *extensionDecls = [extensionDeclarationsCache objectForKey:currClass];
+  NSMutableDictionary *extensionDecls = [extensionDeclarationsCache objectForKey:(id <NSCopying>)currClass];
 
   if (extensionDecls == nil) {
     extensionDecls = [NSMutableDictionary dictionary];
-    [extensionDeclarationsCache setObject:extensionDecls forKey:currClass];
+    [extensionDeclarationsCache setObject:extensionDecls forKey:(id <NSCopying>)currClass];
   }
 
   // get this class's extensions for the specified parent class
-  NSMutableArray *array = [extensionDecls objectForKey:parentClass];
+  NSMutableArray *array = [extensionDecls objectForKey:(id <NSCopying>)parentClass];
   if (array == nil) {
     array = [NSMutableArray array];
-    [extensionDecls setObject:array forKey:parentClass];
+    [extensionDecls setObject:array forKey:(id <NSCopying>)parentClass];
   }
 
   GDATA_DEBUG_ASSERT([childClass conformsToProtocol:@protocol(GDataExtension)],
@@ -1793,10 +1793,10 @@ objectDescriptionIfNonNil:(id)obj
   // get the declarations for this class
   Class currClass = [self class];
   NSMutableDictionary *cache = [self extensionDeclarationsCache];
-  NSMutableDictionary *classMap = [cache objectForKey:currClass];
+  NSMutableDictionary *classMap = [cache objectForKey:(id <NSCopying>)currClass];
 
   // get the extensions for the specified parent class
-  NSMutableArray *array = [classMap objectForKey:parentClass];
+  NSMutableArray *array = [classMap objectForKey:(id <NSCopying>)parentClass];
   return array;
 }
 
@@ -1806,7 +1806,7 @@ objectDescriptionIfNonNil:(id)obj
 // this is typically called by the getter methods of subclasses
 
 - (NSArray *)objectsForExtensionClass:(Class)theClass {
-  id obj = [extensions_ objectForKey:theClass];
+  id obj = [extensions_ objectForKey:(id <NSCopying>)theClass];
   if (obj == nil) return nil;
 
   if ([obj isKindOfClass:[NSArray class]]) {
@@ -1822,7 +1822,7 @@ objectDescriptionIfNonNil:(id)obj
 // this is typically called by the getter methods of subclasses
 
 - (id)objectForExtensionClass:(Class)theClass {
-  id obj = [extensions_ objectForKey:theClass];
+  id obj = [extensions_ objectForKey:(id <NSCopying>)theClass];
 
   if ([obj isKindOfClass:[NSArray class]]) {
     if ([obj count] > 0) {
@@ -1855,7 +1855,7 @@ objectDescriptionIfNonNil:(id)obj
 
   @synchronized(gQualifiedNameMap) {
 
-    name = [gQualifiedNameMap objectForKey:theClass];
+    name = [gQualifiedNameMap objectForKey:(id <NSCopying>)theClass];
     if (name == nil) {
 
       NSString *extensionURI = [theClass extensionElementURI];
@@ -1868,7 +1868,7 @@ objectDescriptionIfNonNil:(id)obj
                 [theClass extensionElementLocalName]];
       }
 
-      [gQualifiedNameMap setObject:name forKey:theClass];
+      [gQualifiedNameMap setObject:name forKey:(id <NSCopying>)theClass];
     }
   }
   return name;
@@ -1903,9 +1903,9 @@ objectDescriptionIfNonNil:(id)obj
     GDATA_FOREACH(obj, objects) {
       [self ensureObject:obj hasXMLNameForExtensionClass:theClass];
     }
-    [extensions_ setObject:objects forKey:theClass];
+    [extensions_ setObject:objects forKey:(id <NSCopying>)theClass];
   } else {
-    [extensions_ removeObjectForKey:theClass];
+    [extensions_ removeObjectForKey:(id <NSCopying>)theClass];
   }
 }
 
@@ -1923,9 +1923,9 @@ objectDescriptionIfNonNil:(id)obj
 
   if (object) {
     [self ensureObject:object hasXMLNameForExtensionClass:theClass];
-    [extensions_ setObject:object forKey:theClass];
+    [extensions_ setObject:object forKey:(id <NSCopying>)theClass];
   } else {
-    [extensions_ removeObjectForKey:theClass];
+    [extensions_ removeObjectForKey:(id <NSCopying>)theClass];
   }
 }
 
@@ -1937,7 +1937,7 @@ objectDescriptionIfNonNil:(id)obj
 
   if (newObj == nil) return;
 
-  id previousObjOrArray = [extensions_ objectForKey:theClass];
+  id previousObjOrArray = [extensions_ objectForKey:(id <NSCopying>)theClass];
   if (previousObjOrArray) {
 
     if ([previousObjOrArray isKindOfClass:[NSArray class]]) {
@@ -1951,7 +1951,7 @@ objectDescriptionIfNonNil:(id)obj
       // create an array with the previous object and the new object
       NSMutableArray *array = [NSMutableArray arrayWithObjects:
                                previousObjOrArray, newObj, nil];
-      [extensions_ setObject:array forKey:theClass];
+      [extensions_ setObject:array forKey:(id <NSCopying>)theClass];
     }
   } else {
 
@@ -1965,7 +1965,7 @@ objectDescriptionIfNonNil:(id)obj
 // this is typically called by removeObject methods of subclasses
 
 - (void)removeObject:(id)object forExtensionClass:(Class)theClass {
-  id previousObjOrArray = [extensions_ objectForKey:theClass];
+  id previousObjOrArray = [extensions_ objectForKey:(id <NSCopying>)theClass];
   if ([previousObjOrArray isKindOfClass:[NSArray class]]) {
 
     // remove from the array
@@ -1974,7 +1974,7 @@ objectDescriptionIfNonNil:(id)obj
   } else if ([object isEqual:previousObjOrArray]) {
 
     // no array, so remove if it matches the sole object
-    [extensions_ removeObjectForKey:theClass];
+    [extensions_ removeObjectForKey:(id <NSCopying>)theClass];
   }
 }
 
@@ -2118,10 +2118,10 @@ objectDescriptionIfNonNil:(id)obj
 
     // we keep a strong pointer to the array in the cache since the cache
     // belongs to the feed or the topmost parent, and that may go away
-    attributeDeclarations_ = [[cache objectForKey:currClass] retain];
+    attributeDeclarations_ = [[cache objectForKey:(id <NSCopying>)currClass] retain];
     if (attributeDeclarations_ == nil) {
       attributeDeclarations_ = [[NSMutableArray alloc] init];
-      [cache setObject:attributeDeclarations_ forKey:currClass];
+      [cache setObject:attributeDeclarations_ forKey:(id <NSCopying>)currClass];
     }
   }
 
@@ -2559,7 +2559,7 @@ forCategoryWithScheme:(NSString *)scheme
   }
 
   // ensure this is a unique registration
-  GDATA_DEBUG_ASSERT(nil == [*map objectForKey:theClass],
+  GDATA_DEBUG_ASSERT(nil == [*map objectForKey:(id <NSCopying>)theClass],
                @"%@ already registered", theClass);
 
 #if !NS_BLOCK_ASSERTIONS

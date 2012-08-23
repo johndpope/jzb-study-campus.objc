@@ -1,0 +1,322 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		42690B9115BB039A0009D10B /* XMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 42690B9015BB039A0009D10B /* XMLReader.m */; };
+		42690B9415BB13990009D10B /* SafariBookmarks.m in Sources */ = {isa = PBXBuildFile; fileRef = 42690B9315BB13990009D10B /* SafariBookmarks.m */; };
+		42F4749515B8707D0088C68F /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42F4749415B8707D0088C68F /* WebKit.framework */; };
+		42FEAB4A15B71B42009C6D02 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42FEAB4915B71B42009C6D02 /* Cocoa.framework */; };
+		42FEAB5415B71B42009C6D02 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 42FEAB5215B71B42009C6D02 /* InfoPlist.strings */; };
+		42FEAB5615B71B42009C6D02 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FEAB5515B71B42009C6D02 /* main.m */; };
+		42FEAB5A15B71B42009C6D02 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 42FEAB5815B71B42009C6D02 /* Credits.rtf */; };
+		42FEAB5D15B71B42009C6D02 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FEAB5C15B71B42009C6D02 /* AppDelegate.m */; };
+		42FEAB6015B71B42009C6D02 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 42FEAB5E15B71B42009C6D02 /* MainMenu.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		42690B8F15BB03950009D10B /* XMLReader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XMLReader.h; path = XMLReader/XMLReader.h; sourceTree = "<group>"; };
+		42690B9015BB039A0009D10B /* XMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMLReader.m; path = XMLReader/XMLReader.m; sourceTree = "<group>"; };
+		42690B9215BB13990009D10B /* SafariBookmarks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SafariBookmarks.h; sourceTree = "<group>"; };
+		42690B9315BB13990009D10B /* SafariBookmarks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SafariBookmarks.m; sourceTree = "<group>"; };
+		42690B9515BB15360009D10B /* LogTracer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LogTracer.h; sourceTree = "<group>"; };
+		42F4749415B8707D0088C68F /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		42FEAB4515B71B42009C6D02 /* GBMSync.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GBMSync.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		42FEAB4915B71B42009C6D02 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		42FEAB4C15B71B42009C6D02 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		42FEAB4D15B71B42009C6D02 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		42FEAB4E15B71B42009C6D02 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		42FEAB5115B71B42009C6D02 /* GBMSync-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GBMSync-Info.plist"; sourceTree = "<group>"; };
+		42FEAB5315B71B42009C6D02 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		42FEAB5515B71B42009C6D02 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		42FEAB5715B71B42009C6D02 /* GBMSync-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GBMSync-Prefix.pch"; sourceTree = "<group>"; };
+		42FEAB5915B71B42009C6D02 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		42FEAB5B15B71B42009C6D02 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		42FEAB5C15B71B42009C6D02 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		42FEAB5F15B71B42009C6D02 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		42FEAB4215B71B42009C6D02 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				42F4749515B8707D0088C68F /* WebKit.framework in Frameworks */,
+				42FEAB4A15B71B42009C6D02 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		42690B8E15BB03880009D10B /* XMLReader */ = {
+			isa = PBXGroup;
+			children = (
+				42690B9015BB039A0009D10B /* XMLReader.m */,
+				42690B8F15BB03950009D10B /* XMLReader.h */,
+			);
+			name = XMLReader;
+			sourceTree = "<group>";
+		};
+		42FEAB3A15B71B42009C6D02 = {
+			isa = PBXGroup;
+			children = (
+				42FEAB4F15B71B42009C6D02 /* GBMSync */,
+				42FEAB4815B71B42009C6D02 /* Frameworks */,
+				42FEAB4615B71B42009C6D02 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		42FEAB4615B71B42009C6D02 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				42FEAB4515B71B42009C6D02 /* GBMSync.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		42FEAB4815B71B42009C6D02 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				42F4749415B8707D0088C68F /* WebKit.framework */,
+				42FEAB4915B71B42009C6D02 /* Cocoa.framework */,
+				42FEAB4B15B71B42009C6D02 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		42FEAB4B15B71B42009C6D02 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				42FEAB4C15B71B42009C6D02 /* AppKit.framework */,
+				42FEAB4D15B71B42009C6D02 /* CoreData.framework */,
+				42FEAB4E15B71B42009C6D02 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		42FEAB4F15B71B42009C6D02 /* GBMSync */ = {
+			isa = PBXGroup;
+			children = (
+				42690B8E15BB03880009D10B /* XMLReader */,
+				42FEAB5B15B71B42009C6D02 /* AppDelegate.h */,
+				42FEAB5C15B71B42009C6D02 /* AppDelegate.m */,
+				42FEAB5E15B71B42009C6D02 /* MainMenu.xib */,
+				42690B9215BB13990009D10B /* SafariBookmarks.h */,
+				42690B9315BB13990009D10B /* SafariBookmarks.m */,
+				42690B9515BB15360009D10B /* LogTracer.h */,
+				42FEAB5015B71B42009C6D02 /* Supporting Files */,
+			);
+			path = GBMSync;
+			sourceTree = "<group>";
+		};
+		42FEAB5015B71B42009C6D02 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				42FEAB5115B71B42009C6D02 /* GBMSync-Info.plist */,
+				42FEAB5215B71B42009C6D02 /* InfoPlist.strings */,
+				42FEAB5515B71B42009C6D02 /* main.m */,
+				42FEAB5715B71B42009C6D02 /* GBMSync-Prefix.pch */,
+				42FEAB5815B71B42009C6D02 /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		42FEAB4415B71B42009C6D02 /* GBMSync */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 42FEAB6315B71B42009C6D02 /* Build configuration list for PBXNativeTarget "GBMSync" */;
+			buildPhases = (
+				42FEAB4115B71B42009C6D02 /* Sources */,
+				42FEAB4215B71B42009C6D02 /* Frameworks */,
+				42FEAB4315B71B42009C6D02 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GBMSync;
+			productName = GBMSync;
+			productReference = 42FEAB4515B71B42009C6D02 /* GBMSync.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		42FEAB3C15B71B42009C6D02 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = 42FEAB3F15B71B42009C6D02 /* Build configuration list for PBXProject "GBMSync" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 42FEAB3A15B71B42009C6D02;
+			productRefGroup = 42FEAB4615B71B42009C6D02 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				42FEAB4415B71B42009C6D02 /* GBMSync */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		42FEAB4315B71B42009C6D02 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				42FEAB5415B71B42009C6D02 /* InfoPlist.strings in Resources */,
+				42FEAB5A15B71B42009C6D02 /* Credits.rtf in Resources */,
+				42FEAB6015B71B42009C6D02 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		42FEAB4115B71B42009C6D02 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				42FEAB5615B71B42009C6D02 /* main.m in Sources */,
+				42FEAB5D15B71B42009C6D02 /* AppDelegate.m in Sources */,
+				42690B9115BB039A0009D10B /* XMLReader.m in Sources */,
+				42690B9415BB13990009D10B /* SafariBookmarks.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		42FEAB5215B71B42009C6D02 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				42FEAB5315B71B42009C6D02 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		42FEAB5815B71B42009C6D02 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				42FEAB5915B71B42009C6D02 /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		42FEAB5E15B71B42009C6D02 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				42FEAB5F15B71B42009C6D02 /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		42FEAB6115B71B42009C6D02 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		42FEAB6215B71B42009C6D02 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		42FEAB6415B71B42009C6D02 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "GBMSync/GBMSync-Prefix.pch";
+				INFOPLIST_FILE = "GBMSync/GBMSync-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		42FEAB6515B71B42009C6D02 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "GBMSync/GBMSync-Prefix.pch";
+				INFOPLIST_FILE = "GBMSync/GBMSync-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		42FEAB3F15B71B42009C6D02 /* Build configuration list for PBXProject "GBMSync" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				42FEAB6115B71B42009C6D02 /* Debug */,
+				42FEAB6215B71B42009C6D02 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		42FEAB6315B71B42009C6D02 /* Build configuration list for PBXNativeTarget "GBMSync" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				42FEAB6415B71B42009C6D02 /* Debug */,
+				42FEAB6515B71B42009C6D02 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 42FEAB3C15B71B42009C6D02 /* Project object */;
+}

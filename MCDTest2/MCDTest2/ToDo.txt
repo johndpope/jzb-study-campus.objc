@@ -1,0 +1,6 @@
+*-------
+Hay que verificar que el borrado en cascada de las relaciones funciona como se espera.
+
+*-------
+Hay que utilizar caches para que las busquedas vayan lo mas rapido posible
+

@@ -1,0 +1,4 @@
+MGroup
+
+@property (nonatomic) UInt viewCount;
+@synthesize viewCount = _viewCount;

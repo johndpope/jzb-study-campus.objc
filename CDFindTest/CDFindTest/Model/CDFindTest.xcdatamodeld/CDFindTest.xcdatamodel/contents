@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1487" systemVersion="11E53" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="MGroup" representedClassName="MGroup" syncable="YES">
+        <attribute name="count" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="level" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="name" attributeType="String" syncable="YES"/>
+        <attribute name="uID" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="ancestors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MGroup" inverseName="descendants" inverseEntity="MGroup" syncable="YES"/>
+        <relationship name="descendants" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MGroup" inverseName="ancestors" inverseEntity="MGroup" syncable="YES"/>
+        <relationship name="intersections" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MIntersection" inverseName="groups" inverseEntity="MIntersection" syncable="YES"/>
+        <relationship name="points" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MPoint" inverseName="groups" inverseEntity="MPoint" syncable="YES"/>
+        <relationship name="root" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MGroup" syncable="YES"/>
+    </entity>
+    <entity name="MIntersection" representedClassName="MIntersection" syncable="YES">
+        <attribute name="count" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="uID" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="groups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MGroup" inverseName="intersections" inverseEntity="MGroup" syncable="YES"/>
+    </entity>
+    <entity name="MPoint" representedClassName="MPoint" syncable="YES">
+        <attribute name="name" attributeType="String" syncable="YES"/>
+        <relationship name="groups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MGroup" inverseName="points" inverseEntity="MGroup" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="MGroup" positionX="-29" positionY="-243" width="128" height="150"/>
+        <element name="MIntersection" positionX="-288" positionY="-216" width="137" height="90"/>
+        <element name="MPoint" positionX="-171" positionY="-21" width="128" height="75"/>
+    </elements>
+</model>

@@ -927,7 +927,7 @@ enum {
 
 #if NS_BLOCKS_AVAILABLE
 - (GDataServiceTicket *)fetchFeedWithURL:(NSURL *)feedURL
-                       completionHandler:(GDataServiceFeedBaseCompletionHandler)handler {
+                       completionHandler:(void (^)(GDataServiceTicket *ticket, GDataFeedBase *feed, NSError *error))handler {
 
   return [self fetchAuthenticatedObjectWithURL:feedURL
                                    objectClass:kGDataUseRegisteredClass
@@ -945,9 +945,8 @@ enum {
               completionHandler:handler];
 }
 
-
 - (GDataServiceTicket *)fetchEntryWithURL:(NSURL *)entryURL
-                        completionHandler:(GDataServiceEntryBaseCompletionHandler)handler {
+                        completionHandler:(void (^)(GDataServiceTicket *ticket, GDataEntryBase *entry, NSError *error))handler {
 
   return [self fetchAuthenticatedObjectWithURL:entryURL
                                    objectClass:kGDataUseRegisteredClass
@@ -961,7 +960,7 @@ enum {
 
 - (GDataServiceTicket *)fetchEntryByInsertingEntry:(GDataEntryBase *)entryToInsert
                                         forFeedURL:(NSURL *)feedURL
-                                 completionHandler:(GDataServiceEntryBaseCompletionHandler)handler {
+                                 completionHandler:(void (^)(GDataServiceTicket *ticket, GDataEntryBase *entry, NSError *error))handler {
   NSString *etag = [entryToInsert ETag];
 
   // objects being uploaded will always need some namespaces at the root level
@@ -978,7 +977,8 @@ enum {
 }
 
 - (GDataServiceTicket *)fetchEntryByUpdatingEntry:(GDataEntryBase *)entryToUpdate
-                                completionHandler:(GDataServiceEntryBaseCompletionHandler)handler {
+                                completionHandler:(void (^)(GDataServiceTicket *ticket, GDataEntryBase *entry, NSError *error))handler {
+
   // Entries should be updated only if they contain copies of any unparsed XML
   // (unknown children and attributes) or if fields to update are explicitly
   // specified in the gd:field attribute.
@@ -1024,7 +1024,9 @@ enum {
 
 - (GDataServiceTicket *)deleteResourceURL:(NSURL *)resourceEditURL
                                      ETag:(NSString *)etag
-                        completionHandler:(GDataServiceCompletionHandler)handler {
+                        completionHandler:(void (^)(GDataServiceTicket *ticket, id nilObject, NSError *error))handler {
+    
+
   GDATA_ASSERT(resourceEditURL != nil, @"deleting unspecified resource");
 
   return [self fetchAuthenticatedObjectWithURL:resourceEditURL

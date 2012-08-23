@@ -25,7 +25,7 @@
     [service setServiceShouldFollowNextLinks:YES];
     
     NSString *username = @"jzarzuela@gmail.com";
-    NSString *password = @"#webweb1971";
+    NSString *password = @"";
     [service setUserCredentialsWithUsername:username password:password];
 
     NSURL *feedURL = [GDataServiceGoogleMaps mapsFeedURLForUserID:kGDataServiceDefaultUser

@@ -460,7 +460,7 @@ totalBytesExpectedToSend:0];
 #if DEBUG
   NSInteger status = [chunkFetcher statusCode];
   NSAssert1(status == 200 || status == 201,
-            @"unexpected chunks status %d", status);
+            @"unexpected chunks status %ld", status);
 #endif
 
   // take the chunk fetcher's data as our own

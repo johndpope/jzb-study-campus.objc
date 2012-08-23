@@ -615,7 +615,7 @@ static NSString* gLoggingProcessName = nil;
     }
 
     [outputHTML appendFormat:@"<b>response:</b> <i>status:</i> %@ <i>  "
-       "&nbsp;&nbsp;&nbsp;MIMEType:</i><code> %@</code>%@<br>\n",
+       "&nbsp;&nbsp;&nbsp;MIMEType:</i><code> %@</code>%@<br>%@<br>\n",
      statusString,
      [response MIMEType],
      responseURLStr,
@@ -906,8 +906,8 @@ static NSString* gLoggingProcessName = nil;
   // pad the key names, but not beyond 16 chars, since long custom header
   // keys just create too much whitespace
   NSArray *keys = [[dict allKeys] sortedArrayUsingSelector:@selector(compare:)];
-  NSNumber *maxKeyNum = [keys valueForKeyPath:@"@max.length"];
-  NSUInteger maxKeyLen = [maxKeyNum unsignedIntValue];
+    //NSNumber *maxKeyNum = [keys valueForKeyPath:@"@max.length"];
+    //NSUInteger maxKeyLen = [maxKeyNum unsignedIntValue];
 
   NSMutableString *str = [NSMutableString string];
   NSEnumerator *keyEnum = [keys objectEnumerator];
@@ -920,7 +920,8 @@ static NSString* gLoggingProcessName = nil;
                                        endString:@"\""];
     }
     if (shouldAlignColons) {
-      [str appendFormat:@"%*s: %@\n", maxKeyLen, [key UTF8String], value];
+        //[str appendFormat:@"%*s: %@\n", maxKeyLen, [key UTF8String], value];
+        [str appendFormat:@"  %@: %@\n", key, value];
     } else {
       [str appendFormat:@"  %@: %@\n", key, value];
     }

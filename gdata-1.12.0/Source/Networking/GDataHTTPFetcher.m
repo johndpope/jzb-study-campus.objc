@@ -1937,7 +1937,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
   NSString *reservationStr = reservationDate_ ?
     [NSString stringWithFormat:@" resDate:%@", reservationDate_] : @"";
 
-  return [NSString stringWithFormat:@"%@ %p: {bytes:%@ useDate:%@%@}",
+  return [NSString stringWithFormat:@"%@ %p: {bytes:%@ useDate:%@%@-%@}",
           [self class], self,
           data_ ? [NSNumber numberWithInt:(int)[data_ length]] : nil,
           useDate_,

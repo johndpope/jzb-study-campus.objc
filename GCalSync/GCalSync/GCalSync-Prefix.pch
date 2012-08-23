@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'GCalSync' target in the 'GCalSync' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif

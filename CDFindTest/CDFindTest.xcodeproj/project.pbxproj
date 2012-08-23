@@ -1,0 +1,363 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		42CD1D5D15C3DEC200FF4145 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42CD1D5C15C3DEC200FF4145 /* UIKit.framework */; };
+		42CD1D5F15C3DEC200FF4145 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42CD1D5E15C3DEC200FF4145 /* Foundation.framework */; };
+		42CD1D6115C3DEC200FF4145 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42CD1D6015C3DEC200FF4145 /* CoreGraphics.framework */; };
+		42CD1D6315C3DEC200FF4145 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42CD1D6215C3DEC200FF4145 /* CoreData.framework */; };
+		42CD1D6915C3DEC200FF4145 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 42CD1D6715C3DEC200FF4145 /* InfoPlist.strings */; };
+		42CD1D6B15C3DEC200FF4145 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CD1D6A15C3DEC200FF4145 /* main.m */; };
+		42CD1D6F15C3DEC200FF4145 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CD1D6E15C3DEC200FF4145 /* AppDelegate.m */; };
+		42CD1D7215C3DEC200FF4145 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 42CD1D7015C3DEC200FF4145 /* MainStoryboard_iPhone.storyboard */; };
+		42CD1D7515C3DEC200FF4145 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 42CD1D7315C3DEC200FF4145 /* MainStoryboard_iPad.storyboard */; };
+		42CD1D7B15C3DEC200FF4145 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CD1D7A15C3DEC200FF4145 /* MainViewController.m */; };
+		42CD1D7E15C3DEC200FF4145 /* FlipsideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CD1D7D15C3DEC200FF4145 /* FlipsideViewController.m */; };
+		42CD1DA415C4260900FF4145 /* CDFindTest.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 42CD1DA215C4260900FF4145 /* CDFindTest.xcdatamodeld */; };
+		42CD1DB015C426E200FF4145 /* MPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CD1DAF15C426E200FF4145 /* MPoint.m */; };
+		42CD1DB315C426E200FF4145 /* MGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CD1DB215C426E200FF4145 /* MGroup.m */; };
+		42CD1DB615C426E200FF4145 /* MIntersection.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CD1DB515C426E200FF4145 /* MIntersection.m */; };
+		42CD1DB915C4275A00FF4145 /* ModelUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CD1DB815C4275A00FF4145 /* ModelUtils.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		42CD1D5815C3DEC200FF4145 /* CDFindTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CDFindTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		42CD1D5C15C3DEC200FF4145 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		42CD1D5E15C3DEC200FF4145 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		42CD1D6015C3DEC200FF4145 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		42CD1D6215C3DEC200FF4145 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		42CD1D6615C3DEC200FF4145 /* CDFindTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CDFindTest-Info.plist"; sourceTree = "<group>"; };
+		42CD1D6815C3DEC200FF4145 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		42CD1D6A15C3DEC200FF4145 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		42CD1D6C15C3DEC200FF4145 /* CDFindTest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CDFindTest-Prefix.pch"; sourceTree = "<group>"; };
+		42CD1D6D15C3DEC200FF4145 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		42CD1D6E15C3DEC200FF4145 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		42CD1D7115C3DEC200FF4145 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
+		42CD1D7415C3DEC200FF4145 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
+		42CD1D7915C3DEC200FF4145 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		42CD1D7A15C3DEC200FF4145 /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		42CD1D7C15C3DEC200FF4145 /* FlipsideViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlipsideViewController.h; sourceTree = "<group>"; };
+		42CD1D7D15C3DEC200FF4145 /* FlipsideViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FlipsideViewController.m; sourceTree = "<group>"; };
+		42CD1DA015C425F700FF4145 /* Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Model.h; path = Model/Model.h; sourceTree = "<group>"; };
+		42CD1DA315C4260900FF4145 /* CDFindTest.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CDFindTest.xcdatamodel; sourceTree = "<group>"; };
+		42CD1DAE15C426E200FF4145 /* MPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPoint.h; path = Model/MPoint.h; sourceTree = "<group>"; };
+		42CD1DAF15C426E200FF4145 /* MPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MPoint.m; path = Model/MPoint.m; sourceTree = "<group>"; };
+		42CD1DB115C426E200FF4145 /* MGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGroup.h; path = Model/MGroup.h; sourceTree = "<group>"; };
+		42CD1DB215C426E200FF4145 /* MGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGroup.m; path = Model/MGroup.m; sourceTree = "<group>"; };
+		42CD1DB415C426E200FF4145 /* MIntersection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MIntersection.h; path = Model/MIntersection.h; sourceTree = "<group>"; };
+		42CD1DB515C426E200FF4145 /* MIntersection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MIntersection.m; path = Model/MIntersection.m; sourceTree = "<group>"; };
+		42CD1DB715C4275A00FF4145 /* ModelUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ModelUtils.h; path = Model/ModelUtils.h; sourceTree = "<group>"; };
+		42CD1DB815C4275A00FF4145 /* ModelUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ModelUtils.m; path = Model/ModelUtils.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		42CD1D5515C3DEC200FF4145 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				42CD1D5D15C3DEC200FF4145 /* UIKit.framework in Frameworks */,
+				42CD1D5F15C3DEC200FF4145 /* Foundation.framework in Frameworks */,
+				42CD1D6115C3DEC200FF4145 /* CoreGraphics.framework in Frameworks */,
+				42CD1D6315C3DEC200FF4145 /* CoreData.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		42CD1D4D15C3DEC200FF4145 = {
+			isa = PBXGroup;
+			children = (
+				42CD1D6415C3DEC200FF4145 /* CDFindTest */,
+				42CD1D5B15C3DEC200FF4145 /* Frameworks */,
+				42CD1D5915C3DEC200FF4145 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		42CD1D5915C3DEC200FF4145 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				42CD1D5815C3DEC200FF4145 /* CDFindTest.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		42CD1D5B15C3DEC200FF4145 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				42CD1D5C15C3DEC200FF4145 /* UIKit.framework */,
+				42CD1D5E15C3DEC200FF4145 /* Foundation.framework */,
+				42CD1D6015C3DEC200FF4145 /* CoreGraphics.framework */,
+				42CD1D6215C3DEC200FF4145 /* CoreData.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		42CD1D6415C3DEC200FF4145 /* CDFindTest */ = {
+			isa = PBXGroup;
+			children = (
+				42CD1D6D15C3DEC200FF4145 /* AppDelegate.h */,
+				42CD1D6E15C3DEC200FF4145 /* AppDelegate.m */,
+				42CD1D7015C3DEC200FF4145 /* MainStoryboard_iPhone.storyboard */,
+				42CD1D7315C3DEC200FF4145 /* MainStoryboard_iPad.storyboard */,
+				42CD1D7915C3DEC200FF4145 /* MainViewController.h */,
+				42CD1D7A15C3DEC200FF4145 /* MainViewController.m */,
+				42CD1D7C15C3DEC200FF4145 /* FlipsideViewController.h */,
+				42CD1D7D15C3DEC200FF4145 /* FlipsideViewController.m */,
+				42CD1D9315C3EA6000FF4145 /* Model */,
+				42CD1D6515C3DEC200FF4145 /* Supporting Files */,
+			);
+			path = CDFindTest;
+			sourceTree = "<group>";
+		};
+		42CD1D6515C3DEC200FF4145 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				42CD1D6615C3DEC200FF4145 /* CDFindTest-Info.plist */,
+				42CD1D6715C3DEC200FF4145 /* InfoPlist.strings */,
+				42CD1D6A15C3DEC200FF4145 /* main.m */,
+				42CD1D6C15C3DEC200FF4145 /* CDFindTest-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		42CD1D9315C3EA6000FF4145 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				42CD1DA215C4260900FF4145 /* CDFindTest.xcdatamodeld */,
+				42CD1DA015C425F700FF4145 /* Model.h */,
+				42CD1DB715C4275A00FF4145 /* ModelUtils.h */,
+				42CD1DB815C4275A00FF4145 /* ModelUtils.m */,
+				42CD1DB415C426E200FF4145 /* MIntersection.h */,
+				42CD1DB515C426E200FF4145 /* MIntersection.m */,
+				42CD1DB115C426E200FF4145 /* MGroup.h */,
+				42CD1DB215C426E200FF4145 /* MGroup.m */,
+				42CD1DAE15C426E200FF4145 /* MPoint.h */,
+				42CD1DAF15C426E200FF4145 /* MPoint.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		42CD1D5715C3DEC200FF4145 /* CDFindTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 42CD1D8115C3DEC200FF4145 /* Build configuration list for PBXNativeTarget "CDFindTest" */;
+			buildPhases = (
+				42CD1D5415C3DEC200FF4145 /* Sources */,
+				42CD1D5515C3DEC200FF4145 /* Frameworks */,
+				42CD1D5615C3DEC200FF4145 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CDFindTest;
+			productName = CDFindTest;
+			productReference = 42CD1D5815C3DEC200FF4145 /* CDFindTest.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		42CD1D4F15C3DEC200FF4145 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0440;
+				ORGANIZATIONNAME = "Jose Zarzuela";
+			};
+			buildConfigurationList = 42CD1D5215C3DEC200FF4145 /* Build configuration list for PBXProject "CDFindTest" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 42CD1D4D15C3DEC200FF4145;
+			productRefGroup = 42CD1D5915C3DEC200FF4145 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				42CD1D5715C3DEC200FF4145 /* CDFindTest */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		42CD1D5615C3DEC200FF4145 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				42CD1D6915C3DEC200FF4145 /* InfoPlist.strings in Resources */,
+				42CD1D7215C3DEC200FF4145 /* MainStoryboard_iPhone.storyboard in Resources */,
+				42CD1D7515C3DEC200FF4145 /* MainStoryboard_iPad.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		42CD1D5415C3DEC200FF4145 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				42CD1D6B15C3DEC200FF4145 /* main.m in Sources */,
+				42CD1D6F15C3DEC200FF4145 /* AppDelegate.m in Sources */,
+				42CD1D7B15C3DEC200FF4145 /* MainViewController.m in Sources */,
+				42CD1D7E15C3DEC200FF4145 /* FlipsideViewController.m in Sources */,
+				42CD1DA415C4260900FF4145 /* CDFindTest.xcdatamodeld in Sources */,
+				42CD1DB015C426E200FF4145 /* MPoint.m in Sources */,
+				42CD1DB315C426E200FF4145 /* MGroup.m in Sources */,
+				42CD1DB615C426E200FF4145 /* MIntersection.m in Sources */,
+				42CD1DB915C4275A00FF4145 /* ModelUtils.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		42CD1D6715C3DEC200FF4145 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				42CD1D6815C3DEC200FF4145 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		42CD1D7015C3DEC200FF4145 /* MainStoryboard_iPhone.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				42CD1D7115C3DEC200FF4145 /* en */,
+			);
+			name = MainStoryboard_iPhone.storyboard;
+			sourceTree = "<group>";
+		};
+		42CD1D7315C3DEC200FF4145 /* MainStoryboard_iPad.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				42CD1D7415C3DEC200FF4145 /* en */,
+			);
+			name = MainStoryboard_iPad.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		42CD1D7F15C3DEC200FF4145 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		42CD1D8015C3DEC200FF4145 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		42CD1D8215C3DEC200FF4145 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CDFindTest/CDFindTest-Prefix.pch";
+				INFOPLIST_FILE = "CDFindTest/CDFindTest-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		42CD1D8315C3DEC200FF4145 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CDFindTest/CDFindTest-Prefix.pch";
+				INFOPLIST_FILE = "CDFindTest/CDFindTest-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		42CD1D5215C3DEC200FF4145 /* Build configuration list for PBXProject "CDFindTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				42CD1D7F15C3DEC200FF4145 /* Debug */,
+				42CD1D8015C3DEC200FF4145 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		42CD1D8115C3DEC200FF4145 /* Build configuration list for PBXNativeTarget "CDFindTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				42CD1D8215C3DEC200FF4145 /* Debug */,
+				42CD1D8315C3DEC200FF4145 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		42CD1DA215C4260900FF4145 /* CDFindTest.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				42CD1DA315C4260900FF4145 /* CDFindTest.xcdatamodel */,
+			);
+			currentVersion = 42CD1DA315C4260900FF4145 /* CDFindTest.xcdatamodel */;
+			name = CDFindTest.xcdatamodeld;
+			path = Model/CDFindTest.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 42CD1D4F15C3DEC200FF4145 /* Project object */;
+}

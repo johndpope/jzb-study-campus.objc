@@ -662,6 +662,9 @@ void AssertSelectorNilOrImplementedWithArguments(id obj, SEL sel, ...);
 + (void)setIsLoggingEnabled:(BOOL)flag;
 #endif // STRIP_GDATA_FETCH_LOGGING
 
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection;
+
 @end
 
 @interface GDataCookieStorage : NSObject {
