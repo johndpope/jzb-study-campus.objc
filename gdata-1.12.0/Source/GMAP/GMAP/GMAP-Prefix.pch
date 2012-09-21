@@ -1,7 +1,0 @@
-//
-// Prefix header for all source files of the 'GMAP' target in the 'GMAP' project
-//
-
-#ifdef __OBJC__
-    #import <Cocoa/Cocoa.h>
-#endif

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model name="" userDefinedModelVersionIdentifier="V1.0" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1487" systemVersion="11E53" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="MAssignment" representedClassName="MAssignment" parentEntity="MBase" syncable="YES">
+        <relationship name="group" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MGroup" inverseName="assignments" inverseEntity="MGroup" syncable="YES"/>
+        <relationship name="point" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MPoint" inverseName="assignments" inverseEntity="MPoint" syncable="YES"/>
+    </entity>
+    <entity name="MBase" representedClassName="MBase" syncable="YES">
+        <attribute name="etag" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="gID" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="markedAsDeleted" attributeType="Boolean" defaultValueString="NO" indexed="YES" syncable="YES"/>
+        <attribute name="modifiedSinceLastSync" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+    </entity>
+    <entity name="MBaseNamed" representedClassName="MBaseNamed" isAbstract="YES" parentEntity="MBase" syncable="YES">
+        <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" attributeType="String" indexed="YES" syncable="YES"/>
+    </entity>
+    <entity name="MGroup" representedClassName="MGroup" parentEntity="MBaseNamed" syncable="YES">
+        <attribute name="fixed" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="treePath" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="treeUID" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="assignments" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="MAssignment" inverseName="group" inverseEntity="MAssignment" syncable="YES"/>
+        <relationship name="parent" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MGroup" inverseName="subgroups" inverseEntity="MGroup" syncable="YES"/>
+        <relationship name="subgroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="MGroup" inverseName="parent" inverseEntity="MGroup" syncable="YES"/>
+    </entity>
+    <entity name="MPoint" representedClassName="MPoint" parentEntity="MBaseNamed" syncable="YES">
+        <relationship name="assignments" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="MAssignment" inverseName="point" inverseEntity="MAssignment" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="MAssignment" positionX="144" positionY="513" width="128" height="75"/>
+        <element name="MBase" positionX="144" positionY="144" width="128" height="105"/>
+        <element name="MBaseNamed" positionX="61" positionY="312" width="128" height="75"/>
+        <element name="MGroup" positionX="360" positionY="342" width="128" height="135"/>
+        <element name="MPoint" positionX="-153" positionY="378" width="128" height="60"/>
+    </elements>
+</model>
