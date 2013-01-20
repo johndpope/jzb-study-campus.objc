@@ -1,0 +1,488 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		424D150C15F4C2CB00A9E4B4 /* ErrorManagerService.m in Sources */ = {isa = PBXBuildFile; fileRef = 424D150B15F4C2CB00A9E4B4 /* ErrorManagerService.m */; };
+		429402C515EFC8FE001CC6E4 /* DataListWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 429402C315EFC8FE001CC6E4 /* DataListWindowController.m */; };
+		429402C615EFC8FE001CC6E4 /* DataListWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 429402C415EFC8FE001CC6E4 /* DataListWindowController.xib */; };
+		429402D115F0AD95001CC6E4 /* KK.m in Sources */ = {isa = PBXBuildFile; fileRef = 429402D015F0AD95001CC6E4 /* KK.m */; };
+		429402D515F0D0F9001CC6E4 /* GroupEditWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 429402D315F0D0F9001CC6E4 /* GroupEditWindowController.m */; };
+		429402D615F0D0F9001CC6E4 /* GroupEditWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 429402D415F0D0F9001CC6E4 /* GroupEditWindowController.xib */; };
+		429537DD15EE482300EDAED4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 429537DC15EE482300EDAED4 /* Cocoa.framework */; };
+		429537E715EE482300EDAED4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 429537E515EE482300EDAED4 /* InfoPlist.strings */; };
+		429537E915EE482300EDAED4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 429537E815EE482300EDAED4 /* main.m */; };
+		429537ED15EE482300EDAED4 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 429537EB15EE482300EDAED4 /* Credits.rtf */; };
+		429537F015EE482300EDAED4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 429537EF15EE482300EDAED4 /* AppDelegate.m */; };
+		429538B115EE578500EDAED4 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 429538AF15EE578500EDAED4 /* MainMenu.xib */; };
+		429538B415EE57B100EDAED4 /* MockUp.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538B315EE57B000EDAED4 /* MockUp.m */; };
+		429538D415EE5D8100EDAED4 /* MAssignment+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538CD15EE5D8100EDAED4 /* MAssignment+Extension.m */; };
+		429538D515EE5D8100EDAED4 /* MBase+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538CF15EE5D8100EDAED4 /* MBase+Extension.m */; };
+		429538D615EE5D8100EDAED4 /* MGroup+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538D115EE5D8100EDAED4 /* MGroup+Extension.m */; };
+		429538D715EE5D8100EDAED4 /* MPoint+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538D315EE5D8100EDAED4 /* MPoint+Extension.m */; };
+		429538DD15EF567800EDAED4 /* BaseCoreData.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538DA15EF567800EDAED4 /* BaseCoreData.m */; };
+		429538DE15EF567800EDAED4 /* ModelDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538DC15EF567800EDAED4 /* ModelDAO.m */; };
+		429538E715EF5D5A00EDAED4 /* MDataView.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538E615EF5D5A00EDAED4 /* MDataView.m */; };
+		429538EA15EF63CE00EDAED4 /* MBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538E915EF63CE00EDAED4 /* MBase.m */; };
+		429538ED15EF63D000EDAED4 /* MAssignment.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538EC15EF63D000EDAED4 /* MAssignment.m */; };
+		429538F015EF63D100EDAED4 /* MPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538EF15EF63D000EDAED4 /* MPoint.m */; };
+		429538F315EF63D100EDAED4 /* MGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538F215EF63D100EDAED4 /* MGroup.m */; };
+		429538F615EF63D100EDAED4 /* MBaseNamed.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538F515EF63D100EDAED4 /* MBaseNamed.m */; };
+		429538F915EF708400EDAED4 /* FixedData.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538F815EF708400EDAED4 /* FixedData.m */; };
+		429538FC15EF778500EDAED4 /* iTravelPOI.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 429538FA15EF778500EDAED4 /* iTravelPOI.xcdatamodeld */; };
+		42D193291602113600016C0C /* MyCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 42D193281602113500016C0C /* MyCellView.xib */; };
+		42D1932D1602117500016C0C /* MyCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D1932C1602117500016C0C /* MyCellView.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		424D150A15F4C2CB00A9E4B4 /* ErrorManagerService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ErrorManagerService.h; sourceTree = "<group>"; };
+		424D150B15F4C2CB00A9E4B4 /* ErrorManagerService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ErrorManagerService.m; sourceTree = "<group>"; };
+		429402C215EFC8FE001CC6E4 /* DataListWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataListWindowController.h; sourceTree = "<group>"; };
+		429402C315EFC8FE001CC6E4 /* DataListWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataListWindowController.m; sourceTree = "<group>"; };
+		429402C415EFC8FE001CC6E4 /* DataListWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DataListWindowController.xib; sourceTree = "<group>"; };
+		429402CF15F0AD95001CC6E4 /* KK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KK.h; sourceTree = "<group>"; };
+		429402D015F0AD95001CC6E4 /* KK.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KK.m; sourceTree = "<group>"; };
+		429402D215F0D0F9001CC6E4 /* GroupEditWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupEditWindowController.h; sourceTree = "<group>"; };
+		429402D315F0D0F9001CC6E4 /* GroupEditWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupEditWindowController.m; sourceTree = "<group>"; };
+		429402D415F0D0F9001CC6E4 /* GroupEditWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GroupEditWindowController.xib; sourceTree = "<group>"; };
+		429537D815EE482300EDAED4 /* iTravelPOI-Mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iTravelPOI-Mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		429537DC15EE482300EDAED4 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		429537DF15EE482300EDAED4 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		429537E015EE482300EDAED4 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		429537E115EE482300EDAED4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		429537E415EE482300EDAED4 /* iTravelPOI-Mac-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "iTravelPOI-Mac-Info.plist"; sourceTree = "<group>"; };
+		429537E615EE482300EDAED4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		429537E815EE482300EDAED4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		429537EA15EE482300EDAED4 /* iTravelPOI-Mac-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iTravelPOI-Mac-Prefix.pch"; sourceTree = "<group>"; };
+		429537EC15EE482300EDAED4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		429537EE15EE482300EDAED4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		429537EF15EE482300EDAED4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		429538B015EE578500EDAED4 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		429538B215EE57B000EDAED4 /* MockUp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockUp.h; sourceTree = "<group>"; };
+		429538B315EE57B000EDAED4 /* MockUp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockUp.m; sourceTree = "<group>"; };
+		429538CC15EE5D8100EDAED4 /* MAssignment+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MAssignment+Extension.h"; sourceTree = "<group>"; };
+		429538CD15EE5D8100EDAED4 /* MAssignment+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MAssignment+Extension.m"; sourceTree = "<group>"; };
+		429538CE15EE5D8100EDAED4 /* MBase+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MBase+Extension.h"; sourceTree = "<group>"; };
+		429538CF15EE5D8100EDAED4 /* MBase+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MBase+Extension.m"; sourceTree = "<group>"; };
+		429538D015EE5D8100EDAED4 /* MGroup+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MGroup+Extension.h"; sourceTree = "<group>"; };
+		429538D115EE5D8100EDAED4 /* MGroup+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MGroup+Extension.m"; sourceTree = "<group>"; };
+		429538D215EE5D8100EDAED4 /* MPoint+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPoint+Extension.h"; sourceTree = "<group>"; };
+		429538D315EE5D8100EDAED4 /* MPoint+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MPoint+Extension.m"; sourceTree = "<group>"; };
+		429538D815EE5DAD00EDAED4 /* Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Model.h; sourceTree = "<group>"; };
+		429538D915EF567800EDAED4 /* BaseCoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseCoreData.h; sourceTree = "<group>"; };
+		429538DA15EF567800EDAED4 /* BaseCoreData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseCoreData.m; sourceTree = "<group>"; };
+		429538DB15EF567800EDAED4 /* ModelDAO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelDAO.h; sourceTree = "<group>"; };
+		429538DC15EF567800EDAED4 /* ModelDAO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModelDAO.m; sourceTree = "<group>"; };
+		429538E515EF5D5A00EDAED4 /* MDataView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDataView.h; sourceTree = "<group>"; };
+		429538E615EF5D5A00EDAED4 /* MDataView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDataView.m; sourceTree = "<group>"; };
+		429538E815EF63CE00EDAED4 /* MBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBase.h; sourceTree = "<group>"; };
+		429538E915EF63CE00EDAED4 /* MBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBase.m; sourceTree = "<group>"; };
+		429538EB15EF63CF00EDAED4 /* MAssignment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAssignment.h; sourceTree = "<group>"; };
+		429538EC15EF63D000EDAED4 /* MAssignment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAssignment.m; sourceTree = "<group>"; };
+		429538EE15EF63D000EDAED4 /* MPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPoint.h; sourceTree = "<group>"; };
+		429538EF15EF63D000EDAED4 /* MPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPoint.m; sourceTree = "<group>"; };
+		429538F115EF63D100EDAED4 /* MGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGroup.h; sourceTree = "<group>"; };
+		429538F215EF63D100EDAED4 /* MGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGroup.m; sourceTree = "<group>"; };
+		429538F415EF63D100EDAED4 /* MBaseNamed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBaseNamed.h; sourceTree = "<group>"; };
+		429538F515EF63D100EDAED4 /* MBaseNamed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBaseNamed.m; sourceTree = "<group>"; };
+		429538F715EF708400EDAED4 /* FixedData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FixedData.h; sourceTree = "<group>"; };
+		429538F815EF708400EDAED4 /* FixedData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FixedData.m; sourceTree = "<group>"; };
+		429538FB15EF778500EDAED4 /* iTravelPOI.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = iTravelPOI.xcdatamodel; sourceTree = "<group>"; };
+		42D193281602113500016C0C /* MyCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyCellView.xib; sourceTree = "<group>"; };
+		42D1932B1602117500016C0C /* MyCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCellView.h; sourceTree = "<group>"; };
+		42D1932C1602117500016C0C /* MyCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCellView.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		429537D515EE482300EDAED4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				429537DD15EE482300EDAED4 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		429402C015EFC8A8001CC6E4 /* gui */ = {
+			isa = PBXGroup;
+			children = (
+				429402C215EFC8FE001CC6E4 /* DataListWindowController.h */,
+				429402C315EFC8FE001CC6E4 /* DataListWindowController.m */,
+				429402C415EFC8FE001CC6E4 /* DataListWindowController.xib */,
+				429402D215F0D0F9001CC6E4 /* GroupEditWindowController.h */,
+				429402D315F0D0F9001CC6E4 /* GroupEditWindowController.m */,
+				429402D415F0D0F9001CC6E4 /* GroupEditWindowController.xib */,
+				42D193281602113500016C0C /* MyCellView.xib */,
+				42D1932B1602117500016C0C /* MyCellView.h */,
+				42D1932C1602117500016C0C /* MyCellView.m */,
+			);
+			path = gui;
+			sourceTree = "<group>";
+		};
+		429537CD15EE482300EDAED4 = {
+			isa = PBXGroup;
+			children = (
+				429402CF15F0AD95001CC6E4 /* KK.h */,
+				429402D015F0AD95001CC6E4 /* KK.m */,
+				429538A615EE55B000EDAED4 /* Frwk */,
+				429537E215EE482300EDAED4 /* iTravelPOI-Mac */,
+				429537DB15EE482300EDAED4 /* Frameworks */,
+				429537D915EE482300EDAED4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		429537D915EE482300EDAED4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				429537D815EE482300EDAED4 /* iTravelPOI-Mac.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		429537DB15EE482300EDAED4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				429537DC15EE482300EDAED4 /* Cocoa.framework */,
+				429537DE15EE482300EDAED4 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		429537DE15EE482300EDAED4 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				429537DF15EE482300EDAED4 /* AppKit.framework */,
+				429537E015EE482300EDAED4 /* CoreData.framework */,
+				429537E115EE482300EDAED4 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		429537E215EE482300EDAED4 /* iTravelPOI-Mac */ = {
+			isa = PBXGroup;
+			children = (
+				429402C015EFC8A8001CC6E4 /* gui */,
+				429538B215EE57B000EDAED4 /* MockUp.h */,
+				429538B315EE57B000EDAED4 /* MockUp.m */,
+				429538AF15EE578500EDAED4 /* MainMenu.xib */,
+				429537EE15EE482300EDAED4 /* AppDelegate.h */,
+				429537EF15EE482300EDAED4 /* AppDelegate.m */,
+				429537E315EE482300EDAED4 /* Supporting Files */,
+			);
+			path = "iTravelPOI-Mac";
+			sourceTree = "<group>";
+		};
+		429537E315EE482300EDAED4 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				429537E415EE482300EDAED4 /* iTravelPOI-Mac-Info.plist */,
+				429537E515EE482300EDAED4 /* InfoPlist.strings */,
+				429537E815EE482300EDAED4 /* main.m */,
+				429537EA15EE482300EDAED4 /* iTravelPOI-Mac-Prefix.pch */,
+				429537EB15EE482300EDAED4 /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		429538A615EE55B000EDAED4 /* Frwk */ = {
+			isa = PBXGroup;
+			children = (
+				429538B915EE5BB700EDAED4 /* Model */,
+				429538B515EE583100EDAED4 /* Services */,
+			);
+			name = Frwk;
+			sourceTree = "<group>";
+		};
+		429538B515EE583100EDAED4 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				429538F715EF708400EDAED4 /* FixedData.h */,
+				429538F815EF708400EDAED4 /* FixedData.m */,
+				429538E515EF5D5A00EDAED4 /* MDataView.h */,
+				429538E615EF5D5A00EDAED4 /* MDataView.m */,
+				429538D915EF567800EDAED4 /* BaseCoreData.h */,
+				429538DA15EF567800EDAED4 /* BaseCoreData.m */,
+				429538DB15EF567800EDAED4 /* ModelDAO.h */,
+				429538DC15EF567800EDAED4 /* ModelDAO.m */,
+				424D150A15F4C2CB00A9E4B4 /* ErrorManagerService.h */,
+				424D150B15F4C2CB00A9E4B4 /* ErrorManagerService.m */,
+			);
+			name = Services;
+			path = "../iTravelPOI-FRWK/Services";
+			sourceTree = "<group>";
+		};
+		429538B915EE5BB700EDAED4 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				429538FA15EF778500EDAED4 /* iTravelPOI.xcdatamodeld */,
+				429538D815EE5DAD00EDAED4 /* Model.h */,
+				429538F415EF63D100EDAED4 /* MBaseNamed.h */,
+				429538F515EF63D100EDAED4 /* MBaseNamed.m */,
+				429538F115EF63D100EDAED4 /* MGroup.h */,
+				429538F215EF63D100EDAED4 /* MGroup.m */,
+				429538EE15EF63D000EDAED4 /* MPoint.h */,
+				429538EF15EF63D000EDAED4 /* MPoint.m */,
+				429538EB15EF63CF00EDAED4 /* MAssignment.h */,
+				429538EC15EF63D000EDAED4 /* MAssignment.m */,
+				429538E815EF63CE00EDAED4 /* MBase.h */,
+				429538E915EF63CE00EDAED4 /* MBase.m */,
+				429538CC15EE5D8100EDAED4 /* MAssignment+Extension.h */,
+				429538CD15EE5D8100EDAED4 /* MAssignment+Extension.m */,
+				429538CE15EE5D8100EDAED4 /* MBase+Extension.h */,
+				429538CF15EE5D8100EDAED4 /* MBase+Extension.m */,
+				429538D015EE5D8100EDAED4 /* MGroup+Extension.h */,
+				429538D115EE5D8100EDAED4 /* MGroup+Extension.m */,
+				429538D215EE5D8100EDAED4 /* MPoint+Extension.h */,
+				429538D315EE5D8100EDAED4 /* MPoint+Extension.m */,
+			);
+			name = Model;
+			path = "../iTravelPOI-FRWK/Model";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		429537D715EE482300EDAED4 /* iTravelPOI-Mac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 429537F915EE482300EDAED4 /* Build configuration list for PBXNativeTarget "iTravelPOI-Mac" */;
+			buildPhases = (
+				429537D415EE482300EDAED4 /* Sources */,
+				429537D515EE482300EDAED4 /* Frameworks */,
+				429537D615EE482300EDAED4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "iTravelPOI-Mac";
+			productName = "iTravelPOI-Mac";
+			productReference = 429537D815EE482300EDAED4 /* iTravelPOI-Mac.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		429537CF15EE482300EDAED4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0440;
+				ORGANIZATIONNAME = "Jose Zarzuela";
+			};
+			buildConfigurationList = 429537D215EE482300EDAED4 /* Build configuration list for PBXProject "iTravelPOI-Mac" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 429537CD15EE482300EDAED4;
+			productRefGroup = 429537D915EE482300EDAED4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				429537D715EE482300EDAED4 /* iTravelPOI-Mac */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		429537D615EE482300EDAED4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				429537E715EE482300EDAED4 /* InfoPlist.strings in Resources */,
+				429537ED15EE482300EDAED4 /* Credits.rtf in Resources */,
+				429538B115EE578500EDAED4 /* MainMenu.xib in Resources */,
+				429402C615EFC8FE001CC6E4 /* DataListWindowController.xib in Resources */,
+				429402D615F0D0F9001CC6E4 /* GroupEditWindowController.xib in Resources */,
+				42D193291602113600016C0C /* MyCellView.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		429537D415EE482300EDAED4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				429537E915EE482300EDAED4 /* main.m in Sources */,
+				429537F015EE482300EDAED4 /* AppDelegate.m in Sources */,
+				429538B415EE57B100EDAED4 /* MockUp.m in Sources */,
+				429538D415EE5D8100EDAED4 /* MAssignment+Extension.m in Sources */,
+				429538D515EE5D8100EDAED4 /* MBase+Extension.m in Sources */,
+				429538D615EE5D8100EDAED4 /* MGroup+Extension.m in Sources */,
+				429538D715EE5D8100EDAED4 /* MPoint+Extension.m in Sources */,
+				429538DD15EF567800EDAED4 /* BaseCoreData.m in Sources */,
+				429538DE15EF567800EDAED4 /* ModelDAO.m in Sources */,
+				429538E715EF5D5A00EDAED4 /* MDataView.m in Sources */,
+				429538EA15EF63CE00EDAED4 /* MBase.m in Sources */,
+				429538ED15EF63D000EDAED4 /* MAssignment.m in Sources */,
+				429538F015EF63D100EDAED4 /* MPoint.m in Sources */,
+				429538F315EF63D100EDAED4 /* MGroup.m in Sources */,
+				429538F615EF63D100EDAED4 /* MBaseNamed.m in Sources */,
+				429538F915EF708400EDAED4 /* FixedData.m in Sources */,
+				429538FC15EF778500EDAED4 /* iTravelPOI.xcdatamodeld in Sources */,
+				429402C515EFC8FE001CC6E4 /* DataListWindowController.m in Sources */,
+				429402D115F0AD95001CC6E4 /* KK.m in Sources */,
+				429402D515F0D0F9001CC6E4 /* GroupEditWindowController.m in Sources */,
+				424D150C15F4C2CB00A9E4B4 /* ErrorManagerService.m in Sources */,
+				42D1932D1602117500016C0C /* MyCellView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		429537E515EE482300EDAED4 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				429537E615EE482300EDAED4 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		429537EB15EE482300EDAED4 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				429537EC15EE482300EDAED4 /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		429538AF15EE578500EDAED4 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				429538B015EE578500EDAED4 /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		429537F715EE482300EDAED4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		429537F815EE482300EDAED4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		429537FA15EE482300EDAED4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../Library/Developer/Xcode/DerivedData/WKSP-iTravelPOI-Mac-dtnjruyovsglbzerzuyrcwsedowb/Build/Products/Debug\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iTravelPOI-Mac/iTravelPOI-Mac-Prefix.pch";
+				INFOPLIST_FILE = "iTravelPOI-Mac/iTravelPOI-Mac-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		429537FB15EE482300EDAED4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../Library/Developer/Xcode/DerivedData/WKSP-iTravelPOI-Mac-dtnjruyovsglbzerzuyrcwsedowb/Build/Products/Debug\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iTravelPOI-Mac/iTravelPOI-Mac-Prefix.pch";
+				INFOPLIST_FILE = "iTravelPOI-Mac/iTravelPOI-Mac-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		429537D215EE482300EDAED4 /* Build configuration list for PBXProject "iTravelPOI-Mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				429537F715EE482300EDAED4 /* Debug */,
+				429537F815EE482300EDAED4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		429537F915EE482300EDAED4 /* Build configuration list for PBXNativeTarget "iTravelPOI-Mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				429537FA15EE482300EDAED4 /* Debug */,
+				429537FB15EE482300EDAED4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		429538FA15EF778500EDAED4 /* iTravelPOI.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				429538FB15EF778500EDAED4 /* iTravelPOI.xcdatamodel */,
+			);
+			currentVersion = 429538FB15EF778500EDAED4 /* iTravelPOI.xcdatamodel */;
+			path = iTravelPOI.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 429537CF15EE482300EDAED4 /* Project object */;
+}

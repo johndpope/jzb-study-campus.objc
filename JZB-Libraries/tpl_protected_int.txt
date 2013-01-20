@@ -1,0 +1,44 @@
+#import <Foundation/Foundation.h>
+#import "__name__.h"
+
+
+
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark PROTECTED Enumeration & definitions
+//*********************************************************************************************************************
+#define MY_PROT_CONSTANT @"a constant"
+
+typedef enum {
+    P_SORT_ASCENDING = YES,
+    P_SORT_DESCENDING = NO
+} PROT_SORTING_ORDER;
+
+typedef NSString * (^TBlock_prot_blockDefinition)(NSArray *p1, NSError *error);
+
+
+
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark PROTECTED Interface definition
+//*********************************************************************************************************************
+@interface __name__(Protected)
+
+
+@property (nonatomic, retain) NSString *protectedPropety;
+
+//=====================================================================================================================
+#pragma mark -
+#pragma mark CLASS protected methods
+//---------------------------------------------------------------------------------------------------------------------
++ (void) protectedClassMethod;
+
+
+//=====================================================================================================================
+#pragma mark -
+#pragma mark INSTANCE protected methods
+//---------------------------------------------------------------------------------------------------------------------
+- (void) protectedMethod;
+
+
+@end

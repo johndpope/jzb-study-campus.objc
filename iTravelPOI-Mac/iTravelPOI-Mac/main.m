@@ -2,7 +2,7 @@
 //  main.m
 //  iTravelPOI-Mac
 //
-//  Created by Jose Zarzuela on 29/08/12.
+//  Created by Jose Zarzuela on 31/12/12.
 //  Copyright (c) 2012 Jose Zarzuela. All rights reserved.
 //
 

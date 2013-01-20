@@ -1,13 +1,15 @@
 //
+//  AppDelegate.h
 //  iTravelPOI-Mac
-//  iTravelPOI
 //
-//  Created by Jose Zarzuela on 29/07/12.
+//  Created by Jose Zarzuela on 31/12/12.
 //  Copyright (c) 2012 Jose Zarzuela. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
+
+@property (assign) IBOutlet NSWindow *window;
 
 @end

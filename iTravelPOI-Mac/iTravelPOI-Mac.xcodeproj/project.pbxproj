@@ -7,254 +7,503 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		424D150C15F4C2CB00A9E4B4 /* ErrorManagerService.m in Sources */ = {isa = PBXBuildFile; fileRef = 424D150B15F4C2CB00A9E4B4 /* ErrorManagerService.m */; };
-		429402C515EFC8FE001CC6E4 /* DataListWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 429402C315EFC8FE001CC6E4 /* DataListWindowController.m */; };
-		429402C615EFC8FE001CC6E4 /* DataListWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 429402C415EFC8FE001CC6E4 /* DataListWindowController.xib */; };
-		429402D115F0AD95001CC6E4 /* KK.m in Sources */ = {isa = PBXBuildFile; fileRef = 429402D015F0AD95001CC6E4 /* KK.m */; };
-		429402D515F0D0F9001CC6E4 /* GroupEditWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 429402D315F0D0F9001CC6E4 /* GroupEditWindowController.m */; };
-		429402D615F0D0F9001CC6E4 /* GroupEditWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 429402D415F0D0F9001CC6E4 /* GroupEditWindowController.xib */; };
-		429537DD15EE482300EDAED4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 429537DC15EE482300EDAED4 /* Cocoa.framework */; };
-		429537E715EE482300EDAED4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 429537E515EE482300EDAED4 /* InfoPlist.strings */; };
-		429537E915EE482300EDAED4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 429537E815EE482300EDAED4 /* main.m */; };
-		429537ED15EE482300EDAED4 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 429537EB15EE482300EDAED4 /* Credits.rtf */; };
-		429537F015EE482300EDAED4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 429537EF15EE482300EDAED4 /* AppDelegate.m */; };
-		429538B115EE578500EDAED4 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 429538AF15EE578500EDAED4 /* MainMenu.xib */; };
-		429538B415EE57B100EDAED4 /* MockUp.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538B315EE57B000EDAED4 /* MockUp.m */; };
-		429538D415EE5D8100EDAED4 /* MAssignment+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538CD15EE5D8100EDAED4 /* MAssignment+Extension.m */; };
-		429538D515EE5D8100EDAED4 /* MBase+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538CF15EE5D8100EDAED4 /* MBase+Extension.m */; };
-		429538D615EE5D8100EDAED4 /* MGroup+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538D115EE5D8100EDAED4 /* MGroup+Extension.m */; };
-		429538D715EE5D8100EDAED4 /* MPoint+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538D315EE5D8100EDAED4 /* MPoint+Extension.m */; };
-		429538DD15EF567800EDAED4 /* BaseCoreData.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538DA15EF567800EDAED4 /* BaseCoreData.m */; };
-		429538DE15EF567800EDAED4 /* ModelDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538DC15EF567800EDAED4 /* ModelDAO.m */; };
-		429538E715EF5D5A00EDAED4 /* MDataView.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538E615EF5D5A00EDAED4 /* MDataView.m */; };
-		429538EA15EF63CE00EDAED4 /* MBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538E915EF63CE00EDAED4 /* MBase.m */; };
-		429538ED15EF63D000EDAED4 /* MAssignment.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538EC15EF63D000EDAED4 /* MAssignment.m */; };
-		429538F015EF63D100EDAED4 /* MPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538EF15EF63D000EDAED4 /* MPoint.m */; };
-		429538F315EF63D100EDAED4 /* MGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538F215EF63D100EDAED4 /* MGroup.m */; };
-		429538F615EF63D100EDAED4 /* MBaseNamed.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538F515EF63D100EDAED4 /* MBaseNamed.m */; };
-		429538F915EF708400EDAED4 /* FixedData.m in Sources */ = {isa = PBXBuildFile; fileRef = 429538F815EF708400EDAED4 /* FixedData.m */; };
-		429538FC15EF778500EDAED4 /* iTravelPOI.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 429538FA15EF778500EDAED4 /* iTravelPOI.xcdatamodeld */; };
-		42D193291602113600016C0C /* MyCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 42D193281602113500016C0C /* MyCellView.xib */; };
-		42D1932D1602117500016C0C /* MyCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D1932C1602117500016C0C /* MyCellView.m */; };
+		4219160A1691A54A00185866 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 421916091691A54A00185866 /* Cocoa.framework */; };
+		421916141691A54A00185866 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 421916121691A54A00185866 /* InfoPlist.strings */; };
+		421916161691A54A00185866 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 421916151691A54A00185866 /* main.m */; };
+		4219161A1691A54A00185866 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 421916181691A54A00185866 /* Credits.rtf */; };
+		4219161D1691A54A00185866 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4219161C1691A54A00185866 /* AppDelegate.m */; };
+		421916201691A54A00185866 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4219161E1691A54A00185866 /* MainMenu.xib */; };
+		421916741691AC6300185866 /* iTravelPOI.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 421916671691AC6300185866 /* iTravelPOI.xcdatamodeld */; };
+		4219167B1691ADE100185866 /* BaseCoreData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4219167A1691ADE100185866 /* BaseCoreData.m */; };
+		4219167E1691AE1D00185866 /* ErrorManagerService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4219167D1691AE1D00185866 /* ErrorManagerService.m */; };
+		421916811691AF6B00185866 /* MockUp.m in Sources */ = {isa = PBXBuildFile; fileRef = 421916801691AF6B00185866 /* MockUp.m */; };
+		421CB04F16AAEBC7001F9B09 /* MCacheViewCount.m in Sources */ = {isa = PBXBuildFile; fileRef = 421CB04E16AAEBC7001F9B09 /* MCacheViewCount.m */; };
+		421CB05316AAEC60001F9B09 /* _MCacheViewCount.m in Sources */ = {isa = PBXBuildFile; fileRef = 421CB05216AAEC60001F9B09 /* _MCacheViewCount.m */; };
+		4223D0AF16A09C3C00AED134 /* _MPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 4223D0AE16A09C3C00AED134 /* _MPoint.m */; };
+		4223D0B316A09C4700AED134 /* MPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 4223D0B216A09C4700AED134 /* MPoint.m */; };
+		4223D27516A32B2300AED134 /* AppTesting.m in Sources */ = {isa = PBXBuildFile; fileRef = 4223D27416A32B2300AED134 /* AppTesting.m */; };
+		4223D28616A336CD00AED134 /* tpl_implementation.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4223D28316A336CD00AED134 /* tpl_implementation.txt */; };
+		4223D28716A336CD00AED134 /* tpl_interface.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4223D28416A336CD00AED134 /* tpl_interface.txt */; };
+		4223D28816A336CD00AED134 /* tpl_protected_int.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4223D28516A336CD00AED134 /* tpl_protected_int.txt */; };
+		4223D2A016A36A0B00AED134 /* properties.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4223D29F16A36A0B00AED134 /* properties.txt */; };
+		4223D2A616A446D700AED134 /* MapEditorPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4223D2A416A446D700AED134 /* MapEditorPanel.m */; };
+		4223D2A716A446D700AED134 /* MapEditorPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4223D2A516A446D700AED134 /* MapEditorPanel.xib */; };
+		4223D2BA16A4921600AED134 /* MyCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4223D2B816A4921600AED134 /* MyCellView.m */; };
+		4223D2BB16A4921600AED134 /* MyCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4223D2B916A4921600AED134 /* MyCellView.xib */; };
+		423BBF3316A8CC510010C2DD /* GMapIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 423BBF3116A8CC510010C2DD /* GMapIcon.m */; };
+		423BBF3416A8CC510010C2DD /* GMapIcons.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 423BBF3216A8CC510010C2DD /* GMapIcons.bundle */; };
+		4281590916A8A53D00471064 /* MCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4281590816A8A53D00471064 /* MCategory.m */; };
+		4281590D16A8A54B00471064 /* _MCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4281590C16A8A54B00471064 /* _MCategory.m */; };
+		4281591116A8A79700471064 /* PointEditorPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4281590F16A8A79700471064 /* PointEditorPanel.m */; };
+		4281591216A8A79700471064 /* PointEditorPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4281591016A8A79700471064 /* PointEditorPanel.xib */; };
+		42D3F50516A08EAF0067FC89 /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F4F616A08EAF0067FC89 /* DDAbstractDatabaseLogger.m */; };
+		42D3F50616A08EAF0067FC89 /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F4F816A08EAF0067FC89 /* DDASLLogger.m */; };
+		42D3F50716A08EAF0067FC89 /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F4FA16A08EAF0067FC89 /* DDFileLogger.m */; };
+		42D3F50816A08EAF0067FC89 /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F4FC16A08EAF0067FC89 /* DDLog.m */; };
+		42D3F50916A08EAF0067FC89 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F4FE16A08EAF0067FC89 /* DDTTYLogger.m */; };
+		42D3F50A16A08EAF0067FC89 /* ContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F50116A08EAF0067FC89 /* ContextFilterLogFormatter.m */; };
+		42D3F50B16A08EAF0067FC89 /* DispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F50316A08EAF0067FC89 /* DispatchQueueLogFormatter.m */; };
+		42D3F50C16A08EAF0067FC89 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 42D3F50416A08EAF0067FC89 /* README.txt */; };
+		42D3F52616A08EBC0067FC89 /* GMapDataFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F50F16A08EBC0067FC89 /* GMapDataFetcher.m */; };
+		42D3F52716A08EBC0067FC89 /* GMapService.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F51116A08EBC0067FC89 /* GMapService.m */; };
+		42D3F52816A08EBC0067FC89 /* GMapSyncService.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F51316A08EBC0067FC89 /* GMapSyncService.m */; };
+		42D3F52916A08EBC0067FC89 /* GMTBatchCmd.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F51816A08EBC0067FC89 /* GMTBatchCmd.m */; };
+		42D3F52A16A08EBC0067FC89 /* GMTCompTuple.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F51A16A08EBC0067FC89 /* GMTCompTuple.m */; };
+		42D3F52B16A08EBC0067FC89 /* GMTItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F51C16A08EBC0067FC89 /* GMTItem.m */; };
+		42D3F52C16A08EBC0067FC89 /* GMTMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F51E16A08EBC0067FC89 /* GMTMap.m */; };
+		42D3F52D16A08EBC0067FC89 /* GMTPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F52016A08EBC0067FC89 /* GMTPoint.m */; };
+		42D3F52E16A08EBC0067FC89 /* GM_SyncTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F52316A08EBC0067FC89 /* GM_SyncTest.m */; };
+		42D3F52F16A08EBC0067FC89 /* GM_Test.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F52516A08EBC0067FC89 /* GM_Test.m */; };
+		42D3F53516A098210067FC89 /* NSString+JavaStr.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F53216A098210067FC89 /* NSString+JavaStr.m */; };
+		42D3F53616A098210067FC89 /* SimpleXMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F53416A098210067FC89 /* SimpleXMLReader.m */; };
+		42D3F54516A0995C0067FC89 /* MBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F54016A0995C0067FC89 /* MBaseEntity.m */; };
+		42D3F54616A0995C0067FC89 /* MMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F54216A0995C0067FC89 /* MMap.m */; };
+		42D3F56516A09B2E0067FC89 /* _MBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F56016A09B2E0067FC89 /* _MBaseEntity.m */; };
+		42D3F56616A09B2E0067FC89 /* _MMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F56216A09B2E0067FC89 /* _MMap.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		424D150A15F4C2CB00A9E4B4 /* ErrorManagerService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ErrorManagerService.h; sourceTree = "<group>"; };
-		424D150B15F4C2CB00A9E4B4 /* ErrorManagerService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ErrorManagerService.m; sourceTree = "<group>"; };
-		429402C215EFC8FE001CC6E4 /* DataListWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataListWindowController.h; sourceTree = "<group>"; };
-		429402C315EFC8FE001CC6E4 /* DataListWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataListWindowController.m; sourceTree = "<group>"; };
-		429402C415EFC8FE001CC6E4 /* DataListWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DataListWindowController.xib; sourceTree = "<group>"; };
-		429402CF15F0AD95001CC6E4 /* KK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KK.h; sourceTree = "<group>"; };
-		429402D015F0AD95001CC6E4 /* KK.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KK.m; sourceTree = "<group>"; };
-		429402D215F0D0F9001CC6E4 /* GroupEditWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupEditWindowController.h; sourceTree = "<group>"; };
-		429402D315F0D0F9001CC6E4 /* GroupEditWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupEditWindowController.m; sourceTree = "<group>"; };
-		429402D415F0D0F9001CC6E4 /* GroupEditWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GroupEditWindowController.xib; sourceTree = "<group>"; };
-		429537D815EE482300EDAED4 /* iTravelPOI-Mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iTravelPOI-Mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		429537DC15EE482300EDAED4 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
-		429537DF15EE482300EDAED4 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
-		429537E015EE482300EDAED4 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		429537E115EE482300EDAED4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		429537E415EE482300EDAED4 /* iTravelPOI-Mac-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "iTravelPOI-Mac-Info.plist"; sourceTree = "<group>"; };
-		429537E615EE482300EDAED4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		429537E815EE482300EDAED4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		429537EA15EE482300EDAED4 /* iTravelPOI-Mac-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iTravelPOI-Mac-Prefix.pch"; sourceTree = "<group>"; };
-		429537EC15EE482300EDAED4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
-		429537EE15EE482300EDAED4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		429537EF15EE482300EDAED4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		429538B015EE578500EDAED4 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		429538B215EE57B000EDAED4 /* MockUp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockUp.h; sourceTree = "<group>"; };
-		429538B315EE57B000EDAED4 /* MockUp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockUp.m; sourceTree = "<group>"; };
-		429538CC15EE5D8100EDAED4 /* MAssignment+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MAssignment+Extension.h"; sourceTree = "<group>"; };
-		429538CD15EE5D8100EDAED4 /* MAssignment+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MAssignment+Extension.m"; sourceTree = "<group>"; };
-		429538CE15EE5D8100EDAED4 /* MBase+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MBase+Extension.h"; sourceTree = "<group>"; };
-		429538CF15EE5D8100EDAED4 /* MBase+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MBase+Extension.m"; sourceTree = "<group>"; };
-		429538D015EE5D8100EDAED4 /* MGroup+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MGroup+Extension.h"; sourceTree = "<group>"; };
-		429538D115EE5D8100EDAED4 /* MGroup+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MGroup+Extension.m"; sourceTree = "<group>"; };
-		429538D215EE5D8100EDAED4 /* MPoint+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPoint+Extension.h"; sourceTree = "<group>"; };
-		429538D315EE5D8100EDAED4 /* MPoint+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MPoint+Extension.m"; sourceTree = "<group>"; };
-		429538D815EE5DAD00EDAED4 /* Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Model.h; sourceTree = "<group>"; };
-		429538D915EF567800EDAED4 /* BaseCoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseCoreData.h; sourceTree = "<group>"; };
-		429538DA15EF567800EDAED4 /* BaseCoreData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseCoreData.m; sourceTree = "<group>"; };
-		429538DB15EF567800EDAED4 /* ModelDAO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelDAO.h; sourceTree = "<group>"; };
-		429538DC15EF567800EDAED4 /* ModelDAO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModelDAO.m; sourceTree = "<group>"; };
-		429538E515EF5D5A00EDAED4 /* MDataView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDataView.h; sourceTree = "<group>"; };
-		429538E615EF5D5A00EDAED4 /* MDataView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDataView.m; sourceTree = "<group>"; };
-		429538E815EF63CE00EDAED4 /* MBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBase.h; sourceTree = "<group>"; };
-		429538E915EF63CE00EDAED4 /* MBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBase.m; sourceTree = "<group>"; };
-		429538EB15EF63CF00EDAED4 /* MAssignment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAssignment.h; sourceTree = "<group>"; };
-		429538EC15EF63D000EDAED4 /* MAssignment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAssignment.m; sourceTree = "<group>"; };
-		429538EE15EF63D000EDAED4 /* MPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPoint.h; sourceTree = "<group>"; };
-		429538EF15EF63D000EDAED4 /* MPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPoint.m; sourceTree = "<group>"; };
-		429538F115EF63D100EDAED4 /* MGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGroup.h; sourceTree = "<group>"; };
-		429538F215EF63D100EDAED4 /* MGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGroup.m; sourceTree = "<group>"; };
-		429538F415EF63D100EDAED4 /* MBaseNamed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBaseNamed.h; sourceTree = "<group>"; };
-		429538F515EF63D100EDAED4 /* MBaseNamed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBaseNamed.m; sourceTree = "<group>"; };
-		429538F715EF708400EDAED4 /* FixedData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FixedData.h; sourceTree = "<group>"; };
-		429538F815EF708400EDAED4 /* FixedData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FixedData.m; sourceTree = "<group>"; };
-		429538FB15EF778500EDAED4 /* iTravelPOI.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = iTravelPOI.xcdatamodel; sourceTree = "<group>"; };
-		42D193281602113500016C0C /* MyCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyCellView.xib; sourceTree = "<group>"; };
-		42D1932B1602117500016C0C /* MyCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCellView.h; sourceTree = "<group>"; };
-		42D1932C1602117500016C0C /* MyCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCellView.m; sourceTree = "<group>"; };
+		421916051691A54A00185866 /* iTravelPOI-Mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iTravelPOI-Mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		421916091691A54A00185866 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		4219160C1691A54A00185866 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		4219160D1691A54A00185866 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		4219160E1691A54A00185866 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		421916111691A54A00185866 /* iTravelPOI-Mac-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "iTravelPOI-Mac-Info.plist"; sourceTree = "<group>"; };
+		421916131691A54A00185866 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		421916151691A54A00185866 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		421916171691A54A00185866 /* iTravelPOI-Mac-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iTravelPOI-Mac-Prefix.pch"; sourceTree = "<group>"; };
+		421916191691A54A00185866 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		4219161B1691A54A00185866 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		4219161C1691A54A00185866 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		4219161F1691A54A00185866 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		421916681691AC6300185866 /* iTravelPOI.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = iTravelPOI.xcdatamodel; sourceTree = "<group>"; };
+		421916791691ADE100185866 /* BaseCoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseCoreData.h; sourceTree = "<group>"; };
+		4219167A1691ADE100185866 /* BaseCoreData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseCoreData.m; sourceTree = "<group>"; };
+		4219167C1691AE1D00185866 /* ErrorManagerService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ErrorManagerService.h; sourceTree = "<group>"; };
+		4219167D1691AE1D00185866 /* ErrorManagerService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ErrorManagerService.m; sourceTree = "<group>"; };
+		4219167F1691AF6B00185866 /* MockUp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockUp.h; sourceTree = "<group>"; };
+		421916801691AF6B00185866 /* MockUp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockUp.m; sourceTree = "<group>"; };
+		421CB04E16AAEBC7001F9B09 /* MCacheViewCount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCacheViewCount.m; sourceTree = "<group>"; };
+		421CB05116AAEC60001F9B09 /* _MCacheViewCount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MCacheViewCount.h; sourceTree = "<group>"; };
+		421CB05216AAEC60001F9B09 /* _MCacheViewCount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MCacheViewCount.m; sourceTree = "<group>"; };
+		421CB05416AC6E23001F9B09 /* PCachingViewCount.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PCachingViewCount.h; sourceTree = "<group>"; };
+		421CB05E16AC7F10001F9B09 /* pp-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "pp-Info.plist"; sourceTree = "<group>"; };
+		421CB06016AC7F10001F9B09 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		421CB06216AC7F10001F9B09 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		421CB06416AC7F10001F9B09 /* pp-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "pp-Prefix.pch"; sourceTree = "<group>"; };
+		421CB06616AC7F10001F9B09 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		421CB06816AC7F10001F9B09 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		421CB06916AC7F10001F9B09 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		421CB06C16AC7F11001F9B09 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		421CB06F16AC7F11001F9B09 /* pp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = pp.xcdatamodel; sourceTree = "<group>"; };
+		4223D0AD16A09C3C00AED134 /* _MPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MPoint.h; sourceTree = "<group>"; };
+		4223D0AE16A09C3C00AED134 /* _MPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MPoint.m; sourceTree = "<group>"; };
+		4223D0B116A09C4700AED134 /* MPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPoint.h; sourceTree = "<group>"; };
+		4223D0B216A09C4700AED134 /* MPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPoint.m; sourceTree = "<group>"; };
+		4223D0B416A09E7100AED134 /* Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Model.h; sourceTree = "<group>"; };
+		4223D27316A32B2300AED134 /* AppTesting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppTesting.h; path = test/AppTesting.h; sourceTree = "<group>"; };
+		4223D27416A32B2300AED134 /* AppTesting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppTesting.m; path = test/AppTesting.m; sourceTree = "<group>"; };
+		4223D28316A336CD00AED134 /* tpl_implementation.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = tpl_implementation.txt; path = "../JZB-Libraries/tpl_implementation.txt"; sourceTree = "<group>"; };
+		4223D28416A336CD00AED134 /* tpl_interface.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = tpl_interface.txt; path = "../JZB-Libraries/tpl_interface.txt"; sourceTree = "<group>"; };
+		4223D28516A336CD00AED134 /* tpl_protected_int.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = tpl_protected_int.txt; path = "../JZB-Libraries/tpl_protected_int.txt"; sourceTree = "<group>"; };
+		4223D29F16A36A0B00AED134 /* properties.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = properties.txt; sourceTree = "<group>"; };
+		4223D2A316A446D700AED134 /* MapEditorPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapEditorPanel.h; sourceTree = "<group>"; };
+		4223D2A416A446D700AED134 /* MapEditorPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapEditorPanel.m; sourceTree = "<group>"; };
+		4223D2A516A446D700AED134 /* MapEditorPanel.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MapEditorPanel.xib; sourceTree = "<group>"; };
+		4223D2B716A4921600AED134 /* MyCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCellView.h; sourceTree = "<group>"; };
+		4223D2B816A4921600AED134 /* MyCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCellView.m; sourceTree = "<group>"; };
+		4223D2B916A4921600AED134 /* MyCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyCellView.xib; sourceTree = "<group>"; };
+		423BBF3016A8CC510010C2DD /* GMapIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMapIcon.h; sourceTree = "<group>"; };
+		423BBF3116A8CC510010C2DD /* GMapIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapIcon.m; sourceTree = "<group>"; };
+		423BBF3216A8CC510010C2DD /* GMapIcons.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = GMapIcons.bundle; sourceTree = "<group>"; };
+		4281590716A8A53C00471064 /* MCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCategory.h; sourceTree = "<group>"; };
+		4281590816A8A53D00471064 /* MCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCategory.m; sourceTree = "<group>"; };
+		4281590B16A8A54B00471064 /* _MCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MCategory.h; sourceTree = "<group>"; };
+		4281590C16A8A54B00471064 /* _MCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MCategory.m; sourceTree = "<group>"; };
+		4281590E16A8A79700471064 /* PointEditorPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointEditorPanel.h; sourceTree = "<group>"; };
+		4281590F16A8A79700471064 /* PointEditorPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointEditorPanel.m; sourceTree = "<group>"; };
+		4281591016A8A79700471064 /* PointEditorPanel.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PointEditorPanel.xib; sourceTree = "<group>"; };
+		42D3F4F516A08EAF0067FC89 /* DDAbstractDatabaseLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDAbstractDatabaseLogger.h; sourceTree = "<group>"; };
+		42D3F4F616A08EAF0067FC89 /* DDAbstractDatabaseLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDAbstractDatabaseLogger.m; sourceTree = "<group>"; };
+		42D3F4F716A08EAF0067FC89 /* DDASLLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDASLLogger.h; sourceTree = "<group>"; };
+		42D3F4F816A08EAF0067FC89 /* DDASLLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDASLLogger.m; sourceTree = "<group>"; };
+		42D3F4F916A08EAF0067FC89 /* DDFileLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDFileLogger.h; sourceTree = "<group>"; };
+		42D3F4FA16A08EAF0067FC89 /* DDFileLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDFileLogger.m; sourceTree = "<group>"; };
+		42D3F4FB16A08EAF0067FC89 /* DDLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDLog.h; sourceTree = "<group>"; };
+		42D3F4FC16A08EAF0067FC89 /* DDLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDLog.m; sourceTree = "<group>"; };
+		42D3F4FD16A08EAF0067FC89 /* DDTTYLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTTYLogger.h; sourceTree = "<group>"; };
+		42D3F4FE16A08EAF0067FC89 /* DDTTYLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDTTYLogger.m; sourceTree = "<group>"; };
+		42D3F50016A08EAF0067FC89 /* ContextFilterLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContextFilterLogFormatter.h; sourceTree = "<group>"; };
+		42D3F50116A08EAF0067FC89 /* ContextFilterLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContextFilterLogFormatter.m; sourceTree = "<group>"; };
+		42D3F50216A08EAF0067FC89 /* DispatchQueueLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DispatchQueueLogFormatter.h; sourceTree = "<group>"; };
+		42D3F50316A08EAF0067FC89 /* DispatchQueueLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DispatchQueueLogFormatter.m; sourceTree = "<group>"; };
+		42D3F50416A08EAF0067FC89 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		42D3F50E16A08EBC0067FC89 /* GMapDataFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMapDataFetcher.h; sourceTree = "<group>"; };
+		42D3F50F16A08EBC0067FC89 /* GMapDataFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapDataFetcher.m; sourceTree = "<group>"; };
+		42D3F51016A08EBC0067FC89 /* GMapService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMapService.h; sourceTree = "<group>"; };
+		42D3F51116A08EBC0067FC89 /* GMapService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapService.m; sourceTree = "<group>"; };
+		42D3F51216A08EBC0067FC89 /* GMapSyncService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMapSyncService.h; sourceTree = "<group>"; };
+		42D3F51316A08EBC0067FC89 /* GMapSyncService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapSyncService.m; sourceTree = "<group>"; };
+		42D3F51416A08EBC0067FC89 /* GMPComparable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMPComparable.h; sourceTree = "<group>"; };
+		42D3F51516A08EBC0067FC89 /* GMPItemSubclassing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMPItemSubclassing.h; sourceTree = "<group>"; };
+		42D3F51616A08EBC0067FC89 /* GMPSyncDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMPSyncDelegate.h; sourceTree = "<group>"; };
+		42D3F51716A08EBC0067FC89 /* GMTBatchCmd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMTBatchCmd.h; sourceTree = "<group>"; };
+		42D3F51816A08EBC0067FC89 /* GMTBatchCmd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMTBatchCmd.m; sourceTree = "<group>"; };
+		42D3F51916A08EBC0067FC89 /* GMTCompTuple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMTCompTuple.h; sourceTree = "<group>"; };
+		42D3F51A16A08EBC0067FC89 /* GMTCompTuple.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMTCompTuple.m; sourceTree = "<group>"; };
+		42D3F51B16A08EBC0067FC89 /* GMTItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMTItem.h; sourceTree = "<group>"; };
+		42D3F51C16A08EBC0067FC89 /* GMTItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMTItem.m; sourceTree = "<group>"; };
+		42D3F51D16A08EBC0067FC89 /* GMTMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMTMap.h; sourceTree = "<group>"; };
+		42D3F51E16A08EBC0067FC89 /* GMTMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMTMap.m; sourceTree = "<group>"; };
+		42D3F51F16A08EBC0067FC89 /* GMTPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMTPoint.h; sourceTree = "<group>"; };
+		42D3F52016A08EBC0067FC89 /* GMTPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMTPoint.m; sourceTree = "<group>"; };
+		42D3F52216A08EBC0067FC89 /* GM_SyncTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GM_SyncTest.h; sourceTree = "<group>"; };
+		42D3F52316A08EBC0067FC89 /* GM_SyncTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GM_SyncTest.m; sourceTree = "<group>"; };
+		42D3F52416A08EBC0067FC89 /* GM_Test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GM_Test.h; sourceTree = "<group>"; };
+		42D3F52516A08EBC0067FC89 /* GM_Test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GM_Test.m; sourceTree = "<group>"; };
+		42D3F53116A098210067FC89 /* NSString+JavaStr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+JavaStr.h"; sourceTree = "<group>"; };
+		42D3F53216A098210067FC89 /* NSString+JavaStr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+JavaStr.m"; sourceTree = "<group>"; };
+		42D3F53316A098210067FC89 /* SimpleXMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleXMLReader.h; sourceTree = "<group>"; };
+		42D3F53416A098210067FC89 /* SimpleXMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleXMLReader.m; sourceTree = "<group>"; };
+		42D3F53F16A0995C0067FC89 /* MBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBaseEntity.h; sourceTree = "<group>"; };
+		42D3F54016A0995C0067FC89 /* MBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBaseEntity.m; sourceTree = "<group>"; };
+		42D3F54116A0995C0067FC89 /* MMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMap.h; sourceTree = "<group>"; };
+		42D3F54216A0995C0067FC89 /* MMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMap.m; sourceTree = "<group>"; };
+		42D3F55F16A09B2E0067FC89 /* _MBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MBaseEntity.h; sourceTree = "<group>"; };
+		42D3F56016A09B2E0067FC89 /* _MBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MBaseEntity.m; sourceTree = "<group>"; };
+		42D3F56116A09B2E0067FC89 /* _MMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MMap.h; sourceTree = "<group>"; };
+		42D3F56216A09B2E0067FC89 /* _MMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MMap.m; sourceTree = "<group>"; };
+		42FC6FCC16AAEB57008AE86A /* MCacheViewCount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCacheViewCount.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		429537D515EE482300EDAED4 /* Frameworks */ = {
+		421916021691A54A00185866 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				429537DD15EE482300EDAED4 /* Cocoa.framework in Frameworks */,
+				4219160A1691A54A00185866 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		429402C015EFC8A8001CC6E4 /* gui */ = {
+		421915FA1691A54A00185866 = {
 			isa = PBXGroup;
 			children = (
-				429402C215EFC8FE001CC6E4 /* DataListWindowController.h */,
-				429402C315EFC8FE001CC6E4 /* DataListWindowController.m */,
-				429402C415EFC8FE001CC6E4 /* DataListWindowController.xib */,
-				429402D215F0D0F9001CC6E4 /* GroupEditWindowController.h */,
-				429402D315F0D0F9001CC6E4 /* GroupEditWindowController.m */,
-				429402D415F0D0F9001CC6E4 /* GroupEditWindowController.xib */,
-				42D193281602113500016C0C /* MyCellView.xib */,
-				42D1932B1602117500016C0C /* MyCellView.h */,
-				42D1932C1602117500016C0C /* MyCellView.m */,
-			);
-			path = gui;
-			sourceTree = "<group>";
-		};
-		429537CD15EE482300EDAED4 = {
-			isa = PBXGroup;
-			children = (
-				429402CF15F0AD95001CC6E4 /* KK.h */,
-				429402D015F0AD95001CC6E4 /* KK.m */,
-				429538A615EE55B000EDAED4 /* Frwk */,
-				429537E215EE482300EDAED4 /* iTravelPOI-Mac */,
-				429537DB15EE482300EDAED4 /* Frameworks */,
-				429537D915EE482300EDAED4 /* Products */,
+				42D3F4F316A08E9F0067FC89 /* JZB-Utils */,
+				4219165E1691AC6300185866 /* iTravelPOI-Common */,
+				4219160F1691A54A00185866 /* iTravelPOI-Mac */,
+				421CB05C16AC7F10001F9B09 /* pp */,
+				421916081691A54A00185866 /* Frameworks */,
+				421916061691A54A00185866 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		429537D915EE482300EDAED4 /* Products */ = {
+		421916061691A54A00185866 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				429537D815EE482300EDAED4 /* iTravelPOI-Mac.app */,
+				421916051691A54A00185866 /* iTravelPOI-Mac.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		429537DB15EE482300EDAED4 /* Frameworks */ = {
+		421916081691A54A00185866 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				429537DC15EE482300EDAED4 /* Cocoa.framework */,
-				429537DE15EE482300EDAED4 /* Other Frameworks */,
+				421916091691A54A00185866 /* Cocoa.framework */,
+				4219160B1691A54A00185866 /* Other Frameworks */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		429537DE15EE482300EDAED4 /* Other Frameworks */ = {
+		4219160B1691A54A00185866 /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				429537DF15EE482300EDAED4 /* AppKit.framework */,
-				429537E015EE482300EDAED4 /* CoreData.framework */,
-				429537E115EE482300EDAED4 /* Foundation.framework */,
+				4219160C1691A54A00185866 /* AppKit.framework */,
+				4219160D1691A54A00185866 /* CoreData.framework */,
+				4219160E1691A54A00185866 /* Foundation.framework */,
 			);
 			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
-		429537E215EE482300EDAED4 /* iTravelPOI-Mac */ = {
+		4219160F1691A54A00185866 /* iTravelPOI-Mac */ = {
 			isa = PBXGroup;
 			children = (
-				429402C015EFC8A8001CC6E4 /* gui */,
-				429538B215EE57B000EDAED4 /* MockUp.h */,
-				429538B315EE57B000EDAED4 /* MockUp.m */,
-				429538AF15EE578500EDAED4 /* MainMenu.xib */,
-				429537EE15EE482300EDAED4 /* AppDelegate.h */,
-				429537EF15EE482300EDAED4 /* AppDelegate.m */,
-				429537E315EE482300EDAED4 /* Supporting Files */,
+				4223D2A116A446D700AED134 /* App GUI */,
+				4219161B1691A54A00185866 /* AppDelegate.h */,
+				4219161C1691A54A00185866 /* AppDelegate.m */,
+				4219161E1691A54A00185866 /* MainMenu.xib */,
+				4223D27116A32ACF00AED134 /* test */,
+				421916101691A54A00185866 /* Supporting Files */,
 			);
 			path = "iTravelPOI-Mac";
 			sourceTree = "<group>";
 		};
-		429537E315EE482300EDAED4 /* Supporting Files */ = {
+		421916101691A54A00185866 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				429537E415EE482300EDAED4 /* iTravelPOI-Mac-Info.plist */,
-				429537E515EE482300EDAED4 /* InfoPlist.strings */,
-				429537E815EE482300EDAED4 /* main.m */,
-				429537EA15EE482300EDAED4 /* iTravelPOI-Mac-Prefix.pch */,
-				429537EB15EE482300EDAED4 /* Credits.rtf */,
+				421916111691A54A00185866 /* iTravelPOI-Mac-Info.plist */,
+				421916121691A54A00185866 /* InfoPlist.strings */,
+				421916151691A54A00185866 /* main.m */,
+				421916171691A54A00185866 /* iTravelPOI-Mac-Prefix.pch */,
+				421916181691A54A00185866 /* Credits.rtf */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		429538A615EE55B000EDAED4 /* Frwk */ = {
+		4219165E1691AC6300185866 /* iTravelPOI-Common */ = {
 			isa = PBXGroup;
 			children = (
-				429538B915EE5BB700EDAED4 /* Model */,
-				429538B515EE583100EDAED4 /* Services */,
+				423BBF2F16A8CC510010C2DD /* Icons */,
+				4219165F1691AC6300185866 /* Model */,
+				421916701691AC6300185866 /* Services */,
 			);
-			name = Frwk;
+			name = "iTravelPOI-Common";
+			path = "../iTravelPOI-Common";
 			sourceTree = "<group>";
 		};
-		429538B515EE583100EDAED4 /* Services */ = {
+		4219165F1691AC6300185866 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				429538F715EF708400EDAED4 /* FixedData.h */,
-				429538F815EF708400EDAED4 /* FixedData.m */,
-				429538E515EF5D5A00EDAED4 /* MDataView.h */,
-				429538E615EF5D5A00EDAED4 /* MDataView.m */,
-				429538D915EF567800EDAED4 /* BaseCoreData.h */,
-				429538DA15EF567800EDAED4 /* BaseCoreData.m */,
-				429538DB15EF567800EDAED4 /* ModelDAO.h */,
-				429538DC15EF567800EDAED4 /* ModelDAO.m */,
-				424D150A15F4C2CB00A9E4B4 /* ErrorManagerService.h */,
-				424D150B15F4C2CB00A9E4B4 /* ErrorManagerService.m */,
+				42D3F55E16A09B2E0067FC89 /* Machine */,
+				421916601691AC6300185866 /* Human */,
+				421916781691AC9700185866 /* Test */,
+				421916671691AC6300185866 /* iTravelPOI.xcdatamodeld */,
 			);
-			name = Services;
-			path = "../iTravelPOI-FRWK/Services";
+			path = Model;
 			sourceTree = "<group>";
 		};
-		429538B915EE5BB700EDAED4 /* Model */ = {
+		421916601691AC6300185866 /* Human */ = {
 			isa = PBXGroup;
 			children = (
-				429538FA15EF778500EDAED4 /* iTravelPOI.xcdatamodeld */,
-				429538D815EE5DAD00EDAED4 /* Model.h */,
-				429538F415EF63D100EDAED4 /* MBaseNamed.h */,
-				429538F515EF63D100EDAED4 /* MBaseNamed.m */,
-				429538F115EF63D100EDAED4 /* MGroup.h */,
-				429538F215EF63D100EDAED4 /* MGroup.m */,
-				429538EE15EF63D000EDAED4 /* MPoint.h */,
-				429538EF15EF63D000EDAED4 /* MPoint.m */,
-				429538EB15EF63CF00EDAED4 /* MAssignment.h */,
-				429538EC15EF63D000EDAED4 /* MAssignment.m */,
-				429538E815EF63CE00EDAED4 /* MBase.h */,
-				429538E915EF63CE00EDAED4 /* MBase.m */,
-				429538CC15EE5D8100EDAED4 /* MAssignment+Extension.h */,
-				429538CD15EE5D8100EDAED4 /* MAssignment+Extension.m */,
-				429538CE15EE5D8100EDAED4 /* MBase+Extension.h */,
-				429538CF15EE5D8100EDAED4 /* MBase+Extension.m */,
-				429538D015EE5D8100EDAED4 /* MGroup+Extension.h */,
-				429538D115EE5D8100EDAED4 /* MGroup+Extension.m */,
-				429538D215EE5D8100EDAED4 /* MPoint+Extension.h */,
-				429538D315EE5D8100EDAED4 /* MPoint+Extension.m */,
+				421CB04E16AAEBC7001F9B09 /* MCacheViewCount.m */,
+				42FC6FCC16AAEB57008AE86A /* MCacheViewCount.h */,
+				4281590716A8A53C00471064 /* MCategory.h */,
+				4281590816A8A53D00471064 /* MCategory.m */,
+				4223D0B416A09E7100AED134 /* Model.h */,
+				4223D0B116A09C4700AED134 /* MPoint.h */,
+				4223D0B216A09C4700AED134 /* MPoint.m */,
+				42D3F53F16A0995C0067FC89 /* MBaseEntity.h */,
+				42D3F54016A0995C0067FC89 /* MBaseEntity.m */,
+				42D3F54116A0995C0067FC89 /* MMap.h */,
+				42D3F54216A0995C0067FC89 /* MMap.m */,
+				4223D29F16A36A0B00AED134 /* properties.txt */,
+				421CB05416AC6E23001F9B09 /* PCachingViewCount.h */,
 			);
-			name = Model;
-			path = "../iTravelPOI-FRWK/Model";
+			path = Human;
+			sourceTree = "<group>";
+		};
+		421916701691AC6300185866 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				4219167C1691AE1D00185866 /* ErrorManagerService.h */,
+				4219167D1691AE1D00185866 /* ErrorManagerService.m */,
+				421916791691ADE100185866 /* BaseCoreData.h */,
+				4219167A1691ADE100185866 /* BaseCoreData.m */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		421916781691AC9700185866 /* Test */ = {
+			isa = PBXGroup;
+			children = (
+				4219167F1691AF6B00185866 /* MockUp.h */,
+				421916801691AF6B00185866 /* MockUp.m */,
+			);
+			path = Test;
+			sourceTree = "<group>";
+		};
+		421CB05C16AC7F10001F9B09 /* pp */ = {
+			isa = PBXGroup;
+			children = (
+				421CB06816AC7F10001F9B09 /* AppDelegate.h */,
+				421CB06916AC7F10001F9B09 /* AppDelegate.m */,
+				421CB06B16AC7F11001F9B09 /* MainMenu.xib */,
+				421CB06E16AC7F11001F9B09 /* pp.xcdatamodeld */,
+				421CB05D16AC7F10001F9B09 /* Supporting Files */,
+			);
+			path = pp;
+			sourceTree = "<group>";
+		};
+		421CB05D16AC7F10001F9B09 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				421CB05E16AC7F10001F9B09 /* pp-Info.plist */,
+				421CB05F16AC7F10001F9B09 /* InfoPlist.strings */,
+				421CB06216AC7F10001F9B09 /* main.m */,
+				421CB06416AC7F10001F9B09 /* pp-Prefix.pch */,
+				421CB06516AC7F10001F9B09 /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4223D27116A32ACF00AED134 /* test */ = {
+			isa = PBXGroup;
+			children = (
+				4223D27316A32B2300AED134 /* AppTesting.h */,
+				4223D27416A32B2300AED134 /* AppTesting.m */,
+			);
+			name = test;
+			sourceTree = "<group>";
+		};
+		4223D2A116A446D700AED134 /* App GUI */ = {
+			isa = PBXGroup;
+			children = (
+				4223D2A216A446D700AED134 /* Editors */,
+				4223D2B716A4921600AED134 /* MyCellView.h */,
+				4223D2B816A4921600AED134 /* MyCellView.m */,
+				4223D2B916A4921600AED134 /* MyCellView.xib */,
+			);
+			path = "App GUI";
+			sourceTree = "<group>";
+		};
+		4223D2A216A446D700AED134 /* Editors */ = {
+			isa = PBXGroup;
+			children = (
+				4281590E16A8A79700471064 /* PointEditorPanel.h */,
+				4281590F16A8A79700471064 /* PointEditorPanel.m */,
+				4281591016A8A79700471064 /* PointEditorPanel.xib */,
+				4223D2A316A446D700AED134 /* MapEditorPanel.h */,
+				4223D2A416A446D700AED134 /* MapEditorPanel.m */,
+				4223D2A516A446D700AED134 /* MapEditorPanel.xib */,
+			);
+			path = Editors;
+			sourceTree = "<group>";
+		};
+		423BBF2F16A8CC510010C2DD /* Icons */ = {
+			isa = PBXGroup;
+			children = (
+				423BBF3016A8CC510010C2DD /* GMapIcon.h */,
+				423BBF3116A8CC510010C2DD /* GMapIcon.m */,
+				423BBF3216A8CC510010C2DD /* GMapIcons.bundle */,
+			);
+			path = Icons;
+			sourceTree = "<group>";
+		};
+		42D3F4F316A08E9F0067FC89 /* JZB-Utils */ = {
+			isa = PBXGroup;
+			children = (
+				4223D28316A336CD00AED134 /* tpl_implementation.txt */,
+				4223D28416A336CD00AED134 /* tpl_interface.txt */,
+				4223D28516A336CD00AED134 /* tpl_protected_int.txt */,
+				42D3F53016A098210067FC89 /* Utils */,
+				42D3F50D16A08EBC0067FC89 /* GMapService */,
+				42D3F4F416A08EAF0067FC89 /* Lumberjack */,
+			);
+			name = "JZB-Utils";
+			sourceTree = "<group>";
+		};
+		42D3F4F416A08EAF0067FC89 /* Lumberjack */ = {
+			isa = PBXGroup;
+			children = (
+				42D3F4F516A08EAF0067FC89 /* DDAbstractDatabaseLogger.h */,
+				42D3F4F616A08EAF0067FC89 /* DDAbstractDatabaseLogger.m */,
+				42D3F4F716A08EAF0067FC89 /* DDASLLogger.h */,
+				42D3F4F816A08EAF0067FC89 /* DDASLLogger.m */,
+				42D3F4F916A08EAF0067FC89 /* DDFileLogger.h */,
+				42D3F4FA16A08EAF0067FC89 /* DDFileLogger.m */,
+				42D3F4FB16A08EAF0067FC89 /* DDLog.h */,
+				42D3F4FC16A08EAF0067FC89 /* DDLog.m */,
+				42D3F4FD16A08EAF0067FC89 /* DDTTYLogger.h */,
+				42D3F4FE16A08EAF0067FC89 /* DDTTYLogger.m */,
+				42D3F4FF16A08EAF0067FC89 /* Extensions */,
+			);
+			name = Lumberjack;
+			path = "../JZB-Libraries/Lumberjack";
+			sourceTree = "<group>";
+		};
+		42D3F4FF16A08EAF0067FC89 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				42D3F50016A08EAF0067FC89 /* ContextFilterLogFormatter.h */,
+				42D3F50116A08EAF0067FC89 /* ContextFilterLogFormatter.m */,
+				42D3F50216A08EAF0067FC89 /* DispatchQueueLogFormatter.h */,
+				42D3F50316A08EAF0067FC89 /* DispatchQueueLogFormatter.m */,
+				42D3F50416A08EAF0067FC89 /* README.txt */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		42D3F50D16A08EBC0067FC89 /* GMapService */ = {
+			isa = PBXGroup;
+			children = (
+				42D3F50E16A08EBC0067FC89 /* GMapDataFetcher.h */,
+				42D3F50F16A08EBC0067FC89 /* GMapDataFetcher.m */,
+				42D3F51016A08EBC0067FC89 /* GMapService.h */,
+				42D3F51116A08EBC0067FC89 /* GMapService.m */,
+				42D3F51216A08EBC0067FC89 /* GMapSyncService.h */,
+				42D3F51316A08EBC0067FC89 /* GMapSyncService.m */,
+				42D3F51416A08EBC0067FC89 /* GMPComparable.h */,
+				42D3F51516A08EBC0067FC89 /* GMPItemSubclassing.h */,
+				42D3F51616A08EBC0067FC89 /* GMPSyncDelegate.h */,
+				42D3F51716A08EBC0067FC89 /* GMTBatchCmd.h */,
+				42D3F51816A08EBC0067FC89 /* GMTBatchCmd.m */,
+				42D3F51916A08EBC0067FC89 /* GMTCompTuple.h */,
+				42D3F51A16A08EBC0067FC89 /* GMTCompTuple.m */,
+				42D3F51B16A08EBC0067FC89 /* GMTItem.h */,
+				42D3F51C16A08EBC0067FC89 /* GMTItem.m */,
+				42D3F51D16A08EBC0067FC89 /* GMTMap.h */,
+				42D3F51E16A08EBC0067FC89 /* GMTMap.m */,
+				42D3F51F16A08EBC0067FC89 /* GMTPoint.h */,
+				42D3F52016A08EBC0067FC89 /* GMTPoint.m */,
+				42D3F52116A08EBC0067FC89 /* test */,
+			);
+			name = GMapService;
+			path = "../JZB-Libraries/GMapService";
+			sourceTree = "<group>";
+		};
+		42D3F52116A08EBC0067FC89 /* test */ = {
+			isa = PBXGroup;
+			children = (
+				42D3F52216A08EBC0067FC89 /* GM_SyncTest.h */,
+				42D3F52316A08EBC0067FC89 /* GM_SyncTest.m */,
+				42D3F52416A08EBC0067FC89 /* GM_Test.h */,
+				42D3F52516A08EBC0067FC89 /* GM_Test.m */,
+			);
+			path = test;
+			sourceTree = "<group>";
+		};
+		42D3F53016A098210067FC89 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				42D3F53116A098210067FC89 /* NSString+JavaStr.h */,
+				42D3F53216A098210067FC89 /* NSString+JavaStr.m */,
+				42D3F53316A098210067FC89 /* SimpleXMLReader.h */,
+				42D3F53416A098210067FC89 /* SimpleXMLReader.m */,
+			);
+			name = Utils;
+			path = "../JZB-Libraries/Utils";
+			sourceTree = "<group>";
+		};
+		42D3F55E16A09B2E0067FC89 /* Machine */ = {
+			isa = PBXGroup;
+			children = (
+				421CB05116AAEC60001F9B09 /* _MCacheViewCount.h */,
+				421CB05216AAEC60001F9B09 /* _MCacheViewCount.m */,
+				4281590B16A8A54B00471064 /* _MCategory.h */,
+				4281590C16A8A54B00471064 /* _MCategory.m */,
+				4223D0AD16A09C3C00AED134 /* _MPoint.h */,
+				4223D0AE16A09C3C00AED134 /* _MPoint.m */,
+				42D3F55F16A09B2E0067FC89 /* _MBaseEntity.h */,
+				42D3F56016A09B2E0067FC89 /* _MBaseEntity.m */,
+				42D3F56116A09B2E0067FC89 /* _MMap.h */,
+				42D3F56216A09B2E0067FC89 /* _MMap.m */,
+			);
+			path = Machine;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		429537D715EE482300EDAED4 /* iTravelPOI-Mac */ = {
+		421916041691A54A00185866 /* iTravelPOI-Mac */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 429537F915EE482300EDAED4 /* Build configuration list for PBXNativeTarget "iTravelPOI-Mac" */;
+			buildConfigurationList = 421916261691A54A00185866 /* Build configuration list for PBXNativeTarget "iTravelPOI-Mac" */;
 			buildPhases = (
-				429537D415EE482300EDAED4 /* Sources */,
-				429537D515EE482300EDAED4 /* Frameworks */,
-				429537D615EE482300EDAED4 /* Resources */,
+				4219163F1691AA5000185866 /* ShellScript */,
+				421916011691A54A00185866 /* Sources */,
+				421916021691A54A00185866 /* Frameworks */,
+				421916031691A54A00185866 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -262,104 +511,169 @@
 			);
 			name = "iTravelPOI-Mac";
 			productName = "iTravelPOI-Mac";
-			productReference = 429537D815EE482300EDAED4 /* iTravelPOI-Mac.app */;
+			productReference = 421916051691A54A00185866 /* iTravelPOI-Mac.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		429537CF15EE482300EDAED4 /* Project object */ = {
+		421915FC1691A54A00185866 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0440;
+				LastUpgradeCheck = 0450;
 				ORGANIZATIONNAME = "Jose Zarzuela";
 			};
-			buildConfigurationList = 429537D215EE482300EDAED4 /* Build configuration list for PBXProject "iTravelPOI-Mac" */;
+			buildConfigurationList = 421915FF1691A54A00185866 /* Build configuration list for PBXProject "iTravelPOI-Mac" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				English,
 			);
-			mainGroup = 429537CD15EE482300EDAED4;
-			productRefGroup = 429537D915EE482300EDAED4 /* Products */;
+			mainGroup = 421915FA1691A54A00185866;
+			productRefGroup = 421916061691A54A00185866 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				429537D715EE482300EDAED4 /* iTravelPOI-Mac */,
+				421916041691A54A00185866 /* iTravelPOI-Mac */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		429537D615EE482300EDAED4 /* Resources */ = {
+		421916031691A54A00185866 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				429537E715EE482300EDAED4 /* InfoPlist.strings in Resources */,
-				429537ED15EE482300EDAED4 /* Credits.rtf in Resources */,
-				429538B115EE578500EDAED4 /* MainMenu.xib in Resources */,
-				429402C615EFC8FE001CC6E4 /* DataListWindowController.xib in Resources */,
-				429402D615F0D0F9001CC6E4 /* GroupEditWindowController.xib in Resources */,
-				42D193291602113600016C0C /* MyCellView.xib in Resources */,
+				421916141691A54A00185866 /* InfoPlist.strings in Resources */,
+				4219161A1691A54A00185866 /* Credits.rtf in Resources */,
+				421916201691A54A00185866 /* MainMenu.xib in Resources */,
+				42D3F50C16A08EAF0067FC89 /* README.txt in Resources */,
+				4223D28616A336CD00AED134 /* tpl_implementation.txt in Resources */,
+				4223D28716A336CD00AED134 /* tpl_interface.txt in Resources */,
+				4223D28816A336CD00AED134 /* tpl_protected_int.txt in Resources */,
+				4223D2A016A36A0B00AED134 /* properties.txt in Resources */,
+				4223D2A716A446D700AED134 /* MapEditorPanel.xib in Resources */,
+				4223D2BB16A4921600AED134 /* MyCellView.xib in Resources */,
+				4281591216A8A79700471064 /* PointEditorPanel.xib in Resources */,
+				423BBF3416A8CC510010C2DD /* GMapIcons.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		4219163F1691AA5000185866 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd ../iTravelPOI-Common/Model\necho \"Running mogenerator\"\nmogenerator --template-var arc=true -m iTravelPOI.xcdatamodeld/iTravelPOI.xcdatamodel/ -M Machine/ -H Human/";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
-		429537D415EE482300EDAED4 /* Sources */ = {
+		421916011691A54A00185866 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				429537E915EE482300EDAED4 /* main.m in Sources */,
-				429537F015EE482300EDAED4 /* AppDelegate.m in Sources */,
-				429538B415EE57B100EDAED4 /* MockUp.m in Sources */,
-				429538D415EE5D8100EDAED4 /* MAssignment+Extension.m in Sources */,
-				429538D515EE5D8100EDAED4 /* MBase+Extension.m in Sources */,
-				429538D615EE5D8100EDAED4 /* MGroup+Extension.m in Sources */,
-				429538D715EE5D8100EDAED4 /* MPoint+Extension.m in Sources */,
-				429538DD15EF567800EDAED4 /* BaseCoreData.m in Sources */,
-				429538DE15EF567800EDAED4 /* ModelDAO.m in Sources */,
-				429538E715EF5D5A00EDAED4 /* MDataView.m in Sources */,
-				429538EA15EF63CE00EDAED4 /* MBase.m in Sources */,
-				429538ED15EF63D000EDAED4 /* MAssignment.m in Sources */,
-				429538F015EF63D100EDAED4 /* MPoint.m in Sources */,
-				429538F315EF63D100EDAED4 /* MGroup.m in Sources */,
-				429538F615EF63D100EDAED4 /* MBaseNamed.m in Sources */,
-				429538F915EF708400EDAED4 /* FixedData.m in Sources */,
-				429538FC15EF778500EDAED4 /* iTravelPOI.xcdatamodeld in Sources */,
-				429402C515EFC8FE001CC6E4 /* DataListWindowController.m in Sources */,
-				429402D115F0AD95001CC6E4 /* KK.m in Sources */,
-				429402D515F0D0F9001CC6E4 /* GroupEditWindowController.m in Sources */,
-				424D150C15F4C2CB00A9E4B4 /* ErrorManagerService.m in Sources */,
-				42D1932D1602117500016C0C /* MyCellView.m in Sources */,
+				421916161691A54A00185866 /* main.m in Sources */,
+				4219161D1691A54A00185866 /* AppDelegate.m in Sources */,
+				421916741691AC6300185866 /* iTravelPOI.xcdatamodeld in Sources */,
+				4219167B1691ADE100185866 /* BaseCoreData.m in Sources */,
+				4219167E1691AE1D00185866 /* ErrorManagerService.m in Sources */,
+				421916811691AF6B00185866 /* MockUp.m in Sources */,
+				42D3F50516A08EAF0067FC89 /* DDAbstractDatabaseLogger.m in Sources */,
+				42D3F50616A08EAF0067FC89 /* DDASLLogger.m in Sources */,
+				42D3F50716A08EAF0067FC89 /* DDFileLogger.m in Sources */,
+				42D3F50816A08EAF0067FC89 /* DDLog.m in Sources */,
+				42D3F50916A08EAF0067FC89 /* DDTTYLogger.m in Sources */,
+				42D3F50A16A08EAF0067FC89 /* ContextFilterLogFormatter.m in Sources */,
+				42D3F50B16A08EAF0067FC89 /* DispatchQueueLogFormatter.m in Sources */,
+				42D3F52616A08EBC0067FC89 /* GMapDataFetcher.m in Sources */,
+				42D3F52716A08EBC0067FC89 /* GMapService.m in Sources */,
+				42D3F52816A08EBC0067FC89 /* GMapSyncService.m in Sources */,
+				42D3F52916A08EBC0067FC89 /* GMTBatchCmd.m in Sources */,
+				42D3F52A16A08EBC0067FC89 /* GMTCompTuple.m in Sources */,
+				42D3F52B16A08EBC0067FC89 /* GMTItem.m in Sources */,
+				42D3F52C16A08EBC0067FC89 /* GMTMap.m in Sources */,
+				42D3F52D16A08EBC0067FC89 /* GMTPoint.m in Sources */,
+				42D3F52E16A08EBC0067FC89 /* GM_SyncTest.m in Sources */,
+				42D3F52F16A08EBC0067FC89 /* GM_Test.m in Sources */,
+				42D3F53516A098210067FC89 /* NSString+JavaStr.m in Sources */,
+				42D3F53616A098210067FC89 /* SimpleXMLReader.m in Sources */,
+				42D3F54516A0995C0067FC89 /* MBaseEntity.m in Sources */,
+				42D3F54616A0995C0067FC89 /* MMap.m in Sources */,
+				42D3F56516A09B2E0067FC89 /* _MBaseEntity.m in Sources */,
+				42D3F56616A09B2E0067FC89 /* _MMap.m in Sources */,
+				4223D0AF16A09C3C00AED134 /* _MPoint.m in Sources */,
+				4223D0B316A09C4700AED134 /* MPoint.m in Sources */,
+				4223D27516A32B2300AED134 /* AppTesting.m in Sources */,
+				4223D2A616A446D700AED134 /* MapEditorPanel.m in Sources */,
+				4223D2BA16A4921600AED134 /* MyCellView.m in Sources */,
+				4281590916A8A53D00471064 /* MCategory.m in Sources */,
+				4281590D16A8A54B00471064 /* _MCategory.m in Sources */,
+				4281591116A8A79700471064 /* PointEditorPanel.m in Sources */,
+				423BBF3316A8CC510010C2DD /* GMapIcon.m in Sources */,
+				421CB04F16AAEBC7001F9B09 /* MCacheViewCount.m in Sources */,
+				421CB05316AAEC60001F9B09 /* _MCacheViewCount.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		429537E515EE482300EDAED4 /* InfoPlist.strings */ = {
+		421916121691A54A00185866 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				429537E615EE482300EDAED4 /* en */,
+				421916131691A54A00185866 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		429537EB15EE482300EDAED4 /* Credits.rtf */ = {
+		421916181691A54A00185866 /* Credits.rtf */ = {
 			isa = PBXVariantGroup;
 			children = (
-				429537EC15EE482300EDAED4 /* en */,
+				421916191691A54A00185866 /* en */,
 			);
 			name = Credits.rtf;
 			sourceTree = "<group>";
 		};
-		429538AF15EE578500EDAED4 /* MainMenu.xib */ = {
+		4219161E1691A54A00185866 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				429538B015EE578500EDAED4 /* en */,
+				4219161F1691A54A00185866 /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		421CB05F16AC7F10001F9B09 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				421CB06016AC7F10001F9B09 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		421CB06516AC7F10001F9B09 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				421CB06616AC7F10001F9B09 /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		421CB06B16AC7F11001F9B09 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				421CB06C16AC7F11001F9B09 /* en */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -367,13 +681,15 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		429537F715EE482300EDAED4 /* Debug */ = {
+		421916241691A54A00185866 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -389,19 +705,21 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
-		429537F815EE482300EDAED4 /* Release */ = {
+		421916251691A54A00185866 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -411,19 +729,15 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				SDKROOT = macosx;
 			};
 			name = Release;
 		};
-		429537FA15EE482300EDAED4 /* Debug */ = {
+		421916271691A54A00185866 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../../Library/Developer/Xcode/DerivedData/WKSP-iTravelPOI-Mac-dtnjruyovsglbzerzuyrcwsedowb/Build/Products/Debug\"",
-				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iTravelPOI-Mac/iTravelPOI-Mac-Prefix.pch";
 				INFOPLIST_FILE = "iTravelPOI-Mac/iTravelPOI-Mac-Info.plist";
@@ -432,14 +746,10 @@
 			};
 			name = Debug;
 		};
-		429537FB15EE482300EDAED4 /* Release */ = {
+		421916281691A54A00185866 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../../Library/Developer/Xcode/DerivedData/WKSP-iTravelPOI-Mac-dtnjruyovsglbzerzuyrcwsedowb/Build/Products/Debug\"",
-				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iTravelPOI-Mac/iTravelPOI-Mac-Prefix.pch";
 				INFOPLIST_FILE = "iTravelPOI-Mac/iTravelPOI-Mac-Info.plist";
@@ -451,20 +761,20 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		429537D215EE482300EDAED4 /* Build configuration list for PBXProject "iTravelPOI-Mac" */ = {
+		421915FF1691A54A00185866 /* Build configuration list for PBXProject "iTravelPOI-Mac" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				429537F715EE482300EDAED4 /* Debug */,
-				429537F815EE482300EDAED4 /* Release */,
+				421916241691A54A00185866 /* Debug */,
+				421916251691A54A00185866 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		429537F915EE482300EDAED4 /* Build configuration list for PBXNativeTarget "iTravelPOI-Mac" */ = {
+		421916261691A54A00185866 /* Build configuration list for PBXNativeTarget "iTravelPOI-Mac" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				429537FA15EE482300EDAED4 /* Debug */,
-				429537FB15EE482300EDAED4 /* Release */,
+				421916271691A54A00185866 /* Debug */,
+				421916281691A54A00185866 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -472,17 +782,27 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		429538FA15EF778500EDAED4 /* iTravelPOI.xcdatamodeld */ = {
+		421916671691AC6300185866 /* iTravelPOI.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				429538FB15EF778500EDAED4 /* iTravelPOI.xcdatamodel */,
+				421916681691AC6300185866 /* iTravelPOI.xcdatamodel */,
 			);
-			currentVersion = 429538FB15EF778500EDAED4 /* iTravelPOI.xcdatamodel */;
+			currentVersion = 421916681691AC6300185866 /* iTravelPOI.xcdatamodel */;
 			path = iTravelPOI.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		421CB06E16AC7F11001F9B09 /* pp.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				421CB06F16AC7F11001F9B09 /* pp.xcdatamodel */,
+			);
+			currentVersion = 421CB06F16AC7F11001F9B09 /* pp.xcdatamodel */;
+			path = pp.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
 /* End XCVersionGroup section */
 	};
-	rootObject = 429537CF15EE482300EDAED4 /* Project object */;
+	rootObject = 421915FC1691A54A00185866 /* Project object */;
 }

@@ -1,19 +1,15 @@
 //
+//  AppDelegate.h
 //  iTravelPOI-Mac
-//  iTravelPOI
 //
-//  Created by Jose Zarzuela on 29/07/12.
+//  Created by Jose Zarzuela on 31/12/12.
 //  Copyright (c) 2012 Jose Zarzuela. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>
 
-@interface AppDelegate : NSObject <NSApplicationDelegate, NSTableViewDelegate, NSTableViewDataSource>
+@interface AppDelegate : NSObject <NSApplicationDelegate>
 
 @property (assign) IBOutlet NSWindow *window;
-
-@property (weak) IBOutlet NSTableView *dataTable;
-@property (weak) IBOutlet NSButton *goBackButton;
-@property (weak) IBOutlet NSTextField *groupLabel;
 
 @end
