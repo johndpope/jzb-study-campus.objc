@@ -53,10 +53,10 @@
 #pragma mark CLASS methods
 // ---------------------------------------------------------------------------------------------------------------------
 + (NSString *) stringFromDate:(NSDate *)date {
- 
+
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:GM_DATE_FORMATTER];
-    //The Z at the end of your string represents Zulu which is UTC
+    // The Z at the end of your string represents Zulu which is UTC
     [dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
     NSString *dateString = [dateFormatter stringFromDate:date];
     return dateString;
@@ -64,15 +64,14 @@
 
 // ---------------------------------------------------------------------------------------------------------------------
 + (NSDate *) dateFromString:(NSString *)str {
-    
+
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:GM_DATE_FORMATTER];
-    //The Z at the end of your string represents Zulu which is UTC
+    // The Z at the end of your string represents Zulu which is UTC
     [dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
     NSDate *dateFromString = [dateFormatter dateFromString:str];
     return dateFromString;
 }
-
 
 // =====================================================================================================================
 #pragma mark -
@@ -96,7 +95,7 @@
 #pragma mark General PUBLIC methods
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) resetEntityWithName:(NSString *)name {
-    
+
     self.name = name;
     self.gmID = GM_LOCAL_ID;
     self.etag = GM_NO_SYNC_ETAG;
@@ -107,7 +106,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) atomEntryDataContent:(NSMutableString *)atomStr {
 
-    if(self.gmID!=nil && self.gmID.length>0 && ![self.gmID isEqualToString:GM_LOCAL_ID]) {
+    if(self.gmID != nil && self.gmID.length > 0 && ![self.gmID isEqualToString:GM_LOCAL_ID]) {
         [atomStr appendFormat:@"  <atom:id>%@</atom:id>", self.gmID];
         [atomStr appendFormat:@"  <atom:link rel='edit' type='application/atom+xml' href='%@'/>", self.editLink];
     }

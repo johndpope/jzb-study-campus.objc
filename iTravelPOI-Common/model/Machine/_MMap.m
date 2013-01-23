@@ -14,7 +14,6 @@ const struct MMapRelationships MMapRelationships = {
 };
 
 const struct MMapFetchedProperties MMapFetchedProperties = {
-	.notDeletedPoints = @"notDeletedPoints",
 };
 
 @implementation MMapID
@@ -91,8 +90,6 @@ const struct MMapFetchedProperties MMapFetchedProperties = {
 	
 
 
-
-@dynamic notDeletedPoints;
 
 
 

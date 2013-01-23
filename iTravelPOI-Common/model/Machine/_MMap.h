@@ -15,7 +15,6 @@ extern const struct MMapRelationships {
 } MMapRelationships;
 
 extern const struct MMapFetchedProperties {
-	__unsafe_unretained NSString *notDeletedPoints;
 } MMapFetchedProperties;
 
 @class MCacheViewCount;
@@ -70,8 +69,6 @@ extern const struct MMapFetchedProperties {
 
 
 
-
-@property (nonatomic, readonly) NSArray *notDeletedPoints;
 
 
 @end

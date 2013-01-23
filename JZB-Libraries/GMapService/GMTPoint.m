@@ -67,7 +67,7 @@
 #pragma mark General PUBLIC methods
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) resetEntityWithName:(NSString *)name {
-    
+
     [super resetEntityWithName:name];
 
     self.descr = @"";
@@ -75,8 +75,6 @@
     self.latitude = 0.0;
     self.longitude = 0.0;
 }
-
-
 
 // =====================================================================================================================
 #pragma mark -

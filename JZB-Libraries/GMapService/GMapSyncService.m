@@ -338,7 +338,7 @@
     id<GMPComparableLocal> localMap = mapTuple.localItem;
     GMTMap *remoteMap = mapTuple.remoteItem;
 
-    
+
     // Se apunta si el mapa local estaba borrado y se esta re-actualizando desde el remoto
     BOOL localMapWasDeleted = localMap.markedAsDeletedValue;
 
@@ -363,7 +363,7 @@
             [allErrors addObject:[self anError:@"update remote map" withError:localError data:nil]];
             return;
         }
-        
+
         // Tiene que actualizar el ETAG del mapa local tras la actualizacion remota
         if(NO == [self.delegate updateLocalMap:localMap withRemoteMap:remoteMap allPointsOK:true error:&localError]) {
             [allErrors addObject:[self anError:@"update local map from remote" withError:localError data:nil]];
@@ -501,10 +501,10 @@
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (NSArray *) makeEqualLocalItems:(NSArray *)localItems toRemoteItems:(NSArray *)remoteItems {
-    
+
     // Aqui se almacenara el resultado de la comparacion
     NSMutableArray *tuples = [NSMutableArray array];
-    
+
     // ----------------------------------------------------------------------------------------------------
     // ----------------------------------------------------------------------------------------------------
     // Todos los elementos remotos o se crean o se actualizan en local
@@ -513,28 +513,28 @@
     for(id<GMPComparable> remoteItem in remoteItems) {
 
         id<GMPComparableLocal> localItem = (id<GMPComparableLocal>)[self searchItemByGMID : remoteItem.gmID inArray : localItems];
-        
-        if(localItems!=nil) {
+
+        if(localItems != nil) {
             [tuples addObject:[GMTCompTuple tupleWithStatus:ST_Comp_Update_Local localItem:localItem remoteItem:remoteItem conflicted:false]];
         } else {
             [tuples addObject:[GMTCompTuple tupleWithStatus:ST_Comp_Create_Local localItem:localItem remoteItem:remoteItem conflicted:false]];
         }
     }
-    
-    
+
+
     // ----------------------------------------------------------------------------------------------------
     // ----------------------------------------------------------------------------------------------------
     // Todos los elementos locales que no esten en remotos se eliminan
     // ----------------------------------------------------------------------------------------------------
     // ----------------------------------------------------------------------------------------------------
     for(id<GMPComparableLocal> localItem in localItems) {
-        
+
         id<GMPComparable> remoteItem = [self searchItemByGMID:localItem.gmID inArray:remoteItems];
-        if(remoteItem==nil) {
+        if(remoteItem == nil) {
             [tuples addObject:[GMTCompTuple tupleWithStatus:ST_Comp_Delete_Local localItem:localItem remoteItem:remoteItem conflicted:false]];
         }
     }
-    
+
     // Retorna el resultado
     return tuples;
 }

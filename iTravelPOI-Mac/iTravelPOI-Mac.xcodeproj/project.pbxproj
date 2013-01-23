@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4210E48416ADF2370059F42B /* CategoryEditorPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4210E48216ADF2370059F42B /* CategoryEditorPanel.m */; };
+		4210E48516ADF2370059F42B /* CategoryEditorPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4210E48316ADF2370059F42B /* CategoryEditorPanel.xib */; };
 		4219160A1691A54A00185866 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 421916091691A54A00185866 /* Cocoa.framework */; };
 		421916141691A54A00185866 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 421916121691A54A00185866 /* InfoPlist.strings */; };
 		421916161691A54A00185866 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 421916151691A54A00185866 /* main.m */; };
@@ -63,6 +65,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4210E48116ADF2370059F42B /* CategoryEditorPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CategoryEditorPanel.h; sourceTree = "<group>"; };
+		4210E48216ADF2370059F42B /* CategoryEditorPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CategoryEditorPanel.m; sourceTree = "<group>"; };
+		4210E48316ADF2370059F42B /* CategoryEditorPanel.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CategoryEditorPanel.xib; sourceTree = "<group>"; };
 		421916051691A54A00185866 /* iTravelPOI-Mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iTravelPOI-Mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		421916091691A54A00185866 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		4219160C1691A54A00185866 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -361,6 +366,9 @@
 		4223D2A216A446D700AED134 /* Editors */ = {
 			isa = PBXGroup;
 			children = (
+				4210E48116ADF2370059F42B /* CategoryEditorPanel.h */,
+				4210E48216ADF2370059F42B /* CategoryEditorPanel.m */,
+				4210E48316ADF2370059F42B /* CategoryEditorPanel.xib */,
 				4281590E16A8A79700471064 /* PointEditorPanel.h */,
 				4281590F16A8A79700471064 /* PointEditorPanel.m */,
 				4281591016A8A79700471064 /* PointEditorPanel.xib */,
@@ -558,6 +566,7 @@
 				4223D2BB16A4921600AED134 /* MyCellView.xib in Resources */,
 				4281591216A8A79700471064 /* PointEditorPanel.xib in Resources */,
 				423BBF3416A8CC510010C2DD /* GMapIcons.bundle in Resources */,
+				4210E48516ADF2370059F42B /* CategoryEditorPanel.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -624,6 +633,7 @@
 				423BBF3316A8CC510010C2DD /* GMapIcon.m in Sources */,
 				421CB04F16AAEBC7001F9B09 /* MCacheViewCount.m in Sources */,
 				421CB05316AAEC60001F9B09 /* _MCacheViewCount.m in Sources */,
+				4210E48416ADF2370059F42B /* CategoryEditorPanel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,16 +1,17 @@
 //
-// MapEditorPanel.m
+// CategoryEditorPanel.m
 // iTravelPOI-Mac
 //
 // Created by Jose Zarzuela on 13/01/13.
 // Copyright (c) 2013 Jose Zarzuela. All rights reserved.
 //
 
-#define __MapEditorPanel__IMPL__
-#import "MapEditorPanel.h"
+#define __CategoryEditorPanel__IMPL__
+#import "CategoryEditorPanel.h"
+#import "GMapIcon.h"
 #import "GMTItem.h"
+#import "MCategory.h"
 
-#import "PointEditorPanel.h"
 
 
 // *********************************************************************************************************************
@@ -23,17 +24,18 @@
 #pragma mark -
 #pragma mark PRIVATE interface definition
 // *********************************************************************************************************************
-@interface MapEditorPanel () <NSTextFieldDelegate, NSTextViewDelegate>
+@interface CategoryEditorPanel () <NSTextFieldDelegate, NSTextViewDelegate>
 
 
-@property (nonatomic, assign) IBOutlet NSTextField *mapNameField;
-@property (nonatomic, assign) IBOutlet NSTextView *mapSummaryField;
-@property (nonatomic, assign) IBOutlet NSTextField *mapExtraInfo;
+@property (nonatomic, assign) IBOutlet NSImageView *iconImageField;
+@property (nonatomic, assign) IBOutlet NSTextField *categoryNameField;
+@property (nonatomic, assign) IBOutlet NSTextField *categoryPathField;
+@property (nonatomic, assign) IBOutlet NSTextView *categoryDescrField;
+@property (nonatomic, assign) IBOutlet NSTextField *categoryExtraInfo;
 
+@property (nonatomic, strong) NSManagedObjectContext *categoryContext;
 
-@property (nonatomic, strong) NSManagedObjectContext *mapContext;
-
-@property (nonatomic, strong) MapEditorPanel *myself;
+@property (nonatomic, strong) CategoryEditorPanel *myself;
 
 @end
 
@@ -42,7 +44,7 @@
 #pragma mark -
 #pragma mark Implementation
 // *********************************************************************************************************************
-@implementation MapEditorPanel
+@implementation CategoryEditorPanel
 
 
 
@@ -50,29 +52,33 @@
 #pragma mark -
 #pragma mark CLASS methods
 // ---------------------------------------------------------------------------------------------------------------------
-+ (MapEditorPanel *) startEditMap:(MMap *)map delegate:(id<MapEditorPanelDelegate>)delegate {
++ (CategoryEditorPanel *) startEditCategory:(MCategory *)category inMap:(MMap *)map delegate:(id<CategoryEditorPanelDelegate>)delegate {
 
-    if(map == nil || delegate == nil) {
+    if(category == nil || delegate == nil) {
         return nil;
     }
 
-    MapEditorPanel *me = [[MapEditorPanel alloc] init];
+    CategoryEditorPanel *me = [[CategoryEditorPanel alloc] init];
 
-    BOOL allOK = [NSBundle loadNibNamed:@"MapEditorPanel" owner:me];
+    BOOL allOK = [NSBundle loadNibNamed:@"CategoryEditorPanel" owner:me];
 
     if(allOK) {
+
         me.myself = me;
         me.delegate = delegate;
+        me.category = category;
         me.map = map;
-        // No se por que se debe crear una referencia fuerte al contexto si el mapa esta dentro
-        me.mapContext = map.managedObjectContext;
-        [me setFieldValuesFromMap];
+        // No se por que se debe crear una referencia fuerte al contexto si el categorya esta dentro
+        me.categoryContext = category.managedObjectContext;
+        [me setFieldValuesFromCategory];
+
 
         [NSApp beginSheet:me.window
            modalForWindow:[[NSApp delegate] window]
             modalDelegate:nil
            didEndSelector:nil
               contextInfo:nil];
+
 
         return me;
     } else {
@@ -116,8 +122,8 @@
 - (IBAction) btnCloseSave:(id)sender {
 
     if(self.delegate) {
-        [self setMapFromFieldValues];
-        [self.delegate mapPanelSaveChanges:self];
+        [self setCategoryFromFieldValues];
+        [self.delegate categoryPanelSaveChanges:self];
     }
     [self closePanel];
 }
@@ -126,7 +132,7 @@
 - (IBAction) btnCloseCancel:(id)sender {
 
     if(self.delegate) {
-        [self.delegate mapPanelCancelChanges:self];
+        [self.delegate categoryPanelCancelChanges:self];
     }
     [self closePanel];
 }
@@ -137,40 +143,46 @@
     [NSApp endSheet:self.window];
     [self.window close];
     self.window = nil;
-    self.map = nil;
-    self.mapContext = nil;
+    self.category = nil;
+    self.categoryContext = nil;
     self.delegate = nil;
     self.myself = nil;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) setFieldValuesFromMap {
+- (void) setFieldValuesFromCategory {
 
-    if(self.map) {
-        [self.mapNameField setStringValue:self.map.name];
-        [self.mapSummaryField setString:self.map.summary];
-        [self.mapExtraInfo setStringValue:[NSString stringWithFormat:@"Published: %@\tUpdated: %@\nETAG: %@",
-                                           [GMTItem stringFromDate:self.map.published_Date],
-                                           [GMTItem stringFromDate:self.map.updated_Date],
-                                           self.map.etag]];
+    if(self.category) {
+
+        GMapIcon *icon = [GMapIcon iconForHREF:self.category.iconHREF];
+        self.iconImageField.image = icon.image;
+
+        NSString *catPath = nil;
+        [MCategory parseIconHREF:self.category.iconHREF baseURL:nil catPath:&catPath];
+        [self.categoryPathField setStringValue:catPath];
+
+        [self.categoryNameField setStringValue:self.category.name];
+        [self.categoryDescrField setString:@""];
+        [self.categoryExtraInfo setStringValue:[NSString stringWithFormat:@"Published: %@\tUpdated: %@\nETAG: %@",
+                                             [GMTItem stringFromDate:self.category.published_Date],
+                                             [GMTItem stringFromDate:self.category.updated_Date],
+                                             self.category.etag]];
     }
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) setMapFromFieldValues {
+- (void) setCategoryFromFieldValues {
 
-    if(self.map) {
-        // *** CONTROL DE SEGURIDAD (@name) PARA NO TOCAR MAPAS BUENOS ***
-        NSString *name = self.mapNameField.stringValue;
-        if([name hasPrefix:@"@"]) {
-            self.map.name = name;
-        } else {
-            self.map.name = [NSString stringWithFormat:@"@%@", name];
-        }
-        self.map.summary = [self.mapSummaryField string];
-        self.map.updated_Date = [NSDate date];
+    if(self.category) {
+        
+        NSString *baseURL = nil;
+        [MCategory parseIconHREF:self.category.iconHREF baseURL:&baseURL catPath:nil];
+        NSString *newIconHREF = [NSString stringWithFormat:@"%@%@", baseURL, self.categoryPathField.stringValue];
+        
+        // Los cambios en esta entidad son, REALMENTE, CAMBIOS EN LOS PUNTOS ASOCIADOS
+        [self.category movePointsToCategoryWithIconHREF:newIconHREF inMap:self.map];
+        
     }
-    
 }
 
 // =====================================================================================================================

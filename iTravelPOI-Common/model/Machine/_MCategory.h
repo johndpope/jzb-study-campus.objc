@@ -17,7 +17,6 @@ extern const struct MCategoryRelationships {
 } MCategoryRelationships;
 
 extern const struct MCategoryFetchedProperties {
-	__unsafe_unretained NSString *allPointsInMap;
 } MCategoryFetchedProperties;
 
 @class MCacheViewCount;
@@ -88,8 +87,6 @@ extern const struct MCategoryFetchedProperties {
 
 
 
-
-@property (nonatomic, readonly) NSArray *allPointsInMap;
 
 
 @end

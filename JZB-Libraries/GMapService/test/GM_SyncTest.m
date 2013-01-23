@@ -190,8 +190,8 @@
 
     FakeItem *fakeMap1 = [[FakeItem alloc] init];
     fakeMap1.name = @"@fakeMap1";
-    fakeMap1.gmID = @"http://maps.google.com/maps/feeds/maps/212026791974164037226/0004d2e0687a695f7a032"; //GM_LOCAL_ID;
-    fakeMap1.etag = @"W/\"C0QHQX0_eyp7I2A9WhNUF0s.\"";  //GM_NO_SYNC_ETAG;
+    fakeMap1.gmID = @"http://maps.google.com/maps/feeds/maps/212026791974164037226/0004d2e0687a695f7a032"; // GM_LOCAL_ID;
+    fakeMap1.etag = @"W/\"C0QHQX0_eyp7I2A9WhNUF0s.\"";  // GM_NO_SYNC_ETAG;
     fakeMap1.markedAsDeletedValue = false;
     fakeMap1.wasSynchronizedValue = true;
     fakeMap1.modifiedSinceLastSyncValue = true;
@@ -209,8 +209,8 @@
 
     FakeItem *fakePoint1 = [[FakeItem alloc] init];
     fakePoint1.name = @"@fakePoint1";
-    fakePoint1.gmID = @"http://maps.google.com/maps/feeds/features/212026791974164037226/0004d2e0687a695f7a032/0004d2e06a3a38f3140ee"; //GM_LOCAL_ID;
-    fakePoint1.etag = @"W/\"C0UEQns-eCp7I2A9WhNUF0s.\""; //GM_NO_SYNC_ETAG;
+    fakePoint1.gmID = @"http://maps.google.com/maps/feeds/features/212026791974164037226/0004d2e0687a695f7a032/0004d2e06a3a38f3140ee"; // GM_LOCAL_ID;
+    fakePoint1.etag = @"W/\"C0UEQns - eCp7I2A9WhNUF0s.\""; // GM_NO_SYNC_ETAG;
     fakePoint1.markedAsDeletedValue = false;
     fakePoint1.wasSynchronizedValue = true;
     fakePoint1.modifiedSinceLastSyncValue = true;

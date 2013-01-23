@@ -21,18 +21,12 @@
         <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MCategory" inverseName="subCategories" inverseEntity="MCategory" syncable="YES"/>
         <relationship name="points" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MPoint" inverseName="category" inverseEntity="MPoint" syncable="YES"/>
         <relationship name="subCategories" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="MCategory" inverseName="parent" inverseEntity="MCategory" syncable="YES"/>
-        <fetchedProperty name="allPointsInMap" optional="YES" syncable="YES">
-            <fetchRequest name="fetchedPropertyFetchRequest" entity="MPoint" predicateString="(markedAsDeleted=NO) AND (iconHREF BEGINSWITH $FETCH_SOURCE.iconHREF) AND ($FETCHED_PROPERTY. userInfo.map=map)"/>
-        </fetchedProperty>
     </entity>
     <entity name="MMap" representedClassName="MMap" parentEntity="MBaseEntity" syncable="YES">
         <attribute name="summary" attributeType="String" syncable="YES"/>
         <attribute name="viewCount" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="catViewCounts" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="MCacheViewCount" inverseName="map" inverseEntity="MCacheViewCount" syncable="YES"/>
         <relationship name="points" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="MPoint" inverseName="map" inverseEntity="MPoint" syncable="YES"/>
-        <fetchedProperty name="notDeletedPoints" optional="YES" syncable="YES">
-            <fetchRequest name="fetchedPropertyFetchRequest" entity="MPoint" predicateString="(markedAsDeleted=NO) AND ($FETCH_SOURCE=map)"/>
-        </fetchedProperty>
     </entity>
     <entity name="MPoint" representedClassName="MPoint" parentEntity="MBaseEntity" syncable="YES">
         <attribute name="descr" attributeType="String" syncable="YES"/>
@@ -45,8 +39,8 @@
     <elements>
         <element name="MBaseEntity" positionX="-522" positionY="-3033" width="128" height="148"/>
         <element name="MCacheViewCount" positionX="-713" positionY="-2889" width="128" height="88"/>
-        <element name="MCategory" positionX="-522" positionY="-2826" width="128" height="161"/>
-        <element name="MMap" positionX="-729" positionY="-2718" width="128" height="131"/>
+        <element name="MCategory" positionX="-522" positionY="-2826" width="128" height="133"/>
+        <element name="MMap" positionX="-729" positionY="-2718" width="128" height="103"/>
         <element name="MPoint" positionX="-317" positionY="-2752" width="128" height="133"/>
     </elements>
 </model>

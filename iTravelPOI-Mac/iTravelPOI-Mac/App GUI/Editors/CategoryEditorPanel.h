@@ -1,5 +1,5 @@
 //
-// MapEditorPanel.h
+// CategoryEditorPanel.h
 // iTravelPOI-Mac
 //
 // Created by Jose Zarzuela on 13/01/13.
@@ -7,7 +7,8 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "MMap.h"
+#import "MCategory.h"
+
 
 
 // *********************************************************************************************************************
@@ -18,13 +19,13 @@
 
 // *********************************************************************************************************************
 #pragma mark -
-#pragma mark <MapEditorPanelDelegate> Protocol
+#pragma mark <CategoryEditorPanelDelegate> Protocol
 // *********************************************************************************************************************
-@class MapEditorPanel;
-@protocol MapEditorPanelDelegate <NSObject>
+@class CategoryEditorPanel;
+@protocol CategoryEditorPanelDelegate <NSObject>
 
-- (void) mapPanelSaveChanges:(MapEditorPanel *)sender;
-- (void) mapPanelCancelChanges:(MapEditorPanel *)sender;
+- (void) categoryPanelSaveChanges:(CategoryEditorPanel *)sender;
+- (void) categoryPanelCancelChanges:(CategoryEditorPanel *)sender;
 
 @end
 
@@ -34,9 +35,10 @@
 #pragma mark -
 #pragma mark Interface definition
 // *********************************************************************************************************************
-@interface MapEditorPanel : NSWindowController
+@interface CategoryEditorPanel : NSWindowController
 
-@property (weak) id<MapEditorPanelDelegate> delegate;
+@property (weak) id<CategoryEditorPanelDelegate> delegate;
+@property (strong) MCategory *category;
 @property (strong) MMap *map;
 
 
@@ -45,11 +47,11 @@
 #pragma mark -
 #pragma mark CLASS public methods
 // ---------------------------------------------------------------------------------------------------------------------
-#ifndef __MapEditorPanel__IMPL__
+#ifndef __CategoryEditorPanel__IMPL__
 - (id) init __attribute__ ((unavailable ("init not available")));
 #endif
 
-+ (MapEditorPanel *) startEditMap:(MMap *)map delegate:(id<MapEditorPanelDelegate>)delegate;
++ (CategoryEditorPanel *) startEditCategory:(MCategory *)category inMap:(MMap *)map delegate:(id<CategoryEditorPanelDelegate>)delegate;
 
 
 // =====================================================================================================================

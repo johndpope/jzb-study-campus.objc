@@ -16,7 +16,6 @@ const struct MCategoryRelationships MCategoryRelationships = {
 };
 
 const struct MCategoryFetchedProperties MCategoryFetchedProperties = {
-	.allPointsInMap = @"allPointsInMap",
 };
 
 @implementation MCategoryID
@@ -110,8 +109,6 @@ const struct MCategoryFetchedProperties MCategoryFetchedProperties = {
 	
 
 
-
-@dynamic allPointsInMap;
 
 
 
