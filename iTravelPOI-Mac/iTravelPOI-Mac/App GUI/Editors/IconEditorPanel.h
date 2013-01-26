@@ -50,7 +50,7 @@
 - (id) init __attribute__ ((unavailable ("init not available")));
 #endif
 
-+ (IconEditorPanel *) startEditIcon:(NSString *)iconHREF delegate:(id<IconEditorPanelDelegate>)delegate;
++ (IconEditorPanel *) startEditIconHREF:(NSString *)iconHREF delegate:(id<IconEditorPanelDelegate>)delegate;
 
 
 // =====================================================================================================================

@@ -11,6 +11,7 @@
 #import "GMapIcon.h"
 #import "GMTItem.h"
 #import "MCategory.h"
+#import "IconEditorPanel.h"
 
 
 
@@ -24,10 +25,10 @@
 #pragma mark -
 #pragma mark PRIVATE interface definition
 // *********************************************************************************************************************
-@interface PointEditorPanel () <NSTextFieldDelegate, NSTextViewDelegate>
+@interface PointEditorPanel () <IconEditorPanelDelegate, NSTextFieldDelegate, NSTextViewDelegate>
 
 
-@property (nonatomic, assign) IBOutlet NSImageView *iconImageField;
+@property (nonatomic, assign) IBOutlet NSButton *iconImageBtnField;
 @property (nonatomic, assign) IBOutlet NSTextField *pointNameField;
 @property (nonatomic, assign) IBOutlet NSTextField *pointCategoryField;
 @property (nonatomic, assign) IBOutlet NSTextView *pointDescrField;
@@ -36,6 +37,8 @@
 @property (nonatomic, strong) NSManagedObjectContext *pointContext;
 
 @property (nonatomic, strong) PointEditorPanel *myself;
+
+@property (nonatomic, strong) NSString *iconBaseURL;
 
 @end
 
@@ -58,19 +61,13 @@
         return nil;
     }
 
-    PointEditorPanel *me = [[PointEditorPanel alloc] init];
-
-    BOOL allOK = [NSBundle loadNibNamed:@"PointEditorPanel" owner:me];
-
-    if(allOK) {
-
+    PointEditorPanel *me = [[PointEditorPanel alloc] initWithWindowNibName:@"PointEditorPanel"];
+    if(me) {
         me.myself = me;
         me.delegate = delegate;
         me.Point = Point;
         // No se por que se debe crear una referencia fuerte al contexto si el Pointa esta dentro
         me.PointContext = Point.managedObjectContext;
-        [me setFieldValuesFromPoint];
-
 
         [NSApp beginSheet:me.window
            modalForWindow:[delegate window]
@@ -90,23 +87,16 @@
 #pragma mark -
 #pragma mark Initialization & finalization
 // ---------------------------------------------------------------------------------------------------------------------
-- (id) initWithWindow:(NSWindow *)window {
-    self = [super initWithWindow:window];
-    if(self) {
-        // Initialization code here.
-    }
-
-    return self;
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
 - (void) windowDidLoad {
+    
     [super windowDidLoad];
-
+    
     // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
-
+    [self setFieldValuesFromPoint];
 
 }
+
+
 
 // =====================================================================================================================
 #pragma mark -
@@ -117,6 +107,11 @@
 // =====================================================================================================================
 #pragma mark -
 #pragma mark General PUBLIC methods
+// ---------------------------------------------------------------------------------------------------------------------
+- (IBAction) iconImageBtnClicked:(id)sender {
+    [IconEditorPanel startEditIconHREF:self.iconBaseURL delegate:self];
+}
+
 // ---------------------------------------------------------------------------------------------------------------------
 - (IBAction) btnCloseSave:(id)sender {
 
@@ -150,16 +145,23 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
+- (void) setImageFieldFromHREF:(NSString *)iconHREF {
+    GMapIcon *icon = [GMapIcon iconForHREF:iconHREF];
+    self.iconImageBtnField.image = icon.image;
+    [self.iconImageBtnField setImagePosition:NSImageOnly];
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
 - (void) setFieldValuesFromPoint {
 
     if(self.point) {
+        [self setImageFieldFromHREF:self.point.iconHREF];
 
-        GMapIcon *icon = [GMapIcon iconForHREF:self.point.iconHREF];
-        self.iconImageField.image = icon.image;
-
+        NSString *baseURL = nil;
         NSString *catPath = nil;
-        [MCategory parseIconHREF:self.point.iconHREF baseURL:nil catPath:&catPath];
+        [MCategory parseIconHREF:self.point.iconHREF baseURL:&baseURL catPath:&catPath];
         [self.pointCategoryField setStringValue:catPath];
+        self.iconBaseURL = baseURL;
 
         [self.pointNameField setStringValue:self.point.name];
         [self.pointDescrField setString:self.point.descr];
@@ -185,11 +187,23 @@
         self.point.descr = [self.pointDescrField string];
         self.point.updated_Date = [NSDate date];
 
-        NSString *baseURL = nil;
-        [MCategory parseIconHREF:self.point.iconHREF baseURL:&baseURL catPath:nil];
-        NSString *iconHREF = [NSString stringWithFormat:@"%@%@", baseURL, self.pointCategoryField.stringValue];
-        [self.point moveToIconHREF:iconHREF];
+        NSString *newIconHREF = [NSString stringWithFormat:@"%@%@", self.iconBaseURL, self.pointCategoryField.stringValue];
+        [self.point moveToIconHREF:newIconHREF];
     }
+}
+
+// =====================================================================================================================
+#pragma mark -
+#pragma mark <IconEditorPanelDelegate> protocol methods
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) iconPanelSaveChanges:(IconEditorPanel *)sender {
+    [self setImageFieldFromHREF:sender.iconHREF];
+    self.iconBaseURL = sender.iconHREF;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) iconPanelCancelChanges:(IconEditorPanel *)sender {
+    // nothing
 }
 
 // =====================================================================================================================

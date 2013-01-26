@@ -28,11 +28,13 @@
 @interface CategoryEditorPanel () <IconEditorPanelDelegate, NSTextFieldDelegate, NSTextViewDelegate>
 
 
-@property (nonatomic, assign) IBOutlet NSImageView *iconImageField;
+@property (nonatomic, assign) IBOutlet NSButton *iconImageBtnField;
 @property (nonatomic, assign) IBOutlet NSTextField *categoryNameField;
 @property (nonatomic, assign) IBOutlet NSTextField *categoryPathField;
 @property (nonatomic, assign) IBOutlet NSTextView *categoryDescrField;
 @property (nonatomic, assign) IBOutlet NSTextField *categoryExtraInfo;
+
+@property (nonatomic, strong) NSString *iconBaseURL;
 
 @property (nonatomic, strong) NSManagedObjectContext *categoryContext;
 
@@ -58,21 +60,16 @@
         return nil;
     }
 
-    CategoryEditorPanel *me = [[CategoryEditorPanel alloc] init];
-
-    BOOL allOK = [NSBundle loadNibNamed:@"CategoryEditorPanel" owner:me];
-
-    if(allOK) {
-
+    CategoryEditorPanel *me = [[CategoryEditorPanel alloc] initWithWindowNibName:@"CategoryEditorPanel"];
+    if(me) {
         me.myself = me;
         me.delegate = delegate;
         me.category = category;
         me.map = map;
         // No se por que se debe crear una referencia fuerte al contexto si el categorya esta dentro
         me.categoryContext = category.managedObjectContext;
-        [me setFieldValuesFromCategory];
 
-
+        
         [NSApp beginSheet:me.window
            modalForWindow:[delegate window]
             modalDelegate:nil
@@ -91,22 +88,20 @@
 #pragma mark -
 #pragma mark Initialization & finalization
 // ---------------------------------------------------------------------------------------------------------------------
-- (id) initWithWindow:(NSWindow *)window {
-    self = [super initWithWindow:window];
-    if(self) {
-        // Initialization code here.
-    }
-
-    return self;
+- (void) windowDidLoad {
+    
+    [super windowDidLoad];
+    
+    // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
+    [self setFieldValuesFromCategory];
+    
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) windowDidLoad {
-    [super windowDidLoad];
-
-    // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
-
-
+- (void)awakeFromNib {
+    
+    //self.iconImageField.target = self;
+    //[self.iconImageField setAction:@selector(iconImageDoubleClicked:)];
 }
 
 // =====================================================================================================================
@@ -118,6 +113,11 @@
 // =====================================================================================================================
 #pragma mark -
 #pragma mark General PUBLIC methods
+// ---------------------------------------------------------------------------------------------------------------------
+- (IBAction) iconImageBtnClicked:(id)sender {
+    [IconEditorPanel startEditIconHREF:self.iconBaseURL delegate:self];
+}
+
 // ---------------------------------------------------------------------------------------------------------------------
 - (IBAction) btnCloseSave:(id)sender {
 
@@ -131,13 +131,10 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (IBAction) btnCloseCancel:(id)sender {
 
-    [IconEditorPanel startEditIcon:@"" delegate:self];
-    /*
     if(self.delegate) {
         [self.delegate categoryPanelCancelChanges:self];
     }
     [self closePanel];
-     */
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -153,16 +150,23 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
+- (void) setImageFieldFromHREF:(NSString *)iconHREF {
+    GMapIcon *icon = [GMapIcon iconForHREF:iconHREF];
+    self.iconImageBtnField.image = icon.image;
+    [self.iconImageBtnField setImagePosition:NSImageOnly];
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
 - (void) setFieldValuesFromCategory {
 
     if(self.category) {
+        [self setImageFieldFromHREF:self.category.iconHREF];
 
-        GMapIcon *icon = [GMapIcon iconForHREF:self.category.iconHREF];
-        self.iconImageField.image = icon.image;
-
+        NSString *baseURL = nil;
         NSString *catPath = nil;
-        [MCategory parseIconHREF:self.category.iconHREF baseURL:nil catPath:&catPath];
+        [MCategory parseIconHREF:self.category.iconHREF baseURL:&baseURL catPath:&catPath];
         [self.categoryPathField setStringValue:catPath];
+        self.iconBaseURL = baseURL;
 
         [self.categoryNameField setStringValue:self.category.name];
         [self.categoryDescrField setString:@""];
@@ -178,9 +182,7 @@
 
     if(self.category) {
         
-        NSString *baseURL = nil;
-        [MCategory parseIconHREF:self.category.iconHREF baseURL:&baseURL catPath:nil];
-        NSString *newIconHREF = [NSString stringWithFormat:@"%@%@", baseURL, self.categoryPathField.stringValue];
+        NSString *newIconHREF = [NSString stringWithFormat:@"%@%@", self.iconBaseURL, self.categoryPathField.stringValue];
         
         // Los cambios en esta entidad son, REALMENTE, CAMBIOS EN LOS PUNTOS ASOCIADOS
         [self.category movePointsToCategoryWithIconHREF:newIconHREF inMap:self.map];
@@ -193,12 +195,13 @@
 #pragma mark <IconEditorPanelDelegate> protocol methods
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) iconPanelSaveChanges:(IconEditorPanel *)sender {
-         
+    [self setImageFieldFromHREF:sender.iconHREF];
+    self.iconBaseURL = sender.iconHREF;
 }
-     
+
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) iconPanelCancelChanges:(IconEditorPanel *)sender {
-         
+    // nothing
 }
 
      

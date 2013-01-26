@@ -44,6 +44,7 @@
 		4281590D16A8A54B00471064 /* _MCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4281590C16A8A54B00471064 /* _MCategory.m */; };
 		4281591116A8A79700471064 /* PointEditorPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4281590F16A8A79700471064 /* PointEditorPanel.m */; };
 		4281591216A8A79700471064 /* PointEditorPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4281591016A8A79700471064 /* PointEditorPanel.xib */; };
+		42C90FCD16B4058900E5EF51 /* MyImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 42C90FCC16B4058900E5EF51 /* MyImageView.m */; };
 		42D3F50516A08EAF0067FC89 /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F4F616A08EAF0067FC89 /* DDAbstractDatabaseLogger.m */; };
 		42D3F50616A08EAF0067FC89 /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F4F816A08EAF0067FC89 /* DDASLLogger.m */; };
 		42D3F50716A08EAF0067FC89 /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F4FA16A08EAF0067FC89 /* DDFileLogger.m */; };
@@ -131,6 +132,8 @@
 		4281590E16A8A79700471064 /* PointEditorPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointEditorPanel.h; sourceTree = "<group>"; };
 		4281590F16A8A79700471064 /* PointEditorPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointEditorPanel.m; sourceTree = "<group>"; };
 		4281591016A8A79700471064 /* PointEditorPanel.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PointEditorPanel.xib; sourceTree = "<group>"; };
+		42C90FCB16B4058800E5EF51 /* MyImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyImageView.h; sourceTree = "<group>"; };
+		42C90FCC16B4058900E5EF51 /* MyImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyImageView.m; sourceTree = "<group>"; };
 		42D3F4F516A08EAF0067FC89 /* DDAbstractDatabaseLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDAbstractDatabaseLogger.h; sourceTree = "<group>"; };
 		42D3F4F616A08EAF0067FC89 /* DDAbstractDatabaseLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDAbstractDatabaseLogger.m; sourceTree = "<group>"; };
 		42D3F4F716A08EAF0067FC89 /* DDASLLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDASLLogger.h; sourceTree = "<group>"; };
@@ -367,6 +370,8 @@
 				4223D2A316A446D700AED134 /* MapEditorPanel.h */,
 				4223D2A416A446D700AED134 /* MapEditorPanel.m */,
 				4223D2A516A446D700AED134 /* MapEditorPanel.xib */,
+				42C90FCB16B4058800E5EF51 /* MyImageView.h */,
+				42C90FCC16B4058900E5EF51 /* MyImageView.m */,
 			);
 			path = Editors;
 			sourceTree = "<group>";
@@ -632,6 +637,7 @@
 				421CB05316AAEC60001F9B09 /* _MCacheViewCount.m in Sources */,
 				4210E48416ADF2370059F42B /* CategoryEditorPanel.m in Sources */,
 				4210E48A16B350240059F42B /* IconEditorPanel.m in Sources */,
+				42C90FCD16B4058900E5EF51 /* MyImageView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

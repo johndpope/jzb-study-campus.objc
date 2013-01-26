@@ -9,28 +9,39 @@
 #define __IconEditorPanel__IMPL__
 #import "IconEditorPanel.h"
 #import "GMTItem.h"
+#import "GMapIcon.h"
+#import "MyImageView.h"
+#import "NSString+JavaStr.h"
 
-#import "PointEditorPanel.h"
 
 
 // *********************************************************************************************************************
 #pragma mark -
 #pragma mark PRIVATE CONSTANTS and C-Methods definitions
 // *********************************************************************************************************************
+#define ICON_OFFSET 2.5
+#define ICON_SIZE 45.0
+#define ICONS_PER_ROW 7
+#define ICON_ROWS 14
 
 
 // *********************************************************************************************************************
 #pragma mark -
 #pragma mark PRIVATE interface definition
 // *********************************************************************************************************************
-@interface IconEditorPanel () <NSTextFieldDelegate, NSTextViewDelegate>
+@interface IconEditorPanel () <MyImageViewDelegate, NSTextFieldDelegate, NSTextViewDelegate>
 
 
 @property (nonatomic, assign) IBOutlet NSScrollView *scrollView;
 @property (nonatomic, assign) IBOutlet NSImageView *allIconsImage;
+@property (weak) IBOutlet NSImageView *selectedImage;
+@property (weak) IBOutlet NSTextField *selectedName;
 
 
 @property (nonatomic, strong) IconEditorPanel *myself;
+@property (nonatomic, strong) NSString *baseURL;
+@property (nonatomic, strong) NSString *queryString;
+
 
 @end
 
@@ -47,27 +58,18 @@
 #pragma mark -
 #pragma mark CLASS methods
 // ---------------------------------------------------------------------------------------------------------------------
-+ (IconEditorPanel *) startEditIcon:(NSString *)iconHREF delegate:(id<IconEditorPanelDelegate>)delegate {
++ (IconEditorPanel *) startEditIconHREF:(NSString *)iconHREF delegate:(id<IconEditorPanelDelegate>)delegate {
 
     if(iconHREF == nil || delegate == nil) {
         return nil;
     }
 
-    IconEditorPanel *me = [[IconEditorPanel alloc] init];
-
-    BOOL allOK = [NSBundle loadNibNamed:@"IconEditorPanel" owner:me];
-
-    if(allOK) {
+    IconEditorPanel *me = [[IconEditorPanel alloc] initWithWindowNibName:@"IconEditorPanel"];
+    if(me) {
         me.myself = me;
         me.delegate = delegate;
         me.iconHREF = iconHREF;
-
-        [me setFieldValuesFromIcon];
-
-        NSString *imagePath = [[NSBundle mainBundle] pathForResource:@"IconEditorPanelBg" ofType:@"tiff"];
-        NSImage *imgColor = [[NSImage alloc] initWithContentsOfFile:imagePath];
-        me.scrollView.backgroundColor = [NSColor colorWithPatternImage:imgColor];
-
+        
         [NSApp beginSheet:me.window
            modalForWindow:[delegate window]
             modalDelegate:nil
@@ -85,21 +87,30 @@
 #pragma mark -
 #pragma mark Initialization & finalization
 // ---------------------------------------------------------------------------------------------------------------------
-- (id) initWithWindow:(NSWindow *)window {
-    self = [super initWithWindow:window];
-    if(self) {
-        // Initialization code here.
-    }
-
-    return self;
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
 - (void) windowDidLoad {
+    
     [super windowDidLoad];
 
     // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
+    
+    self.allIconsImage.target = self;
+    
+    NSString *imagePath = [[NSBundle mainBundle] pathForResource:@"IconEditorPanelBg" ofType:@"tiff"];
+    NSImage *imgColor = [[NSImage alloc] initWithContentsOfFile:imagePath];
+    self.scrollView.backgroundColor = [NSColor colorWithPatternImage:imgColor];
+    
+    NSUInteger index = [self.iconHREF indexOf:@"?"];
+    if(index!=NSNotFound) {
+        self.baseURL = [self.iconHREF subStrFrom:0 to:index];
+        self.queryString = [self.iconHREF subStrFrom:index];
+    } else {
+        self.baseURL = self.iconHREF;
+        self.queryString = @"";
+    }
+    [self setSelectedIconHREF:self.baseURL];
+    [self scrollToSelectedIcon:self.baseURL];
 }
+
 
 // =====================================================================================================================
 #pragma mark -
@@ -114,7 +125,6 @@
 - (IBAction) btnCloseSave:(id)sender {
 
     if(self.delegate) {
-        [self setIconFromFieldValues];
         [self.delegate iconPanelSaveChanges:self];
     }
     [self closePanel];
@@ -129,6 +139,7 @@
     [self closePanel];
 }
 
+
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) closePanel {
 
@@ -141,16 +152,90 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) setFieldValuesFromIcon {
-
-    if(self.iconHREF) {
-    }
+- (void) setSelectedIconHREF:(NSString *)baseIconHREF {
+    self.iconHREF = [NSString stringWithFormat:@"%@%@", baseIconHREF, self.queryString];
+    GMapIcon *icon = [GMapIcon iconForHREF:baseIconHREF];
+    self.selectedName.stringValue = icon.shortName;
+    self.selectedImage.image = icon.image;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) setIconFromFieldValues {
+- (void) myImageViewClicked:(MyImageView *)sender inPoint:(NSPoint)point {
+
+    int xPos = floor((point.x-ICON_OFFSET)/ICON_SIZE);
+    int yPos = floor((sender.frame.size.height-point.y-ICON_OFFSET)/ICON_SIZE);
     
+    if(xPos>=0 && xPos<ICONS_PER_ROW && yPos>=0 && yPos<ICON_ROWS) {
+        unsigned iconIndex = xPos + yPos * ICONS_PER_ROW;
+        NSString *iconHREF = [self urlFromIndex:iconIndex];
+        [self setSelectedIconHREF:iconHREF];
+    }
+
 }
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSString *) urlFromIndex:(unsigned) index {
+    
+    if(indexForURL==nil) {
+        [self loadGMapIconInfoList];
+    }
+    
+    if(index < [indexForURL count])
+        return [indexForURL objectAtIndex:index];
+    else
+        return  nil; //?????SEGURO????
+}
+
+static __strong NSArray *indexForURL = nil;
+static __strong NSDictionary *urlForIndex = nil;
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) loadGMapIconInfoList {
+    
+    NSMutableArray *_indexForURL = [NSMutableArray array];
+    NSMutableDictionary *_urlForIndex = [NSMutableDictionary dictionary];
+    
+    NSString *thePath = [[NSBundle mainBundle] pathForResource:@"allGMapIconsInfo" ofType:@"plist"];
+    NSDictionary *iconsInfo = [NSDictionary dictionaryWithContentsOfFile:thePath];
+    NSArray *iconsData = [iconsInfo valueForKey:@"iconsData"];
+    
+    unsigned index = 0;
+    for(NSDictionary *iconData in iconsData) {
+        NSString *iconURL = [iconData valueForKey:@"url"];
+        NSNumber *cIndex = [NSNumber numberWithUnsignedInt:index++];
+        
+        [_indexForURL addObject:iconURL];
+        [_urlForIndex setValue:cIndex forKey:iconURL];
+    }
+    
+    indexForURL = _indexForURL;
+    urlForIndex = _urlForIndex;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) scrollToSelectedIcon:(NSString *) url {
+    
+    // Scroll the vertical scroller to top
+    if ([_scrollView hasVerticalScroller]) {
+        // _scrollView.verticalScroller.floatValue = 0;
+    }
+    
+    
+    if(url) {
+        if(urlForIndex==nil) {
+            [self loadGMapIconInfoList];
+        }
+        
+        NSNumber *index = [urlForIndex objectForKey:url];
+        if(index) {
+            unsigned yPos = [index unsignedIntValue] / ICONS_PER_ROW;
+            float pos = ((NSView*)_scrollView.documentView).frame.size.height-_scrollView.contentSize.height-ICON_OFFSET-ICON_SIZE*yPos;
+            [_scrollView.contentView scrollToPoint:NSMakePoint(0, pos)];
+        }
+    }
+}
+
+
 
 
 
