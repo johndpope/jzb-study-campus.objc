@@ -23,7 +23,7 @@
 #import "MPoint.h"
 #import "BaseCoreData.h"
 #import "NSString+JavaStr.h"
-#import "PCachingViewCount.h"
+#import "GMapIcon.h"
 
 
 
@@ -54,6 +54,7 @@
 @implementation AppDelegate
 
 
+
 // ------------------------------------------------------------------------------------------------------------------
 - (void) applicationDidFinishLaunching:(NSNotification *)aNotification {
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
@@ -62,10 +63,11 @@
     self.selectedMap = nil;
     self.selectedCategory = nil;
     [self initDataModel];
-
+    
     [self loadTableDataSelectingObjWithID:nil];
 
     // [self showMainWindow];
+        
 }
 
 // ------------------------------------------------------------------------------------------------------------------
@@ -119,13 +121,13 @@
         MMap *newMap = [MMap emptyMapInContext:moc];
         [MapEditorPanel startEditMap:newMap delegate:self];
     } else {
-        MMap *copiedMap = (MMap *)[moc objectWithID:self.selectedMap.objectID];
-        MPoint *newPoint = [MPoint emptyPointInMap:copiedMap inContext:moc];
+        MMap *copiedMap = nil;
+        MCategory *copiedCategory = nil;
+
+        if(self.selectedMap!=nil) copiedMap = (MMap *)[moc objectWithID:self.selectedMap.objectID];
+        if(self.selectedCategory!=nil) copiedCategory = (MCategory *)[moc objectWithID:self.selectedCategory.objectID];
         
-        if(self.selectedCategory!=nil) {
-            newPoint.iconHREF = self.selectedCategory.iconHREF;
-        }
-        
+        MPoint *newPoint = [MPoint emptyPointWithName:@"" inMap:copiedMap withCategory:copiedCategory];
         [PointEditorPanel startEditPoint:newPoint delegate:self];
     }
 }
@@ -191,7 +193,7 @@
     if([item isKindOfClass:[MCategory class]]) {
         [((MCategory *)item) deletePointsWithMap:self.selectedMap];
     } else {
-        [item deleteEntity];
+        [item setAsDeleted:true];
     }
     
     [BaseCoreData saveContext];
@@ -242,88 +244,6 @@
 #pragma mark -
 #pragma mark <NSTableViewDelegate> methods
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) asyncSetBadgeTextForCell:(MyCellView *)cell cachingItem:(id<PCachingViewCount>)cachingItem {
-
-    // Array con los items que se estan calculando
-    static NSMutableDictionary *calculatingItems = nil;
-    if(calculatingItems == nil) {
-        calculatingItems = [NSMutableDictionary dictionary];
-    }
-
-
-    // Si ya estaba calculada la cuenta la establece y termina
-    NSString *viewCount = cachingItem.viewCount;
-    if(viewCount != nil) {
-        cell.badgeText = viewCount;
-        return;
-    }
-
-
-    // ------------------------------------------------------------------
-    // Se tiene que hacer el calculo de forma asincrona
-    cell.badgeText = @"???";
-
-    // Se apoyara en el ID
-    __block NSManagedObjectID *itemToShowID = cachingItem.objectID;
-
-
-    // Asocia la celda con el item actual
-    cell.objectValue = itemToShowID;
-
-    // Comprueba si ya estaba realizando el calculo para ese item (se le asocia la nueva celda)
-    MyCellView *prevCell = [calculatingItems objectForKey:itemToShowID];
-    [calculatingItems setObject:cell forKey:itemToShowID];
-    if(prevCell != nil) {
-        // Si la celda anterior me seguia apuntando a mi la libera
-        if([prevCell.objectValue isEqual:itemToShowID]) {
-            prevCell.objectValue = nil;
-        }
-        // Termina
-        return;
-    }
-
-
-
-    // ------------------------------------------------------------------
-    // Realiza el calculo de forma asincrona
-    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-    moc.parentContext = [BaseCoreData moContext];
-    [moc performBlock: ^{
-
-         // [NSThread sleepForTimeInterval:20];
-
-         // Actualiza la cuenta para su visualizacion
-         id<PCachingViewCount> cachingItem = (id<PCachingViewCount>)[moc objectWithID:itemToShowID];
-         [cachingItem updateViewCount];
-
-         // Graba el resultado al contexto padre
-         NSError *err = nil;
-         if(![moc save:&err]) {
-             NSLog (@"Error salvando la cuenta de puntos: %@", err);
-         }
-
-         // ------------------------------------------------------------------
-         // Actualiza el texto de la celda en el hilo principal
-         dispatch_async (dispatch_get_main_queue (), ^{
-
-                             MyCellView *prevCell = [calculatingItems objectForKey:itemToShowID];
-                             [calculatingItems removeObjectForKey:itemToShowID];
-
-                             if([prevCell.objectValue isEqual:itemToShowID]) {
-                                 id<PCachingViewCount> cachingItem = (id<PCachingViewCount>)[[BaseCoreData moContext] objectWithID:itemToShowID];
-                                 prevCell.badgeText = cachingItem.viewCount;
-                             }
-
-                             // Si no hay actualizaciones graba el contexto
-                             if(calculatingItems.count <= 0) {
-                                 [BaseCoreData saveContext];
-                             }
-                         });
-
-     }];
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
 - (NSView *) tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
 
     MBaseEntity *itemToShow = self.items[row];
@@ -338,22 +258,27 @@
     resultCell.objectValue = nil;
 
     // Establece el nuevo valor dependiendo del tipo de elemento
-    if(![itemToShow conformsToProtocol:@protocol(PCachingViewCount)]) {
+    if([itemToShow isKindOfClass:[MPoint class]]) {
+        
+        MPoint *pointToShow = (MPoint *)itemToShow;
         resultCell.badgeText = nil;
+        GMapIcon *gmapIcon = [GMapIcon iconForHREF:pointToShow.iconHREF];
+        resultCell.imageView.image = gmapIcon.image;
+        
+    } else if([itemToShow isKindOfClass:[MMap class]]) {
+        
+        MMap *mapToShow = (MMap *)itemToShow;
+        resultCell.badgeText=[NSString stringWithFormat:@"%03d", mapToShow.viewCountValue];
+        resultCell.imageView.image = nil;
+        
     } else {
-
-        id<PCachingViewCount> cachingItem;
-
-        // Si es una categoria necesitamos su asociacion con el mapa
-        if([itemToShow isKindOfClass:[MCategory class]]) {
-            MCategory *cat = (MCategory *)itemToShow;
-            cachingItem = [(MCategory *) cat viewCountForMap:self.selectedMap];
-        } else {
-            cachingItem = (id<PCachingViewCount>)itemToShow;
-        }
-
-        [self asyncSetBadgeTextForCell:resultCell cachingItem:cachingItem];
-
+        
+        MCategory *catToShow = (MCategory *)itemToShow;
+        MCacheViewCount *viewCountForMap = [catToShow viewCountForMap:self.selectedMap];
+        resultCell.badgeText=[NSString stringWithFormat:@"%03d", viewCountForMap.viewCountValue];
+        GMapIcon *gmapIcon = [GMapIcon iconForHREF:catToShow.iconHREF];
+        resultCell.imageView.image = gmapIcon.image;
+        
     }
 
     return resultCell;
@@ -530,22 +455,6 @@
      */
     // ---------------------------------------
     // ---------------------------------------
-
-
-    // Crea la peticion de busqueda
-    
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"MCategory"];
-    
-    // Se ejecuta y retorna el resultado
-    NSError *err=nil;
-    NSArray *array = [[BaseCoreData moContext] executeFetchRequest:request error:&err];
-    for(MPoint *item in array) {
-        NSString *name=item.name;
-        [name isEqual:@""];
-        NSLog(@"-------------------------------------------------");
-        NSLog(@"%@",item);
-    }
-    
 
 }
 

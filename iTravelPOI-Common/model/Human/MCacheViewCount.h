@@ -1,5 +1,4 @@
 #import "_MCacheViewCount.h"
-#import "PCachingViewCount.h"
 
 
 // *********************************************************************************************************************
@@ -13,7 +12,7 @@
 #pragma mark -
 #pragma mark Interface definition
 // *********************************************************************************************************************
-@interface MCacheViewCount : _MCacheViewCount <PCachingViewCount>
+@interface MCacheViewCount : _MCacheViewCount
 
 
 
@@ -28,8 +27,6 @@
 #pragma mark -
 #pragma mark INSTANCE public methods
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) resetViewCount;
-- (NSString *) updateViewCount;
 
 
 @end

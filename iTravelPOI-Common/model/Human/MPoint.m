@@ -1,4 +1,7 @@
+#define __MPoint__PROTECTED__
 #import "MPoint.h"
+
+
 #import "GMTPoint.h"
 #import "MMap.h"
 #import "MCategory.h"
@@ -9,7 +12,8 @@
 #pragma mark -
 #pragma mark PRIVATE CONSTANTS and C-Methods definitions
 // *********************************************************************************************************************
-
+#define UPD_POINT_ADDED   +1
+#define UPD_POINT_REMOVED -1
 
 
 // *********************************************************************************************************************
@@ -18,7 +22,6 @@
 // *********************************************************************************************************************
 @interface MPoint ()
 
-// Private interface goes here.
 
 @end
 
@@ -34,16 +37,38 @@
 #pragma mark -
 #pragma mark CLASS methods
 // ---------------------------------------------------------------------------------------------------------------------
-+ (MPoint *) emptyPointInMap:(MMap *)map inContext:(NSManagedObjectContext *)moContext {
-    return [MPoint emptyPointWithName:@"" inMap:map inContext:moContext];
++ (MPoint *) emptyPointInMap:(MMap *)map {
+
+    MCategory *cat = [MCategory categoryForIconHREF:GM_DEFAULT_POINT_ICON_HREF inContext:map.managedObjectContext];
+    return [MPoint emptyPointWithName:@"" inMap:map withCategory:cat];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-+ (MPoint *) emptyPointWithName:(NSString *)name inMap:(MMap *)map inContext:(NSManagedObjectContext *)moContext {
++ (MPoint *) emptyPointWithName:(NSString *)name inMap:(MMap *)map {
 
-    MPoint *point = [MPoint insertInManagedObjectContext:moContext];
-    point.map = map;
+    MCategory *cat = [MCategory categoryForIconHREF:GM_DEFAULT_POINT_ICON_HREF inContext:map.managedObjectContext];
+    return [MPoint emptyPointWithName:name inMap:map withCategory:cat];
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
++ (MPoint *) emptyPointWithName:(NSString *)name inMap:(MMap *)map withCategory:(MCategory *)category {
+
+    MPoint *point = [MPoint insertInManagedObjectContext:map.managedObjectContext];
     [point resetEntityWithName:name];
+    
+    point.map = map;
+    
+    if(category!=nil) {
+        point.category = category;
+    } else {
+        point.category = [MCategory categoryForIconHREF:GM_DEFAULT_POINT_ICON_HREF inContext:point.managedObjectContext];
+    }
+    point.iconHREF = point.category.iconHREF;
+    
+    [point.map updateViewCount: UPD_POINT_ADDED];
+    [point.category updateViewCount: UPD_POINT_ADDED];
+    [point.category updateViewCountForMap:map increment:UPD_POINT_ADDED];
+    
     return point;
 }
 
@@ -76,162 +101,7 @@
 #pragma mark -
 #pragma mark Getter/Setter methods
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) setModifiedSinceLastSync:(NSNumber *)modifiedSinceLastSync {
-    
-    // Cada vez que se modifica un punto, tambien lo hace su mapa
-    self.map.modifiedSinceLastSyncValue = true;
-    
-    // Establece el nuevo valor
-    [self willChangeValueForKey:@"modifiedSinceLastSync"];
-    [self setPrimitiveModifiedSinceLastSync:modifiedSinceLastSync];
-    [self didChangeValueForKey:@"modifiedSinceLastSync"];
-}
 
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) setMarkedAsDeleted:(NSNumber *)markedAsDeleted {
-    
-    // Si el valor a establecer es igual al que tiene no hace nada
-    if([self.markedAsDeleted isEqual:markedAsDeleted]) return;
-    
-    // Anula las cuentas cacheadas
-    [self.map resetViewCount];
-    [self.category resetViewCount];
-    [self.category resetViewCountForMap:self.map];
-    
-    // Lo marca como modificado desde la ultima sincronizacion
-    self.modifiedSinceLastSyncValue = true;
-    
-    // Establece el nuevo valor
-    [self willChangeValueForKey:@"markedAsDeleted"];
-    [self setPrimitiveMarkedAsDeleted:markedAsDeleted];
-    [self didChangeValueForKey:@"markedAsDeleted"];
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) setMap:(MMap *)newMap {
-
-    // Si el valor a establecer es igual al que tiene no hace nada
-    if([self.map.objectID isEqual:newMap.objectID]) return;
-    
-    // Anula las cuentas cacheadas de los valores actuales
-    [self.map resetViewCount];
-    [self.category resetViewCountForMap:self.map];
-
-    // Marca el mapa actual como modificado desde la ultima sincronizacion
-    self.map.modifiedSinceLastSyncValue = true;
-
-    // Establece el nuevo valor
-    [self willChangeValueForKey:@"map"];
-    [self setPrimitiveMap:newMap];
-    [self didChangeValueForKey:@"map"];
-
-    // Anula las cuentas cacheadas de los valores establecidos
-    [self.map resetViewCount];
-    [self.category resetViewCountForMap:self.map];
-    
-    // Lo marca como modificado desde la ultima sincronizacion
-    // Hay que hacerlo aqui despues de cambiar el valor del mapa referenciado
-    self.modifiedSinceLastSyncValue = true;
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) setCategory:(MCategory *)newCategory {
-
-    // Si el valor a establecer es igual al que tiene no hace nada
-    if([self.category.objectID isEqual:newCategory.objectID]) return;
-
-    // Anula las cuentas cacheadas de los valores actuales
-    [self.category resetViewCountForMap:self.map];
-
-    // Lo marca como modificado desde la ultima sincronizacion
-    self.modifiedSinceLastSyncValue = true;
-
-    // Establece el nuevo valor
-    [self willChangeValueForKey:@"category"];
-    [self setPrimitiveCategory:newCategory];
-    [self didChangeValueForKey:@"category"];
-
-    // Anula las cuentas cacheadas de los valores establecidos
-    [self.category resetViewCountForMap:self.map];
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) setIconHREF:(NSString *)value {
-
-    // ==========================================================================================
-    // Cambiar desde el interfaz, no desde el storage, el iconHREF implica recatalogar al punto
-    // ==========================================================================================
-
-
-    // Si el valor a establecer es igual al que tiene no hace nada
-    if([self.iconHREF isEqualToString:value]) return;
-
-    // Asigna la nueva categoria acorde con el nuevo iconHREF
-    NSError *err = nil;
-    MCategory *pointCategory = [MCategory categoryForIconHREF:value inContext:self.managedObjectContext error:&err];
-
-    if(pointCategory == nil) {
-        // ¿que podemos hacer?
-    } else {
-        // Se asigna a la nueva categoria
-        self.category = pointCategory;
-        // Se asigna el iconHREF normalizado de la categoria
-        value = pointCategory.iconHREF;
-    }
-
-    // Lo marca como modificado desde la ultima sincronizacion
-    self.modifiedSinceLastSyncValue = true;
-
-    // Cambia el valor primitivo del atributo para que se almacene en el storage
-    [self willChangeValueForKey:@"iconHREF"];
-    [self setPrimitiveIconHREF:value];
-    [self didChangeValueForKey:@"iconHREF"];
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) setDescr:(NSString *)descr {
-    
-    // Si el valor a establecer es igual al que tiene no hace nada
-    if([self.descr isEqual:descr]) return;
-    
-    // Lo marca como modificado desde la ultima sincronizacion
-    self.modifiedSinceLastSyncValue = true;
-    
-    // Establece el nuevo valor
-    [self willChangeValueForKey:@"descr"];
-    [self setPrimitiveDescr:descr];
-    [self didChangeValueForKey:@"descr"];
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) setLatitude:(NSNumber *)latitude {
-    
-    // Si el valor a establecer es igual al que tiene no hace nada
-    if([self.latitude isEqual:latitude]) return;
-    
-    // Lo marca como modificado desde la ultima sincronizacion
-    self.modifiedSinceLastSyncValue = true;
-    
-    // Establece el nuevo valor
-    [self willChangeValueForKey:@"latitude"];
-    [self setPrimitiveLatitude:latitude];
-    [self didChangeValueForKey:@"latitude"];
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) setLongitude:(NSNumber *)longitude {
-    
-    // Si el valor a establecer es igual al que tiene no hace nada
-    if([self.longitude isEqual:longitude]) return;
-    
-    // Lo marca como modificado desde la ultima sincronizacion
-    self.modifiedSinceLastSyncValue = true;
-    
-    // Establece el nuevo valor
-    [self willChangeValueForKey:@"longitude"];
-    [self setPrimitiveLongitude:longitude];
-    [self didChangeValueForKey:@"longitude"];
-}
 
 
 // =====================================================================================================================
@@ -242,9 +112,50 @@
 
     [super resetEntityWithName:name];
     self.descr = @"";
-    self.iconHREF = GM_DEFAULT_POINT_ICON_HREF;
     self.latitudeValue = 0.0;
     self.longitudeValue = 0.0;
+
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) moveToIconHREF:(NSString *)iconHREF {
+
+    [self moveToCategory: [MCategory categoryForIconHREF:iconHREF inContext:self.managedObjectContext]];
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) moveToCategory:(MCategory *)category {
+    
+    // Si ya es igual no hace nada
+    if([self.category.objectID isEqual:category.objectID]) return;
+    
+    
+    // Descuenta de la actual
+    [self.category updateViewCount: UPD_POINT_REMOVED];
+    [self.category updateViewCountForMap:self.map increment:UPD_POINT_REMOVED];
+    
+    self.category = category;
+    self.iconHREF = category.iconHREF;
+    
+    // añade a la nueva
+    [self.category updateViewCount: UPD_POINT_ADDED];
+    [self.category updateViewCountForMap:self.map increment:UPD_POINT_ADDED];
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) setAsDeleted:(BOOL)value {
+    
+    // Si ya es igual no hace nada
+    if(self.markedAsDeletedValue==value) return;
+
+    // Ajusta la cuenta de puntos visibles en su mapa y categoria
+    int increment = value ? UPD_POINT_REMOVED : UPD_POINT_ADDED;
+    [self.map updateViewCount:increment];
+    [self.category updateViewCount: increment];
+    [self.category updateViewCountForMap:self.map increment:increment];
+
+    // Establece el nuevo valor llamando a su clase base
+    [super setAsDeleted:value];
 }
 
 

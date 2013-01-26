@@ -73,7 +73,7 @@
 
 
         [NSApp beginSheet:me.window
-           modalForWindow:[[NSApp delegate] window]
+           modalForWindow:[delegate window]
             modalDelegate:nil
            didEndSelector:nil
               contextInfo:nil];
@@ -122,6 +122,7 @@
 
     if(self.delegate) {
         [self setPointFromFieldValues];
+        NSLog(@"--- panel point save ---");
         [self.delegate pointPanelSaveChanges:self];
     }
     [self closePanel];
@@ -172,6 +173,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) setPointFromFieldValues {
 
+    
     if(self.point) {
         // *** CONTROL DE SEGURIDAD (@name) PARA NO TOCAR Points BUENOS ***
         NSString *name = self.pointNameField.stringValue;
@@ -185,7 +187,8 @@
 
         NSString *baseURL = nil;
         [MCategory parseIconHREF:self.point.iconHREF baseURL:&baseURL catPath:nil];
-        self.point.iconHREF = [NSString stringWithFormat:@"%@%@", baseURL, self.pointCategoryField.stringValue];
+        NSString *iconHREF = [NSString stringWithFormat:@"%@%@", baseURL, self.pointCategoryField.stringValue];
+        [self.point moveToIconHREF:iconHREF];
     }
 }
 

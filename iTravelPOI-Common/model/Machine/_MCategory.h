@@ -1,8 +1,8 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
 // Make changes to MCategory.h instead.
-
 #import <CoreData/CoreData.h>
 #import "MBaseEntity.h"
+
 
 extern const struct MCategoryAttributes {
 	__unsafe_unretained NSString *iconHREF;
@@ -40,7 +40,13 @@ extern const struct MCategoryFetchedProperties {
 
 
 
+
+
+
 @property (nonatomic, strong) NSString* iconHREF;
+
+
+
 
 
 
@@ -50,7 +56,23 @@ extern const struct MCategoryFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* viewCount;
+
+
+
+@property (nonatomic, strong) NSNumber* viewCount;
+
+
+
+
+
+
+
+
+@property int16_t viewCountValue;
+- (int16_t)viewCountValue;
+- (void)setViewCountValue:(int16_t)value_;
+
+
 
 
 
@@ -67,7 +89,13 @@ extern const struct MCategoryFetchedProperties {
 
 
 
+
+
+
 @property (nonatomic, strong) MCategory *parent;
+
+
+
 
 //- (BOOL)validateParent:(id*)value_ error:(NSError**)error_;
 
@@ -91,24 +119,28 @@ extern const struct MCategoryFetchedProperties {
 
 @end
 
-@interface _MCategory (CoreDataGeneratedAccessors)
 
+@interface _MCategory (MapViewCountsCoreDataGeneratedAccessors)
 - (void)addMapViewCounts:(NSSet*)value_;
 - (void)removeMapViewCounts:(NSSet*)value_;
 - (void)addMapViewCountsObject:(MCacheViewCount*)value_;
 - (void)removeMapViewCountsObject:(MCacheViewCount*)value_;
+@end
 
+@interface _MCategory (PointsCoreDataGeneratedAccessors)
 - (void)addPoints:(NSSet*)value_;
 - (void)removePoints:(NSSet*)value_;
 - (void)addPointsObject:(MPoint*)value_;
 - (void)removePointsObject:(MPoint*)value_;
+@end
 
+@interface _MCategory (SubCategoriesCoreDataGeneratedAccessors)
 - (void)addSubCategories:(NSSet*)value_;
 - (void)removeSubCategories:(NSSet*)value_;
 - (void)addSubCategoriesObject:(MCategory*)value_;
 - (void)removeSubCategoriesObject:(MCategory*)value_;
-
 @end
+
 
 @interface _MCategory (CoreDataGeneratedPrimitiveAccessors)
 
@@ -119,8 +151,11 @@ extern const struct MCategoryFetchedProperties {
 
 
 
-- (NSString*)primitiveViewCount;
-- (void)setPrimitiveViewCount:(NSString*)value;
+- (NSNumber*)primitiveViewCount;
+- (void)setPrimitiveViewCount:(NSNumber*)value;
+
+- (int16_t)primitiveViewCountValue;
+- (void)setPrimitiveViewCountValue:(int16_t)value_;
 
 
 

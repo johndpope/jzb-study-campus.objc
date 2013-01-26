@@ -1,6 +1,9 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
 // Make changes to MPoint.m instead.
 
+#define __MPoint__PROTECTED__
+
+
 #import "_MPoint.h"
 
 const struct MPointAttributes MPointAttributes = {
@@ -84,9 +87,11 @@ const struct MPointFetchedProperties MPointFetchedProperties = {
 	return [result doubleValue];
 }
 
+
 - (void)setLatitudeValue:(double)value_ {
 	[self setLatitude:[NSNumber numberWithDouble:value_]];
 }
+
 
 - (double)primitiveLatitudeValue {
 	NSNumber *result = [self primitiveLatitude];
@@ -110,9 +115,11 @@ const struct MPointFetchedProperties MPointFetchedProperties = {
 	return [result doubleValue];
 }
 
+
 - (void)setLongitudeValue:(double)value_ {
 	[self setLongitude:[NSNumber numberWithDouble:value_]];
 }
+
 
 - (double)primitiveLongitudeValue {
 	NSNumber *result = [self primitiveLongitude];
@@ -141,3 +148,7 @@ const struct MPointFetchedProperties MPointFetchedProperties = {
 
 
 @end
+
+
+
+

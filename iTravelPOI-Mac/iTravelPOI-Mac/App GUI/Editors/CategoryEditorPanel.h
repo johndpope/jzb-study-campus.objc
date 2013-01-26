@@ -24,6 +24,7 @@
 @class CategoryEditorPanel;
 @protocol CategoryEditorPanelDelegate <NSObject>
 
+- (NSWindow *) window;
 - (void) categoryPanelSaveChanges:(CategoryEditorPanel *)sender;
 - (void) categoryPanelCancelChanges:(CategoryEditorPanel *)sender;
 

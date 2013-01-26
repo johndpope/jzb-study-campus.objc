@@ -1,7 +1,6 @@
 #import "_MCategory.h"
 #import "MMap.h"
 #import "MCacheViewCount.h"
-#import "PCachingViewCount.h"
 
 
 
@@ -18,8 +17,7 @@
 #pragma mark -
 #pragma mark Interface definition
 // *********************************************************************************************************************
-@interface MCategory : _MCategory <PCachingViewCount>
-
+@interface MCategory : _MCategory
 
 
 // =====================================================================================================================
@@ -27,7 +25,8 @@
 #pragma mark CLASS public methods
 // ---------------------------------------------------------------------------------------------------------------------
 + (void) parseIconHREF:(NSString *)iconHREF baseURL:(NSString **)baseURL catPath:(NSString **)catPath;
-+ (MCategory *) categoryForIconHREF:(NSString *)iconHREF inContext:(NSManagedObjectContext *)moContext error:(NSError **)err;
+
++ (MCategory *) categoryForIconHREF:(NSString *)iconHREF inContext:(NSManagedObjectContext *)moContext;
 + (NSArray *) categoriesFromMap:(MMap *)map parentCategory:(MCategory *)pCat error:(NSError **)err;
 
 
@@ -37,10 +36,12 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) deletePointsWithMap:(MMap *)map;
 - (void) movePointsToCategoryWithIconHREF:(NSString *)iconHREF inMap:(MMap *)map;
-- (void) resetViewCount;
-- (void) resetViewCountForMap:(MMap *)map;
 - (MCacheViewCount *) viewCountForMap:(MMap *)map;
-- (NSString *) updateViewCount;
+
+- (void) setAsDeleted:(BOOL) value;
+- (void) updateViewCount:(int) increment;
+- (void) updateViewCountForMap:(MMap *)map increment:(int) increment;
+
 
 
 @end

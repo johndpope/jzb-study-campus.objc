@@ -1,5 +1,5 @@
 //
-// PointEditorPanel.h
+// IconEditorPanel.h
 // iTravelPOI-Mac
 //
 // Created by Jose Zarzuela on 13/01/13.
@@ -7,8 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "MPoint.h"
-
+#import "MMap.h"
 
 
 // *********************************************************************************************************************
@@ -19,14 +18,14 @@
 
 // *********************************************************************************************************************
 #pragma mark -
-#pragma mark <PointEditorPanelDelegate> Protocol
+#pragma mark <IconEditorPanelDelegate> Protocol
 // *********************************************************************************************************************
-@class PointEditorPanel;
-@protocol PointEditorPanelDelegate <NSObject>
+@class IconEditorPanel;
+@protocol IconEditorPanelDelegate <NSObject>
 
 - (NSWindow *) window;
-- (void) pointPanelSaveChanges:(PointEditorPanel *)sender;
-- (void) pointPanelCancelChanges:(PointEditorPanel *)sender;
+- (void) iconPanelSaveChanges:(IconEditorPanel *)sender;
+- (void) iconPanelCancelChanges:(IconEditorPanel *)sender;
 
 @end
 
@@ -36,10 +35,10 @@
 #pragma mark -
 #pragma mark Interface definition
 // *********************************************************************************************************************
-@interface PointEditorPanel : NSWindowController
+@interface IconEditorPanel : NSWindowController
 
-@property (weak) id<PointEditorPanelDelegate> delegate;
-@property (strong) MPoint *point;
+@property (weak) id<IconEditorPanelDelegate> delegate;
+@property (strong) NSString *iconHREF;
 
 
 
@@ -47,11 +46,11 @@
 #pragma mark -
 #pragma mark CLASS public methods
 // ---------------------------------------------------------------------------------------------------------------------
-#ifndef __PointEditorPanel__IMPL__
+#ifndef __IconEditorPanel__IMPL__
 - (id) init __attribute__ ((unavailable ("init not available")));
 #endif
 
-+ (PointEditorPanel *) startEditPoint:(MPoint *)Point delegate:(id<PointEditorPanelDelegate>)delegate;
++ (IconEditorPanel *) startEditIcon:(NSString *)iconHREF delegate:(id<IconEditorPanelDelegate>)delegate;
 
 
 // =====================================================================================================================

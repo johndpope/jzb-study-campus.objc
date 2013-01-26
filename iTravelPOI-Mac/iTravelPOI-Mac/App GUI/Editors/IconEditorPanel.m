@@ -1,18 +1,16 @@
 //
-// CategoryEditorPanel.m
+// IconEditorPanel.m
 // iTravelPOI-Mac
 //
 // Created by Jose Zarzuela on 13/01/13.
 // Copyright (c) 2013 Jose Zarzuela. All rights reserved.
 //
 
-#define __CategoryEditorPanel__IMPL__
-#import "CategoryEditorPanel.h"
-#import "GMapIcon.h"
-#import "GMTItem.h"
-#import "MCategory.h"
-
+#define __IconEditorPanel__IMPL__
 #import "IconEditorPanel.h"
+#import "GMTItem.h"
+
+#import "PointEditorPanel.h"
 
 
 // *********************************************************************************************************************
@@ -25,18 +23,14 @@
 #pragma mark -
 #pragma mark PRIVATE interface definition
 // *********************************************************************************************************************
-@interface CategoryEditorPanel () <IconEditorPanelDelegate, NSTextFieldDelegate, NSTextViewDelegate>
+@interface IconEditorPanel () <NSTextFieldDelegate, NSTextViewDelegate>
 
 
-@property (nonatomic, assign) IBOutlet NSImageView *iconImageField;
-@property (nonatomic, assign) IBOutlet NSTextField *categoryNameField;
-@property (nonatomic, assign) IBOutlet NSTextField *categoryPathField;
-@property (nonatomic, assign) IBOutlet NSTextView *categoryDescrField;
-@property (nonatomic, assign) IBOutlet NSTextField *categoryExtraInfo;
+@property (nonatomic, assign) IBOutlet NSScrollView *scrollView;
+@property (nonatomic, assign) IBOutlet NSImageView *allIconsImage;
 
-@property (nonatomic, strong) NSManagedObjectContext *categoryContext;
 
-@property (nonatomic, strong) CategoryEditorPanel *myself;
+@property (nonatomic, strong) IconEditorPanel *myself;
 
 @end
 
@@ -45,40 +39,40 @@
 #pragma mark -
 #pragma mark Implementation
 // *********************************************************************************************************************
-@implementation CategoryEditorPanel
+@implementation IconEditorPanel
+
 
 
 // =====================================================================================================================
 #pragma mark -
 #pragma mark CLASS methods
 // ---------------------------------------------------------------------------------------------------------------------
-+ (CategoryEditorPanel *) startEditCategory:(MCategory *)category inMap:(MMap *)map delegate:(id<CategoryEditorPanelDelegate>)delegate {
++ (IconEditorPanel *) startEditIcon:(NSString *)iconHREF delegate:(id<IconEditorPanelDelegate>)delegate {
 
-    if(category == nil || delegate == nil) {
+    if(iconHREF == nil || delegate == nil) {
         return nil;
     }
 
-    CategoryEditorPanel *me = [[CategoryEditorPanel alloc] init];
+    IconEditorPanel *me = [[IconEditorPanel alloc] init];
 
-    BOOL allOK = [NSBundle loadNibNamed:@"CategoryEditorPanel" owner:me];
+    BOOL allOK = [NSBundle loadNibNamed:@"IconEditorPanel" owner:me];
 
     if(allOK) {
-
         me.myself = me;
         me.delegate = delegate;
-        me.category = category;
-        me.map = map;
-        // No se por que se debe crear una referencia fuerte al contexto si el categorya esta dentro
-        me.categoryContext = category.managedObjectContext;
-        [me setFieldValuesFromCategory];
+        me.iconHREF = iconHREF;
 
+        [me setFieldValuesFromIcon];
+
+        NSString *imagePath = [[NSBundle mainBundle] pathForResource:@"IconEditorPanelBg" ofType:@"tiff"];
+        NSImage *imgColor = [[NSImage alloc] initWithContentsOfFile:imagePath];
+        me.scrollView.backgroundColor = [NSColor colorWithPatternImage:imgColor];
 
         [NSApp beginSheet:me.window
            modalForWindow:[delegate window]
             modalDelegate:nil
            didEndSelector:nil
               contextInfo:nil];
-
 
         return me;
     } else {
@@ -105,8 +99,6 @@
     [super windowDidLoad];
 
     // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
-
-
 }
 
 // =====================================================================================================================
@@ -122,8 +114,8 @@
 - (IBAction) btnCloseSave:(id)sender {
 
     if(self.delegate) {
-        [self setCategoryFromFieldValues];
-        [self.delegate categoryPanelSaveChanges:self];
+        [self setIconFromFieldValues];
+        [self.delegate iconPanelSaveChanges:self];
     }
     [self closePanel];
 }
@@ -131,13 +123,10 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (IBAction) btnCloseCancel:(id)sender {
 
-    [IconEditorPanel startEditIcon:@"" delegate:self];
-    /*
     if(self.delegate) {
-        [self.delegate categoryPanelCancelChanges:self];
+        [self.delegate iconPanelCancelChanges:self];
     }
     [self closePanel];
-     */
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -146,63 +135,25 @@
     [NSApp endSheet:self.window];
     [self.window close];
     self.window = nil;
-    self.category = nil;
-    self.categoryContext = nil;
+    self.iconHREF = nil;
     self.delegate = nil;
     self.myself = nil;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) setFieldValuesFromCategory {
+- (void) setFieldValuesFromIcon {
 
-    if(self.category) {
-
-        GMapIcon *icon = [GMapIcon iconForHREF:self.category.iconHREF];
-        self.iconImageField.image = icon.image;
-
-        NSString *catPath = nil;
-        [MCategory parseIconHREF:self.category.iconHREF baseURL:nil catPath:&catPath];
-        [self.categoryPathField setStringValue:catPath];
-
-        [self.categoryNameField setStringValue:self.category.name];
-        [self.categoryDescrField setString:@""];
-        [self.categoryExtraInfo setStringValue:[NSString stringWithFormat:@"Published: %@\tUpdated: %@\nETAG: %@",
-                                             [GMTItem stringFromDate:self.category.published_Date],
-                                             [GMTItem stringFromDate:self.category.updated_Date],
-                                             self.category.etag]];
+    if(self.iconHREF) {
     }
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) setCategoryFromFieldValues {
-
-    if(self.category) {
-        
-        NSString *baseURL = nil;
-        [MCategory parseIconHREF:self.category.iconHREF baseURL:&baseURL catPath:nil];
-        NSString *newIconHREF = [NSString stringWithFormat:@"%@%@", baseURL, self.categoryPathField.stringValue];
-        
-        // Los cambios en esta entidad son, REALMENTE, CAMBIOS EN LOS PUNTOS ASOCIADOS
-        [self.category movePointsToCategoryWithIconHREF:newIconHREF inMap:self.map];
-        
-    }
+- (void) setIconFromFieldValues {
+    
 }
 
-// =====================================================================================================================
-#pragma mark -
-#pragma mark <IconEditorPanelDelegate> protocol methods
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) iconPanelSaveChanges:(IconEditorPanel *)sender {
-         
-}
-     
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) iconPanelCancelChanges:(IconEditorPanel *)sender {
-         
-}
 
-     
-     
+
 // =====================================================================================================================
 #pragma mark -
 #pragma mark PRIVATE methods

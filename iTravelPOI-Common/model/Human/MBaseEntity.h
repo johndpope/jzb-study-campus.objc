@@ -19,6 +19,6 @@
 #pragma mark INSTANCE public methods
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) resetEntityWithName:(NSString *)name;
-- (void) deleteEntity;
+- (void) setAsDeleted:(BOOL) value;
 
 @end

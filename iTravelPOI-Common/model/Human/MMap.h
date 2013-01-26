@@ -1,5 +1,4 @@
 #import "_MMap.h"
-#import "PCachingViewCount.h"
 
 
 
@@ -7,7 +6,7 @@
 #pragma mark -
 #pragma mark Interface definition
 // *********************************************************************************************************************
-@interface MMap : _MMap <PCachingViewCount>
+@interface MMap : _MMap
 
 
 // =====================================================================================================================
@@ -25,8 +24,8 @@
 #pragma mark -
 #pragma mark INSTANCE public methods
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) resetViewCount;
-- (NSString *) updateViewCount;
+- (void) setAsDeleted:(BOOL)value;
+- (void) updateViewCount:(int) increment;
 
 
 @end

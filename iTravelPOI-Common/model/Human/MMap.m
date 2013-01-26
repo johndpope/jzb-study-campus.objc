@@ -74,41 +74,7 @@
 #pragma mark -
 #pragma mark Getter/Setter methods
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) setMarkedAsDeleted:(NSNumber *)markedAsDeleted {
 
-    // Si el valor a establecer es igual al que tiene no hace nada
-    if([self.markedAsDeleted isEqual:markedAsDeleted]) return;
-
-    // Lo marca como modificado desde la ultima sincronizacion
-    self.modifiedSinceLastSyncValue = true;
-    
-    // Si se esta borrando, eso implica borrar todos los puntos del mapa
-    if(markedAsDeleted.boolValue) {
-        for(MPoint *point in self.points) {
-            point.markedAsDeleted = markedAsDeleted;
-        }
-    }
-
-    // Establece el nuevo valor
-    [self willChangeValueForKey:@"markedAsDeleted"];
-    [self setPrimitiveMarkedAsDeleted:markedAsDeleted];
-    [self didChangeValueForKey:@"markedAsDeleted"];
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) setSummary:(NSString *)summary {
-    
-    // Si el valor a establecer es igual al que tiene no hace nada
-    if([self.summary isEqual:summary]) return;
-    
-    // Lo marca como modificado desde la ultima sincronizacion
-    self.modifiedSinceLastSyncValue = true;
-    
-    // Establece el nuevo valor
-    [self willChangeValueForKey:@"summary"];
-    [self setPrimitiveSummary:summary];
-    [self didChangeValueForKey:@"summary"];
-}
 
 
 // =====================================================================================================================
@@ -122,29 +88,27 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) resetViewCount {
-    self.viewCount = nil;
+- (void) updateViewCount:(int) increment {
+    self.viewCountValue += increment;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (NSString *) updateViewCount {
-
-    NSError *err = nil;
-
-    // Crea la peticion de busqueda
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"MPoint"];
-
-    // Se asigna una condicion de filtro
-    NSPredicate *query = [NSPredicate predicateWithFormat:@"(markedAsDeleted=NO) AND (map=%@)", self];
-    [request setPredicate:query];
-
-    // Se ejecuta y retorna el resultado
-    NSUInteger count = [self.managedObjectContext countForFetchRequest:request error:&err];
-
-    // Actualiza la cuenta
-    self.viewCount = [NSString stringWithFormat:@"%03ld", count];
-    return self.viewCount;
+- (void) setAsDeleted:(BOOL)value {
+    
+    // Si ya es igual no hace nada
+    if(self.markedAsDeletedValue==value) return;
+    
+    // Si se esta borrando, eso implica borrar todos los puntos asociados
+    if(value==true) {
+        for(MPoint *point in self.points) {
+            [point setAsDeleted:true];
+        }
+    }
+    
+    // Establece el nuevo valor llamando a su clase base
+    [super setAsDeleted:value];
 }
+
 
 // =====================================================================================================================
 #pragma mark -

@@ -1,6 +1,9 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
 // Make changes to MCategory.m instead.
 
+#define __MCategory__PROTECTED__
+
+
 #import "_MCategory.h"
 
 const struct MCategoryAttributes MCategoryAttributes = {
@@ -44,6 +47,11 @@ const struct MCategoryFetchedProperties MCategoryFetchedProperties = {
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
+	if ([key isEqualToString:@"viewCountValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"viewCount"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
 
 	return keyPaths;
 }
@@ -60,6 +68,27 @@ const struct MCategoryFetchedProperties MCategoryFetchedProperties = {
 
 @dynamic viewCount;
 
+
+
+- (int16_t)viewCountValue {
+	NSNumber *result = [self viewCount];
+	return [result shortValue];
+}
+
+
+- (void)setViewCountValue:(int16_t)value_ {
+	[self setViewCount:[NSNumber numberWithShort:value_]];
+}
+
+
+- (int16_t)primitiveViewCountValue {
+	NSNumber *result = [self primitiveViewCount];
+	return [result shortValue];
+}
+
+- (void)setPrimitiveViewCountValue:(int16_t)value_ {
+	[self setPrimitiveViewCount:[NSNumber numberWithShort:value_]];
+}
 
 
 
@@ -114,3 +143,7 @@ const struct MCategoryFetchedProperties MCategoryFetchedProperties = {
 
 
 @end
+
+
+
+

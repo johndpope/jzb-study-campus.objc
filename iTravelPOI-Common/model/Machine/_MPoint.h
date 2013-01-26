@@ -1,8 +1,8 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
 // Make changes to MPoint.h instead.
-
 #import <CoreData/CoreData.h>
 #import "MBaseEntity.h"
+
 
 extern const struct MPointAttributes {
 	__unsafe_unretained NSString *descr;
@@ -40,7 +40,13 @@ extern const struct MPointFetchedProperties {
 
 
 
+
+
+
 @property (nonatomic, strong) NSString* descr;
+
+
+
 
 
 
@@ -50,7 +56,17 @@ extern const struct MPointFetchedProperties {
 
 
 
+
+
+
+#ifndef __MPoint__PROTECTED__
+@property (nonatomic, strong, readonly) NSString* iconHREF;
+#else
 @property (nonatomic, strong) NSString* iconHREF;
+#endif
+
+
+
 
 
 
@@ -60,7 +76,15 @@ extern const struct MPointFetchedProperties {
 
 
 
+
+
+
 @property (nonatomic, strong) NSNumber* latitude;
+
+
+
+
+
 
 
 
@@ -68,7 +92,14 @@ extern const struct MPointFetchedProperties {
 - (double)latitudeValue;
 - (void)setLatitudeValue:(double)value_;
 
+
+
+
+
 //- (BOOL)validateLatitude:(id*)value_ error:(NSError**)error_;
+
+
+
 
 
 
@@ -78,9 +109,18 @@ extern const struct MPointFetchedProperties {
 
 
 
+
+
+
+
+
 @property double longitudeValue;
 - (double)longitudeValue;
 - (void)setLongitudeValue:(double)value_;
+
+
+
+
 
 //- (BOOL)validateLongitude:(id*)value_ error:(NSError**)error_;
 
@@ -88,14 +128,38 @@ extern const struct MPointFetchedProperties {
 
 
 
+
+
+
+
+#ifndef __MPoint__PROTECTED__
+@property (nonatomic, strong, readonly) MCategory *category;
+#else
 @property (nonatomic, strong) MCategory *category;
+#endif
+
+
+
+
 
 //- (BOOL)validateCategory:(id*)value_ error:(NSError**)error_;
 
 
 
 
+
+
+
+
+#ifndef __MPoint__PROTECTED__
+@property (nonatomic, strong, readonly) MMap *map;
+#else
 @property (nonatomic, strong) MMap *map;
+#endif
+
+
+
+
 
 //- (BOOL)validateMap:(id*)value_ error:(NSError**)error_;
 
@@ -105,9 +169,7 @@ extern const struct MPointFetchedProperties {
 
 @end
 
-@interface _MPoint (CoreDataGeneratedAccessors)
 
-@end
 
 @interface _MPoint (CoreDataGeneratedPrimitiveAccessors)
 

@@ -1,6 +1,5 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
 // Make changes to MCacheViewCount.h instead.
-
 #import <CoreData/CoreData.h>
 
 
@@ -34,7 +33,23 @@ extern const struct MCacheViewCountFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* viewCount;
+
+
+
+@property (nonatomic, strong) NSNumber* viewCount;
+
+
+
+
+
+
+
+
+@property int16_t viewCountValue;
+- (int16_t)viewCountValue;
+- (void)setViewCountValue:(int16_t)value_;
+
+
 
 
 
@@ -44,14 +59,26 @@ extern const struct MCacheViewCountFetchedProperties {
 
 
 
+
+
+
 @property (nonatomic, strong) MCategory *category;
+
+
+
 
 //- (BOOL)validateCategory:(id*)value_ error:(NSError**)error_;
 
 
 
 
+
+
+
 @property (nonatomic, strong) MMap *map;
+
+
+
 
 //- (BOOL)validateMap:(id*)value_ error:(NSError**)error_;
 
@@ -61,15 +88,16 @@ extern const struct MCacheViewCountFetchedProperties {
 
 @end
 
-@interface _MCacheViewCount (CoreDataGeneratedAccessors)
 
-@end
 
 @interface _MCacheViewCount (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSString*)primitiveViewCount;
-- (void)setPrimitiveViewCount:(NSString*)value;
+- (NSNumber*)primitiveViewCount;
+- (void)setPrimitiveViewCount:(NSNumber*)value;
+
+- (int16_t)primitiveViewCountValue;
+- (void)setPrimitiveViewCountValue:(int16_t)value_;
 
 
 

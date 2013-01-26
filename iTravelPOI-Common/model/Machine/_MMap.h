@@ -1,8 +1,8 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
 // Make changes to MMap.h instead.
-
 #import <CoreData/CoreData.h>
 #import "MBaseEntity.h"
+
 
 extern const struct MMapAttributes {
 	__unsafe_unretained NSString *summary;
@@ -36,7 +36,13 @@ extern const struct MMapFetchedProperties {
 
 
 
+
+
+
 @property (nonatomic, strong) NSString* summary;
+
+
+
 
 
 
@@ -46,7 +52,23 @@ extern const struct MMapFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* viewCount;
+
+
+
+@property (nonatomic, strong) NSNumber* viewCount;
+
+
+
+
+
+
+
+
+@property int16_t viewCountValue;
+- (int16_t)viewCountValue;
+- (void)setViewCountValue:(int16_t)value_;
+
+
 
 
 
@@ -73,19 +95,21 @@ extern const struct MMapFetchedProperties {
 
 @end
 
-@interface _MMap (CoreDataGeneratedAccessors)
 
+@interface _MMap (CatViewCountsCoreDataGeneratedAccessors)
 - (void)addCatViewCounts:(NSSet*)value_;
 - (void)removeCatViewCounts:(NSSet*)value_;
 - (void)addCatViewCountsObject:(MCacheViewCount*)value_;
 - (void)removeCatViewCountsObject:(MCacheViewCount*)value_;
+@end
 
+@interface _MMap (PointsCoreDataGeneratedAccessors)
 - (void)addPoints:(NSSet*)value_;
 - (void)removePoints:(NSSet*)value_;
 - (void)addPointsObject:(MPoint*)value_;
 - (void)removePointsObject:(MPoint*)value_;
-
 @end
+
 
 @interface _MMap (CoreDataGeneratedPrimitiveAccessors)
 
@@ -96,8 +120,11 @@ extern const struct MMapFetchedProperties {
 
 
 
-- (NSString*)primitiveViewCount;
-- (void)setPrimitiveViewCount:(NSString*)value;
+- (NSNumber*)primitiveViewCount;
+- (void)setPrimitiveViewCount:(NSNumber*)value;
+
+- (int16_t)primitiveViewCountValue;
+- (void)setPrimitiveViewCountValue:(int16_t)value_;
 
 
 

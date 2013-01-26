@@ -146,7 +146,7 @@
     localMap.name = gmMap.name;
     localMap.gmID = gmMap.gmID;
     localMap.etag = gmMap.etag;
-    localMap.markedAsDeletedValue = false;
+    [localMap setAsDeleted:false];
     localMap.modifiedSinceLastSyncValue = false;
     // localMap.published_Date = gmMap.published_Date; --> STR => DATE
     // localMap.updated_Date = gmMap.updated_Date; --> STR => DATE
@@ -161,7 +161,7 @@
 
     if(err != nil) *err = nil;
 
-    localMap.markedAsDeletedValue = true;
+    [localMap setAsDeleted:true];
     localMap.modifiedSinceLastSyncValue = true;
 
     return true;
@@ -202,7 +202,7 @@
 
     if(err != nil) *err = nil;
 
-    MPoint *localPoint = [MPoint emptyPointWithName:gmPoint.name inMap:map inContext:self.moContext];
+    MPoint *localPoint = [MPoint emptyPointWithName:gmPoint.name inMap:map];
     [self updateLocalPoint:localPoint withRemotePoint:gmPoint error:err];
 
     return localPoint;
@@ -216,13 +216,13 @@
     localPoint.name = gmPoint.name;
     localPoint.gmID = gmPoint.gmID;
     localPoint.etag = gmPoint.etag;
-    localPoint.markedAsDeletedValue = false;
+    [localPoint setAsDeleted:false];
     localPoint.modifiedSinceLastSyncValue = false;
     // localPoint.published_Date = gmMap.published_Date; --> STR => DATE
     // localPoint.updated_Date = gmMap.updated_Date; --> STR => DATE
 
     localPoint.descr = gmPoint.descr;
-    localPoint.iconHREF = gmPoint.iconHREF;
+    [localPoint moveToIconHREF:gmPoint.iconHREF];
     localPoint.latitudeValue = gmPoint.latitude;
     localPoint.longitudeValue = gmPoint.longitude;
 
@@ -234,7 +234,7 @@
 
     if(err != nil) *err = nil;
 
-    localPoint.markedAsDeletedValue = true;
+    [localPoint setAsDeleted:true];
     localPoint.map.modifiedSinceLastSyncValue = true;
 
     return true;

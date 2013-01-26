@@ -1,6 +1,9 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
 // Make changes to MBaseEntity.m instead.
 
+#define __MBaseEntity__PROTECTED__
+
+
 #import "_MBaseEntity.h"
 
 const struct MBaseEntityAttributes MBaseEntityAttributes = {
@@ -85,9 +88,11 @@ const struct MBaseEntityFetchedProperties MBaseEntityFetchedProperties = {
 	return [result boolValue];
 }
 
+
 - (void)setMarkedAsDeletedValue:(BOOL)value_ {
 	[self setMarkedAsDeleted:[NSNumber numberWithBool:value_]];
 }
+
 
 - (BOOL)primitiveMarkedAsDeletedValue {
 	NSNumber *result = [self primitiveMarkedAsDeleted];
@@ -111,9 +116,11 @@ const struct MBaseEntityFetchedProperties MBaseEntityFetchedProperties = {
 	return [result boolValue];
 }
 
+
 - (void)setModifiedSinceLastSyncValue:(BOOL)value_ {
 	[self setModifiedSinceLastSync:[NSNumber numberWithBool:value_]];
 }
+
 
 - (BOOL)primitiveModifiedSinceLastSyncValue {
 	NSNumber *result = [self primitiveModifiedSinceLastSync];
@@ -155,3 +162,7 @@ const struct MBaseEntityFetchedProperties MBaseEntityFetchedProperties = {
 
 
 @end
+
+
+
+

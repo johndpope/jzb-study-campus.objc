@@ -102,36 +102,36 @@ BOOL _init_model_ = TRUE;
     // -------------------------------------------------------
     MMap *map1 = [MMap emptyMapWithName:@"@map1" inContext:moContext];
 
-
+    
     // -------------------------------------------------------
     MPoint *point;
 
-    point = [MPoint emptyPointWithName:@"p0" inMap:map1 inContext:moContext];
-    point.iconHREF = [MockUp _testIconHREF:@"rest#"];
+    point = [MPoint emptyPointWithName:@"p0" inMap:map1];
+    [point moveToIconHREF:@"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png?pcat=rest#"];
+    
+    point = [MPoint emptyPointWithName:@"p1" inMap:map1];
+    [point moveToIconHREF:@"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png?pcat=rest#chino#"];
 
-    point = [MPoint emptyPointWithName:@"p1" inMap:map1 inContext:moContext];
-    point.iconHREF = [MockUp _testIconHREF:@"rest#chino#"];
+    point = [MPoint emptyPointWithName:@"p2" inMap:map1];
+    [point moveToIconHREF:@"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png?pcat=rest#veg#"];
 
-    point = [MPoint emptyPointWithName:@"p2" inMap:map1 inContext:moContext];
-    point.iconHREF = [MockUp _testIconHREF:@"rest#veg#"];
+    point = [MPoint emptyPointWithName:@"p3" inMap:map1];
+    [point moveToIconHREF:@"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png?pcat=rest#veg#eco#"];
 
-    point = [MPoint emptyPointWithName:@"p3" inMap:map1 inContext:moContext];
-    point.iconHREF = [MockUp _testIconHREF:@"rest#veg#eco#"];
+    point = [MPoint emptyPointWithName:@"p4" inMap:map1];
+    [point moveToIconHREF:@"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png?pcat=rest#veg#dise#"];
 
-    point = [MPoint emptyPointWithName:@"p4" inMap:map1 inContext:moContext];
-    point.iconHREF = [MockUp _testIconHREF:@"rest#veg#dise#"];
+    point = [MPoint emptyPointWithName:@"p5" inMap:map1];
+    [point moveToIconHREF:@"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png?pcat=rest#trad#"];
 
-    point = [MPoint emptyPointWithName:@"p5" inMap:map1 inContext:moContext];
-    point.iconHREF = [MockUp _testIconHREF:@"rest#trad#"];
+    point = [MPoint emptyPointWithName:@"p6" inMap:map1];
+    [point moveToIconHREF:@"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png?pcat=rest#trad#esp#"];
 
-    point = [MPoint emptyPointWithName:@"p6" inMap:map1 inContext:moContext];
-    point.iconHREF = [MockUp _testIconHREF:@"rest#trad#esp#"];
+    point = [MPoint emptyPointWithName:@"p7" inMap:map1];
+    [point moveToIconHREF:@"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png?pcat=rest#trad#belga#"];
 
-    point = [MPoint emptyPointWithName:@"p7" inMap:map1 inContext:moContext];
-    point.iconHREF = [MockUp _testIconHREF:@"rest#trad#belga#"];
-
-    point = [MPoint emptyPointWithName:@"p8" inMap:map1 inContext:moContext];
-    point.iconHREF = [MockUp _testIconHREF:@"casas#"];
+    point = [MPoint emptyPointWithName:@"p8" inMap:map1];
+    [point moveToIconHREF:@"http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png?pcat=casas#"];
 
 
 

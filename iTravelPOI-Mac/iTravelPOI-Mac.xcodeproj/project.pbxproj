@@ -9,6 +9,12 @@
 /* Begin PBXBuildFile section */
 		4210E48416ADF2370059F42B /* CategoryEditorPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4210E48216ADF2370059F42B /* CategoryEditorPanel.m */; };
 		4210E48516ADF2370059F42B /* CategoryEditorPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4210E48316ADF2370059F42B /* CategoryEditorPanel.xib */; };
+		4210E48A16B350240059F42B /* IconEditorPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4210E48816B350240059F42B /* IconEditorPanel.m */; };
+		4210E48B16B350240059F42B /* IconEditorPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4210E48916B350240059F42B /* IconEditorPanel.xib */; };
+		4210E49516B3524A0059F42B /* allGMapIcons.png in Resources */ = {isa = PBXBuildFile; fileRef = 4210E49116B3524A0059F42B /* allGMapIcons.png */; };
+		4210E49616B3524A0059F42B /* allGMapIconsInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4210E49216B3524A0059F42B /* allGMapIconsInfo.plist */; };
+		4210E49B16B3604C0059F42B /* IconEditorPanelBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 4210E49916B3604C0059F42B /* IconEditorPanelBg.png */; };
+		4210E49C16B3604C0059F42B /* IconEditorPanelBg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4210E49A16B3604C0059F42B /* IconEditorPanelBg@2x.png */; };
 		4219160A1691A54A00185866 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 421916091691A54A00185866 /* Cocoa.framework */; };
 		421916141691A54A00185866 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 421916121691A54A00185866 /* InfoPlist.strings */; };
 		421916161691A54A00185866 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 421916151691A54A00185866 /* main.m */; };
@@ -68,6 +74,13 @@
 		4210E48116ADF2370059F42B /* CategoryEditorPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CategoryEditorPanel.h; sourceTree = "<group>"; };
 		4210E48216ADF2370059F42B /* CategoryEditorPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CategoryEditorPanel.m; sourceTree = "<group>"; };
 		4210E48316ADF2370059F42B /* CategoryEditorPanel.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CategoryEditorPanel.xib; sourceTree = "<group>"; };
+		4210E48716B350240059F42B /* IconEditorPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconEditorPanel.h; sourceTree = "<group>"; };
+		4210E48816B350240059F42B /* IconEditorPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IconEditorPanel.m; sourceTree = "<group>"; };
+		4210E48916B350240059F42B /* IconEditorPanel.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IconEditorPanel.xib; sourceTree = "<group>"; };
+		4210E49116B3524A0059F42B /* allGMapIcons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = allGMapIcons.png; sourceTree = "<group>"; };
+		4210E49216B3524A0059F42B /* allGMapIconsInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = allGMapIconsInfo.plist; sourceTree = "<group>"; };
+		4210E49916B3604C0059F42B /* IconEditorPanelBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IconEditorPanelBg.png; sourceTree = "<group>"; };
+		4210E49A16B3604C0059F42B /* IconEditorPanelBg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "IconEditorPanelBg@2x.png"; sourceTree = "<group>"; };
 		421916051691A54A00185866 /* iTravelPOI-Mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iTravelPOI-Mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		421916091691A54A00185866 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		4219160C1691A54A00185866 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -91,16 +104,6 @@
 		421CB04E16AAEBC7001F9B09 /* MCacheViewCount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCacheViewCount.m; sourceTree = "<group>"; };
 		421CB05116AAEC60001F9B09 /* _MCacheViewCount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MCacheViewCount.h; sourceTree = "<group>"; };
 		421CB05216AAEC60001F9B09 /* _MCacheViewCount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MCacheViewCount.m; sourceTree = "<group>"; };
-		421CB05416AC6E23001F9B09 /* PCachingViewCount.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PCachingViewCount.h; sourceTree = "<group>"; };
-		421CB05E16AC7F10001F9B09 /* pp-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "pp-Info.plist"; sourceTree = "<group>"; };
-		421CB06016AC7F10001F9B09 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		421CB06216AC7F10001F9B09 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		421CB06416AC7F10001F9B09 /* pp-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "pp-Prefix.pch"; sourceTree = "<group>"; };
-		421CB06616AC7F10001F9B09 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
-		421CB06816AC7F10001F9B09 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		421CB06916AC7F10001F9B09 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		421CB06C16AC7F11001F9B09 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		421CB06F16AC7F11001F9B09 /* pp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = pp.xcdatamodel; sourceTree = "<group>"; };
 		4223D0AD16A09C3C00AED134 /* _MPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MPoint.h; sourceTree = "<group>"; };
 		4223D0AE16A09C3C00AED134 /* _MPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MPoint.m; sourceTree = "<group>"; };
 		4223D0B116A09C4700AED134 /* MPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPoint.h; sourceTree = "<group>"; };
@@ -193,13 +196,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4210E49016B3524A0059F42B /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4210E49916B3604C0059F42B /* IconEditorPanelBg.png */,
+				4210E49A16B3604C0059F42B /* IconEditorPanelBg@2x.png */,
+				4210E49116B3524A0059F42B /* allGMapIcons.png */,
+				4210E49216B3524A0059F42B /* allGMapIconsInfo.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		421915FA1691A54A00185866 = {
 			isa = PBXGroup;
 			children = (
 				42D3F4F316A08E9F0067FC89 /* JZB-Utils */,
 				4219165E1691AC6300185866 /* iTravelPOI-Common */,
 				4219160F1691A54A00185866 /* iTravelPOI-Mac */,
-				421CB05C16AC7F10001F9B09 /* pp */,
 				421916081691A54A00185866 /* Frameworks */,
 				421916061691A54A00185866 /* Products */,
 			);
@@ -294,7 +307,6 @@
 				42D3F54116A0995C0067FC89 /* MMap.h */,
 				42D3F54216A0995C0067FC89 /* MMap.m */,
 				4223D29F16A36A0B00AED134 /* properties.txt */,
-				421CB05416AC6E23001F9B09 /* PCachingViewCount.h */,
 			);
 			path = Human;
 			sourceTree = "<group>";
@@ -317,30 +329,6 @@
 				421916801691AF6B00185866 /* MockUp.m */,
 			);
 			path = Test;
-			sourceTree = "<group>";
-		};
-		421CB05C16AC7F10001F9B09 /* pp */ = {
-			isa = PBXGroup;
-			children = (
-				421CB06816AC7F10001F9B09 /* AppDelegate.h */,
-				421CB06916AC7F10001F9B09 /* AppDelegate.m */,
-				421CB06B16AC7F11001F9B09 /* MainMenu.xib */,
-				421CB06E16AC7F11001F9B09 /* pp.xcdatamodeld */,
-				421CB05D16AC7F10001F9B09 /* Supporting Files */,
-			);
-			path = pp;
-			sourceTree = "<group>";
-		};
-		421CB05D16AC7F10001F9B09 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				421CB05E16AC7F10001F9B09 /* pp-Info.plist */,
-				421CB05F16AC7F10001F9B09 /* InfoPlist.strings */,
-				421CB06216AC7F10001F9B09 /* main.m */,
-				421CB06416AC7F10001F9B09 /* pp-Prefix.pch */,
-				421CB06516AC7F10001F9B09 /* Credits.rtf */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		4223D27116A32ACF00AED134 /* test */ = {
@@ -366,6 +354,10 @@
 		4223D2A216A446D700AED134 /* Editors */ = {
 			isa = PBXGroup;
 			children = (
+				4210E49016B3524A0059F42B /* Resources */,
+				4210E48716B350240059F42B /* IconEditorPanel.h */,
+				4210E48816B350240059F42B /* IconEditorPanel.m */,
+				4210E48916B350240059F42B /* IconEditorPanel.xib */,
 				4210E48116ADF2370059F42B /* CategoryEditorPanel.h */,
 				4210E48216ADF2370059F42B /* CategoryEditorPanel.m */,
 				4210E48316ADF2370059F42B /* CategoryEditorPanel.xib */,
@@ -567,6 +559,11 @@
 				4281591216A8A79700471064 /* PointEditorPanel.xib in Resources */,
 				423BBF3416A8CC510010C2DD /* GMapIcons.bundle in Resources */,
 				4210E48516ADF2370059F42B /* CategoryEditorPanel.xib in Resources */,
+				4210E48B16B350240059F42B /* IconEditorPanel.xib in Resources */,
+				4210E49516B3524A0059F42B /* allGMapIcons.png in Resources */,
+				4210E49616B3524A0059F42B /* allGMapIconsInfo.plist in Resources */,
+				4210E49B16B3604C0059F42B /* IconEditorPanelBg.png in Resources */,
+				4210E49C16B3604C0059F42B /* IconEditorPanelBg@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -584,7 +581,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd ../iTravelPOI-Common/Model\necho \"Running mogenerator\"\nmogenerator --template-var arc=true -m iTravelPOI.xcdatamodeld/iTravelPOI.xcdatamodel/ -M Machine/ -H Human/";
+			shellScript = "cd ../iTravelPOI-Common/Model\necho \"Running mogenerator\"\nmogenerator --template-var arc=true -m iTravelPOI.xcdatamodeld/iTravelPOI.xcdatamodel/ -M Machine/ -H Human/ --template-path ~/motemplates";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -634,6 +631,7 @@
 				421CB04F16AAEBC7001F9B09 /* MCacheViewCount.m in Sources */,
 				421CB05316AAEC60001F9B09 /* _MCacheViewCount.m in Sources */,
 				4210E48416ADF2370059F42B /* CategoryEditorPanel.m in Sources */,
+				4210E48A16B350240059F42B /* IconEditorPanel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -660,30 +658,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				4219161F1691A54A00185866 /* en */,
-			);
-			name = MainMenu.xib;
-			sourceTree = "<group>";
-		};
-		421CB05F16AC7F10001F9B09 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				421CB06016AC7F10001F9B09 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		421CB06516AC7F10001F9B09 /* Credits.rtf */ = {
-			isa = PBXVariantGroup;
-			children = (
-				421CB06616AC7F10001F9B09 /* en */,
-			);
-			name = Credits.rtf;
-			sourceTree = "<group>";
-		};
-		421CB06B16AC7F11001F9B09 /* MainMenu.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				421CB06C16AC7F11001F9B09 /* en */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -799,16 +773,6 @@
 			);
 			currentVersion = 421916681691AC6300185866 /* iTravelPOI.xcdatamodel */;
 			path = iTravelPOI.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-		421CB06E16AC7F11001F9B09 /* pp.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				421CB06F16AC7F11001F9B09 /* pp.xcdatamodel */,
-			);
-			currentVersion = 421CB06F16AC7F11001F9B09 /* pp.xcdatamodel */;
-			path = pp.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

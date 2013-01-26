@@ -30,9 +30,6 @@
 // *********************************************************************************************************************
 @implementation MCategory
 
-- (MCategory *) init {
-    return self;
-}
 
 // =====================================================================================================================
 #pragma mark -
@@ -124,11 +121,9 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-+ (MCategory *) categoryForIconHREF:(NSString *)iconHREF inContext:(NSManagedObjectContext *)moContext error:(NSError **)err {
++ (MCategory *) categoryForIconHREF:(NSString *)iconHREF inContext:(NSManagedObjectContext *)moContext {
 
-    __autoreleasing NSError *localError = nil;
-    if(err == nil) err = &localError;
-    *err = nil;
+    NSError *localError = nil;
 
 
     MCategory *cat;
@@ -140,7 +135,7 @@
 
     // Busca a ver la categoria requerida ya existe. En cuyo caso la retorna
     NSString *normalizedHREF = [NSString stringWithFormat:@"%@%@", baseURL, catPath];
-    cat = [MCategory _searchCategoryForIconHREF:normalizedHREF inContext:moContext error:err];
+    cat = [MCategory _searchCategoryForIconHREF:normalizedHREF inContext:moContext error:&localError];
     if(cat != nil) {
         return cat;
     }
@@ -158,7 +153,7 @@
         [partialHREF appendString:catName];
         [partialHREF appendString:CATPATH_SEP];
 
-        cat = [MCategory _searchCategoryForIconHREF:partialHREF inContext:moContext error:err];
+        cat = [MCategory _searchCategoryForIconHREF:partialHREF inContext:moContext error:&localError];
         if(cat == nil) {
             cat = [MCategory _emptyCategoryWithName:catName inContext:moContext];
             cat.parent = parentCat;
@@ -172,7 +167,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-+ (NSArray *) categoriesFromMap:(MMap *)map parentCategory:(MCategory *)pCat error:(NSError **)err {
++ (NSArray *) categoriesFromMap:(MMap *)map parentCategory:(MCategory *)parentCat error:(NSError **)err {
 
     __autoreleasing NSError *localError = nil;
     if(err == nil) err = &localError;
@@ -180,12 +175,14 @@
 
     // Crea la peticion de busqueda
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"MCategory"];
-
-
+    
     // Se asigna una condicion de filtro
-    NSPredicate *query = [NSPredicate predicateWithFormat:@"markedAsDeleted=NO AND parent=%@ AND (ANY points.map=%@)", pCat, map];
+    NSString *queryString = @"parent=%@ AND SUBQUERY(self.mapViewCounts, $X, $X.viewCount>0 AND $X.map=%@).@count>0";
+    NSPredicate *query = [NSPredicate predicateWithFormat:queryString, parentCat, map];
     [request setPredicate:query];
 
+    
+    
     // Se asigna el criterio de ordenacion
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:TRUE];
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
@@ -195,6 +192,7 @@
     NSArray *array = [map.managedObjectContext executeFetchRequest:request error:err];
     return array;
 }
+
 
 // =====================================================================================================================
 #pragma mark -
@@ -223,7 +221,7 @@
     // Transmite el borrado a sus puntos y los de sus subcategorias
     for(MPoint *point in self.points.allObjects) {
         if(map==nil || [point.map.objectID isEqual:map.objectID]) {
-            [point deleteEntity];
+            [point setAsDeleted:true];
         }
     }
     
@@ -235,58 +233,72 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
+- (void) allSubcategories:(NSMutableArray *)cats {
+
+    [cats addObjectsFromArray:self.subCategories.allObjects];
+    for(MCategory *scat in self.subCategories) {
+        [scat allSubcategories:cats];
+    }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
 - (void) movePointsToCategoryWithIconHREF:(NSString *)iconHREF inMap:(MMap *)map {
     
-    // Cambia todos sus puntos a la nueva categoria indicada
+    // Recopila todas las subcateforias
+    // Se hace asi por si se moviese "hacia abajo". Lo que podría hacer un bucle infinito
+    NSMutableArray *allSubCats = [NSMutableArray arrayWithObject:self];
+    [self allSubcategories:allSubCats];
+
+    // Comprueba donde se quiere mover
+    MCategory *newCategory = [MCategory categoryForIconHREF:iconHREF inContext:self.managedObjectContext];
+    if([self.objectID isEqual:newCategory.objectID]) return;
+    
+
+    // Cambia todos los puntos de cada categoria a la nueva categoria equivalente
     // Si se indica un mapa, se restringiran los puntos a los de ese mapa
     // Se están moviendo incluso los puntos borrados
-    for(MPoint *point in self.points.allObjects) {
-        if(map==nil || [point.map.objectID isEqual:map.objectID]) {
-            point.iconHREF = iconHREF;
+    NSUInteger index = self.iconHREF.length;
+    for(MCategory *cat in allSubCats) {
+        
+        NSString *newIconHREF = [NSString stringWithFormat:@"%@%@", newCategory.iconHREF, [cat.iconHREF subStrFrom:index]];
+        MCategory *newSubCategory = [MCategory categoryForIconHREF:newIconHREF inContext:self.managedObjectContext];
+        
+        NSArray *allPoints = [NSArray arrayWithArray:cat.points.allObjects];
+        for(MPoint *point in allPoints) {
+            if(map==nil || [point.map.objectID isEqual:map.objectID]) {
+                [point moveToCategory:newSubCategory];
+            }
+        }
+        
+    }
+}
+
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) setAsDeleted:(BOOL) value {
+    
+    // Si ya es igual no hace nada
+    if(self.markedAsDeletedValue==value) return;
+    
+    // Si se esta borrando, eso implica borrar todos los puntos asociados
+    if(value==true) {
+        for(MPoint *point in self.points) {
+            [point setAsDeleted:true];
         }
     }
     
-    // Debe cambiar los puntos de sus subcategorias adecuando su iconHREF
-    for(MCategory *subCat in self.subCategories) {
-        NSString *subCatIconHREF = [NSString stringWithFormat:@"%@%@%@", iconHREF, subCat.name, CATPATH_SEP];
-        [subCat movePointsToCategoryWithIconHREF:subCatIconHREF inMap:map];
-    }
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) resetViewCount {
-
-    // Borra sus cuentas cacheadas y las de sus padres. Así como con los mapas
-    MCategory *category = self;
-    while(category != nil) {
-        category.viewCount = nil;
-        for(MCacheViewCount *cacheViewCount in category.mapViewCounts) {
-            [cacheViewCount resetViewCount];
-        }
-        category = category.parent;
-    }
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) resetViewCountForMap:(MMap *)map {
-
-    // Borra sus cuentas cacheadas con respecto al mapa y las de sus padres
-    MCategory *category = self;
-    while(category != nil) {
-        [category resetViewCount];
-        for(MCacheViewCount *cacheViewCount in category.mapViewCounts) {
-            if([cacheViewCount.map isEqual:map]) {
-                [cacheViewCount resetViewCount];
-                break;
-            }
-        }
-        category = category.parent;
-    }
+    // Establece el nuevo valor llamando a su clase base
+    [super setAsDeleted:value];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (MCacheViewCount *) viewCountForMap:(MMap *)map {
 
+    // Si no hay mapa, no hay cuenta
+    if(map==nil) {
+        return nil;
+    }
+    
     // Busca la relacion existente previa con ese mapa
     for(MCacheViewCount *cacheViewCount in self.mapViewCounts) {
         if([cacheViewCount.map isEqual:map]) {
@@ -296,31 +308,30 @@
 
     // En el caso de que sea la primera vez que se pide, crea dicha relacion
     MCacheViewCount *cacheViewCount = [MCacheViewCount cacheViewCountForMap:map category:self inContext:self.managedObjectContext];
-
-    NSLog(@"created viewCount map=%@ - cat=%@", map.name, self.name);
     return cacheViewCount;
 
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (NSString *) updateViewCount {
+- (void) updateViewCount:(int) increment {
 
-    NSError *err = nil;
-
-    // Crea la peticion de busqueda
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"MPoint"];
-
-    // Se asigna una condicion de filtro
-    NSPredicate *query = [NSPredicate predicateWithFormat:@"(markedAsDeleted=NO) AND (category=%@)", self];
-    [request setPredicate:query];
-
-    // Se ejecuta y retorna el resultado
-    NSUInteger count = [self.managedObjectContext countForFetchRequest:request error:&err];
-
-    // Actualiza la cuenta
-    self.viewCount = [NSString stringWithFormat:@"%03ld", count];
-    return self.viewCount;
+    MCategory *cat = self;
+    while (cat != nil) {
+        cat.viewCountValue += increment;
+        cat = cat.parent;
+    }
 }
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) updateViewCountForMap:(MMap *)map increment:(int) increment {
+    
+    MCategory *cat = self;
+    while (cat != nil) {;
+        [cat viewCountForMap:map].viewCountValue += increment;
+        cat = cat.parent;
+    }
+}
+
 
 // =====================================================================================================================
 #pragma mark -

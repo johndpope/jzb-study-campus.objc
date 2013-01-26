@@ -1,6 +1,5 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
 // Make changes to MBaseEntity.h instead.
-
 #import <CoreData/CoreData.h>
 
 
@@ -42,7 +41,13 @@ extern const struct MBaseEntityFetchedProperties {
 
 
 
+
+
+
 @property (nonatomic, strong) NSString* etag;
+
+
+
 
 
 
@@ -52,7 +57,13 @@ extern const struct MBaseEntityFetchedProperties {
 
 
 
+
+
+
 @property (nonatomic, strong) NSString* gmID;
+
+
+
 
 
 
@@ -62,15 +73,39 @@ extern const struct MBaseEntityFetchedProperties {
 
 
 
+
+
+
+#ifndef __MBaseEntity__PROTECTED__
+@property (nonatomic, strong, readonly) NSNumber* markedAsDeleted;
+#else
 @property (nonatomic, strong) NSNumber* markedAsDeleted;
+#endif
 
 
 
+
+
+
+
+
+#ifndef __MBaseEntity__PROTECTED__
+@property (readonly) BOOL markedAsDeletedValue;
+- (BOOL)markedAsDeletedValue;
+#else
 @property BOOL markedAsDeletedValue;
 - (BOOL)markedAsDeletedValue;
 - (void)setMarkedAsDeletedValue:(BOOL)value_;
+#endif
+
+
+
+
 
 //- (BOOL)validateMarkedAsDeleted:(id*)value_ error:(NSError**)error_;
+
+
+
 
 
 
@@ -80,11 +115,23 @@ extern const struct MBaseEntityFetchedProperties {
 
 
 
+
+
+
+
+
 @property BOOL modifiedSinceLastSyncValue;
 - (BOOL)modifiedSinceLastSyncValue;
 - (void)setModifiedSinceLastSyncValue:(BOOL)value_;
 
+
+
+
+
 //- (BOOL)validateModifiedSinceLastSync:(id*)value_ error:(NSError**)error_;
+
+
+
 
 
 
@@ -94,7 +141,13 @@ extern const struct MBaseEntityFetchedProperties {
 
 
 
+
+
+
 //- (BOOL)validateName:(id*)value_ error:(NSError**)error_;
+
+
+
 
 
 
@@ -104,13 +157,22 @@ extern const struct MBaseEntityFetchedProperties {
 
 
 
+
+
+
 //- (BOOL)validatePublished_Date:(id*)value_ error:(NSError**)error_;
 
 
 
 
 
+
+
+
 @property (nonatomic, strong) NSDate* updated_Date;
+
+
+
 
 
 
@@ -123,9 +185,7 @@ extern const struct MBaseEntityFetchedProperties {
 
 @end
 
-@interface _MBaseEntity (CoreDataGeneratedAccessors)
 
-@end
 
 @interface _MBaseEntity (CoreDataGeneratedPrimitiveAccessors)
 

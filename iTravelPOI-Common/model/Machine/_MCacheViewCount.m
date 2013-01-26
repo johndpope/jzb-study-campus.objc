@@ -1,6 +1,9 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
 // Make changes to MCacheViewCount.m instead.
 
+#define __MCacheViewCount__PROTECTED__
+
+
 #import "_MCacheViewCount.h"
 
 const struct MCacheViewCountAttributes MCacheViewCountAttributes = {
@@ -41,6 +44,11 @@ const struct MCacheViewCountFetchedProperties MCacheViewCountFetchedProperties =
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
+	if ([key isEqualToString:@"viewCountValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"viewCount"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
 
 	return keyPaths;
 }
@@ -50,6 +58,27 @@ const struct MCacheViewCountFetchedProperties MCacheViewCountFetchedProperties =
 
 @dynamic viewCount;
 
+
+
+- (int16_t)viewCountValue {
+	NSNumber *result = [self viewCount];
+	return [result shortValue];
+}
+
+
+- (void)setViewCountValue:(int16_t)value_ {
+	[self setViewCount:[NSNumber numberWithShort:value_]];
+}
+
+
+- (int16_t)primitiveViewCountValue {
+	NSNumber *result = [self primitiveViewCount];
+	return [result shortValue];
+}
+
+- (void)setPrimitiveViewCountValue:(int16_t)value_ {
+	[self setPrimitiveViewCount:[NSNumber numberWithShort:value_]];
+}
 
 
 
@@ -69,3 +98,7 @@ const struct MCacheViewCountFetchedProperties MCacheViewCountFetchedProperties =
 
 
 @end
+
+
+
+
