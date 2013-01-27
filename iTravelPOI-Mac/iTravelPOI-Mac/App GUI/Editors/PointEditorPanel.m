@@ -69,6 +69,7 @@
         // No se por que se debe crear una referencia fuerte al contexto si el Pointa esta dentro
         me.PointContext = Point.managedObjectContext;
 
+        
         [NSApp beginSheet:me.window
            modalForWindow:[delegate window]
             modalDelegate:nil
@@ -127,7 +128,9 @@
 - (IBAction) btnCloseCancel:(id)sender {
 
     if(self.delegate) {
-        [self.delegate pointPanelCancelChanges:self];
+        if([self.delegate respondsToSelector:@selector(pointPanelCancelChanges:)]) {
+            [self.delegate pointPanelCancelChanges:self];
+        }
     }
     [self closePanel];
 }

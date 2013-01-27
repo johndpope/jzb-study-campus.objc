@@ -23,7 +23,10 @@
 @class MapEditorPanel;
 @protocol MapEditorPanelDelegate <NSObject>
 
+- (NSWindow *) window;
 - (void) mapPanelSaveChanges:(MapEditorPanel *)sender;
+
+@optional
 - (void) mapPanelCancelChanges:(MapEditorPanel *)sender;
 
 @end

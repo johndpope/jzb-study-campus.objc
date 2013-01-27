@@ -132,7 +132,9 @@
 - (IBAction) btnCloseCancel:(id)sender {
 
     if(self.delegate) {
-        [self.delegate categoryPanelCancelChanges:self];
+        if([self.delegate respondsToSelector:@selector(categoryPanelCancelChanges:)]) {
+            [self.delegate categoryPanelCancelChanges:self];
+        }
     }
     [self closePanel];
 }

@@ -56,20 +56,17 @@
         return nil;
     }
 
-    MapEditorPanel *me = [[MapEditorPanel alloc] init];
-
-    BOOL allOK = [NSBundle loadNibNamed:@"MapEditorPanel" owner:me];
-
-    if(allOK) {
+    MapEditorPanel *me = [[MapEditorPanel alloc] initWithWindowNibName:@"MapEditorPanel"];
+    if(me) {
         me.myself = me;
         me.delegate = delegate;
         me.map = map;
         // No se por que se debe crear una referencia fuerte al contexto si el mapa esta dentro
         me.mapContext = map.managedObjectContext;
-        [me setFieldValuesFromMap];
 
+        
         [NSApp beginSheet:me.window
-           modalForWindow:[[NSApp delegate] window]
+           modalForWindow:[delegate window]
             modalDelegate:nil
            didEndSelector:nil
               contextInfo:nil];
@@ -85,23 +82,17 @@
 #pragma mark -
 #pragma mark Initialization & finalization
 // ---------------------------------------------------------------------------------------------------------------------
-- (id) initWithWindow:(NSWindow *)window {
-    self = [super initWithWindow:window];
-    if(self) {
-        // Initialization code here.
-    }
-
-    return self;
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
 - (void) windowDidLoad {
+    
     [super windowDidLoad];
-
+    
     // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
-
-
+    [self setFieldValuesFromMap];
+    
 }
+
+
+
 
 // =====================================================================================================================
 #pragma mark -
@@ -126,7 +117,9 @@
 - (IBAction) btnCloseCancel:(id)sender {
 
     if(self.delegate) {
-        [self.delegate mapPanelCancelChanges:self];
+        if([self.delegate respondsToSelector:@selector(mapPanelCancelChanges:)]) {
+            [self.delegate mapPanelCancelChanges:self];
+        }
     }
     [self closePanel];
 }

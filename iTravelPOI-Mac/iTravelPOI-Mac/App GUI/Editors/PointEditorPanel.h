@@ -26,6 +26,8 @@
 
 - (NSWindow *) window;
 - (void) pointPanelSaveChanges:(PointEditorPanel *)sender;
+
+@optional
 - (void) pointPanelCancelChanges:(PointEditorPanel *)sender;
 
 @end

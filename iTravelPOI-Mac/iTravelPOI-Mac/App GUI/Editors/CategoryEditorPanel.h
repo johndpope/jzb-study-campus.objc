@@ -26,6 +26,8 @@
 
 - (NSWindow *) window;
 - (void) categoryPanelSaveChanges:(CategoryEditorPanel *)sender;
+
+@optional
 - (void) categoryPanelCancelChanges:(CategoryEditorPanel *)sender;
 
 @end

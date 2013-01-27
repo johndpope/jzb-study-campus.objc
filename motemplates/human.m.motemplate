@@ -1,0 +1,17 @@
+#define __<$managedObjectClassName$>__PROTECTED__
+
+#import "<$managedObjectClassName$>.h"
+
+
+@interface <$managedObjectClassName$> ()
+
+// Private interface goes here.
+
+@end
+
+
+@implementation <$managedObjectClassName$>
+
+// Custom logic goes here.
+
+@end
