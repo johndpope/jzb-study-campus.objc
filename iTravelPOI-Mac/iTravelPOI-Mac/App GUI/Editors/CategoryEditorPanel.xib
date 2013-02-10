@@ -579,10 +579,12 @@ wGw</bytes>
 						<object class="NSButton" id="129821886">
 							<reference key="NSNextResponder" ref="1022022908"/>
 							<int key="NSvFlags">268</int>
+							<array class="NSMutableArray" key="NSSubviews"/>
 							<string key="NSFrame">{{20, 223}, {48, 48}}</string>
 							<reference key="NSSuperview" ref="1022022908"/>
 							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="63737747"/>
+							<bool key="NSViewIsLayerTreeHost">YES</bool>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="405459470">
@@ -1639,7 +1641,7 @@ wGw</bytes>
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
 					<string key="className">CategoryEditorPanel</string>
-					<string key="superclassName">NSWindowController</string>
+					<string key="superclassName">EntityEditorPanel</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="btnCloseCancel:">id</string>
 						<string key="iconImageBtnClicked:">id</string>
@@ -1686,6 +1688,14 @@ wGw</bytes>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/CategoryEditorPanel.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">EntityEditorPanel</string>
+					<string key="superclassName">NSWindowController</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/EntityEditorPanel.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">

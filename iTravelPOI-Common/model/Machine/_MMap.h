@@ -1,7 +1,11 @@
+//*********************************************************************************************************************
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
 // Make changes to MMap.h instead.
+//*********************************************************************************************************************
+
 #import <CoreData/CoreData.h>
-#import "MBaseEntity.h"
+
+#import "MBaseGMSync.h"
 
 
 extern const struct MMapAttributes {
@@ -17,7 +21,7 @@ extern const struct MMapRelationships {
 extern const struct MMapFetchedProperties {
 } MMapFetchedProperties;
 
-@class MCacheViewCount;
+@class RMCViewCount;
 @class MPoint;
 
 
@@ -26,7 +30,7 @@ extern const struct MMapFetchedProperties {
 @interface MMapID : NSManagedObjectID {}
 @end
 
-@interface _MMap : MBaseEntity {}
+@interface _MMap : MBaseGMSync {}
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_;
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
@@ -55,7 +59,11 @@ extern const struct MMapFetchedProperties {
 
 
 
+#ifndef __MMap__PROTECTED__
+@property (nonatomic, strong, readonly) NSNumber* viewCount;
+#else
 @property (nonatomic, strong) NSNumber* viewCount;
+#endif
 
 
 
@@ -64,9 +72,14 @@ extern const struct MMapFetchedProperties {
 
 
 
+#ifndef __MMap__PROTECTED__
+@property (readonly) int16_t viewCountValue;
+- (int16_t)viewCountValue;
+#else
 @property int16_t viewCountValue;
 - (int16_t)viewCountValue;
 - (void)setViewCountValue:(int16_t)value_;
+#endif
 
 
 
@@ -99,8 +112,8 @@ extern const struct MMapFetchedProperties {
 @interface _MMap (CatViewCountsCoreDataGeneratedAccessors)
 - (void)addCatViewCounts:(NSSet*)value_;
 - (void)removeCatViewCounts:(NSSet*)value_;
-- (void)addCatViewCountsObject:(MCacheViewCount*)value_;
-- (void)removeCatViewCountsObject:(MCacheViewCount*)value_;
+- (void)addCatViewCountsObject:(RMCViewCount*)value_;
+- (void)removeCatViewCountsObject:(RMCViewCount*)value_;
 @end
 
 @interface _MMap (PointsCoreDataGeneratedAccessors)

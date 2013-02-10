@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "EntityEditorPanel.h"
 #import "MCategory.h"
 
 
@@ -17,32 +18,13 @@
 // *********************************************************************************************************************
 
 
-// *********************************************************************************************************************
-#pragma mark -
-#pragma mark <CategoryEditorPanelDelegate> Protocol
-// *********************************************************************************************************************
-@class CategoryEditorPanel;
-@protocol CategoryEditorPanelDelegate <NSObject>
-
-- (NSWindow *) window;
-- (void) categoryPanelSaveChanges:(CategoryEditorPanel *)sender;
-
-@optional
-- (void) categoryPanelCancelChanges:(CategoryEditorPanel *)sender;
-
-@end
-
 
 
 // *********************************************************************************************************************
 #pragma mark -
 #pragma mark Interface definition
 // *********************************************************************************************************************
-@interface CategoryEditorPanel : NSWindowController
-
-@property (weak) id<CategoryEditorPanelDelegate> delegate;
-@property (strong) MCategory *category;
-@property (strong) MMap *map;
+@interface CategoryEditorPanel : EntityEditorPanel
 
 
 
@@ -54,7 +36,7 @@
 - (id) init __attribute__ ((unavailable ("init not available")));
 #endif
 
-+ (CategoryEditorPanel *) startEditCategory:(MCategory *)category inMap:(MMap *)map delegate:(id<CategoryEditorPanelDelegate>)delegate;
++ (CategoryEditorPanel *) startEditCategory:(MCategory *)category inMap:(MMap *)map delegate:(id<EntityEditorPanelDelegate>)delegate;
 
 
 // =====================================================================================================================

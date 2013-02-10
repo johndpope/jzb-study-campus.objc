@@ -10,6 +10,7 @@
 
 #import "GMTMap.h"
 #import "GMTPoint.h"
+#import "GMTCompTuple.h"
 
 
 // *********************************************************************************************************************
@@ -32,4 +33,14 @@
 - (BOOL) updateLocalPoint:(id)localPoint withRemotePoint:(GMTPoint *)remotePoint error:(NSError **)err;
 - (BOOL) deleteLocalPoint:(id)localPoint inLocalMap:(id)map error:(NSError **)err;
 
+
+@optional
+
+- (void) willGetRemoteMapList;
+- (void) didGetRemoteMapList;
+- (void) willSyncMapTupleList:(NSArray *)compTuples;
+- (void) willSyncMapTuple:(GMTCompTuple *)tuple withIndex:(int)index;
+- (void) didSyncMapTuple:(GMTCompTuple *)tuple withIndex:(int)index syncOK:(BOOL)syncOK;
+
 @end
+

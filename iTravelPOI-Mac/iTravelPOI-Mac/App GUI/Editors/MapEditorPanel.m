@@ -6,11 +6,11 @@
 // Copyright (c) 2013 Jose Zarzuela. All rights reserved.
 //
 
+#define __EntityEditorPanel__IMPL__
 #define __MapEditorPanel__IMPL__
 #import "MapEditorPanel.h"
 #import "GMTItem.h"
 
-#import "PointEditorPanel.h"
 
 
 // *********************************************************************************************************************
@@ -25,15 +25,9 @@
 // *********************************************************************************************************************
 @interface MapEditorPanel () <NSTextFieldDelegate, NSTextViewDelegate>
 
-
 @property (nonatomic, assign) IBOutlet NSTextField *mapNameField;
 @property (nonatomic, assign) IBOutlet NSTextView *mapSummaryField;
 @property (nonatomic, assign) IBOutlet NSTextField *mapExtraInfo;
-
-
-@property (nonatomic, strong) NSManagedObjectContext *mapContext;
-
-@property (nonatomic, strong) MapEditorPanel *myself;
 
 @end
 
@@ -50,47 +44,16 @@
 #pragma mark -
 #pragma mark CLASS methods
 // ---------------------------------------------------------------------------------------------------------------------
-+ (MapEditorPanel *) startEditMap:(MMap *)map delegate:(id<MapEditorPanelDelegate>)delegate {
-
-    if(map == nil || delegate == nil) {
-        return nil;
-    }
++ (MapEditorPanel *) startEditMap:(MMap *)map delegate:(id<EntityEditorPanelDelegate>)delegate {
 
     MapEditorPanel *me = [[MapEditorPanel alloc] initWithWindowNibName:@"MapEditorPanel"];
-    if(me) {
-        me.myself = me;
-        me.delegate = delegate;
-        me.map = map;
-        // No se por que se debe crear una referencia fuerte al contexto si el mapa esta dentro
-        me.mapContext = map.managedObjectContext;
-
-        
-        [NSApp beginSheet:me.window
-           modalForWindow:[delegate window]
-            modalDelegate:nil
-           didEndSelector:nil
-              contextInfo:nil];
-
-        return me;
-    } else {
-        return nil;
-    }
-
+    return (MapEditorPanel *)[EntityEditorPanel panel:me startEditingEntity:map delegate:delegate];
 }
 
 // =====================================================================================================================
 #pragma mark -
 #pragma mark Initialization & finalization
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) windowDidLoad {
-    
-    [super windowDidLoad];
-    
-    // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
-    [self setFieldValuesFromMap];
-    
-}
-
 
 
 
@@ -98,59 +61,30 @@
 #pragma mark -
 #pragma mark Getter/Setter methods
 // ---------------------------------------------------------------------------------------------------------------------
+- (MMap *) map {
+    return (MMap *)self.entity;
+}
+
 
 
 // =====================================================================================================================
 #pragma mark -
 #pragma mark General PUBLIC methods
 // ---------------------------------------------------------------------------------------------------------------------
-- (IBAction) btnCloseSave:(id)sender {
-
-    if(self.delegate) {
-        [self setMapFromFieldValues];
-        [self.delegate mapPanelSaveChanges:self];
-    }
-    [self closePanel];
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-- (IBAction) btnCloseCancel:(id)sender {
-
-    if(self.delegate) {
-        if([self.delegate respondsToSelector:@selector(mapPanelCancelChanges:)]) {
-            [self.delegate mapPanelCancelChanges:self];
-        }
-    }
-    [self closePanel];
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) closePanel {
-
-    [NSApp endSheet:self.window];
-    [self.window close];
-    self.window = nil;
-    self.map = nil;
-    self.mapContext = nil;
-    self.delegate = nil;
-    self.myself = nil;
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) setFieldValuesFromMap {
+- (void) setFieldValuesFromEntity {
 
     if(self.map) {
         [self.mapNameField setStringValue:self.map.name];
         [self.mapSummaryField setString:self.map.summary];
         [self.mapExtraInfo setStringValue:[NSString stringWithFormat:@"Published: %@\tUpdated: %@\nETAG: %@",
-                                           [GMTItem stringFromDate:self.map.published_Date],
-                                           [GMTItem stringFromDate:self.map.updated_Date],
+                                           [GMTItem stringFromDate:self.map.published_date],
+                                           [GMTItem stringFromDate:self.map.updated_date],
                                            self.map.etag]];
     }
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) setMapFromFieldValues {
+- (void) setEntityFromFieldValues {
 
     if(self.map) {
         // *** CONTROL DE SEGURIDAD (@name) PARA NO TOCAR MAPAS BUENOS ***
@@ -161,7 +95,8 @@
             self.map.name = [NSString stringWithFormat:@"@%@", name];
         }
         self.map.summary = [self.mapSummaryField string];
-        self.map.updated_Date = [NSDate date];
+        self.map.updated_date = [NSDate date];
+        self.map.modifiedSinceLastSyncValue = true;
     }
     
 }

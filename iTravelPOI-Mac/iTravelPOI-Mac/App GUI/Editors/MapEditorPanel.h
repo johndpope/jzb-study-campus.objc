@@ -7,7 +7,9 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "EntityEditorPanel.h"
 #import "MMap.h"
+
 
 
 // *********************************************************************************************************************
@@ -16,31 +18,12 @@
 // *********************************************************************************************************************
 
 
-// *********************************************************************************************************************
-#pragma mark -
-#pragma mark <MapEditorPanelDelegate> Protocol
-// *********************************************************************************************************************
-@class MapEditorPanel;
-@protocol MapEditorPanelDelegate <NSObject>
-
-- (NSWindow *) window;
-- (void) mapPanelSaveChanges:(MapEditorPanel *)sender;
-
-@optional
-- (void) mapPanelCancelChanges:(MapEditorPanel *)sender;
-
-@end
-
-
 
 // *********************************************************************************************************************
 #pragma mark -
 #pragma mark Interface definition
 // *********************************************************************************************************************
-@interface MapEditorPanel : NSWindowController
-
-@property (weak) id<MapEditorPanelDelegate> delegate;
-@property (strong) MMap *map;
+@interface MapEditorPanel : EntityEditorPanel
 
 
 
@@ -52,7 +35,7 @@
 - (id) init __attribute__ ((unavailable ("init not available")));
 #endif
 
-+ (MapEditorPanel *) startEditMap:(MMap *)map delegate:(id<MapEditorPanelDelegate>)delegate;
++ (MapEditorPanel *) startEditMap:(MMap *)map delegate:(id<EntityEditorPanelDelegate>)delegate;
 
 
 // =====================================================================================================================

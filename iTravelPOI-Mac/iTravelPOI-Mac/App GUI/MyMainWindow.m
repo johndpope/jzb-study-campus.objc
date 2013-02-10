@@ -12,13 +12,16 @@
 
 #import "BaseCoreData.h"
 
+#import "GSyncPanel.h"
+#import "EntityEditorPanel.h"
 #import "MapEditorPanel.h"
 #import "PointEditorPanel.h"
 #import "CategoryEditorPanel.h"
+#import "RMCViewCount.h"
+
+#import "IconManager.h"
 
 #import "MyCellView.h"
-
-#import "GMapIcon.h"
 
 
 
@@ -34,7 +37,7 @@
 #pragma mark -
 #pragma mark PRIVATE interface definition
 //*********************************************************************************************************************
-@interface MyMainWindow() <MapEditorPanelDelegate, PointEditorPanelDelegate, CategoryEditorPanelDelegate, NSTableViewDelegate, NSTableViewDataSource>
+@interface MyMainWindow() <GSyncPanelDelegate, EntityEditorPanelDelegate, NSTableViewDelegate, NSTableViewDataSource>
 
 @property (nonatomic, assign) IBOutlet NSTableView *tableViewItems;
 
@@ -43,8 +46,6 @@
 
 @property (nonatomic, strong) MMap *selectedMap;
 @property (nonatomic, strong) MCategory *selectedCategory;
-
-
 
 @end
 
@@ -88,6 +89,10 @@
     
     // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
     [self loadTableDataSelectingObjWithID:nil];
+    
+    [self.window makeKeyAndOrderFront:self];
+    [self.window setOrderedIndex:0];
+    
 }
 
 // ------------------------------------------------------------------------------------------------------------------
@@ -122,17 +127,27 @@
 #pragma mark -
 #pragma mark <IBAction> methods
 // ---------------------------------------------------------------------------------------------------------------------
+- (IBAction) toolbarSyncItemAction:(id)sender {
+        
+    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    moc.parentContext = [BaseCoreData moContext];
+    [GSyncPanel startSyncWithMOContext:moc delegate:self];
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
 - (IBAction) toolbarBackItemAction:(id)sender {
     
     if(self.selectedCategory != nil) {
         
+        NSManagedObjectID *objID = self.selectedCategory.objectID;
         self.selectedCategory = self.selectedCategory.parent;
-        [self loadTableDataSelectingObjWithID:nil];
+        [self loadTableDataSelectingObjWithID:objID];
         
     } else if(self.selectedMap != nil) {
         
+        NSManagedObjectID *objID = self.selectedMap.objectID;
         self.selectedMap = nil;
-        [self loadTableDataSelectingObjWithID:nil];
+        [self loadTableDataSelectingObjWithID:objID];
         
     }
 }
@@ -140,11 +155,11 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (IBAction) toolbarAddItemAction:(id)sender {
     
-    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
     moc.parentContext = [BaseCoreData moContext];
     
     if(self.selectedMap == nil) {
-        MMap *newMap = [MMap emptyMapInContext:moc];
+        MMap *newMap = [MMap emptyMapWithName:@"" inContext:moc];
         [MapEditorPanel startEditMap:newMap delegate:self];
     } else {
         MMap *copiedMap = nil;
@@ -166,7 +181,7 @@
     
     MBaseEntity *item = self.loadedItems[index];
     
-    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
     moc.parentContext = [BaseCoreData moContext];
     MBaseEntity *selectedItemCopy = (MBaseEntity *)[moc objectWithID:item.objectID];
     
@@ -199,7 +214,7 @@
         [alert setInformativeText:@"Deleted records cannot be restored."];
         [alert setAlertStyle:NSWarningAlertStyle];
         
-        [alert beginSheetModalForWindow:[[NSApp delegate] window]
+        [alert beginSheetModalForWindow:self.window
                           modalDelegate:self
                          didEndSelector:@selector(alertRemoveItemDidEnd:returnCode:contextInfo:)
                             contextInfo:nil];
@@ -217,9 +232,9 @@
     
     // Esto no funciona con las categorias
     if([item isKindOfClass:[MCategory class]]) {
-        [((MCategory *)item) deletePointsWithMap:self.selectedMap];
+        [((MCategory *)item) deletePointsInMap:self.selectedMap];
     } else {
-        [item setAsDeleted:true];
+        [item updateDeleteMark:true];
     }
     
     [BaseCoreData saveContext];
@@ -262,7 +277,8 @@
     MyCellView *resultCell = [tableView makeViewWithIdentifier:tableColumn.identifier owner:self];
     
     resultCell.labelText = itemToShow.name;
-    // resultCell = itemToShow;
+    IconData *icon = [IconManager iconDataForHREF:itemToShow.iconBaseHREF];
+    resultCell.imageView.image = icon.image;
     
     
     // SIEMPRE se debe desasociar de cualquier item que tuviese de un uso anterior
@@ -271,24 +287,18 @@
     // Establece el nuevo valor dependiendo del tipo de elemento
     if([itemToShow isKindOfClass:[MPoint class]]) {
         
-        MPoint *pointToShow = (MPoint *)itemToShow;
         resultCell.badgeText = nil;
-        GMapIcon *gmapIcon = [GMapIcon iconForHREF:pointToShow.iconHREF];
-        resultCell.imageView.image = gmapIcon.image;
         
     } else if([itemToShow isKindOfClass:[MMap class]]) {
         
         MMap *mapToShow = (MMap *)itemToShow;
         resultCell.badgeText=[NSString stringWithFormat:@"%03d", mapToShow.viewCountValue];
-        resultCell.imageView.image = nil;
         
     } else {
         
         MCategory *catToShow = (MCategory *)itemToShow;
-        MCacheViewCount *viewCountForMap = [catToShow viewCountForMap:self.selectedMap];
+        RMCViewCount *viewCountForMap = [catToShow viewCountForMap:self.selectedMap];
         resultCell.badgeText=[NSString stringWithFormat:@"%03d", viewCountForMap.viewCountValue];
-        GMapIcon *gmapIcon = [GMapIcon iconForHREF:catToShow.iconHREF];
-        resultCell.imageView.image = gmapIcon.image;
         
     }
     
@@ -297,53 +307,37 @@
 
 // =====================================================================================================================
 #pragma mark -
-#pragma mark <MapEditorPanelDelegate> <PointEditorPanelDelegate> <CategoryEditorPanelDelegate> methods
+#pragma mark <EntityEditorPanelDelegate> <GSyncPanelDelegate> methods
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) mapPanelSaveChanges:(MapEditorPanel *)sender {
+- (void) editorPanelSaveChanges:(MapEditorPanel *)sender {
     
-    NSManagedObjectContext *moc = sender.map.managedObjectContext;
+    NSManagedObjectContext *moc = sender.entity.managedObjectContext;
     
     // Tiene que salvar la informacion del contexto hijo al padre y de este a disco
     [BaseCoreData saveMOContext:moc];
     [BaseCoreData saveContext];
     
-    MMap *savedMap = (MMap *)[[BaseCoreData moContext] objectWithID:sender.map.objectID];
+    MBaseEntity *savedEntity = (MBaseEntity *)[[BaseCoreData moContext] objectWithID:sender.entity.objectID];
     
     // Un cambio de nombre al editar o un nuevo elemento hace que la lista se desordene
     // mejor recargar la informacion de nuevo
-    [self loadTableDataSelectingObjWithID:savedMap.objectID];
+    [self loadTableDataSelectingObjWithID:savedEntity.objectID];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) pointPanelSaveChanges:(PointEditorPanel *)sender {
+- (void) gsyncPanelClose:(GSyncPanel *)sender {
     
-    NSManagedObjectContext *moc = sender.point.managedObjectContext;
-    
-    // Tiene que salvar la informacion del contexto hijo al padre y de este a disco
-    [BaseCoreData saveMOContext:moc];
-    [BaseCoreData saveContext];
-    
-    MPoint *savedPoint = (MPoint *)[[BaseCoreData moContext] objectWithID:sender.point.objectID];
-    
-    // Un cambio de nombre al editar o un nuevo elemento hace que la lista se desordene
-    // mejor recargar la informacion de nuevo
-    [self loadTableDataSelectingObjWithID:savedPoint.objectID];
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) categoryPanelSaveChanges:(CategoryEditorPanel *)sender {
-    
-    NSManagedObjectContext *moc = sender.category.managedObjectContext;
+    NSManagedObjectContext *moc = sender.moContext;
     
     // Tiene que salvar la informacion del contexto hijo al padre y de este a disco
     [BaseCoreData saveMOContext:moc];
     [BaseCoreData saveContext];
     
-    MCategory *savedCategory = (MCategory *)[[BaseCoreData moContext] objectWithID:sender.category.objectID];
-    
     // Un cambio de nombre al editar o un nuevo elemento hace que la lista se desordene
     // mejor recargar la informacion de nuevo
-    [self loadTableDataSelectingObjWithID:savedCategory.objectID];
+    self.selectedMap = nil;
+    self.selectedCategory = nil;
+    [self loadTableDataSelectingObjWithID:nil];
 }
 
 
@@ -384,16 +378,15 @@
     self.toolBarEnabled = false;
     
     
-    NSError *err = nil;
     NSArray *loadedItems = nil;
     
     if(self.selectedMap == nil) {
         // carga todos los mapas disponibles
         NSManagedObjectContext *moc = [BaseCoreData moContext];
-        loadedItems = [MMap allMapsInContext:moc includeMarkedAsDeleted:false error:&err];
+        loadedItems = [MMap allMapsInContext:moc includeMarkedAsDeleted:false];
     } else {
-        NSArray *cats = [MCategory categoriesFromMap:self.selectedMap parentCategory:self.selectedCategory error:&err];
-        NSArray *points = [MPoint pointsFromMap:self.selectedMap category:self.selectedCategory error:&err];
+        NSArray *cats = [MCategory categoriesWithPointsInMap:self.selectedMap parentCategory:self.selectedCategory];
+        NSArray *points = [MPoint pointsInMap:self.selectedMap category:self.selectedCategory];
         NSMutableArray *allItems = [NSMutableArray arrayWithArray:cats];
         [allItems addObjectsFromArray:points];
         loadedItems = allItems;
@@ -407,6 +400,8 @@
             MBaseEntity *item = self.loadedItems[n];
             if([item.objectID isEqual:objID]) {
                 [self.tableViewItems selectRowIndexes:[NSIndexSet indexSetWithIndex:n] byExtendingSelection:false];
+                [self.tableViewItems scrollRowToVisible:n];
+                break;
             }
         }
     }

@@ -6,13 +6,16 @@
 // Copyright (c) 2013 Jose Zarzuela. All rights reserved.
 //
 
+#define __EntityEditorPanel__IMPL__
 #define __CategoryEditorPanel__IMPL__
+#import <QuartzCore/QuartzCore.h>
 #import "CategoryEditorPanel.h"
-#import "GMapIcon.h"
-#import "GMTItem.h"
 #import "MCategory.h"
-
+#import "IconManager.h"
 #import "IconEditorPanel.h"
+#import "MPoint.h"
+#import "NSString+JavaStr.h"
+
 
 
 // *********************************************************************************************************************
@@ -34,11 +37,10 @@
 @property (nonatomic, assign) IBOutlet NSTextView *categoryDescrField;
 @property (nonatomic, assign) IBOutlet NSTextField *categoryExtraInfo;
 
-@property (nonatomic, strong) NSString *iconBaseURL;
+@property (nonatomic, strong) NSString *iconBaseHREF;
 
-@property (nonatomic, strong) NSManagedObjectContext *categoryContext;
+@property (nonatomic, strong) MMap *map;
 
-@property (nonatomic, strong) CategoryEditorPanel *myself;
 
 @end
 
@@ -54,60 +56,27 @@
 #pragma mark -
 #pragma mark CLASS methods
 // ---------------------------------------------------------------------------------------------------------------------
-+ (CategoryEditorPanel *) startEditCategory:(MCategory *)category inMap:(MMap *)map delegate:(id<CategoryEditorPanelDelegate>)delegate {
-
-    if(category == nil || delegate == nil) {
-        return nil;
-    }
++ (CategoryEditorPanel *) startEditCategory:(MCategory *)category inMap:(MMap *)map delegate:(id<EntityEditorPanelDelegate>)delegate {
 
     CategoryEditorPanel *me = [[CategoryEditorPanel alloc] initWithWindowNibName:@"CategoryEditorPanel"];
-    if(me) {
-        me.myself = me;
-        me.delegate = delegate;
-        me.category = category;
-        me.map = map;
-        // No se por que se debe crear una referencia fuerte al contexto si el categorya esta dentro
-        me.categoryContext = category.managedObjectContext;
-
-        
-        [NSApp beginSheet:me.window
-           modalForWindow:[delegate window]
-            modalDelegate:nil
-           didEndSelector:nil
-              contextInfo:nil];
-
-
-        return me;
-    } else {
-        return nil;
-    }
-
+    me.map = map;
+    return (CategoryEditorPanel *)[EntityEditorPanel panel:me startEditingEntity:category delegate:delegate];
 }
 
 // =====================================================================================================================
 #pragma mark -
 #pragma mark Initialization & finalization
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) windowDidLoad {
-    
-    [super windowDidLoad];
-    
-    // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
-    [self setFieldValuesFromCategory];
-    
-}
 
-// ---------------------------------------------------------------------------------------------------------------------
-- (void)awakeFromNib {
-    
-    //self.iconImageField.target = self;
-    //[self.iconImageField setAction:@selector(iconImageDoubleClicked:)];
-}
+
 
 // =====================================================================================================================
 #pragma mark -
 #pragma mark Getter/Setter methods
 // ---------------------------------------------------------------------------------------------------------------------
+- (MCategory *) category {
+    return (MCategory *)self.entity;
+}
 
 
 // =====================================================================================================================
@@ -115,90 +84,90 @@
 #pragma mark General PUBLIC methods
 // ---------------------------------------------------------------------------------------------------------------------
 - (IBAction) iconImageBtnClicked:(id)sender {
-    [IconEditorPanel startEditIconHREF:self.iconBaseURL delegate:self];
+    [IconEditorPanel startEditIconBaseHREF:self.iconBaseHREF delegate:self];
 }
 
-// ---------------------------------------------------------------------------------------------------------------------
-- (IBAction) btnCloseSave:(id)sender {
 
-    if(self.delegate) {
-        [self setCategoryFromFieldValues];
-        [self.delegate categoryPanelSaveChanges:self];
-    }
-    [self closePanel];
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-- (IBAction) btnCloseCancel:(id)sender {
-
-    if(self.delegate) {
-        if([self.delegate respondsToSelector:@selector(categoryPanelCancelChanges:)]) {
-            [self.delegate categoryPanelCancelChanges:self];
-        }
-    }
-    [self closePanel];
-}
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) closePanel {
 
-    [NSApp endSheet:self.window];
-    [self.window close];
-    self.window = nil;
-    self.category = nil;
-    self.categoryContext = nil;
-    self.delegate = nil;
-    self.myself = nil;
+    self.map = nil;
+    [super closePanel];
 }
+
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) setImageFieldFromHREF:(NSString *)iconHREF {
-    GMapIcon *icon = [GMapIcon iconForHREF:iconHREF];
+    IconData *icon = [IconManager iconDataForHREF:iconHREF];
     self.iconImageBtnField.image = icon.image;
     [self.iconImageBtnField setImagePosition:NSImageOnly];
+    
+    CABasicAnimation *rotate = [CABasicAnimation animationWithKeyPath:@"transform.rotation.y"];
+    rotate.fromValue = [NSNumber numberWithFloat:0];
+    rotate.toValue = [NSNumber numberWithFloat:-2*M_PI];
+    rotate.duration = 1.0;
+    rotate.repeatCount = 1;
+    [self.iconImageBtnField.layer setAnchorPoint:CGPointMake(0.5, 0.5)];
+    [self.iconImageBtnField.layer addAnimation:rotate forKey:@"trans_rotation"];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) setFieldValuesFromCategory {
+- (void) setFieldValuesFromEntity {
 
     if(self.category) {
-        [self setImageFieldFromHREF:self.category.iconHREF];
-
-        NSString *baseURL = nil;
-        NSString *catPath = nil;
-        [MCategory parseIconHREF:self.category.iconHREF baseURL:&baseURL catPath:&catPath];
-        [self.categoryPathField setStringValue:catPath];
-        self.iconBaseURL = baseURL;
+        [self setImageFieldFromHREF:self.category.iconBaseHREF];
+        self.iconBaseHREF = self.category.iconBaseHREF;
+        [self.categoryPathField setStringValue:self.category.iconExtraInfo];
 
         [self.categoryNameField setStringValue:self.category.name];
         [self.categoryDescrField setString:@""];
-        [self.categoryExtraInfo setStringValue:[NSString stringWithFormat:@"Published: %@\tUpdated: %@\nETAG: %@",
-                                             [GMTItem stringFromDate:self.category.published_Date],
-                                             [GMTItem stringFromDate:self.category.updated_Date],
-                                             self.category.etag]];
+        [self.categoryExtraInfo setStringValue:[NSString stringWithFormat:@"Published: %@\tUpdated: %@\n",
+                                             [MBaseEntity stringFromDate:self.category.published_date],
+                                             [MBaseEntity stringFromDate:self.category.updated_date]]];
     }
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) setCategoryFromFieldValues {
+- (void) setEntityFromFieldValues {
 
     if(self.category) {
         
-        NSString *newIconHREF = [NSString stringWithFormat:@"%@%@", self.iconBaseURL, self.categoryPathField.stringValue];
-        
         // Los cambios en esta entidad son, REALMENTE, CAMBIOS EN LOS PUNTOS ASOCIADOS
-        [self.category movePointsToCategoryWithIconHREF:newIconHREF inMap:self.map];
+        NSString *cleanCatName = [self.categoryPathField.stringValue replaceStr:@"&" with:@"%"];
+        MCategory *destCategory = [MCategory categoryForIconBaseHREF:self.iconBaseHREF
+                                                           extraInfo:cleanCatName
+                                                           inContext:self.category.managedObjectContext];
         
+        [self.category movePointsToCategory:destCategory inMap:self.map];
+        
+        // Marca los puntos y el mapa como modificados
+        [self markAsModifiedPointsForCategory:self.category inMap:self.map];
+        if(![self.category.objectID isEqual:destCategory.objectID]) {
+            [self markAsModifiedPointsForCategory:destCategory inMap:self.map];
+        }
+        self.map.modifiedSinceLastSyncValue = true;
     }
 }
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) markAsModifiedPointsForCategory:(MCategory *)category inMap:(MMap *)map {
+
+    for(MPoint *point in category.points) {
+        if([point.map.objectID isEqual:map.objectID]) {
+            point.modifiedSinceLastSyncValue = true;
+        }
+    }
+}
+
 
 // =====================================================================================================================
 #pragma mark -
 #pragma mark <IconEditorPanelDelegate> protocol methods
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) iconPanelSaveChanges:(IconEditorPanel *)sender {
-    [self setImageFieldFromHREF:sender.iconHREF];
-    self.iconBaseURL = sender.iconHREF;
+    [self setImageFieldFromHREF:sender.baseHREF];
+    self.iconBaseHREF = sender.baseHREF;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

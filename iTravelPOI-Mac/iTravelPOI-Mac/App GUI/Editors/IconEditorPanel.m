@@ -9,9 +9,9 @@
 #define __IconEditorPanel__IMPL__
 #import "IconEditorPanel.h"
 #import "GMTItem.h"
-#import "GMapIcon.h"
 #import "MyImageView.h"
 #import "NSString+JavaStr.h"
+#import "IconManager.h"
 
 
 
@@ -39,8 +39,6 @@
 
 
 @property (nonatomic, strong) IconEditorPanel *myself;
-@property (nonatomic, strong) NSString *baseURL;
-@property (nonatomic, strong) NSString *queryString;
 
 
 @end
@@ -52,15 +50,17 @@
 // *********************************************************************************************************************
 @implementation IconEditorPanel
 
+@synthesize baseHREF = _baseHREF;
+
 
 
 // =====================================================================================================================
 #pragma mark -
 #pragma mark CLASS methods
 // ---------------------------------------------------------------------------------------------------------------------
-+ (IconEditorPanel *) startEditIconHREF:(NSString *)iconHREF delegate:(id<IconEditorPanelDelegate>)delegate {
++ (IconEditorPanel *) startEditIconBaseHREF:(NSString *)baseHREF delegate:(id<IconEditorPanelDelegate>)delegate {
 
-    if(iconHREF == nil || delegate == nil) {
+    if(baseHREF == nil || delegate == nil) {
         return nil;
     }
 
@@ -68,7 +68,7 @@
     if(me) {
         me.myself = me;
         me.delegate = delegate;
-        me.iconHREF = iconHREF;
+        me.baseHREF = baseHREF;
         
         [NSApp beginSheet:me.window
            modalForWindow:[delegate window]
@@ -99,16 +99,8 @@
     NSImage *imgColor = [[NSImage alloc] initWithContentsOfFile:imagePath];
     self.scrollView.backgroundColor = [NSColor colorWithPatternImage:imgColor];
     
-    NSUInteger index = [self.iconHREF indexOf:@"?"];
-    if(index!=NSNotFound) {
-        self.baseURL = [self.iconHREF subStrFrom:0 to:index];
-        self.queryString = [self.iconHREF subStrFrom:index];
-    } else {
-        self.baseURL = self.iconHREF;
-        self.queryString = @"";
-    }
-    [self setSelectedIconHREF:self.baseURL];
-    [self scrollToSelectedIcon:self.baseURL];
+    [self setSelectedIconHREF:self.baseHREF];
+    [self scrollToSelectedIcon:self.baseHREF];
 }
 
 
@@ -116,7 +108,9 @@
 #pragma mark -
 #pragma mark Getter/Setter methods
 // ---------------------------------------------------------------------------------------------------------------------
-
+- (void) setBaseHREF:(NSString *)value {
+    _baseHREF = value;
+}
 
 // =====================================================================================================================
 #pragma mark -
@@ -146,17 +140,18 @@
     [NSApp endSheet:self.window];
     [self.window close];
     self.window = nil;
-    self.iconHREF = nil;
+    self.baseHREF = nil;
     self.delegate = nil;
     self.myself = nil;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) setSelectedIconHREF:(NSString *)baseIconHREF {
-    self.iconHREF = [NSString stringWithFormat:@"%@%@", baseIconHREF, self.queryString];
-    GMapIcon *icon = [GMapIcon iconForHREF:baseIconHREF];
+    
+    IconData *icon = [IconManager iconDataForHREF:baseIconHREF];
     self.selectedName.stringValue = icon.shortName;
     self.selectedImage.image = icon.image;
+    self.baseHREF = baseIconHREF;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

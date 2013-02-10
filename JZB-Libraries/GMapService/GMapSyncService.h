@@ -53,6 +53,6 @@
 #pragma mark INSTANCE public methods
 // ---------------------------------------------------------------------------------------------------------------------
 - (BOOL) syncMaps:(NSError **)err;
-
+- (void) cancelSync;
 
 @end

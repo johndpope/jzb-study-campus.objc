@@ -8,7 +8,10 @@
 
 #import "MockUp.h"
 #import "BaseCoreData.h"
-#import "Model.h"
+#import "MMap.h"
+#import "MPoint.h"
+#import "MCategory.h"
+
 
 
 
@@ -105,34 +108,22 @@ BOOL _init_model_ = TRUE;
     
     // -------------------------------------------------------
     MPoint *point;
-
-    point = [MPoint emptyPointWithName:@"p0" inMap:map1];
-    [point moveToIconHREF:@"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png?pcat=rest#"];
+    NSString *baseURL1 = @"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png";
+    NSString *baseURL2 = @"http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png";
     
-    point = [MPoint emptyPointWithName:@"p1" inMap:map1];
-    [point moveToIconHREF:@"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png?pcat=rest#chino#"];
+    point = [MPoint emptyPointWithName:@"p0" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 extraInfo:@"rest#" inContext:moContext]];
+    
+    point = [MPoint emptyPointWithName:@"p1" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 extraInfo:@"rest#chino#" inContext:moContext]];
 
-    point = [MPoint emptyPointWithName:@"p2" inMap:map1];
-    [point moveToIconHREF:@"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png?pcat=rest#veg#"];
+    point = [MPoint emptyPointWithName:@"p2" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 extraInfo:@"rest#veg#" inContext:moContext]];
+    point = [MPoint emptyPointWithName:@"p3" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 extraInfo:@"rest#veg#eco#" inContext:moContext]];
+    point = [MPoint emptyPointWithName:@"p4" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 extraInfo:@"rest#veg#dise#" inContext:moContext]];
 
-    point = [MPoint emptyPointWithName:@"p3" inMap:map1];
-    [point moveToIconHREF:@"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png?pcat=rest#veg#eco#"];
+    point = [MPoint emptyPointWithName:@"p5" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 extraInfo:@"rest#trad#" inContext:moContext]];
+    point = [MPoint emptyPointWithName:@"p6" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 extraInfo:@"rest#trad#esp#" inContext:moContext]];
+    point = [MPoint emptyPointWithName:@"p7" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 extraInfo:@"rest#trad#belga#" inContext:moContext]];
 
-    point = [MPoint emptyPointWithName:@"p4" inMap:map1];
-    [point moveToIconHREF:@"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png?pcat=rest#veg#dise#"];
-
-    point = [MPoint emptyPointWithName:@"p5" inMap:map1];
-    [point moveToIconHREF:@"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png?pcat=rest#trad#"];
-
-    point = [MPoint emptyPointWithName:@"p6" inMap:map1];
-    [point moveToIconHREF:@"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png?pcat=rest#trad#esp#"];
-
-    point = [MPoint emptyPointWithName:@"p7" inMap:map1];
-    [point moveToIconHREF:@"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png?pcat=rest#trad#belga#"];
-
-    point = [MPoint emptyPointWithName:@"p8" inMap:map1];
-    [point moveToIconHREF:@"http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png?pcat=casas#"];
-
+    point = [MPoint emptyPointWithName:@"p8" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL2 extraInfo:@"casas#" inContext:moContext]];
 
 
     if([BaseCoreData saveContext]) {

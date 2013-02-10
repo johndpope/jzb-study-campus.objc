@@ -1,16 +1,18 @@
+//*********************************************************************************************************************
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
 // Make changes to MBaseEntity.h instead.
+//*********************************************************************************************************************
+
 #import <CoreData/CoreData.h>
 
 
+
 extern const struct MBaseEntityAttributes {
-	__unsafe_unretained NSString *etag;
-	__unsafe_unretained NSString *gmID;
-	__unsafe_unretained NSString *markedAsDeleted;
-	__unsafe_unretained NSString *modifiedSinceLastSync;
+	__unsafe_unretained NSString *iconBaseHREF;
+	__unsafe_unretained NSString *iconExtraInfo;
 	__unsafe_unretained NSString *name;
-	__unsafe_unretained NSString *published_Date;
-	__unsafe_unretained NSString *updated_Date;
+	__unsafe_unretained NSString *published_date;
+	__unsafe_unretained NSString *updated_date;
 } MBaseEntityAttributes;
 
 extern const struct MBaseEntityRelationships {
@@ -18,8 +20,6 @@ extern const struct MBaseEntityRelationships {
 
 extern const struct MBaseEntityFetchedProperties {
 } MBaseEntityFetchedProperties;
-
-
 
 
 
@@ -44,30 +44,18 @@ extern const struct MBaseEntityFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* etag;
+#ifndef __MBaseEntity__PROTECTED__
+@property (nonatomic, strong, readonly) NSString* iconBaseHREF;
+#else
+@property (nonatomic, strong) NSString* iconBaseHREF;
+#endif
 
 
 
 
 
 
-//- (BOOL)validateEtag:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-
-
-
-@property (nonatomic, strong) NSString* gmID;
-
-
-
-
-
-
-//- (BOOL)validateGmID:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateIconBaseHREF:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -77,9 +65,9 @@ extern const struct MBaseEntityFetchedProperties {
 
 
 #ifndef __MBaseEntity__PROTECTED__
-@property (nonatomic, strong, readonly) NSNumber* markedAsDeleted;
+@property (nonatomic, strong, readonly) NSString* iconExtraInfo;
 #else
-@property (nonatomic, strong) NSNumber* markedAsDeleted;
+@property (nonatomic, strong) NSString* iconExtraInfo;
 #endif
 
 
@@ -87,48 +75,7 @@ extern const struct MBaseEntityFetchedProperties {
 
 
 
-
-
-#ifndef __MBaseEntity__PROTECTED__
-@property (readonly) BOOL markedAsDeletedValue;
-- (BOOL)markedAsDeletedValue;
-#else
-@property BOOL markedAsDeletedValue;
-- (BOOL)markedAsDeletedValue;
-- (void)setMarkedAsDeletedValue:(BOOL)value_;
-#endif
-
-
-
-
-
-//- (BOOL)validateMarkedAsDeleted:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-
-
-
-@property (nonatomic, strong) NSNumber* modifiedSinceLastSync;
-
-
-
-
-
-
-
-
-@property BOOL modifiedSinceLastSyncValue;
-- (BOOL)modifiedSinceLastSyncValue;
-- (void)setModifiedSinceLastSyncValue:(BOOL)value_;
-
-
-
-
-
-//- (BOOL)validateModifiedSinceLastSync:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateIconExtraInfo:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -153,14 +100,14 @@ extern const struct MBaseEntityFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* published_Date;
+@property (nonatomic, strong) NSDate* published_date;
 
 
 
 
 
 
-//- (BOOL)validatePublished_Date:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validatePublished_date:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -169,14 +116,14 @@ extern const struct MBaseEntityFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* updated_Date;
+@property (nonatomic, strong) NSDate* updated_date;
 
 
 
 
 
 
-//- (BOOL)validateUpdated_Date:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateUpdated_date:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -190,32 +137,14 @@ extern const struct MBaseEntityFetchedProperties {
 @interface _MBaseEntity (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSString*)primitiveEtag;
-- (void)setPrimitiveEtag:(NSString*)value;
+- (NSString*)primitiveIconBaseHREF;
+- (void)setPrimitiveIconBaseHREF:(NSString*)value;
 
 
 
 
-- (NSString*)primitiveGmID;
-- (void)setPrimitiveGmID:(NSString*)value;
-
-
-
-
-- (NSNumber*)primitiveMarkedAsDeleted;
-- (void)setPrimitiveMarkedAsDeleted:(NSNumber*)value;
-
-- (BOOL)primitiveMarkedAsDeletedValue;
-- (void)setPrimitiveMarkedAsDeletedValue:(BOOL)value_;
-
-
-
-
-- (NSNumber*)primitiveModifiedSinceLastSync;
-- (void)setPrimitiveModifiedSinceLastSync:(NSNumber*)value;
-
-- (BOOL)primitiveModifiedSinceLastSyncValue;
-- (void)setPrimitiveModifiedSinceLastSyncValue:(BOOL)value_;
+- (NSString*)primitiveIconExtraInfo;
+- (void)setPrimitiveIconExtraInfo:(NSString*)value;
 
 
 
@@ -226,14 +155,14 @@ extern const struct MBaseEntityFetchedProperties {
 
 
 
-- (NSDate*)primitivePublished_Date;
-- (void)setPrimitivePublished_Date:(NSDate*)value;
+- (NSDate*)primitivePublished_date;
+- (void)setPrimitivePublished_date:(NSDate*)value;
 
 
 
 
-- (NSDate*)primitiveUpdated_Date;
-- (void)setPrimitiveUpdated_Date:(NSDate*)value;
+- (NSDate*)primitiveUpdated_date;
+- (void)setPrimitiveUpdated_date:(NSDate*)value;
 
 
 

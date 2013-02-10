@@ -1,5 +1,8 @@
+//*********************************************************************************************************************
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
 // Make changes to MPoint.m instead.
+//*********************************************************************************************************************
+
 
 #define __MPoint__PROTECTED__
 
@@ -8,7 +11,6 @@
 
 const struct MPointAttributes MPointAttributes = {
 	.descr = @"descr",
-	.iconHREF = @"iconHREF",
 	.latitude = @"latitude",
 	.longitude = @"longitude",
 };
@@ -65,13 +67,6 @@ const struct MPointFetchedProperties MPointFetchedProperties = {
 
 
 @dynamic descr;
-
-
-
-
-
-
-@dynamic iconHREF;
 
 
 

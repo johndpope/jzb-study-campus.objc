@@ -12,6 +12,7 @@
 #import "GMapDataFetcher.h"
 #import "NSString+JavaStr.h"
 #import "DDLog.h"
+#import "NSString+HTML.h"
 
 
 
@@ -779,8 +780,8 @@
     GMTMap __block *map = [GMTMap emptyMap];
 
 
-    map.name = [dictMapData valueForKeyPath:@"title.text"];
-    map.summary = [dictMapData valueForKeyPath:@"summary.text"];
+    map.name = [[dictMapData valueForKeyPath:@"title.text"] gtm_stringByUnescapingFromHTML];
+    map.summary = [[dictMapData valueForKeyPath:@"summary.text"] gtm_stringByUnescapingFromHTML];
     if(map.summary == nil) map.summary = @"";
     map.etag = [dictMapData valueForKeyPath:@"gd:etag"];
     map.gmID = [dictMapData valueForKeyPath:@"id.text"];
@@ -806,22 +807,22 @@
 
     GMTPoint __block *point = [GMTPoint emptyPoint];
 
-
-    point.name = [dictPointData valueForKeyPath:@"atom:content.Placemark.name.text"];
-    point.descr = [dictPointData valueForKeyPath:@"atom:content.Placemark.description.text"];
+    point.name = [[dictPointData valueForKeyPath:@"atom:content.Placemark.name.text"] gtm_stringByUnescapingFromHTML];
+    point.descr = [[dictPointData valueForKeyPath:@"atom:content.Placemark.description.text"] gtm_stringByUnescapingFromHTML];
     if(point.descr == nil) point.descr = @"";
-    point.iconHREF = [dictPointData valueForKeyPath:@"atom:content.Placemark.Style.IconStyle.Icon.href.text"];
+    point.iconHREF = [[dictPointData valueForKeyPath:@"atom:content.Placemark.Style.IconStyle.Icon.href.text"] gtm_stringByUnescapingFromHTML];
     if(point.iconHREF == nil) point.iconHREF = GM_DEFAULT_POINT_ICON_HREF;
 
 
+    //<!-- lon,lat[,alt] -->
     NSString *coordinates = [dictPointData valueForKeyPath:@"atom:content.Placemark.Point.coordinates.text"];
     NSArray *splittedStr = [coordinates componentsSeparatedByString:@","];
     if(splittedStr.count == 3) {
-        point.latitude = [splittedStr[0] doubleValue];
-        point.longitude = [splittedStr[1] doubleValue];
+        point.longitude = [splittedStr[0] doubleValue];
+        point.latitude = [splittedStr[1] doubleValue];
     } else {
-        point.latitude = -1;
-        point.longitude = -1;
+        point.longitude = 0;
+        point.latitude = 0;
     }
 
 
@@ -830,6 +831,7 @@
     point.published_Date = [GMTItem dateFromString:[dictPointData valueForKeyPath:@"atom:published.text"]];
     point.updated_Date = [GMTItem dateFromString:[dictPointData valueForKeyPath:@"atom:updated.text"]];
 
+    
     // Chequea el resultado y lo retorna
     NSString *errMsg = [point verifyFieldsNotNil];
     if(errMsg) {

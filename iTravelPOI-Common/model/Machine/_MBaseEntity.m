@@ -1,5 +1,8 @@
+//*********************************************************************************************************************
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
 // Make changes to MBaseEntity.m instead.
+//*********************************************************************************************************************
+
 
 #define __MBaseEntity__PROTECTED__
 
@@ -7,13 +10,11 @@
 #import "_MBaseEntity.h"
 
 const struct MBaseEntityAttributes MBaseEntityAttributes = {
-	.etag = @"etag",
-	.gmID = @"gmID",
-	.markedAsDeleted = @"markedAsDeleted",
-	.modifiedSinceLastSync = @"modifiedSinceLastSync",
+	.iconBaseHREF = @"iconBaseHREF",
+	.iconExtraInfo = @"iconExtraInfo",
 	.name = @"name",
-	.published_Date = @"published_Date",
-	.updated_Date = @"updated_Date",
+	.published_date = @"published_date",
+	.updated_date = @"updated_date",
 };
 
 const struct MBaseEntityRelationships MBaseEntityRelationships = {
@@ -48,16 +49,6 @@ const struct MBaseEntityFetchedProperties MBaseEntityFetchedProperties = {
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
-	if ([key isEqualToString:@"markedAsDeletedValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"markedAsDeleted"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-		return keyPaths;
-	}
-	if ([key isEqualToString:@"modifiedSinceLastSyncValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"modifiedSinceLastSync"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-		return keyPaths;
-	}
 
 	return keyPaths;
 }
@@ -65,71 +56,15 @@ const struct MBaseEntityFetchedProperties MBaseEntityFetchedProperties = {
 
 
 
-@dynamic etag;
+@dynamic iconBaseHREF;
 
 
 
 
 
 
-@dynamic gmID;
+@dynamic iconExtraInfo;
 
-
-
-
-
-
-@dynamic markedAsDeleted;
-
-
-
-- (BOOL)markedAsDeletedValue {
-	NSNumber *result = [self markedAsDeleted];
-	return [result boolValue];
-}
-
-
-- (void)setMarkedAsDeletedValue:(BOOL)value_ {
-	[self setMarkedAsDeleted:[NSNumber numberWithBool:value_]];
-}
-
-
-- (BOOL)primitiveMarkedAsDeletedValue {
-	NSNumber *result = [self primitiveMarkedAsDeleted];
-	return [result boolValue];
-}
-
-- (void)setPrimitiveMarkedAsDeletedValue:(BOOL)value_ {
-	[self setPrimitiveMarkedAsDeleted:[NSNumber numberWithBool:value_]];
-}
-
-
-
-
-
-@dynamic modifiedSinceLastSync;
-
-
-
-- (BOOL)modifiedSinceLastSyncValue {
-	NSNumber *result = [self modifiedSinceLastSync];
-	return [result boolValue];
-}
-
-
-- (void)setModifiedSinceLastSyncValue:(BOOL)value_ {
-	[self setModifiedSinceLastSync:[NSNumber numberWithBool:value_]];
-}
-
-
-- (BOOL)primitiveModifiedSinceLastSyncValue {
-	NSNumber *result = [self primitiveModifiedSinceLastSync];
-	return [result boolValue];
-}
-
-- (void)setPrimitiveModifiedSinceLastSyncValue:(BOOL)value_ {
-	[self setPrimitiveModifiedSinceLastSync:[NSNumber numberWithBool:value_]];
-}
 
 
 
@@ -142,14 +77,14 @@ const struct MBaseEntityFetchedProperties MBaseEntityFetchedProperties = {
 
 
 
-@dynamic published_Date;
+@dynamic published_date;
 
 
 
 
 
 
-@dynamic updated_Date;
+@dynamic updated_date;
 
 
 

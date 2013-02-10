@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "EntityEditorPanel.h"
 #import "MPoint.h"
 
 
@@ -17,32 +18,13 @@
 // *********************************************************************************************************************
 
 
-// *********************************************************************************************************************
-#pragma mark -
-#pragma mark <PointEditorPanelDelegate> Protocol
-// *********************************************************************************************************************
-@class PointEditorPanel;
-@protocol PointEditorPanelDelegate <NSObject>
-
-- (NSWindow *) window;
-- (void) pointPanelSaveChanges:(PointEditorPanel *)sender;
-
-@optional
-- (void) pointPanelCancelChanges:(PointEditorPanel *)sender;
-
-@end
-
 
 
 // *********************************************************************************************************************
 #pragma mark -
 #pragma mark Interface definition
 // *********************************************************************************************************************
-@interface PointEditorPanel : NSWindowController
-
-@property (weak) id<PointEditorPanelDelegate> delegate;
-@property (strong) MPoint *point;
-
+@interface PointEditorPanel : EntityEditorPanel
 
 
 // =====================================================================================================================
@@ -53,7 +35,7 @@
 - (id) init __attribute__ ((unavailable ("init not available")));
 #endif
 
-+ (PointEditorPanel *) startEditPoint:(MPoint *)Point delegate:(id<PointEditorPanelDelegate>)delegate;
++ (PointEditorPanel *) startEditPoint:(MPoint *)point delegate:(id<EntityEditorPanelDelegate>)delegate;
 
 
 // =====================================================================================================================

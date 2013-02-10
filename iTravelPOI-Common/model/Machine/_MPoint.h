@@ -1,12 +1,15 @@
+//*********************************************************************************************************************
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
 // Make changes to MPoint.h instead.
+//*********************************************************************************************************************
+
 #import <CoreData/CoreData.h>
-#import "MBaseEntity.h"
+
+#import "MBaseGMSync.h"
 
 
 extern const struct MPointAttributes {
 	__unsafe_unretained NSString *descr;
-	__unsafe_unretained NSString *iconHREF;
 	__unsafe_unretained NSString *latitude;
 	__unsafe_unretained NSString *longitude;
 } MPointAttributes;
@@ -26,11 +29,10 @@ extern const struct MPointFetchedProperties {
 
 
 
-
 @interface MPointID : NSManagedObjectID {}
 @end
 
-@interface _MPoint : MBaseEntity {}
+@interface _MPoint : MBaseGMSync {}
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_;
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
@@ -51,26 +53,6 @@ extern const struct MPointFetchedProperties {
 
 
 //- (BOOL)validateDescr:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-
-
-
-#ifndef __MPoint__PROTECTED__
-@property (nonatomic, strong, readonly) NSString* iconHREF;
-#else
-@property (nonatomic, strong) NSString* iconHREF;
-#endif
-
-
-
-
-
-
-//- (BOOL)validateIconHREF:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -176,12 +158,6 @@ extern const struct MPointFetchedProperties {
 
 - (NSString*)primitiveDescr;
 - (void)setPrimitiveDescr:(NSString*)value;
-
-
-
-
-- (NSString*)primitiveIconHREF;
-- (void)setPrimitiveIconHREF:(NSString*)value;
 
 
 

@@ -11,6 +11,7 @@
 
 #import "GMPItemSubclassing.h"
 #import "NSString+JavaStr.h"
+#import "NSString+HTML.h"
 
 
 
@@ -114,7 +115,7 @@
     [atomStr appendFormat:@"  <atom:published>%@</atom:published>", [GMTItem stringFromDate:self.published_Date]];
     [atomStr appendFormat:@"  <atom:updated>%@</atom:updated>", [GMTItem stringFromDate:self.updated_Date]];
 
-    [atomStr appendFormat:@"  <atom:title   type='text'>%@</atom:title>", self.name];
+    [atomStr appendFormat:@"  <atom:title   type='text'>%@</atom:title>", [self cleanXMLText:self.name]];
 
     [self __atomEntryDataContent:atomStr];
 }
@@ -159,5 +160,12 @@
 
     return desc;
 }
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (NSString *) cleanXMLText:(NSString *)text {
+    
+    return [text gtm_stringByEscapingForHTML];
+}
+
 
 @end

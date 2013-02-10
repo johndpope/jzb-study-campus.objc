@@ -147,8 +147,8 @@
     NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:err];
 
 
-    // NSString *content = [[NSString alloc] initWithData:returnData encoding:NSUTF8StringEncoding];
-    // DDLogVerbose(@"content: %@", content);
+    //NSString *content = [[NSString alloc] initWithData:returnData encoding:NSUTF8StringEncoding];
+    //DDLogVerbose(@"content: %@", content);
 
     if(*err != nil || (response != nil && response.statusCode != 200)) {
 

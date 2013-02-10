@@ -24,9 +24,6 @@
 @interface ErrorManagerService ()
 
 
-+ (ErrorManagerService *) sharedInstance;
-
-
 @end
 
 
@@ -56,7 +53,7 @@
 
     NSLog(@"%@. Error:%@, %@", _errMsg, _err, [_err userInfo]);
 
-    dispatch_sync(dispatch_get_main_queue(), ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
 
     #if TARGET_OS_IPHONE
                       UIAlertView *alert = [[UIAlertView alloc]
@@ -76,20 +73,6 @@
 
 }
 
-// ---------------------------------------------------------------------------------------------------------------------
-#pragma mark -
-#pragma mark CLASS private methods
-// ---------------------------------------------------------------------------------------------------------------------
-+ (ErrorManagerService *) sharedInstance {
-
-    static ErrorManagerService *_globalModelInstance = nil;
-    static dispatch_once_t _predicate;
-    dispatch_once(&_predicate, ^{
-                      NSLog (@"ErrorManagerService - Creating sharedInstance");
-                      _globalModelInstance = [[self alloc] init];
-                  });
-    return _globalModelInstance;
-}
 
 // ---------------------------------------------------------------------------------------------------------------------
 #pragma mark -

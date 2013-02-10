@@ -94,7 +94,9 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) __atomEntryDataContent:(NSMutableString *)atomStr {
 
-    [atomStr appendFormat:@"  <atom:summary type='text'>%@</atom:summary>", self.summary];
+    // Por algun motivo, el "summary" no puede ir vacio
+    NSString *summary = self.summary!=nil && self.summary.length>0 ? self.summary : @".";
+    [atomStr appendFormat:@"  <atom:summary type='text'>%@</atom:summary>", [self cleanXMLText:summary]];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

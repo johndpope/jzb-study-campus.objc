@@ -52,4 +52,6 @@
 - (NSString *) verifyFieldsNotNil;
 - (NSString *) description;
 
+- (NSString *) cleanXMLText:(NSString *)text;
+
 @end

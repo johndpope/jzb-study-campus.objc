@@ -92,17 +92,18 @@
 
     [atomStr appendString:@"  <atom:content type='application/vnd.google-earth.kml+xml'>"];
     [atomStr appendString:@"      <Placemark>"];
-    [atomStr appendFormat:@"        <name>%@</name>", self.name];
-    [atomStr appendFormat:@"        <description><![CDATA[%@]]></description>", self.descr];
+    [atomStr appendFormat:@"        <name>%@</name>", [self cleanXMLText:self.name]];
+    [atomStr appendFormat:@"        <description type='html'>%@</description>", [self cleanXMLText:self.descr]];
 
     if(self.iconHREF) {
         s_idCounter++;
         NSString *styleID = [NSString stringWithFormat:@"Style-%ld-%lu", time(0L), s_idCounter];
-        [atomStr appendFormat:@"        <Style id='%@'><IconStyle><Icon><href>%@</href></Icon></IconStyle></Style>", styleID, self.iconHREF];
+        [atomStr appendFormat:@"        <Style id='%@'><IconStyle><Icon><href><![CDATA[%@]]></href></Icon></IconStyle></Style>", styleID, self.iconHREF];
     }
 
+    //<!-- lon,lat[,alt] -->
     [atomStr appendString:@"        <Point>"];
-    [atomStr appendFormat:@"          <coordinates>%f,%f,0.0</coordinates>", self.latitude, self.longitude];
+    [atomStr appendFormat:@"          <coordinates>%0.6f,%0.6f,0.0</coordinates>", self.longitude, self.latitude];
     [atomStr appendString:@"        </Point>"];
     [atomStr appendString:@"      </Placemark>"];
     [atomStr appendString:@"  </atom:content>"];
@@ -112,8 +113,6 @@
 - (void) __verifyFieldsNotNil:(NSMutableArray *)result {
     if(self.descr == nil) [result addObject:@"descr"];
     if(self.iconHREF == nil) [result addObject:@"iconHREF"];
-    if(self.latitude == -1) [result addObject:@"latitude"];
-    if(self.longitude == -1) [result addObject:@"longitude"];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

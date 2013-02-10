@@ -1,69 +1,69 @@
+//
+//  MPoint.m
+//
+
+#define __MPoint__IMPL__
 #define __MPoint__PROTECTED__
+#define __MBaseEntity__SUBCLASSES__PROTECTED__
+#define __MBaseGMSync__SUBCLASSES__PROTECTED__
+
 #import "MPoint.h"
-
-
-#import "GMTPoint.h"
 #import "MMap.h"
 #import "MCategory.h"
-#import "MCacheViewCount.h"
+#import "ErrorManagerService.h"
 
 
-// *********************************************************************************************************************
+
+//*********************************************************************************************************************
 #pragma mark -
-#pragma mark PRIVATE CONSTANTS and C-Methods definitions
-// *********************************************************************************************************************
+#pragma mark Private Enumerations & definitions
+//*********************************************************************************************************************
 #define UPD_POINT_ADDED   +1
 #define UPD_POINT_REMOVED -1
+#define DEFAULT_POINT_ICON_HREF @"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png"
 
 
-// *********************************************************************************************************************
+
+
+//*********************************************************************************************************************
 #pragma mark -
 #pragma mark PRIVATE interface definition
-// *********************************************************************************************************************
+//*********************************************************************************************************************
 @interface MPoint ()
-
 
 @end
 
 
-// *********************************************************************************************************************
+
+//*********************************************************************************************************************
 #pragma mark -
 #pragma mark Implementation
-// *********************************************************************************************************************
+//*********************************************************************************************************************
 @implementation MPoint
 
 
-// =====================================================================================================================
+
+//=====================================================================================================================
 #pragma mark -
 #pragma mark CLASS methods
-// ---------------------------------------------------------------------------------------------------------------------
-+ (MPoint *) emptyPointInMap:(MMap *)map {
-
-    MCategory *cat = [MCategory categoryForIconHREF:GM_DEFAULT_POINT_ICON_HREF inContext:map.managedObjectContext];
-    return [MPoint emptyPointWithName:@"" inMap:map withCategory:cat];
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-+ (MPoint *) emptyPointWithName:(NSString *)name inMap:(MMap *)map {
-
-    MCategory *cat = [MCategory categoryForIconHREF:GM_DEFAULT_POINT_ICON_HREF inContext:map.managedObjectContext];
-    return [MPoint emptyPointWithName:name inMap:map withCategory:cat];
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------
 + (MPoint *) emptyPointWithName:(NSString *)name inMap:(MMap *)map withCategory:(MCategory *)category {
-
-    MPoint *point = [MPoint insertInManagedObjectContext:map.managedObjectContext];
-    [point resetEntityWithName:name];
+    
+    NSManagedObjectContext *moContext = map.managedObjectContext;
+    
+    
+    MPoint *point = [MPoint insertInManagedObjectContext:moContext];
+    
+    [point _resetEntityWithName:name];
     
     point.map = map;
     
     if(category!=nil) {
-        point.category = category;
+        point.category = (MCategory *)[moContext objectWithID:category.objectID];
     } else {
-        point.category = [MCategory categoryForIconHREF:GM_DEFAULT_POINT_ICON_HREF inContext:point.managedObjectContext];
+        point.category = [MCategory categoryForIconBaseHREF:DEFAULT_POINT_ICON_HREF extraInfo:nil inContext:moContext];
     }
-    point.iconHREF = point.category.iconHREF;
+    [point _updateIconBaseHREF:point.category.iconBaseHREF iconExtraInfo:point.category.iconExtraInfo];
     
     [point.map updateViewCount: UPD_POINT_ADDED];
     [point.category updateViewCount: UPD_POINT_ADDED];
@@ -73,96 +73,104 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-+ (NSArray *) pointsFromMap:(MMap *)map category:(MCategory *)cat error:(NSError **)err {
-
-    __autoreleasing NSError *localError = nil;
-    if(err == nil) err = &localError;
-    *err = nil;
-
++ (NSArray *) pointsInMap:(MMap *)map category:(MCategory *)cat {
+        
     // Crea la peticion de busqueda
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"MPoint"];
-
-
+    
+    
     // Se asigna una condicion de filtro
     NSPredicate *query = [NSPredicate predicateWithFormat:@"markedAsDeleted=NO AND map=%@ AND category=%@", map, cat];
     [request setPredicate:query];
-
+    
     // Se asigna el criterio de ordenacion
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:TRUE];
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
     [request setSortDescriptors:sortDescriptors];
-
+    
     // Se ejecuta y retorna el resultado
-    NSArray *array = [map.managedObjectContext executeFetchRequest:request error:err];
+    NSError *localError = nil;
+    NSArray *array = [map.managedObjectContext executeFetchRequest:request error:&localError];
+    if(array==nil) {
+        [ErrorManagerService manageError:localError compID:@"MPoint:pointsInMap" messageWithFormat:@"Error fetching points in map '%@' with category '%@%@'", map.name, cat.iconBaseHREF, cat.iconExtraInfo];
+    }
     return array;
 }
 
-// =====================================================================================================================
+
+//=====================================================================================================================
 #pragma mark -
-#pragma mark Getter/Setter methods
-// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark Getter & Setter methods
+//---------------------------------------------------------------------------------------------------------------------
 
 
 
-// =====================================================================================================================
+
+//=====================================================================================================================
 #pragma mark -
-#pragma mark General PUBLIC methods
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) resetEntityWithName:(NSString *)name {
-
-    [super resetEntityWithName:name];
-    self.descr = @"";
-    self.latitudeValue = 0.0;
-    self.longitudeValue = 0.0;
-
+#pragma mark Public methods
+//---------------------------------------------------------------------------------------------------------------------
+- (void) updateDeleteMark:(BOOL) value {
+    
+    // Si ya es igual no hace nada
+    if(self.markedAsDeletedValue==value) return;
+    
+    // Ajusta la cuenta de puntos visibles en su mapa y categoria
+    int increment = value ? UPD_POINT_REMOVED : UPD_POINT_ADDED;
+    [self.map updateViewCount:increment];
+    [self.category updateViewCount: increment];
+    [self.category updateViewCountForMap:self.map increment:increment];
+    
+    // Establece el nuevo valor llamando a su clase base
+    [super _baseUpdateDeleteMark:value];
 }
 
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) moveToIconHREF:(NSString *)iconHREF {
-
-    [self moveToCategory: [MCategory categoryForIconHREF:iconHREF inContext:self.managedObjectContext]];
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------
 - (void) moveToCategory:(MCategory *)category {
     
     // Si ya es igual no hace nada
     if([self.category.objectID isEqual:category.objectID]) return;
     
     
-    // Descuenta de la actual
-    [self.category updateViewCount: UPD_POINT_REMOVED];
-    [self.category updateViewCountForMap:self.map increment:UPD_POINT_REMOVED];
+    // Descuenta de la actual si no estaba marcado como borrado
+    if(!self.markedAsDeletedValue) {
+        [self.category updateViewCount: UPD_POINT_REMOVED];
+        [self.category updateViewCountForMap:self.map increment:UPD_POINT_REMOVED];
+    }
     
     self.category = category;
-    self.iconHREF = category.iconHREF;
+    [self _updateIconBaseHREF:category.iconBaseHREF iconExtraInfo:category.iconExtraInfo];
     
-    // añade a la nueva
-    [self.category updateViewCount: UPD_POINT_ADDED];
-    [self.category updateViewCountForMap:self.map increment:UPD_POINT_ADDED];
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) setAsDeleted:(BOOL)value {
-    
-    // Si ya es igual no hace nada
-    if(self.markedAsDeletedValue==value) return;
-
-    // Ajusta la cuenta de puntos visibles en su mapa y categoria
-    int increment = value ? UPD_POINT_REMOVED : UPD_POINT_ADDED;
-    [self.map updateViewCount:increment];
-    [self.category updateViewCount: increment];
-    [self.category updateViewCountForMap:self.map increment:increment];
-
-    // Establece el nuevo valor llamando a su clase base
-    [super setAsDeleted:value];
+    // añade a la nueva si no estaba marcado como borrado
+    if(!self.markedAsDeletedValue) {
+        [self.category updateViewCount: UPD_POINT_ADDED];
+        [self.category updateViewCountForMap:self.map increment:UPD_POINT_ADDED];
+    }
 }
 
 
-// =====================================================================================================================
+
+
+//=====================================================================================================================
 #pragma mark -
-#pragma mark PRIVATE methods
-// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark Protected methods
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _resetEntityWithName:(NSString *)name {
+    
+    [super _resetEntityWithName:name];
+        
+    [self _updateIconHREF:nil];
+    self.descr = @"";
+    self.latitudeValue = 0.0;
+    self.longitudeValue = 0.0;
+}
+
+
+//=====================================================================================================================
+#pragma mark -
+#pragma mark Private methods
+//---------------------------------------------------------------------------------------------------------------------
+
 
 
 @end

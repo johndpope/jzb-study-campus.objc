@@ -15,8 +15,6 @@
 #import "MKCircle.h"
 #import "MKPinAnnotationView.h"
 
-#import "GMapIcon.h"
-#import "GMTPoint.h"
 
 
 
@@ -82,6 +80,7 @@
 // ------------------------------------------------------------------------------------------------------------------
 - (void) awakeFromNib {
     self.mapView.delegate = self;
+    self.mapView.showsUserLocation=TRUE;
 }
 
 
@@ -153,7 +152,7 @@
     
     MKAnnotationView *view1 = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"blah"];
     NSString *path = [[NSBundle mainBundle] pathForResource:@"MarkerTest" ofType:@"png"];
-    path = [[NSBundle mainBundle] pathForResource:@"GMapIcons.bundle/GMI_blue-dot" ofType:@"png"];
+    path = [[NSBundle mainBundle] pathForResource:@"ManagedIcons.bundle/GMI_blue-dot" ofType:@"png"];
     NSURL *url = [NSURL fileURLWithPath:path];
     view1.imageUrl = [url absoluteString];
     

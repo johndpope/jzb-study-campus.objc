@@ -38,7 +38,7 @@
 @interface IconEditorPanel : NSWindowController
 
 @property (weak) id<IconEditorPanelDelegate> delegate;
-@property (strong) NSString *iconHREF;
+@property (nonatomic, strong, readonly) NSString *baseHREF;
 
 
 
@@ -50,7 +50,7 @@
 - (id) init __attribute__ ((unavailable ("init not available")));
 #endif
 
-+ (IconEditorPanel *) startEditIconHREF:(NSString *)iconHREF delegate:(id<IconEditorPanelDelegate>)delegate;
++ (IconEditorPanel *) startEditIconBaseHREF:(NSString *)baseHREF delegate:(id<IconEditorPanelDelegate>)delegate;
 
 
 // =====================================================================================================================

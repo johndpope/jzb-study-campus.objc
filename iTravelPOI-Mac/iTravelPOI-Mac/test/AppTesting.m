@@ -13,7 +13,10 @@
 #import "DDLog.h"
 
 #import "BaseCoreData.h"
-#import "Model.h"
+
+#import "MMap.h"
+#import "MPoint.h"
+#import "MCategory.h"
 
 #import "GMTMap.h"
 #import "GMTPoint.h"
@@ -104,7 +107,7 @@
 
     if(err != nil) *err = nil;
 
-    NSArray *mapList = [MMap allMapsInContext:self.moContext includeMarkedAsDeleted:true error:err];
+    NSArray *mapList = [MMap allMapsInContext:self.moContext includeMarkedAsDeleted:true];
 
     return mapList;
 }
@@ -132,7 +135,7 @@
 
     if(err != nil) *err = nil;
 
-    MMap *localMap = [MMap emptyMapInContext:self.moContext];
+    MMap *localMap = [MMap emptyMapWithName:gmMap.name inContext:self.moContext];
     [self updateLocalMap:localMap withRemoteMap:gmMap allPointsOK:true error:err];
 
     return localMap;
@@ -146,7 +149,7 @@
     localMap.name = gmMap.name;
     localMap.gmID = gmMap.gmID;
     localMap.etag = gmMap.etag;
-    [localMap setAsDeleted:false];
+    [localMap updateDeleteMark:false];
     localMap.modifiedSinceLastSyncValue = false;
     // localMap.published_Date = gmMap.published_Date; --> STR => DATE
     // localMap.updated_Date = gmMap.updated_Date; --> STR => DATE
@@ -161,7 +164,7 @@
 
     if(err != nil) *err = nil;
 
-    [localMap setAsDeleted:true];
+    [localMap updateDeleteMark:true];
     localMap.modifiedSinceLastSyncValue = true;
 
     return true;
@@ -198,11 +201,12 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (id) createLocalPointFrom:(GMTPoint *)gmPoint inLocalMap:(id)map error:(NSError **)err {
+- (id) createLocalPointFrom:(GMTPoint *)gmPoint inLocalMap:(MMap *)map error:(NSError **)err {
 
     if(err != nil) *err = nil;
 
-    MPoint *localPoint = [MPoint emptyPointWithName:gmPoint.name inMap:map];
+    MCategory *cat = [MCategory categoryForIconHREF:gmPoint.iconHREF inContext:map.managedObjectContext];
+    MPoint *localPoint = [MPoint emptyPointWithName:gmPoint.name inMap:map withCategory:cat];
     [self updateLocalPoint:localPoint withRemotePoint:gmPoint error:err];
 
     return localPoint;
@@ -216,13 +220,13 @@
     localPoint.name = gmPoint.name;
     localPoint.gmID = gmPoint.gmID;
     localPoint.etag = gmPoint.etag;
-    [localPoint setAsDeleted:false];
+    [localPoint updateDeleteMark:false];
     localPoint.modifiedSinceLastSyncValue = false;
     // localPoint.published_Date = gmMap.published_Date; --> STR => DATE
     // localPoint.updated_Date = gmMap.updated_Date; --> STR => DATE
 
     localPoint.descr = gmPoint.descr;
-    [localPoint moveToIconHREF:gmPoint.iconHREF];
+    [localPoint moveToCategory:[MCategory categoryForIconHREF:gmPoint.iconHREF inContext:localPoint.managedObjectContext]];
     localPoint.latitudeValue = gmPoint.latitude;
     localPoint.longitudeValue = gmPoint.longitude;
 
@@ -234,7 +238,7 @@
 
     if(err != nil) *err = nil;
 
-    [localPoint setAsDeleted:true];
+    [localPoint updateDeleteMark:true];
     localPoint.map.modifiedSinceLastSyncValue = true;
 
     return true;

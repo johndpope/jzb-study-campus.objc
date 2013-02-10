@@ -74,6 +74,8 @@ const NSString *TCompStatusType_Names[] = {
 #pragma mark -
 #pragma mark General PUBLIC methods
 // ---------------------------------------------------------------------------------------------------------------------
-
+- (NSString *)description {
+    return [NSString stringWithFormat:@"local = %@, remote = %@, status = %@", self.localItem.name, self.remoteItem.name, TCompStatusType_Names[self.status]];
+}
 
 @end

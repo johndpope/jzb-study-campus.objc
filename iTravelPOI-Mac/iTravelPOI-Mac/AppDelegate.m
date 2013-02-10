@@ -14,6 +14,7 @@
 
 #import "MockUp.h"
 
+#import "MyMainWindow.h"
 #import "MapMainWindow.h"
 
 
@@ -52,7 +53,8 @@
 
 // ------------------------------------------------------------------------------------------------------------------
 - (void) showMainWindow {
-    self.mainWndCtrlr = [MapMainWindow mapMainWindow];
+    self.mainWndCtrlr = [MyMainWindow myMainWindow];
+    //self.mainWndCtrlr = [MapMainWindow mapMainWindow];
 }
 
 

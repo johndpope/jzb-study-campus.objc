@@ -1,5 +1,8 @@
+//*********************************************************************************************************************
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
 // Make changes to MCategory.m instead.
+//*********************************************************************************************************************
+
 
 #define __MCategory__PROTECTED__
 
@@ -7,7 +10,6 @@
 #import "_MCategory.h"
 
 const struct MCategoryAttributes MCategoryAttributes = {
-	.iconHREF = @"iconHREF",
 	.viewCount = @"viewCount",
 };
 
@@ -55,13 +57,6 @@ const struct MCategoryFetchedProperties MCategoryFetchedProperties = {
 
 	return keyPaths;
 }
-
-
-
-
-@dynamic iconHREF;
-
-
 
 
 

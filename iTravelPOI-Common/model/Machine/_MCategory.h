@@ -1,11 +1,14 @@
+//*********************************************************************************************************************
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
 // Make changes to MCategory.h instead.
+//*********************************************************************************************************************
+
 #import <CoreData/CoreData.h>
+
 #import "MBaseEntity.h"
 
 
 extern const struct MCategoryAttributes {
-	__unsafe_unretained NSString *iconHREF;
 	__unsafe_unretained NSString *viewCount;
 } MCategoryAttributes;
 
@@ -19,11 +22,10 @@ extern const struct MCategoryRelationships {
 extern const struct MCategoryFetchedProperties {
 } MCategoryFetchedProperties;
 
-@class MCacheViewCount;
+@class RMCViewCount;
 @class MCategory;
 @class MPoint;
 @class MCategory;
-
 
 
 
@@ -43,23 +45,11 @@ extern const struct MCategoryFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* iconHREF;
-
-
-
-
-
-
-//- (BOOL)validateIconHREF:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-
-
-
+#ifndef __MCategory__PROTECTED__
+@property (nonatomic, strong, readonly) NSNumber* viewCount;
+#else
 @property (nonatomic, strong) NSNumber* viewCount;
+#endif
 
 
 
@@ -68,9 +58,14 @@ extern const struct MCategoryFetchedProperties {
 
 
 
+#ifndef __MCategory__PROTECTED__
+@property (readonly) int16_t viewCountValue;
+- (int16_t)viewCountValue;
+#else
 @property int16_t viewCountValue;
 - (int16_t)viewCountValue;
 - (void)setViewCountValue:(int16_t)value_;
+#endif
 
 
 
@@ -123,8 +118,8 @@ extern const struct MCategoryFetchedProperties {
 @interface _MCategory (MapViewCountsCoreDataGeneratedAccessors)
 - (void)addMapViewCounts:(NSSet*)value_;
 - (void)removeMapViewCounts:(NSSet*)value_;
-- (void)addMapViewCountsObject:(MCacheViewCount*)value_;
-- (void)removeMapViewCountsObject:(MCacheViewCount*)value_;
+- (void)addMapViewCountsObject:(RMCViewCount*)value_;
+- (void)removeMapViewCountsObject:(RMCViewCount*)value_;
 @end
 
 @interface _MCategory (PointsCoreDataGeneratedAccessors)
@@ -143,12 +138,6 @@ extern const struct MCategoryFetchedProperties {
 
 
 @interface _MCategory (CoreDataGeneratedPrimitiveAccessors)
-
-
-- (NSString*)primitiveIconHREF;
-- (void)setPrimitiveIconHREF:(NSString*)value;
-
-
 
 
 - (NSNumber*)primitiveViewCount;
