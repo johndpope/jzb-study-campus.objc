@@ -24,8 +24,7 @@
 @protocol IconEditorPanelDelegate <NSObject>
 
 - (NSWindow *) window;
-- (void) iconPanelSaveChanges:(IconEditorPanel *)sender;
-- (void) iconPanelCancelChanges:(IconEditorPanel *)sender;
+- (void) iconPanelClose:(IconEditorPanel *)sender;
 
 @end
 

@@ -76,7 +76,7 @@
     if(self.map) {
         [self.mapNameField setStringValue:self.map.name];
         [self.mapSummaryField setString:self.map.summary];
-        [self.mapExtraInfo setStringValue:[NSString stringWithFormat:@"Published: %@\tUpdated: %@\nETAG: %@",
+        [self.mapExtraInfo setStringValue:[NSString stringWithFormat:@"Published:\t%@\nUpdated:\t%@\nETAG:\t%@",
                                            [GMTItem stringFromDate:self.map.published_date],
                                            [GMTItem stringFromDate:self.map.updated_date],
                                            self.map.etag]];

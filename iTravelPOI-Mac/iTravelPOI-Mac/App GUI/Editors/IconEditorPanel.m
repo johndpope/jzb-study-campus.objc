@@ -116,22 +116,14 @@
 #pragma mark -
 #pragma mark General PUBLIC methods
 // ---------------------------------------------------------------------------------------------------------------------
-- (IBAction) btnCloseSave:(id)sender {
+- (IBAction) btnCloseOK:(id)sender {
 
     if(self.delegate) {
-        [self.delegate iconPanelSaveChanges:self];
+        [self.delegate iconPanelClose:self];
     }
     [self closePanel];
 }
 
-// ---------------------------------------------------------------------------------------------------------------------
-- (IBAction) btnCloseCancel:(id)sender {
-
-    if(self.delegate) {
-        [self.delegate iconPanelCancelChanges:self];
-    }
-    [self closePanel];
-}
 
 
 // ---------------------------------------------------------------------------------------------------------------------

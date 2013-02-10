@@ -37,11 +37,12 @@
 @property (nonatomic, assign) IBOutlet NSTextView *pointDescrField;
 @property (nonatomic, assign) IBOutlet NSTextField *pointExtraInfo;
 
-@property (nonatomic, assign) IBOutlet NSTextField *pointLatitude;
-@property (nonatomic, assign) IBOutlet NSTextField *pointLongitude;
+@property (nonatomic, assign) IBOutlet NSTextField *pointLatLng;
 @property (nonatomic, assign) IBOutlet NSTextField *gpsAccuracy;
 @property (nonatomic, assign) IBOutlet NSImageView *pointMapThumbnail;
 
+@property (nonatomic, assign) double latitude;
+@property (nonatomic, assign) double longitude;
 
 @property (nonatomic, strong) NSString *iconBaseHREF;
 
@@ -117,9 +118,17 @@ self.imageIcon.image = self.tempIcon.image;
 #pragma mark -
 #pragma mark General PUBLIC methods
 // ---------------------------------------------------------------------------------------------------------------------
-- (IBAction) useGPSLocationBtnClicked:(id)sender {
+- (IBAction) btnLocationGPSClicked:(id)sender {
     self.UseGPSLocation = TRUE;
     [self locationManager:self.locMgr didUpdateToLocation:self.locMgr.location fromLocation:nil];
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (IBAction) btnLocationMapClicked:(id)sender {
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (IBAction) btnLocationEditorClicked:(id)sender {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -160,11 +169,10 @@ self.imageIcon.image = self.tempIcon.image;
 
         self.pointNameField.stringValue = self.point.name;
 
-        self.pointLatitude.stringValue = [NSString stringWithFormat:@"%0.06f", self.point.latitudeValue];
-        self.pointLongitude.stringValue = [NSString stringWithFormat:@"%0.06f", self.point.longitudeValue];
+        [self storeLatitude:self.point.latitudeValue longitude:self.point.longitudeValue];
 
         self.pointDescrField.string = self.point.descr;
-        self.pointExtraInfo.stringValue = [NSString stringWithFormat:@"Published: %@\tUpdated: %@\nETAG: %@",
+        self.pointExtraInfo.stringValue = [NSString stringWithFormat:@"Published:\t%@\nUpdated:\t%@\nETAG:\t%@",
                                            [MBaseEntity stringFromDate:self.point.published_date],
                                            [MBaseEntity stringFromDate:self.point.updated_date],
                                            self.point.etag];
@@ -187,8 +195,8 @@ self.imageIcon.image = self.tempIcon.image;
             self.point.name = [NSString stringWithFormat:@"@%@", name];
         }
         
-        self.point.latitudeValue = self.pointLatitude.doubleValue;
-        self.point.longitudeValue = self.pointLongitude.doubleValue;
+        self.point.latitudeValue = self.latitude;
+        self.point.longitudeValue = self.longitude;
 
         self.point.descr = [self.pointDescrField string];
         self.point.updated_date = [NSDate date];
@@ -206,15 +214,11 @@ self.imageIcon.image = self.tempIcon.image;
 #pragma mark -
 #pragma mark <IconEditorPanelDelegate> protocol methods
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) iconPanelSaveChanges:(IconEditorPanel *)sender {
+- (void) iconPanelClose:(IconEditorPanel *)sender {
     [self setImageFieldFromHREF:sender.baseHREF];
     self.iconBaseHREF = sender.baseHREF;
 }
 
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) iconPanelCancelChanges:(IconEditorPanel *)sender {
-    // nothing
-}
 
 
 // =====================================================================================================================
@@ -225,8 +229,7 @@ self.imageIcon.image = self.tempIcon.image;
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
     [self showGPSAccuracyForLocation:newLocation];
     if(self.UseGPSLocation && newLocation!=nil) {
-        self.pointLatitude.stringValue = [NSString stringWithFormat:@"%0.6f", newLocation.coordinate.latitude];
-        self.pointLongitude.stringValue = [NSString stringWithFormat:@"%0.6f", newLocation.coordinate.longitude];
+        [self storeLatitude:newLocation.coordinate.latitude longitude:newLocation.coordinate.longitude];
     }
 }
 
@@ -247,11 +250,19 @@ self.imageIcon.image = self.tempIcon.image;
 - (void) showGPSAccuracyForLocation:(CLLocation *)loc {
     
     if(loc) {
-        self.gpsAccuracy.stringValue = [NSString stringWithFormat:@"GPS accuracy: %0.2f meters", loc.horizontalAccuracy];
+        self.gpsAccuracy.stringValue = [NSString stringWithFormat:@"GPS accuracy: %0.0f m", loc.horizontalAccuracy];
     } else {
         self.gpsAccuracy.stringValue = @"GPS accuracy: UNKNOWN";
     }
     
 }
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) storeLatitude:(double)lat longitude:(double)lng {
+    self.latitude = lat;
+    self.longitude = lng;
+    self.pointLatLng.stringValue = [NSString stringWithFormat:@"Lat:\t%0.06f\nLng:\t%0.06f", lat, lng];
+}
+
 
 @end

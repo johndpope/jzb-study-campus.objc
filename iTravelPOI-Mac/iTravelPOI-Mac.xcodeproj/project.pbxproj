@@ -42,8 +42,9 @@
 		4281591116A8A79700471064 /* PointEditorPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4281590F16A8A79700471064 /* PointEditorPanel.m */; };
 		4281591216A8A79700471064 /* PointEditorPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4281591016A8A79700471064 /* PointEditorPanel.xib */; };
 		4293A11516C7E196005BD7A7 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4293A11416C7E196005BD7A7 /* QuartzCore.framework */; };
-		4293A11916C7F5FE005BD7A7 /* compass.png in Resources */ = {isa = PBXBuildFile; fileRef = 4293A11616C7F5FE005BD7A7 /* compass.png */; };
-		4293A11A16C7F5FE005BD7A7 /* myLocation.png in Resources */ = {isa = PBXBuildFile; fileRef = 4293A11716C7F5FE005BD7A7 /* myLocation.png */; };
+		4293A12D16C83C63005BD7A7 /* locationEdit.png in Resources */ = {isa = PBXBuildFile; fileRef = 4293A12A16C83C63005BD7A7 /* locationEdit.png */; };
+		4293A12E16C83C63005BD7A7 /* locationGPS.png in Resources */ = {isa = PBXBuildFile; fileRef = 4293A12B16C83C63005BD7A7 /* locationGPS.png */; };
+		4293A12F16C83C63005BD7A7 /* locationMap.png in Resources */ = {isa = PBXBuildFile; fileRef = 4293A12C16C83C63005BD7A7 /* locationMap.png */; };
 		42C90FCD16B4058900E5EF51 /* MyImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 42C90FCC16B4058900E5EF51 /* MyImageView.m */; };
 		42C90FDB16B45C5000E5EF51 /* MyCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 42C90FD916B45C5000E5EF51 /* MyCellView.m */; };
 		42C90FDC16B45C5000E5EF51 /* MyCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 42C90FDA16B45C5000E5EF51 /* MyCellView.xib */; };
@@ -190,8 +191,9 @@
 		4281590F16A8A79700471064 /* PointEditorPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointEditorPanel.m; sourceTree = "<group>"; };
 		4281591016A8A79700471064 /* PointEditorPanel.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PointEditorPanel.xib; sourceTree = "<group>"; };
 		4293A11416C7E196005BD7A7 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		4293A11616C7F5FE005BD7A7 /* compass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = compass.png; sourceTree = "<group>"; };
-		4293A11716C7F5FE005BD7A7 /* myLocation.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = myLocation.png; sourceTree = "<group>"; };
+		4293A12A16C83C63005BD7A7 /* locationEdit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = locationEdit.png; sourceTree = "<group>"; };
+		4293A12B16C83C63005BD7A7 /* locationGPS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = locationGPS.png; sourceTree = "<group>"; };
+		4293A12C16C83C63005BD7A7 /* locationMap.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = locationMap.png; sourceTree = "<group>"; };
 		42C90FCB16B4058800E5EF51 /* MyImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyImageView.h; sourceTree = "<group>"; };
 		42C90FCC16B4058900E5EF51 /* MyImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyImageView.m; sourceTree = "<group>"; };
 		42C90FD816B45C5000E5EF51 /* MyCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCellView.h; sourceTree = "<group>"; };
@@ -375,8 +377,9 @@
 		4210E49016B3524A0059F42B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				4293A11616C7F5FE005BD7A7 /* compass.png */,
-				4293A11716C7F5FE005BD7A7 /* myLocation.png */,
+				4293A12A16C83C63005BD7A7 /* locationEdit.png */,
+				4293A12B16C83C63005BD7A7 /* locationGPS.png */,
+				4293A12C16C83C63005BD7A7 /* locationMap.png */,
 				4210E49916B3604C0059F42B /* IconEditorPanelBg.png */,
 				4210E49A16B3604C0059F42B /* IconEditorPanelBg@2x.png */,
 				4210E49116B3524A0059F42B /* allGMapIcons.png */,
@@ -912,8 +915,9 @@
 				42CCF92816B4740E00F790A0 /* TransparentPixel.png in Resources */,
 				420E844C16C6741000319321 /* GSyncPanel.xib in Resources */,
 				420E844E16C6A13C00319321 /* ManagedIcons.bundle in Resources */,
-				4293A11916C7F5FE005BD7A7 /* compass.png in Resources */,
-				4293A11A16C7F5FE005BD7A7 /* myLocation.png in Resources */,
+				4293A12D16C83C63005BD7A7 /* locationEdit.png in Resources */,
+				4293A12E16C83C63005BD7A7 /* locationGPS.png in Resources */,
+				4293A12F16C83C63005BD7A7 /* locationMap.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

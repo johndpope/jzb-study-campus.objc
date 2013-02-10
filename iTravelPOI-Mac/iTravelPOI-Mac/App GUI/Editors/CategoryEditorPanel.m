@@ -122,7 +122,7 @@
 
         [self.categoryNameField setStringValue:self.category.name];
         [self.categoryDescrField setString:@""];
-        [self.categoryExtraInfo setStringValue:[NSString stringWithFormat:@"Published: %@\tUpdated: %@\n",
+        [self.categoryExtraInfo setStringValue:[NSString stringWithFormat:@"Published:\t%@\nUpdated:\t%@\n",
                                              [MBaseEntity stringFromDate:self.category.published_date],
                                              [MBaseEntity stringFromDate:self.category.updated_date]]];
     }
@@ -165,14 +165,9 @@
 #pragma mark -
 #pragma mark <IconEditorPanelDelegate> protocol methods
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) iconPanelSaveChanges:(IconEditorPanel *)sender {
+- (void) iconPanelClose:(IconEditorPanel *)sender {
     [self setImageFieldFromHREF:sender.baseHREF];
     self.iconBaseHREF = sender.baseHREF;
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) iconPanelCancelChanges:(IconEditorPanel *)sender {
-    // nothing
 }
 
      
