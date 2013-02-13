@@ -54,6 +54,7 @@
 #else
 + (EntityEditorPanel *) panel:(EntityEditorPanel *)panel startEditingEntity:(MBaseEntity *)entity delegate:(id<EntityEditorPanelDelegate>)delegate;
 - (void) closePanel;
+- (void) willCloseWithSave:(BOOL)saving;
 #endif
 
 

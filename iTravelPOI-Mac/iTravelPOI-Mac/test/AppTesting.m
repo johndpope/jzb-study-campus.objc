@@ -227,8 +227,7 @@
 
     localPoint.descr = gmPoint.descr;
     [localPoint moveToCategory:[MCategory categoryForIconHREF:gmPoint.iconHREF inContext:localPoint.managedObjectContext]];
-    localPoint.latitudeValue = gmPoint.latitude;
-    localPoint.longitudeValue = gmPoint.longitude;
+    [localPoint setLatitude:gmPoint.latitude longitude:gmPoint.longitude];
 
     return true;
 }

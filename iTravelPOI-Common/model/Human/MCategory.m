@@ -12,7 +12,7 @@
 #import "RMCViewCount.h"
 #import "ErrorManagerService.h"
 #import "NSString+JavaStr.h"
-#import "IconManager.h"
+#import "ImageManager.h"
 
 
 
@@ -63,7 +63,7 @@
     
     // Si no se ha puesto un nombre explicito a la categoria usara el del icono
     if(extraInfo==nil || extraInfo.length==0) {
-        IconData *icon = [IconManager iconDataForHREF:baseHREF];
+        IconData *icon = [ImageManager iconDataForHREF:baseHREF];
         extraInfo = icon.shortName;
     }
     

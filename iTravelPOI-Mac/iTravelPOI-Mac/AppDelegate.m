@@ -19,7 +19,6 @@
 
 
 
-
 // *********************************************************************************************************************
 #pragma mark -
 #pragma mark PRIVATE interface definition
@@ -44,7 +43,7 @@
 - (void) applicationDidFinishLaunching:(NSNotification *)aNotification {
     
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
-
+    
     [self initDataModel];
     [self showMainWindow];
         

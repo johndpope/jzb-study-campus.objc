@@ -1,50 +1,48 @@
 //*********************************************************************************************************************
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to MPoint.m instead.
+// Make changes to MMapThumbnail.m instead.
 //*********************************************************************************************************************
 
 
-#define __MPoint__PROTECTED__
+#define __MMapThumbnail__PROTECTED__
 
 
-#import "_MPoint.h"
+#import "_MMapThumbnail.h"
 
-const struct MPointAttributes MPointAttributes = {
-	.descr = @"descr",
+const struct MMapThumbnailAttributes MMapThumbnailAttributes = {
+	.imageData = @"imageData",
 	.latitude = @"latitude",
 	.longitude = @"longitude",
 };
 
-const struct MPointRelationships MPointRelationships = {
-	.category = @"category",
-	.map = @"map",
-	.thumbnail = @"thumbnail",
+const struct MMapThumbnailRelationships MMapThumbnailRelationships = {
+	.point = @"point",
 };
 
-const struct MPointFetchedProperties MPointFetchedProperties = {
+const struct MMapThumbnailFetchedProperties MMapThumbnailFetchedProperties = {
 };
 
-@implementation MPointID
+@implementation MMapThumbnailID
 @end
 
-@implementation _MPoint
+@implementation _MMapThumbnail
 
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription insertNewObjectForEntityForName:@"MPoint" inManagedObjectContext:moc_];
+	return [NSEntityDescription insertNewObjectForEntityForName:@"MMapThumbnail" inManagedObjectContext:moc_];
 }
 
 + (NSString*)entityName {
-	return @"MPoint";
+	return @"MMapThumbnail";
 }
 
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription entityForName:@"MPoint" inManagedObjectContext:moc_];
+	return [NSEntityDescription entityForName:@"MMapThumbnail" inManagedObjectContext:moc_];
 }
 
-- (MPointID*)objectID {
-	return (MPointID*)[super objectID];
+- (MMapThumbnailID*)objectID {
+	return (MMapThumbnailID*)[super objectID];
 }
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
@@ -67,7 +65,7 @@ const struct MPointFetchedProperties MPointFetchedProperties = {
 
 
 
-@dynamic descr;
+@dynamic imageData;
 
 
 
@@ -130,15 +128,7 @@ const struct MPointFetchedProperties MPointFetchedProperties = {
 
 
 
-@dynamic category;
-
-	
-
-@dynamic map;
-
-	
-
-@dynamic thumbnail;
+@dynamic point;
 
 	
 

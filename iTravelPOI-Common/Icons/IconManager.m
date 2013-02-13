@@ -1,13 +1,13 @@
 //
-//  IconManager.m
+//  ImageManager.m
 //  iTravelPOI-Mac
 //
 //  Created by Jose Zarzuela on 27/01/13.
 //  Copyright (c) 2013 Jose Zarzuela. All rights reserved.
 //
 
-#define __IconManager__IMPL__
-#import "IconManager.h"
+#define __ImageManager__IMPL__
+#import "ImageManager.h"
 
 #import "NSString+JavaStr.h"
 
@@ -35,9 +35,9 @@
 
 //*********************************************************************************************************************
 #pragma mark -
-#pragma mark PRIVATE IconManager interface definition
+#pragma mark PRIVATE ImageManager interface definition
 //*********************************************************************************************************************
-@interface IconManager()
+@interface ImageManager()
 
 + (NSImage *) _loadImageNamed:(NSString *)imgName;
 + (NSImage *) _loadImageShadowNamed:(NSString *)imgName;
@@ -83,7 +83,7 @@
 - (NSImage *) image {
     
     if(_image==nil) {
-        _image = [IconManager _loadImageNamed:_shortName];
+        _image = [ImageManager _loadImageNamed:_shortName];
     }
     return _image;
 }
@@ -92,7 +92,7 @@
 - (NSImage *) shadowImage {
     
     if(_shadowImage==nil) {
-        _shadowImage = [IconManager _loadImageShadowNamed:_shortName];
+        _shadowImage = [ImageManager _loadImageShadowNamed:_shortName];
     }
     return _shadowImage;
 }
@@ -106,9 +106,9 @@
 
 //*********************************************************************************************************************
 #pragma mark -
-#pragma mark IconManager Implementation
+#pragma mark ImageManager Implementation
 //*********************************************************************************************************************
-@implementation IconManager
+@implementation ImageManager
 
 
 
@@ -121,11 +121,11 @@
 //---------------------------------------------------------------------------------------------------------------------
 + (IconData *) iconDataForHREF:(NSString *)HREF {
     
-    NSMutableDictionary *dict = [IconManager _dictionaryIconsForHREF];
+    NSMutableDictionary *dict = [ImageManager _dictionaryIconsForHREF];
     
     IconData *icon = [dict objectForKey:HREF];
     if(icon==nil) {
-        NSString *fileName = [IconManager _fileNameFromIconHREF:HREF];
+        NSString *fileName = [ImageManager _fileNameFromIconHREF:HREF];
         icon = [[IconData alloc] initWithHREF:HREF shortName:fileName];
         @synchronized(dict) {
             [dict setObject:icon forKey:HREF];
@@ -138,7 +138,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 + (NSImage *) imageForName:(NSString *)name {
     
-    NSMutableDictionary *dict = [IconManager _dictionaryIconsForName];
+    NSMutableDictionary *dict = [ImageManager _dictionaryIconsForName];
     
     NSImage *icon = [dict objectForKey:name];
     if(icon==nil) {
@@ -183,11 +183,11 @@
 //---------------------------------------------------------------------------------------------------------------------
 + (NSImage *) _loadImageNamed:(NSString *)imgName {
     
-    NSString *imagePath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"ManagedIcons.bundle/%@", imgName] ofType:@"png"];
+    NSString *imagePath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"ManagedImages.bundle/%@", imgName] ofType:@"png"];
     NSImage *image = [[NSImage alloc] initWithContentsOfFile:imagePath];
     if(image==nil) {
         // AQUI SE PODRIA INTENTAR CARGAR UNA IMAGEN DE OTRO SITIO QUE NO SEA LAS DE POR DEFECTO DE GMAP
-        image = [IconManager _errorImage];
+        image = [ImageManager _errorImage];
     }
     return image;
 }
@@ -195,11 +195,11 @@
 //---------------------------------------------------------------------------------------------------------------------
 + (NSImage *) _loadImageShadowNamed:(NSString *)imgName {
     
-    NSString *imagePath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"ManagedIcons.bundle/%@.shadow", imgName] ofType:@"png"];
+    NSString *imagePath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"ManagedImages.bundle/%@.shadow", imgName] ofType:@"png"];
     NSImage *image = [[NSImage alloc] initWithContentsOfFile:imagePath];
     if(image==nil) {
         // AQUI SE PODRIA INTENTAR CARGAR UNA IMAGEN DE OTRO SITIO QUE NO SEA LAS DE POR DEFECTO DE GMAP
-        image = [IconManager _errorImage];
+        image = [ImageManager _errorImage];
     }
     return image;
 }
@@ -211,7 +211,7 @@
     
     static dispatch_once_t _predicate;
     dispatch_once(&_predicate, ^{
-        NSString *imagePath = [[NSBundle mainBundle] pathForResource:@"ManagedIcons.bundle/GMI_error" ofType:@"png"];
+        NSString *imagePath = [[NSBundle mainBundle] pathForResource:@"ManagedImages.bundle/GMI_error" ofType:@"png"];
         __errorImage = [[NSImage alloc] initWithContentsOfFile:imagePath];
     });
     return __errorImage;
@@ -224,7 +224,7 @@
     
     static dispatch_once_t _predicate;
     dispatch_once(&_predicate, ^{
-        NSString *imagePath = [[NSBundle mainBundle] pathForResource:@"ManagedIcons.bundle/GMI_error.shadow" ofType:@"png"];
+        NSString *imagePath = [[NSBundle mainBundle] pathForResource:@"ManagedImages.bundle/GMI_error.shadow" ofType:@"png"];
         __errorShadowImage = [[NSImage alloc] initWithContentsOfFile:imagePath];
     });
     return __errorShadowImage;

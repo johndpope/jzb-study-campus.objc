@@ -30,13 +30,16 @@
 #pragma mark CLASS public methods
 // ---------------------------------------------------------------------------------------------------------------------
 + (NSManagedObjectContext *) moContext;
++ (NSManagedObjectContext *) moChildContext;
++ (NSManagedObjectContext *) moChildContextASync;
+
 
 + (NSEntityDescription *) entityByName:(NSString *)name;
 
 + (BOOL) initCDStack:(NSString *)modelName;
 
 + (BOOL) saveContext;
-+ (BOOL) saveMOContext:(NSManagedObjectContext *)moContext;
++ (BOOL) saveMOContext:(NSManagedObjectContext *)moContext saveAll:(BOOL) saveAll;
 
 
 @end

@@ -16,7 +16,7 @@
 #import "MMap.h"
 #import "MPoint.h"
 #import "GMTCompTuple.h"
-#import "IconManager.h"
+#import "ImageManager.h"
 #import "NSString+JavaStr.h"
 
 
@@ -223,7 +223,7 @@ NSString *STATUS_ICON_NAME[] = {@"SyncIcon_Pending", @"SyncIcon_Syncing", @"Sync
     NSTableCellView *cell = [tableView makeViewWithIdentifier:tableColumn.identifier owner:self];
     
     NSNumber *status = self.itemStatus[row];
-    cell.imageView.image = [IconManager imageForName:STATUS_ICON_NAME[status.intValue]];
+    cell.imageView.image = [ImageManager imageForName:STATUS_ICON_NAME[status.intValue]];
     cell.textField.stringValue = self.itemNames[row];
     
     return cell;
@@ -361,9 +361,8 @@ NSString *STATUS_ICON_NAME[] = {@"SyncIcon_Pending", @"SyncIcon_Syncing", @"Sync
     
     localPoint.descr = gmPoint.descr;
     [localPoint moveToCategory:[MCategory categoryForIconHREF:gmPoint.iconHREF inContext:localPoint.managedObjectContext]];
-    localPoint.latitudeValue = gmPoint.latitude;
-    localPoint.longitudeValue = gmPoint.longitude;
-    
+    [localPoint setLatitude:gmPoint.latitude longitude:gmPoint.longitude];
+
     [localPoint updateDeleteMark:false];
     localPoint.modifiedSinceLastSyncValue = false;
 

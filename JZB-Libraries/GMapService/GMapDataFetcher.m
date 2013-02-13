@@ -15,7 +15,7 @@
 #pragma mark -
 #pragma mark PRIVATE CONSTANTS and C-Methods definitions
 // ---------------------------------------------------------------------------------------------------------------------
-#define GMAPDataFetcher_Timeout 20
+#define GMAPDataFetcher_Timeout 10
 
 
 

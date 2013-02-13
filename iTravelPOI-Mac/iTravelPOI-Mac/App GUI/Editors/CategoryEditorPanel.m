@@ -11,7 +11,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "CategoryEditorPanel.h"
 #import "MCategory.h"
-#import "IconManager.h"
+#import "ImageManager.h"
 #import "IconEditorPanel.h"
 #import "MPoint.h"
 #import "NSString+JavaStr.h"
@@ -99,7 +99,7 @@
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) setImageFieldFromHREF:(NSString *)iconHREF {
-    IconData *icon = [IconManager iconDataForHREF:iconHREF];
+    IconData *icon = [ImageManager iconDataForHREF:iconHREF];
     self.iconImageBtnField.image = icon.image;
     [self.iconImageBtnField setImagePosition:NSImageOnly];
     

@@ -75,24 +75,51 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
++ (NSManagedObjectContext *) moChildContext {
+    NSManagedObjectContext *childContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+    childContext.parentContext = BaseCoreData.moContext;
+    return childContext;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
++ (NSManagedObjectContext *) moChildContextASync {
+    NSManagedObjectContext *childContextASync = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    childContextASync.parentContext = BaseCoreData.moContext;
+    return childContextASync;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
 + (BOOL) saveContext {
 
     if(BaseCoreData.sharedInstance.moContext != nil) {
-        return [BaseCoreData saveMOContext:BaseCoreData.sharedInstance.moContext];
+        return [BaseCoreData saveMOContext:BaseCoreData.sharedInstance.moContext saveAll:TRUE];
     }
     return true;
 
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-+ (BOOL) saveMOContext:(NSManagedObjectContext *)moContext {
++ (BOOL) saveMOContext:(NSManagedObjectContext *)moContext saveAll:(BOOL) saveAll{
 
-    NSError *error = nil;
-    if([moContext hasChanges] && ![moContext save:&error]) {
-        [ErrorManagerService manageError:error compID:@"BaseCoreData" messageWithFormat:@"Error saving NSManagedContext"];
-        return false;
+    
+    __block BOOL allOK = TRUE;
+
+    NSManagedObjectContext *moc = moContext;
+    while (moc!=nil) {
+        
+        [moc performBlockAndWait:^{
+            
+            NSError *error = nil;
+            if([moc hasChanges] && ![moc save:&error]) {
+                [ErrorManagerService manageError:error compID:@"BaseCoreData" messageWithFormat:@"Error saving NSManagedContext"];
+                allOK = FALSE;
+            }
+        }];
+        
+        moc = moc.parentContext;
     }
-    return true;
+    
+    return allOK;
 
 }
 

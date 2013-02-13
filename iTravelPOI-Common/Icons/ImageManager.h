@@ -1,5 +1,5 @@
 //
-//  IconManager.h
+//  ImageManager.h
 //  iTravelPOI-Mac
 //
 //  Created by Jose Zarzuela on 27/01/13.
@@ -30,7 +30,7 @@
 @property (nonatomic, strong, readonly) NSImage *shadowImage;
 
 
-#ifndef __IconManager__IMPL__
+#ifndef __ImageManager__IMPL__
 - (id) init __attribute__ ((unavailable ("init not available")));
 #endif
 
@@ -41,9 +41,9 @@
 
 //*********************************************************************************************************************
 #pragma mark -
-#pragma mark Public IconManager Interface definition
+#pragma mark Public ImageManager Interface definition
 //*********************************************************************************************************************
-@interface IconManager : NSObject
+@interface ImageManager : NSObject
 
 
 
@@ -52,7 +52,7 @@
 #pragma mark -
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-#ifndef __IconManager__IMPL__
+#ifndef __ImageManager__IMPL__
 - (id) init __attribute__ ((unavailable ("init not available")));
 #endif
 

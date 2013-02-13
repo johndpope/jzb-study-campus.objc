@@ -152,7 +152,7 @@
     
     MKAnnotationView *view1 = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"blah"];
     NSString *path = [[NSBundle mainBundle] pathForResource:@"MarkerTest" ofType:@"png"];
-    path = [[NSBundle mainBundle] pathForResource:@"ManagedIcons.bundle/GMI_blue-dot" ofType:@"png"];
+    path = [[NSBundle mainBundle] pathForResource:@"ManagedImages.bundle/GMI_blue-dot" ofType:@"png"];
     NSURL *url = [NSURL fileURLWithPath:path];
     view1.imageUrl = [url absoluteString];
     

@@ -19,7 +19,7 @@
 #import "CategoryEditorPanel.h"
 #import "RMCViewCount.h"
 
-#import "IconManager.h"
+#import "ImageManager.h"
 
 #import "MyCellView.h"
 
@@ -129,8 +129,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (IBAction) toolbarSyncItemAction:(id)sender {
         
-    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-    moc.parentContext = [BaseCoreData moContext];
+    NSManagedObjectContext *moc = [BaseCoreData moChildContextASync];
     [GSyncPanel startSyncWithMOContext:moc delegate:self];
 }
 
@@ -155,8 +154,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (IBAction) toolbarAddItemAction:(id)sender {
     
-    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-    moc.parentContext = [BaseCoreData moContext];
+    NSManagedObjectContext *moc = [BaseCoreData moChildContext];
     
     if(self.selectedMap == nil) {
         MMap *newMap = [MMap emptyMapWithName:@"" inContext:moc];
@@ -181,8 +179,7 @@
     
     MBaseEntity *item = self.loadedItems[index];
     
-    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-    moc.parentContext = [BaseCoreData moContext];
+    NSManagedObjectContext *moc = [BaseCoreData moChildContext];
     MBaseEntity *selectedItemCopy = (MBaseEntity *)[moc objectWithID:item.objectID];
     
     
@@ -277,7 +274,7 @@
     MyCellView *resultCell = [tableView makeViewWithIdentifier:tableColumn.identifier owner:self];
     
     resultCell.labelText = itemToShow.name;
-    IconData *icon = [IconManager iconDataForHREF:itemToShow.iconBaseHREF];
+    IconData *icon = [ImageManager iconDataForHREF:itemToShow.iconBaseHREF];
     resultCell.imageView.image = icon.image;
     
     
@@ -314,8 +311,7 @@
     NSManagedObjectContext *moc = sender.entity.managedObjectContext;
     
     // Tiene que salvar la informacion del contexto hijo al padre y de este a disco
-    [BaseCoreData saveMOContext:moc];
-    [BaseCoreData saveContext];
+    [BaseCoreData saveMOContext:moc saveAll:TRUE];
     
     MBaseEntity *savedEntity = (MBaseEntity *)[[BaseCoreData moContext] objectWithID:sender.entity.objectID];
     
@@ -330,8 +326,7 @@
     NSManagedObjectContext *moc = sender.moContext;
     
     // Tiene que salvar la informacion del contexto hijo al padre y de este a disco
-    [BaseCoreData saveMOContext:moc];
-    [BaseCoreData saveContext];
+    [BaseCoreData saveMOContext:moc saveAll:TRUE];
     
     // Un cambio de nombre al editar o un nuevo elemento hace que la lista se desordene
     // mejor recargar la informacion de nuevo

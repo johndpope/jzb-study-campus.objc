@@ -12,7 +12,8 @@
 #import <QuartzCore/QuartzCore.h>
 #import "PointEditorPanel.h"
 #import "MCategory.h"
-#import "IconManager.h"
+#import "MMapThumbnail.h"
+#import "ImageManager.h"
 #import "IconEditorPanel.h"
 #import "NSString+JavaStr.h"
 
@@ -40,9 +41,16 @@
 @property (nonatomic, assign) IBOutlet NSTextField *pointLatLng;
 @property (nonatomic, assign) IBOutlet NSTextField *gpsAccuracy;
 @property (nonatomic, assign) IBOutlet NSImageView *pointMapThumbnail;
+@property (nonatomic, assign) IBOutlet NSProgressIndicator *thumbnailSpinner;
 
 @property (nonatomic, assign) double latitude;
 @property (nonatomic, assign) double longitude;
+@property (nonatomic, assign) double thumbnail_latitude;
+@property (nonatomic, assign) double thumbnail_longitude;
+@property (nonatomic, strong) NSData *thumbnail_imgData;
+@property (nonatomic, strong) MMapThumbnailTicket *ticket;
+@property (nonatomic, strong) IBOutlet NSImageView *positionDot;
+
 
 @property (nonatomic, strong) NSString *iconBaseHREF;
 
@@ -76,33 +84,33 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) windowDidLoad {
     
-    [super windowDidLoad];
     
     // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
-
     self.locMgr = [[CLLocationManager alloc] init];
     self.locMgr.delegate = self;
     self.locMgr.purpose = @"To establish POI lat/lng at current position";
     self.locMgr.desiredAccuracy = kCLLocationAccuracyNearestTenMeters; // En metros
     self.locMgr.distanceFilter = kCLDistanceFilterNone; // En metros
-    [self.locMgr startUpdatingLocation];
     
+    self.latitude = HUGE_VAL;
+    self.longitude =HUGE_VAL;
+    self.thumbnail_latitude = HUGE_VAL;
+    self.thumbnail_longitude = HUGE_VAL;
     self.UseGPSLocation = FALSE;
-    [self showGPSAccuracyForLocation:self.locMgr.location];
+    
+    [super windowDidLoad];
 
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.locMgr stopUpdatingLocation];
+    self.thumbnail_imgData = nil;
+    self.ticket = nil;
 }
-/*
-[UIView beginAnimations:nil context:NULL];
-[UIView setAnimationDuration:0.7];
-[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.imageIcon cache:YES];
-self.imageIcon.image = self.tempIcon.image;
-[UIView commitAnimations];
-*/
+
+
 
 // =====================================================================================================================
 #pragma mark -
@@ -120,6 +128,7 @@ self.imageIcon.image = self.tempIcon.image;
 // ---------------------------------------------------------------------------------------------------------------------
 - (IBAction) btnLocationGPSClicked:(id)sender {
     self.UseGPSLocation = TRUE;
+    [self.locMgr startUpdatingLocation];
     [self locationManager:self.locMgr didUpdateToLocation:self.locMgr.location fromLocation:nil];
 }
 
@@ -137,9 +146,15 @@ self.imageIcon.image = self.tempIcon.image;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
+- (void) willCloseWithSave:(BOOL)saving {
+    [self.ticket cancelNotificationSaving:TRUE];
+    self.ticket = nil;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
 - (void) setImageFieldFromHREF:(NSString *)iconHREF {
     
-    IconData *icon = [IconManager iconDataForHREF:iconHREF];
+    IconData *icon = [ImageManager iconDataForHREF:iconHREF];
     self.iconImageBtnField.image = icon.image;
     [self.iconImageBtnField setImagePosition:NSImageOnly];
     
@@ -155,13 +170,9 @@ self.imageIcon.image = self.tempIcon.image;
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) setFieldValuesFromEntity {
 
-    NSString *imagePath = @"/Users/jzarzuela/Downloads/staticmapx1.png";
-    NSImage *image = [[NSImage alloc] initWithContentsOfFile:imagePath];
-    self.pointMapThumbnail.image = image;
-    
-
-    
     if(self.point) {
+        [self showGPSAccuracyForLocation:self.locMgr.location];
+        
         [self setImageFieldFromHREF:self.point.category.iconBaseHREF];
 
         self.iconBaseHREF = self.point.category.iconBaseHREF;
@@ -169,18 +180,20 @@ self.imageIcon.image = self.tempIcon.image;
 
         self.pointNameField.stringValue = self.point.name;
 
-        [self storeLatitude:self.point.latitudeValue longitude:self.point.longitudeValue];
+        self.thumbnail_latitude = self.point.thumbnail.latitudeValue;
+        self.thumbnail_longitude = self.point.thumbnail.longitudeValue;
+        self.thumbnail_imgData = self.point.thumbnail.imageData;
+        [self showAndStoreLatitude:self.point.latitudeValue longitude:self.point.longitudeValue];
 
         self.pointDescrField.string = self.point.descr;
         self.pointExtraInfo.stringValue = [NSString stringWithFormat:@"Published:\t%@\nUpdated:\t%@\nETAG:\t%@",
                                            [MBaseEntity stringFromDate:self.point.published_date],
                                            [MBaseEntity stringFromDate:self.point.updated_date],
                                            self.point.etag];
-
-        self.point.modifiedSinceLastSyncValue = true;
-        self.point.map.modifiedSinceLastSyncValue = true;
+        
     }
 }
+
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) setEntityFromFieldValues {
@@ -195,8 +208,7 @@ self.imageIcon.image = self.tempIcon.image;
             self.point.name = [NSString stringWithFormat:@"@%@", name];
         }
         
-        self.point.latitudeValue = self.latitude;
-        self.point.longitudeValue = self.longitude;
+        [self.point setLatitude:self.latitude longitude:self.longitude];
 
         self.point.descr = [self.pointDescrField string];
         self.point.updated_date = [NSDate date];
@@ -207,6 +219,15 @@ self.imageIcon.image = self.tempIcon.image;
                                                       inContext:self.point.managedObjectContext];
         
         [self.point moveToCategory:destCat];
+        
+        self.point.modifiedSinceLastSyncValue = true;
+        self.point.map.modifiedSinceLastSyncValue = true;
+        
+        /*
+        self.point.thumbnail.latitudeValue = self.thumbnail_latitude;
+        self.point.thumbnail.longitudeValue = self.thumbnail_longitude;
+        self.point.thumbnail.imageData = self.thumbnail_imgData;
+         */
     }
 }
 
@@ -229,7 +250,7 @@ self.imageIcon.image = self.tempIcon.image;
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
     [self showGPSAccuracyForLocation:newLocation];
     if(self.UseGPSLocation && newLocation!=nil) {
-        [self storeLatitude:newLocation.coordinate.latitude longitude:newLocation.coordinate.longitude];
+        [self showAndStoreLatitude:newLocation.coordinate.latitude longitude:newLocation.coordinate.longitude];
     }
 }
 
@@ -258,10 +279,61 @@ self.imageIcon.image = self.tempIcon.image;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) storeLatitude:(double)lat longitude:(double)lng {
+- (void) showAndStoreLatitude:(double)lat longitude:(double)lng {
+    
+    // Solo actua si hay cambios en los valores
+    if(self.longitude==lat && self.longitude==lng) {
+        return;
+    }
+    
+    
     self.latitude = lat;
     self.longitude = lng;
     self.pointLatLng.stringValue = [NSString stringWithFormat:@"Lat:\t%0.06f\nLng:\t%0.06f", lat, lng];
+    
+    // Ajusta la imagen del thumbnail segun se cambien la posicion
+    if(self.thumbnail_imgData == nil ||
+       self.thumbnail_latitude != lat ||
+       self.thumbnail_longitude != lng) {
+        
+        [self.positionDot  setHidden:TRUE];
+
+        //if(!self.thumbnail_imgData)
+        {
+            self.pointMapThumbnail.image = [NSImage imageNamed:@"staticMapNone2.png"];
+        }
+        
+        [self.thumbnailSpinner setHidden:FALSE];
+        [self.thumbnailSpinner startAnimation:self];
+
+        // Cancela el ticket anterior, si lo hubiese, indicando que no salve
+        [self.ticket cancelNotificationSaving:FALSE];
+        // Abre un nuevo ticket
+        self.ticket = [self.point.thumbnail asyncUpdateLatitude:lat
+                                                      longitude:lng
+                                                       callback:^void (double lat, double lng, NSData *imageData) {
+                                                           
+                                                           self.thumbnail_latitude = lat;
+                                                           self.thumbnail_longitude = lng;
+                                                           self.thumbnail_imgData = imageData;
+                                                           
+                                                           dispatch_async(dispatch_get_main_queue(), ^{
+                                                               [self.thumbnailSpinner setHidden:TRUE];
+                                                               [self.thumbnailSpinner stopAnimation:self];
+                                                               if(self.thumbnail_imgData) {
+                                                                   self.pointMapThumbnail.image = [[NSImage alloc] initWithData:self.thumbnail_imgData];
+                                                                   [self.positionDot  setHidden:FALSE];
+                                                               }
+                                                           });
+                                                       }];
+        
+    } else {
+        
+        self.pointMapThumbnail.image = [[NSImage alloc] initWithData:self.thumbnail_imgData];
+        [self.positionDot  setHidden:FALSE];
+        
+    }
+
 }
 
 

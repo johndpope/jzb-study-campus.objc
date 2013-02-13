@@ -10,6 +10,7 @@
 #import "MPoint.h"
 #import "MMap.h"
 #import "MCategory.h"
+#import "MMapThumbnail.h"
 #import "ErrorManagerService.h"
 
 
@@ -53,6 +54,7 @@
     
     
     MPoint *point = [MPoint insertInManagedObjectContext:moContext];
+    point.thumbnail = [MMapThumbnail insertInManagedObjectContext:moContext];
     
     [point _resetEntityWithName:name];
     
@@ -68,6 +70,7 @@
     [point.map updateViewCount: UPD_POINT_ADDED];
     [point.category updateViewCount: UPD_POINT_ADDED];
     [point.category updateViewCountForMap:map increment:UPD_POINT_ADDED];
+    
     
     return point;
 }
@@ -148,6 +151,19 @@
     }
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL) setLatitude:(double)lat longitude:(double)lng {
+    
+    // Si hay un cambio de coordenadas las establece y borra la imagen MapThumbnail asociada para que se recalcule
+    if(self.latitudeValue!=lat || self.longitudeValue!=lng) {
+        self.latitudeValue = lat;
+        self.longitudeValue = lng;
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+
 
 
 
@@ -163,6 +179,10 @@
     self.descr = @"";
     self.latitudeValue = 0.0;
     self.longitudeValue = 0.0;
+    
+    self.thumbnail.latitudeValue = 0.0;
+    self.thumbnail.longitudeValue = 0.0;
+    self.thumbnail.imageData = nil;
 }
 
 

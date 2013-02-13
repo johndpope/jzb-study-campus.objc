@@ -8,7 +8,7 @@
 
 #import "MBaseEntity.h"
 #import "NSString+JavaStr.h"
-#import "IconManager.h"
+#import "ImageManager.h"
 
 
 
@@ -155,7 +155,7 @@
     // Compone la parte del extraInfo
     NSString *infoValue = [iconHREF subStrFrom:p1 + URL_PARAM_ITP_INFO.length to:p2];
     if(infoValue == nil || infoValue.length == 0) {
-        IconData *icon = [IconManager iconDataForHREF:*baseURL];
+        IconData *icon = [ImageManager iconDataForHREF:*baseURL];
         infoValue = icon.shortName;
     }
     if([infoValue hasSuffix:URL_PARAM_ITP_VAL_SEP]) {

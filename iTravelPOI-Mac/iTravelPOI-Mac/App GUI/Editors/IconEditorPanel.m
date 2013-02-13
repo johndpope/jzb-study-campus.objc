@@ -11,7 +11,7 @@
 #import "GMTItem.h"
 #import "MyImageView.h"
 #import "NSString+JavaStr.h"
-#import "IconManager.h"
+#import "ImageManager.h"
 
 
 
@@ -140,7 +140,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) setSelectedIconHREF:(NSString *)baseIconHREF {
     
-    IconData *icon = [IconManager iconDataForHREF:baseIconHREF];
+    IconData *icon = [ImageManager iconDataForHREF:baseIconHREF];
     self.selectedName.stringValue = icon.shortName;
     self.selectedImage.image = icon.image;
     self.baseHREF = baseIconHREF;

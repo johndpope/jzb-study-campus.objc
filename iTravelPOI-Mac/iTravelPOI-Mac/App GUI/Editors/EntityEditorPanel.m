@@ -98,6 +98,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (IBAction) btnCloseSave:(id)sender {
 
+    [self willCloseWithSave:TRUE];
     if(self.delegate && [self.delegate respondsToSelector:@selector(editorPanelSaveChanges:)]) {
         [self setEntityFromFieldValues];
         [self.delegate editorPanelSaveChanges:self];
@@ -108,6 +109,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (IBAction) btnCloseCancel:(id)sender {
 
+    [self willCloseWithSave:FALSE];
     if(self.delegate && [self.delegate respondsToSelector:@selector(editorPanelCancelChanges:)]) {
         [self.delegate editorPanelCancelChanges:self];
     }
@@ -124,6 +126,11 @@
     self.moContext = nil;
     self.delegate = nil;
     self.myself = nil;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) willCloseWithSave:(BOOL)saving {
+    
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
