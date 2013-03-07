@@ -1,24 +1,21 @@
 //
-//  MMapThumbnail.h
+//  MyMKPointAnnotation.h
+//  iTravelPOI-Mac
+//
+//  Created by Jose Zarzuela on 16/02/13.
+//  Copyright (c) 2013 Jose Zarzuela. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+#import "MKPointAnnotation.h"
 
-#import "_MMapThumbnail.h"
 
 
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark Public Enumerations & definitions
 //*********************************************************************************************************************
-typedef void (^TBlock_blockDefinition)(double lat, double lng, NSData *imageData);
 
-
-//=====================================================================================================================
-@interface MMapThumbnailTicket: NSObject
-
-- (void) cancelNotificationSaving:(BOOL)mustSave;
-
-@end
 
 
 
@@ -26,7 +23,11 @@ typedef void (^TBlock_blockDefinition)(double lat, double lng, NSData *imageData
 #pragma mark -
 #pragma mark Public Interface definition
 //*********************************************************************************************************************
-@interface MMapThumbnail : _MMapThumbnail {}
+@interface MyMKPointAnnotation : MKPointAnnotation
+
+
+@property (nonatomic, strong) NSString *iconHREF;
+
 
 
 //=====================================================================================================================
@@ -40,6 +41,7 @@ typedef void (^TBlock_blockDefinition)(double lat, double lng, NSData *imageData
 #pragma mark -
 #pragma mark INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (MMapThumbnailTicket *) asyncUpdateLatitude:(double)lat longitude:(double)lng callback:(TBlock_blockDefinition)callback;
+
+
 
 @end

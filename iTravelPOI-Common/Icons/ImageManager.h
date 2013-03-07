@@ -26,6 +26,7 @@
 
 @property (nonatomic, strong, readonly) NSString *HREF;
 @property (nonatomic, strong, readonly) NSString *shortName;
+@property (nonatomic, strong, readonly) NSString *imagePath;
 @property (nonatomic, strong, readonly) NSImage *image;
 @property (nonatomic, strong, readonly) NSImage *shadowImage;
 

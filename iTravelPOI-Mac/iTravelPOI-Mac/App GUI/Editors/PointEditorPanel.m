@@ -15,6 +15,7 @@
 #import "MMapThumbnail.h"
 #import "ImageManager.h"
 #import "IconEditorPanel.h"
+#import "GMapPointEditorPanel.h"
 #import "NSString+JavaStr.h"
 
 
@@ -29,7 +30,7 @@
 #pragma mark -
 #pragma mark PRIVATE interface definition
 // *********************************************************************************************************************
-@interface PointEditorPanel () <IconEditorPanelDelegate, NSTextFieldDelegate, NSTextViewDelegate, CLLocationManagerDelegate>
+@interface PointEditorPanel () <IconEditorPanelDelegate, GMapPointEditorPanelDelegate, NSTextFieldDelegate, NSTextViewDelegate, CLLocationManagerDelegate>
 
 
 @property (nonatomic, assign) IBOutlet NSButton *iconImageBtnField;
@@ -104,7 +105,6 @@
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.locMgr stopUpdatingLocation];
     self.thumbnail_imgData = nil;
     self.ticket = nil;
@@ -134,6 +134,15 @@
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (IBAction) btnLocationMapClicked:(id)sender {
+    
+    CLLocationCoordinate2D pinCoordinates = {.latitude = self.latitude, .longitude = self.longitude};
+    MyMKPointAnnotation *pin = [[MyMKPointAnnotation alloc] init];
+    pin.title = self.pointNameField.stringValue;
+    pin.subtitle = @"pepe";
+    pin.coordinate = pinCoordinates;
+    pin.iconHREF = self.iconBaseHREF;
+    NSArray *annotations = [NSArray arrayWithObject:pin];
+    [GMapPointEditorPanel startGMapPointEditor:annotations delegate:self];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -217,17 +226,10 @@
         MCategory *destCat = [MCategory categoryForIconBaseHREF:self.iconBaseHREF
                                                       extraInfo:cleanCatName
                                                       inContext:self.point.managedObjectContext];
-        
         [self.point moveToCategory:destCat];
         
         self.point.modifiedSinceLastSyncValue = true;
         self.point.map.modifiedSinceLastSyncValue = true;
-        
-        /*
-        self.point.thumbnail.latitudeValue = self.thumbnail_latitude;
-        self.point.thumbnail.longitudeValue = self.thumbnail_longitude;
-        self.point.thumbnail.imageData = self.thumbnail_imgData;
-         */
     }
 }
 
@@ -240,6 +242,22 @@
     self.iconBaseHREF = sender.baseHREF;
 }
 
+
+
+// =====================================================================================================================
+#pragma mark -
+#pragma mark <GMapPointEditorPanelDelegate> protocol methods
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) editorPanelSaveChanges:(GMapPointEditorPanel *)sender {
+
+    MyMKPointAnnotation *pin = sender.annotations[0];
+    [self showAndStoreLatitude:pin.coordinate.latitude longitude:pin.coordinate.longitude];
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) editorPanelCancelChanges:(GMapPointEditorPanel *)sender {
+    
+}
 
 
 // =====================================================================================================================

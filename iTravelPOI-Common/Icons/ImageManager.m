@@ -39,6 +39,7 @@
 //*********************************************************************************************************************
 @interface ImageManager()
 
++ (NSString *) _imagePath:(NSString *)imgName;
 + (NSImage *) _loadImageNamed:(NSString *)imgName;
 + (NSImage *) _loadImageShadowNamed:(NSString *)imgName;
 
@@ -95,6 +96,11 @@
         _shadowImage = [ImageManager _loadImageShadowNamed:_shortName];
     }
     return _shadowImage;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (NSString *) imagePath {
+    return [ImageManager _imagePath:_shortName];
 }
 
 @end
@@ -181,10 +187,15 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
++ (NSString *) _imagePath:(NSString *)imgName {
+    NSString *imagePath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"ManagedImages.bundle/%@", imgName] ofType:@"png"];
+    return imagePath;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 + (NSImage *) _loadImageNamed:(NSString *)imgName {
     
-    NSString *imagePath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"ManagedImages.bundle/%@", imgName] ofType:@"png"];
-    NSImage *image = [[NSImage alloc] initWithContentsOfFile:imagePath];
+    NSImage *image = [[NSImage alloc] initWithContentsOfFile:[ImageManager _imagePath:imgName]];
     if(image==nil) {
         // AQUI SE PODRIA INTENTAR CARGAR UNA IMAGEN DE OTRO SITIO QUE NO SEA LAS DE POR DEFECTO DE GMAP
         image = [ImageManager _errorImage];

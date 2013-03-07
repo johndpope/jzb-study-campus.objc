@@ -13,81 +13,81 @@
 
 - (void)delegateRegionWillChangeAnimated:(BOOL)animated
 {
-    if (delegate && [delegate respondsToSelector:@selector(mapView:regionWillChangeAnimated:)])
+    if (self.delegate && [self.delegate respondsToSelector:@selector(mapView:regionWillChangeAnimated:)])
     {
-        [delegate mapView:self regionWillChangeAnimated:animated];
+        [self.delegate mapView:self regionWillChangeAnimated:animated];
     }
 }
 
 - (void)delegateRegionDidChangeAnimated:(BOOL)animated
 {
-    if (delegate && [delegate respondsToSelector:@selector(mapView:regionDidChangeAnimated:)])
+    if (self.delegate && [self.delegate respondsToSelector:@selector(mapView:regionDidChangeAnimated:)])
     {
-        [delegate mapView:self regionDidChangeAnimated:animated];
+        [self.delegate mapView:self regionDidChangeAnimated:animated];
     }
 }
 
 - (void)delegateDidUpdateUserLocation
 {
-    if (delegate && [delegate respondsToSelector:@selector(mapView:didUpdateUserLocation:)])
+    if (self.delegate && [self.delegate respondsToSelector:@selector(mapView:didUpdateUserLocation:)])
     {
-        [delegate mapView:self didUpdateUserLocation:userLocation];
+        [self.delegate mapView:self didUpdateUserLocation:userLocation];
     }
 }
 
 - (void)delegateDidFailToLocateUserWithError:(NSError *)error
 {
-    if (delegate && [delegate respondsToSelector:@selector(mapView:didFailToLocateUserWithError:)])
+    if (self.delegate && [self.delegate respondsToSelector:@selector(mapView:didFailToLocateUserWithError:)])
     {
-        [delegate mapView:self didFailToLocateUserWithError:error];
+        [self.delegate mapView:self didFailToLocateUserWithError:error];
     }
 }
 
 - (void)delegateWillStartLocatingUser
 {
-    if (delegate && [delegate respondsToSelector:@selector(mapViewWillStartLocatingUser:)])
+    if (self.delegate && [self.delegate respondsToSelector:@selector(mapViewWillStartLocatingUser:)])
     {
-        [delegate mapViewWillStartLocatingUser:self];
+        [self.delegate mapViewWillStartLocatingUser:self];
     }
 }
 
 - (void)delegateDidStopLocatingUser
 {
-    if (delegate && [delegate respondsToSelector:@selector(mapViewDidStopLocatingUser:)])
+    if (self.delegate && [self.delegate respondsToSelector:@selector(mapViewDidStopLocatingUser:)])
     {
-        [delegate mapViewDidStopLocatingUser:self];
+        [self.delegate mapViewDidStopLocatingUser:self];
     }
 }
 
 - (void)delegateDidAddOverlayViews:(NSArray *)someOverlayViews
 {
-    if (delegate && [delegate respondsToSelector:@selector(mapView:didAddOverlayViews:)])
+    if (self.delegate && [self.delegate respondsToSelector:@selector(mapView:didAddOverlayViews:)])
     {
-        [delegate mapView:self didAddOverlayViews:someOverlayViews];
+        [self.delegate mapView:self didAddOverlayViews:someOverlayViews];
     }
 }
 
 - (void)delegateDidAddAnnotationViews:(NSArray *)someAnnotationViews
 {
-    if (delegate && [delegate respondsToSelector:@selector(mapView:didAddAnnotationViews:)])
+    if (self.delegate && [self.delegate respondsToSelector:@selector(mapView:didAddAnnotationViews:)])
     {
-        [delegate mapView:self didAddAnnotationViews:someAnnotationViews];
+        [self.delegate mapView:self didAddAnnotationViews:someAnnotationViews];
     }
 }
 
 - (void)delegateDidSelectAnnotationView:(MKAnnotationView *)view
 {
-    if (delegate && [delegate respondsToSelector:@selector(mapView:didSelectAnnotationView:)])
+    if (self.delegate && [self.delegate respondsToSelector:@selector(mapView:didSelectAnnotationView:)])
     {
-        [delegate mapView:self didSelectAnnotationView:view];
+        [self.delegate mapView:self didSelectAnnotationView:view];
     }
 }
 
 - (void)delegateDidDeselectAnnotationView:(MKAnnotationView *)view
 {
-    if (delegate && [delegate respondsToSelector:@selector(mapView:didDeselectAnnotationView:)])
+    if (self.delegate && [self.delegate respondsToSelector:@selector(mapView:didDeselectAnnotationView:)])
     {
-        [delegate mapView:self didDeselectAnnotationView:view];
+        [self.delegate mapView:self didDeselectAnnotationView:view];
     }
 }
 
@@ -95,42 +95,42 @@
             didChangeDragState:(MKAnnotationViewDragState)newState 
                   fromOldState:(MKAnnotationViewDragState)oldState
 {
-    if (delegate && [delegate respondsToSelector:@selector(mapView:annotationView:didChangeDragState:fromOldState:)])
+    if (self.delegate && [self.delegate respondsToSelector:@selector(mapView:annotationView:didChangeDragState:fromOldState:)])
     {
-        [delegate mapView:self annotationView:annotationView didChangeDragState:newState fromOldState:oldState];
+        [self.delegate mapView:self annotationView:annotationView didChangeDragState:newState fromOldState:oldState];
     }
 }
 
 - (void)delegateWillStartLoadingMap
 {
-    if (delegate && [delegate respondsToSelector:@selector(mapViewWillStartLoadingMap:)])
+    if (self.delegate && [self.delegate respondsToSelector:@selector(mapViewWillStartLoadingMap:)])
     {
-        [delegate mapViewWillStartLoadingMap:self];
+        [self.delegate mapViewWillStartLoadingMap:self];
     }
 }
 
 - (void)delegateDidFinishLoadingMap;
 {
-    if (delegate && [delegate respondsToSelector:@selector(mapViewDidFinishLoadingMap:)])
+    if (self.delegate && [self.delegate respondsToSelector:@selector(mapViewDidFinishLoadingMap:)])
     {
-        [delegate mapViewDidFinishLoadingMap:self];
+        [self.delegate mapViewDidFinishLoadingMap:self];
     }
 }
 
 - (void)delegateDidFailLoadingMapWithError:(NSError *)error
 {
-    if (delegate && [delegate respondsToSelector:@selector(mapViewDidFailLoadingMap:withError:)])
+    if (self.delegate && [self.delegate respondsToSelector:@selector(mapViewDidFailLoadingMap:withError:)])
     {
-        [delegate mapViewDidFailLoadingMap:self withError:error];
+        [self.delegate mapViewDidFailLoadingMap:self withError:error];
     }
 }
 
 // MacMapKit additions
 - (void)delegateUserDidClickAndHoldAtCoordinate:(CLLocationCoordinate2D)coordinate;
 {
-    if (delegate && [delegate respondsToSelector:@selector(mapView:userDidClickAndHoldAtCoordinate:)])
+    if (self.delegate && [self.delegate respondsToSelector:@selector(mapView:userDidClickAndHoldAtCoordinate:)])
     {
-        [delegate mapView:self userDidClickAndHoldAtCoordinate:coordinate];
+        [self.delegate mapView:self userDidClickAndHoldAtCoordinate:coordinate];
     }
 
 }
@@ -138,9 +138,9 @@
 - (NSArray *)delegateContextMenuItemsForAnnotationView:(MKAnnotationView *)view
 {
     NSArray *items = [NSArray array];
-    if (delegate && [delegate respondsToSelector:@selector(mapView:contextMenuItemsForAnnotationView:)])
+    if (self.delegate && [self.delegate respondsToSelector:@selector(mapView:contextMenuItemsForAnnotationView:)])
     {
-	items = [delegate mapView:self contextMenuItemsForAnnotationView:view];
+	items = [self.delegate mapView:self contextMenuItemsForAnnotationView:view];
     }
     return items;
 }
