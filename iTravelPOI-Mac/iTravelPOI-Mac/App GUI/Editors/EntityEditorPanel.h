@@ -40,8 +40,8 @@
 // *********************************************************************************************************************
 @interface EntityEditorPanel : NSWindowController
 
-@property (weak) id<EntityEditorPanelDelegate> delegate;
-@property (strong) MBaseEntity *entity;
+@property (nonatomic, weak) id<EntityEditorPanelDelegate> delegate;
+@property (nonatomic, strong) MBaseEntity *entity;
 
 
 

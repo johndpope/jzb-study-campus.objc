@@ -25,7 +25,7 @@
 // *********************************************************************************************************************
 @interface AppDelegate ()
 
-@property (strong) NSWindowController *mainWndCtrlr;
+@property (nonatomic, strong) NSWindowController *mainWndCtrlr;
 
 @end
 

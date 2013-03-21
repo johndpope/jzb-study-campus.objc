@@ -11,9 +11,9 @@ NSString *const kXMLReaderTextNodeKey = @"text";
 
 @interface SimpleXMLReader ()
 
-@property (strong) NSMutableArray *dictionaryStack;
-@property (strong) NSMutableString *textInProgress;
-@property (assign) NSError *__autoreleasing *errorPointer;
+@property (nonatomic, strong) NSMutableArray *dictionaryStack;
+@property (nonatomic, strong) NSMutableString *textInProgress;
+@property (nonatomic, assign) NSError *__autoreleasing *errorPointer;
 
 - (id) initWithError:(NSError **)error;
 - (NSDictionary *) objectWithData:(NSData *)data;

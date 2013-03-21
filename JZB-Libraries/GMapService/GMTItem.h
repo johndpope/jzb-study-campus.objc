@@ -22,12 +22,12 @@
 // *********************************************************************************************************************
 @interface GMTItem : NSObject
 
-@property (strong)   NSString *name;
-@property (strong)   NSString *gmID;
-@property (strong)   NSString *etag;
-@property (readonly) NSString *editLink;
-@property (strong)   NSDate *published_Date;
-@property (strong)   NSDate *updated_Date;
+@property (nonatomic, strong)   NSString *name;
+@property (nonatomic, strong)   NSString *gmID;
+@property (nonatomic, strong)   NSString *etag;
+@property (nonatomic, readonly) NSString *editLink;
+@property (nonatomic, strong)   NSDate *published_Date;
+@property (nonatomic, strong)   NSDate *updated_Date;
 
 
 // =====================================================================================================================

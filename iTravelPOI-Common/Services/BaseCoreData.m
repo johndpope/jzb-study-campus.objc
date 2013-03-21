@@ -30,7 +30,7 @@
 @property (strong, readonly) NSPersistentStoreCoordinator *psCoordinator;
 
 
-@property (strong) NSString *modelName;
+@property (nonatomic, strong) NSString *modelName;
 @property (weak, readonly) NSURL *applicationDocumentsDirectory;
 
 

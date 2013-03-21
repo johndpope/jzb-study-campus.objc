@@ -31,8 +31,8 @@
 @interface GMapSyncService ()
 
 
-@property (strong) GMapService *gmService;
-@property (strong) id<GMPSyncDelegate> delegate;
+@property (nonatomic, strong) GMapService *gmService;
+@property (nonatomic, strong) id<GMPSyncDelegate> delegate;
 @property (atomic, assign) BOOL mustCancelSync;
 
 

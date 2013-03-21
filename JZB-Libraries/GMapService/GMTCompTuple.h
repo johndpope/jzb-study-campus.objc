@@ -30,10 +30,10 @@ extern const NSString *TCompStatusType_Names[];
 // *********************************************************************************************************************
 @interface GMTCompTuple : NSObject
 
-@property (assign) TCompStatusType status;
-@property (strong) id<GMPComparableLocal> localItem;
-@property (strong) id<GMPComparable>      remoteItem;
-@property (assign) BOOL conflicted;
+@property (nonatomic, assign) TCompStatusType status;
+@property (nonatomic, strong) id<GMPComparableLocal> localItem;
+@property (nonatomic, strong) id<GMPComparable>      remoteItem;
+@property (nonatomic, assign) BOOL conflicted;
 
 
 // =====================================================================================================================

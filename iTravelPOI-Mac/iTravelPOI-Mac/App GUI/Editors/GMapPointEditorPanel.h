@@ -39,8 +39,8 @@
 // *********************************************************************************************************************
 @interface GMapPointEditorPanel : NSWindowController
 
-@property (weak) id<GMapPointEditorPanelDelegate> delegate;
-@property (strong) NSArray *annotations;
+@property (nonatomic, weak) id<GMapPointEditorPanelDelegate> delegate;
+@property (nonatomic, strong) NSArray *annotations;
 
 
 

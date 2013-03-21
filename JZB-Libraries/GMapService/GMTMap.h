@@ -16,8 +16,8 @@
 // *********************************************************************************************************************
 @interface GMTMap : GMTItem
 
-@property (strong)   NSString *summary;
-@property (readonly) NSString *featuresURL;
+@property (nonatomic, strong)   NSString *summary;
+@property (nonatomic, readonly) NSString *featuresURL;
 
 
 // =====================================================================================================================

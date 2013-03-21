@@ -34,8 +34,8 @@
 
 @property (nonatomic, assign) IBOutlet NSScrollView *scrollView;
 @property (nonatomic, assign) IBOutlet NSImageView *allIconsImage;
-@property (weak) IBOutlet NSImageView *selectedImage;
-@property (weak) IBOutlet NSTextField *selectedName;
+@property (nonatomic, assign) IBOutlet NSImageView *selectedImage;
+@property (nonatomic, assign) IBOutlet NSTextField *selectedName;
 
 
 @property (nonatomic, strong) IconEditorPanel *myself;

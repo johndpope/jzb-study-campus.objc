@@ -20,8 +20,8 @@
 // *********************************************************************************************************************
 @interface GM_Test : NSObject
 
-@property (assign) BOOL exitOnError;
-@property (strong) NSError *error;
+@property (nonatomic, assign) BOOL exitOnError;
+@property (nonatomic, strong) NSError *error;
 
 
 

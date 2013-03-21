@@ -30,7 +30,7 @@
 // *********************************************************************************************************************
 @interface GMapService ()
 
-@property (strong) GMapDataFetcher *fetcher;
+@property (nonatomic, strong) GMapDataFetcher *fetcher;
 
 
 - (GMTMap *) parseDictMapData:(NSDictionary *)dictMapData error:(NSError **)err;

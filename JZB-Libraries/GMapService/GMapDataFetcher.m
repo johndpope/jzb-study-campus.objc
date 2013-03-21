@@ -27,7 +27,7 @@
 }
 
 
-@property (strong) NSString *authToken;
+@property (nonatomic, strong) NSString *authToken;
 
 
 - (NSError *) anError:(NSString *)desc withError:(NSError *)prevErr returnData:(NSData *)returnData;

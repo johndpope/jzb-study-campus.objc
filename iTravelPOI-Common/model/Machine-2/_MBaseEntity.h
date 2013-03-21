@@ -90,7 +90,7 @@ extern const struct MBaseEntityFetchedProperties {
 
 
 #ifndef __MBaseEntity__PROTECTED__
-@property (readonly) BOOL markedAsDeletedValue;
+@property (nonatomic, readonly) BOOL markedAsDeletedValue;
 - (BOOL)markedAsDeletedValue;
 #else
 @property BOOL markedAsDeletedValue;

@@ -19,7 +19,7 @@
 // *********************************************************************************************************************
 @interface GM_Test ()
 
-@property (strong) GMapService *service;
+@property (nonatomic, strong) GMapService *service;
 
 @end
 

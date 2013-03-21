@@ -36,7 +36,7 @@
 // *********************************************************************************************************************
 @interface IconEditorPanel : NSWindowController
 
-@property (weak) id<IconEditorPanelDelegate> delegate;
+@property (nonatomic, weak) id<IconEditorPanelDelegate> delegate;
 @property (nonatomic, strong, readonly) NSString *baseHREF;
 
 

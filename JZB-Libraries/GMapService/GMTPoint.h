@@ -25,10 +25,10 @@
 // *********************************************************************************************************************
 @interface GMTPoint : GMTItem
 
-@property (strong) NSString *descr;
-@property (strong) NSString *iconHREF;
-@property (assign) double latitude;
-@property (assign) double longitude;
+@property (nonatomic, strong) NSString *descr;
+@property (nonatomic, strong) NSString *iconHREF;
+@property (nonatomic, assign) double latitude;
+@property (nonatomic, assign) double longitude;
 
 
 // =====================================================================================================================

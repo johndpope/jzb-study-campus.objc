@@ -20,12 +20,12 @@
 // *********************************************************************************************************************
 @interface FakeItem : NSObject <GMPComparableLocal>
 
-@property (strong) NSString *name;
-@property (strong) NSString *gmID;
-@property (strong) NSString *etag;
-@property (assign) BOOL markedAsDeletedValue;
-@property (assign) BOOL wasSynchronizedValue;
-@property (assign) BOOL modifiedSinceLastSyncValue;
+@property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSString *gmID;
+@property (nonatomic, strong) NSString *etag;
+@property (nonatomic, assign) BOOL markedAsDeletedValue;
+@property (nonatomic, assign) BOOL wasSynchronizedValue;
+@property (nonatomic, assign) BOOL modifiedSinceLastSyncValue;
 
 @end
 
@@ -47,7 +47,7 @@
 // *********************************************************************************************************************
 @interface GM_SyncTest () <GMPSyncDelegate>
 
-@property (strong) GMapSyncService *service;
+@property (nonatomic, strong) GMapSyncService *service;
 
 @end
 

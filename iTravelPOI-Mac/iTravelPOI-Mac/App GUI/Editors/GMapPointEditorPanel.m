@@ -176,7 +176,7 @@
 - (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)commandSelector {
     NSLog(@"===================================================================================================");
     NSLog(@"- (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)commandSelector");
-    NSLog(@"selector: %s", (char *)commandSelector);
+    NSLog(@"selector: %s", sel_getName(commandSelector));
     SEL mySel = @selector(insertNewline:);
     if(mySel==commandSelector) {
     }
