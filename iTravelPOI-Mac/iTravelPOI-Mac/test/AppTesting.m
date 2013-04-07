@@ -193,7 +193,7 @@
     // gmPoint.updated_Date = localPoint.updated_Date; --> STR => DATE
 
     gmPoint.descr = localPoint.descr;
-    gmPoint.iconHREF = localPoint.iconHREF;
+    gmPoint.iconHREF = localPoint.category.iconHREF;
     gmPoint.latitude = localPoint.latitudeValue;
     gmPoint.longitude = localPoint.longitudeValue;
 

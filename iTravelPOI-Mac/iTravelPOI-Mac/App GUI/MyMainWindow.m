@@ -177,10 +177,10 @@
     NSInteger index = [self.tableViewItems selectedRow];
     if(index < 0) return;
     
-    MBaseEntity *item = self.loadedItems[index];
+    MMapBaseEntity *item = self.loadedItems[index];
     
     NSManagedObjectContext *moc = [BaseCoreData moChildContext];
-    MBaseEntity *selectedItemCopy = (MBaseEntity *)[moc objectWithID:item.objectID];
+    MMapBaseEntity *selectedItemCopy = (MMapBaseEntity *)[moc objectWithID:item.objectID];
     
     
     if([item isKindOfClass:[MMap class]]) {
@@ -225,7 +225,7 @@
     NSInteger index = [self.tableViewItems selectedRow];
     if(index < 0 || returnCode != NSAlertFirstButtonReturn) return;
     
-    MBaseEntity *item = self.loadedItems[index];
+    MMapBaseEntity *item = self.loadedItems[index];
     
     // Esto no funciona con las categorias
     if([item isKindOfClass:[MCategory class]]) {
@@ -256,48 +256,25 @@
 
 // =====================================================================================================================
 #pragma mark -
-#pragma mark <NSTableViewDataSource> methods
+#pragma mark <NSTableViewDataSource, NSTableViewDelegate> methods
 // ---------------------------------------------------------------------------------------------------------------------
 - (NSInteger) numberOfRowsInTableView:(NSTableView *)aTableView {
     NSUInteger count = self.loadedItems.count;
     return count;
 }
 
-// =====================================================================================================================
-#pragma mark -
-#pragma mark <NSTableViewDelegate> methods
 // ---------------------------------------------------------------------------------------------------------------------
 - (NSView *) tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
     
-    MBaseEntity *itemToShow = self.loadedItems[row];
-    
+    // Consigue una instancia de la celda
     MyCellView *resultCell = [tableView makeViewWithIdentifier:tableColumn.identifier owner:self];
-    
-    resultCell.labelText = itemToShow.name;
-    IconData *icon = [ImageManager iconDataForHREF:itemToShow.iconBaseHREF];
-    resultCell.imageView.image = icon.image;
-    
     
     // SIEMPRE se debe desasociar de cualquier item que tuviese de un uso anterior
     resultCell.objectValue = nil;
     
-    // Establece el nuevo valor dependiendo del tipo de elemento
-    if([itemToShow isKindOfClass:[MPoint class]]) {
-        
-        resultCell.badgeText = nil;
-        
-    } else if([itemToShow isKindOfClass:[MMap class]]) {
-        
-        MMap *mapToShow = (MMap *)itemToShow;
-        resultCell.badgeText=[NSString stringWithFormat:@"%03d", mapToShow.viewCountValue];
-        
-    } else {
-        
-        MCategory *catToShow = (MCategory *)itemToShow;
-        RMCViewCount *viewCountForMap = [catToShow viewCountForMap:self.selectedMap];
-        resultCell.badgeText=[NSString stringWithFormat:@"%03d", viewCountForMap.viewCountValue];
-        
-    }
+    // Establece los nuevos valores
+    MBaseEntity *itemToShow = self.loadedItems[row];
+    [resultCell setLabelText:itemToShow.name badgeText:itemToShow.strViewCount image:itemToShow.entityImage];
     
     return resultCell;
 }
@@ -313,7 +290,7 @@
     // Tiene que salvar la informacion del contexto hijo al padre y de este a disco
     [BaseCoreData saveMOContext:moc saveAll:TRUE];
     
-    MBaseEntity *savedEntity = (MBaseEntity *)[[BaseCoreData moContext] objectWithID:sender.entity.objectID];
+    MMapBaseEntity *savedEntity = (MMapBaseEntity *)[[BaseCoreData moContext] objectWithID:sender.entity.objectID];
     
     // Un cambio de nombre al editar o un nuevo elemento hace que la lista se desordene
     // mejor recargar la informacion de nuevo
@@ -392,7 +369,7 @@
     
     if(objID != nil) {
         for(NSInteger n = 0; n < self.loadedItems.count; n++) {
-            MBaseEntity *item = self.loadedItems[n];
+            MMapBaseEntity *item = self.loadedItems[n];
             if([item.objectID isEqual:objID]) {
                 [self.tableViewItems selectRowIndexes:[NSIndexSet indexSetWithIndex:n] byExtendingSelection:false];
                 [self.tableViewItems scrollRowToVisible:n];

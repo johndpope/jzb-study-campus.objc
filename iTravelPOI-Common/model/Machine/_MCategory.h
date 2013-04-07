@@ -9,6 +9,8 @@
 
 
 extern const struct MCategoryAttributes {
+	__unsafe_unretained NSString *fullName;
+	__unsafe_unretained NSString *iconBaseHREF;
 	__unsafe_unretained NSString *viewCount;
 } MCategoryAttributes;
 
@@ -29,6 +31,8 @@ extern const struct MCategoryFetchedProperties {
 
 
 
+
+
 @interface MCategoryID : NSManagedObjectID {}
 @end
 
@@ -37,6 +41,46 @@ extern const struct MCategoryFetchedProperties {
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
 - (MCategoryID*)objectID;
+
+
+
+
+
+
+
+
+#ifndef __MCategory__PROTECTED__
+@property (nonatomic, strong, readonly) NSString* fullName;
+#else
+@property (nonatomic, strong) NSString* fullName;
+#endif
+
+
+
+
+
+
+//- (BOOL)validateFullName:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+
+
+
+#ifndef __MCategory__PROTECTED__
+@property (nonatomic, strong, readonly) NSString* iconBaseHREF;
+#else
+@property (nonatomic, strong) NSString* iconBaseHREF;
+#endif
+
+
+
+
+
+
+//- (BOOL)validateIconBaseHREF:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -138,6 +182,18 @@ extern const struct MCategoryFetchedProperties {
 
 
 @interface _MCategory (CoreDataGeneratedPrimitiveAccessors)
+
+
+- (NSString*)primitiveFullName;
+- (void)setPrimitiveFullName:(NSString*)value;
+
+
+
+
+- (NSString*)primitiveIconBaseHREF;
+- (void)setPrimitiveIconBaseHREF:(NSString*)value;
+
+
 
 
 - (NSNumber*)primitiveViewCount;

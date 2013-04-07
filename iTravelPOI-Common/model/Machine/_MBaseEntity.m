@@ -10,10 +10,7 @@
 #import "_MBaseEntity.h"
 
 const struct MBaseEntityAttributes MBaseEntityAttributes = {
-	.iconBaseHREF = @"iconBaseHREF",
-	.iconExtraInfo = @"iconExtraInfo",
 	.name = @"name",
-	.published_date = @"published_date",
 	.updated_date = @"updated_date",
 };
 
@@ -56,28 +53,7 @@ const struct MBaseEntityFetchedProperties MBaseEntityFetchedProperties = {
 
 
 
-@dynamic iconBaseHREF;
-
-
-
-
-
-
-@dynamic iconExtraInfo;
-
-
-
-
-
-
 @dynamic name;
-
-
-
-
-
-
-@dynamic published_date;
 
 
 

@@ -46,9 +46,11 @@
     return nil;
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
 - (id) initWithFrame:(NSRect)frameRect {
     return [super initWithFrame:frameRect];
 }
+
 
 // =====================================================================================================================
 #pragma mark -
@@ -59,25 +61,27 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) setLabelText:(NSString *)value {
-    self.textField.stringValue = value;
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
 - (NSString *) badgeText {
     return self.badgeTextField.stringValue;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) setBadgeText:(NSString *)value {
+- (void) setLabelText:(NSString *)labelText badgeText:(NSString *)badgeText image:(NSImage *)image {
 
-    if(value != nil) {
-        self.badgeTextField.stringValue = value;
+    if(badgeText != nil) {
+        self.badgeTextField.stringValue = badgeText;
         [self.badgeTextField setHidden:false];
+        
+        NSAttributedString *attrStr = [[NSAttributedString alloc] initWithString:labelText attributes:self.boldFontAttributes];
+        self.textField.attributedStringValue = attrStr;
     } else {
         self.badgeTextField.stringValue = @"";
         [self.badgeTextField setHidden:true];
+
+        self.textField.stringValue = labelText;
     }
+    
+    self.imageView.image = image;
 }
 
 // =====================================================================================================================
@@ -90,6 +94,18 @@
 #pragma mark -
 #pragma mark Private methods
 // ---------------------------------------------------------------------------------------------------------------------
+- (NSDictionary *) boldFontAttributes {
+    
+    static __strong NSDictionary *__boldFontAttrs = nil;
+    
+    static dispatch_once_t _predicate;
+    dispatch_once(&_predicate, ^{
+        NSFont *font = [NSFont boldSystemFontOfSize:13.0];
+        __boldFontAttrs = [NSDictionary dictionaryWithObject:font forKey:NSFontAttributeName];
+    });
+    return __boldFontAttrs;
+
+}
 
 @end
 

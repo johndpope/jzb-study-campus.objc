@@ -7,6 +7,7 @@
 
 #import "MMapThumbnail.h"
 #import "BaseCoreData.h"
+#import "MPoint.h"
 
 
 
@@ -68,9 +69,14 @@
     static NSData * _imgZeroData = nil;
     static dispatch_once_t _predicate;
     dispatch_once(&_predicate, ^{
-        NSImage *img = [NSImage imageNamed:@"staticMapZero.png"];
-        [img TIFFRepresentation];
-        _imgZeroData = [[NSImage imageNamed:@"staticMapZero.png"] TIFFRepresentation];
+        
+        JZImage *pngImg = [JZImage imageNamed:@"staticMapZero.png"];
+#if defined(OS_PLATFORM_MAC)
+        _imgZeroData = [pngImg TIFFRepresentation];
+#else
+        _imgZeroData = UIImagePNGRepresentation(pngImg);
+#endif
+        
     });
     return _imgZeroData;
 }
@@ -107,7 +113,7 @@
     
     if(err != nil || (response != nil && response.statusCode != 200)) {
         DDLogError(@"Error requesting thumbnail image. StatusCode = %ld, %@\nError = %@",
-                   response.statusCode,
+                   (long)response.statusCode,
                    [NSHTTPURLResponse localizedStringForStatusCode:response.statusCode],
                    err);
         return nil;
@@ -131,17 +137,16 @@
 #pragma mark Public methods
 //---------------------------------------------------------------------------------------------------------------------
 - (MMapThumbnailTicket *) asyncUpdateLatitude:(double)lat longitude:(double)lng callback:(TBlock_blockDefinition)callback {
-
+    
     // Almacena nuestro objID y los datos pasados
     __block NSManagedObjectID *objID = self.objectID;
     __block double latitude = lat;
     __block double longitude = lng;
-    
-    
+
     // Crea el ticket a retornar
     __block MMapThumbnailTicket *ticket = [[MMapThumbnailTicket alloc] init];
     ticket.callback = callback;
-    ticket.mustSave = TRUE;
+    ticket.mustSave = FALSE;
     
     // Ejecuta la actualizacion en background
     NSManagedObjectContext *childContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
@@ -149,7 +154,6 @@
     [childContext performBlock:^{
         
         NSData *imgData = [MMapThumbnail downloadThumbnailForLatitude:latitude longitude:longitude];
-        
         // Graba lo descargado si asi esta indicado
         if(imgData!=nil && ticket.mustSave) {
             MMapThumbnail *thumbnail = (MMapThumbnail *)[childContext objectWithID:objID];

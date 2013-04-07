@@ -118,13 +118,12 @@
     if(self.category) {
         [self setImageFieldFromHREF:self.category.iconBaseHREF];
         self.iconBaseHREF = self.category.iconBaseHREF;
-        [self.categoryPathField setStringValue:self.category.iconExtraInfo];
+        [self.categoryPathField setStringValue:self.category.fullName];
 
         [self.categoryNameField setStringValue:self.category.name];
         [self.categoryDescrField setString:@""];
-        [self.categoryExtraInfo setStringValue:[NSString stringWithFormat:@"Published:\t%@\nUpdated:\t%@\n",
-                                             [MBaseEntity stringFromDate:self.category.published_date],
-                                             [MBaseEntity stringFromDate:self.category.updated_date]]];
+        [self.categoryExtraInfo setStringValue:[NSString stringWithFormat:@"Updated:\t%@\n",
+                                              [MMapBaseEntity stringFromDate:self.category.updated_date]]];
     }
 }
 
@@ -134,28 +133,14 @@
     if(self.category) {
         
         // Los cambios en esta entidad son, REALMENTE, CAMBIOS EN LOS PUNTOS ASOCIADOS
-        NSString *cleanCatName = [self.categoryPathField.stringValue replaceStr:@"&" with:@"%"];
+        NSString *cleanCatFullName = [self.categoryPathField.stringValue replaceStr:@"&" with:@"%"];
         MCategory *destCategory = [MCategory categoryForIconBaseHREF:self.iconBaseHREF
-                                                           extraInfo:cleanCatName
+                                                            fullName:cleanCatFullName
                                                            inContext:self.category.managedObjectContext];
-        
-        [self.category movePointsToCategory:destCategory inMap:self.map];
-        
-        // Marca los puntos y el mapa como modificados
-        [self markAsModifiedPointsForCategory:self.category inMap:self.map];
+
+        // Si hubo cambios relevantes actualiza los puntos impactados
         if(![self.category.objectID isEqual:destCategory.objectID]) {
-            [self markAsModifiedPointsForCategory:destCategory inMap:self.map];
-        }
-        self.map.modifiedSinceLastSyncValue = true;
-    }
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) markAsModifiedPointsForCategory:(MCategory *)category inMap:(MMap *)map {
-
-    for(MPoint *point in category.points) {
-        if([point.map.objectID isEqual:map.objectID]) {
-            point.modifiedSinceLastSyncValue = true;
+            [self _movePointsFromCategory:self.category toCategory:destCategory inMap:self.map];
         }
     }
 }
@@ -175,6 +160,58 @@
 // =====================================================================================================================
 #pragma mark -
 #pragma mark PRIVATE methods
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _movePointsFromCategory:(MCategory *)origCategory toCategory:(MCategory *)destCategory inMap:(MMap *)map {
+    
+    // Comprueba si se quiere mover a otra categoria diferente
+    if([origCategory.objectID isEqual:destCategory.objectID]) return;
+    
+    // Longitud del nombre base
+    NSUInteger baseFullNameLength = origCategory.fullName.length;
+    
+    // Recopila todas las subcateforias
+    // Se hace asi por si se moviese "hacia abajo". Lo que podría hacer un bucle infinito
+    NSMutableArray *allSubCats = [NSMutableArray array];
+    [self _allSubcategoriesFor:origCategory allSubCats:allSubCats];
+    
+    // Cambia todos los puntos de cada categoria a la nueva categoria equivalente
+    // Si se indica un mapa, se restringiran los puntos a los de ese mapa
+    // Se están moviendo incluso los puntos borrados
+    for(MCategory *cat in allSubCats) {
+        
+        // Caso especial en el que se mueve "hacia abajo"
+        if([cat.objectID isEqual:destCategory.objectID]) continue;
+        
+        
+        NSString *newFullName = [NSString stringWithFormat:@"%@%@", destCategory.fullName, [cat.fullName subStrFrom:baseFullNameLength]];
+        
+        MCategory *newSubCategory = [MCategory categoryForIconBaseHREF:destCategory.iconBaseHREF
+                                                              fullName:newFullName
+                                                             inContext:destCategory.managedObjectContext];
+        
+        NSArray *allPoints = [NSArray arrayWithArray:cat.points.allObjects];
+        for(MPoint *point in allPoints) {
+            if(map==nil || [point.map.objectID isEqual:map.objectID]) {
+                [point moveToCategory:newSubCategory];
+                [point updateModifiedMark];
+                [point.map updateModifiedMark];
+            }
+        }
+    }
+    
+    // Marca la hora de actualizacion de ambas categorias
+    origCategory.updated_date = [NSDate date];
+    destCategory.updated_date = [NSDate date];
+}
+
 // ---------------------------------------------------------------------------------------------------------------------
+- (void) _allSubcategoriesFor:(MCategory *)cat allSubCats:(NSMutableArray *)allSubCats {
+
+    [allSubCats addObject:cat];
+    for(MCategory *subCat in cat.subCategories) {
+        [self _allSubcategoriesFor:subCat allSubCats:allSubCats];
+    }
+}
+
 
 @end

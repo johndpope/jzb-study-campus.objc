@@ -4,12 +4,12 @@
 
 #define __MMap__IMPL__
 #define __MMap__PROTECTED__
-#define __MBaseEntity__SUBCLASSES__PROTECTED__
-#define __MBaseGMSync__SUBCLASSES__PROTECTED__
+#define __MMapBaseEntity__SUBCLASSES__PROTECTED__
 
 #import "MMap.h"
 #import "MPoint.h"
 #import "MCategory.h"
+#import "ImageManager.h"
 #import "ErrorManagerService.h"
 
 
@@ -85,6 +85,28 @@
 #pragma mark -
 #pragma mark Getter & Setter methods
 //---------------------------------------------------------------------------------------------------------------------
+- (MAP_ENTITY_TYPE) entityType {
+    return MET_MAP;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (JZImage *) entityImage {
+    return [ImageManager iconDataForHREF:DEFAULT_MAP_ICON_HREF].image;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSString *) strViewCount {
+    return [NSString stringWithFormat:@"%03d", self.viewCountValue];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSString *) strViewCountForMap:(MMap *)map {
+    if([self.objectID isEqual:map.objectID])
+        return [NSString stringWithFormat:@"%03d", self.viewCountValue];
+    else
+        return nil;
+}
+
 
 
 
@@ -123,9 +145,6 @@
 - (void) _resetEntityWithName:(NSString *)name {
     
     [super _resetEntityWithName:name];
-    
-    [self _updateIconHREF:DEFAULT_MAP_ICON_HREF];
-    
     self.summary = @"";
 }
 

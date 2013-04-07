@@ -97,7 +97,7 @@
 
     if(self.iconHREF) {
         s_idCounter++;
-        NSString *styleID = [NSString stringWithFormat:@"Style-%ld-%lu", time(0L), s_idCounter];
+        NSString *styleID = [NSString stringWithFormat:@"Style-%ld-%lu", time(0L), (unsigned long)s_idCounter];
         [atomStr appendFormat:@"        <Style id='%@'><IconStyle><Icon><href><![CDATA[%@]]></href></Icon></IconStyle></Style>", styleID, self.iconHREF];
     }
 

@@ -156,7 +156,7 @@
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) willCloseWithSave:(BOOL)saving {
-    [self.ticket cancelNotificationSaving:TRUE];
+    [self.ticket cancelNotificationSaving:saving];
     self.ticket = nil;
 }
 
@@ -185,7 +185,7 @@
         [self setImageFieldFromHREF:self.point.category.iconBaseHREF];
 
         self.iconBaseHREF = self.point.category.iconBaseHREF;
-        self.pointCategoryField.stringValue = self.point.category.iconExtraInfo;
+        self.pointCategoryField.stringValue = self.point.category.fullName;
 
         self.pointNameField.stringValue = self.point.name;
 
@@ -196,8 +196,8 @@
 
         self.pointDescrField.string = self.point.descr;
         self.pointExtraInfo.stringValue = [NSString stringWithFormat:@"Published:\t%@\nUpdated:\t%@\nETAG:\t%@",
-                                           [MBaseEntity stringFromDate:self.point.published_date],
-                                           [MBaseEntity stringFromDate:self.point.updated_date],
+                                           [MMapBaseEntity stringFromDate:self.point.published_date],
+                                           [MMapBaseEntity stringFromDate:self.point.updated_date],
                                            self.point.etag];
         
     }
@@ -220,16 +220,15 @@
         [self.point setLatitude:self.latitude longitude:self.longitude];
 
         self.point.descr = [self.pointDescrField string];
-        self.point.updated_date = [NSDate date];
 
-        NSString *cleanCatName = [self.pointCategoryField.stringValue replaceStr:@"&" with:@"%"];
+        NSString *cleanCatFullName = [self.pointCategoryField.stringValue replaceStr:@"&" with:@"%"];
         MCategory *destCat = [MCategory categoryForIconBaseHREF:self.iconBaseHREF
-                                                      extraInfo:cleanCatName
+                                                       fullName:cleanCatFullName
                                                       inContext:self.point.managedObjectContext];
         [self.point moveToCategory:destCat];
-        
-        self.point.modifiedSinceLastSyncValue = true;
-        self.point.map.modifiedSinceLastSyncValue = true;
+
+        [self.point updateModifiedMark];
+        [self.point.map updateModifiedMark];
     }
 }
 
@@ -300,7 +299,7 @@
 - (void) showAndStoreLatitude:(double)lat longitude:(double)lng {
     
     // Solo actua si hay cambios en los valores
-    if(self.longitude==lat && self.longitude==lng) {
+    if(self.latitude==lat && self.longitude==lng) {
         return;
     }
     
@@ -334,6 +333,10 @@
                                                            self.thumbnail_latitude = lat;
                                                            self.thumbnail_longitude = lng;
                                                            self.thumbnail_imgData = imageData;
+                                                           
+                                                           self.point.thumbnail.latitudeValue = lat;
+                                                           self.point.thumbnail.longitudeValue = lng;
+                                                           self.point.thumbnail.imageData = imageData;
                                                            
                                                            dispatch_async(dispatch_get_main_queue(), ^{
                                                                [self.thumbnailSpinner setHidden:TRUE];

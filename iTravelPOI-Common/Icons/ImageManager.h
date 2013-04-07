@@ -27,8 +27,8 @@
 @property (nonatomic, strong, readonly) NSString *HREF;
 @property (nonatomic, strong, readonly) NSString *shortName;
 @property (nonatomic, strong, readonly) NSString *imagePath;
-@property (nonatomic, strong, readonly) NSImage *image;
-@property (nonatomic, strong, readonly) NSImage *shadowImage;
+@property (nonatomic, strong, readonly) JZImage *image;
+@property (nonatomic, strong, readonly) JZImage *shadowImage;
 
 
 #ifndef __ImageManager__IMPL__
@@ -59,7 +59,7 @@
 
 
 + (IconData *) iconDataForHREF:(NSString *)HREF;
-+ (NSImage *) imageForName:(NSString *)name;
++ (JZImage *) imageForName:(NSString *)name;
 
 
 @end

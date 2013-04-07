@@ -393,7 +393,7 @@ static int EscapeMapCompare(const void *ucharVoid, const void *mapVoid) {
         NSMutableData *data = [NSMutableData dataWithLength:length * sizeof(UniChar)];
         if (!data) {
             // COV_NF_START  - Memory fail case
-            NSLog(@"couldn't alloc buffer");
+            DDLogVerbose(@"couldn't alloc buffer");
             return nil;
             // COV_NF_END
         }
@@ -403,7 +403,7 @@ static int EscapeMapCompare(const void *ucharVoid, const void *mapVoid) {
     
     if (!buffer || !data2) {
         // COV_NF_START
-        NSLog(@"Unable to allocate buffer or data2");
+        DDLogVerbose(@"Unable to allocate buffer or data2");
         return nil;
         // COV_NF_END
     }
@@ -428,7 +428,7 @@ static int EscapeMapCompare(const void *ucharVoid, const void *mapVoid) {
             }
             else {
                 if(escapeUnicode && buffer[i] > 127) {
-                    NSLog(@"Illegal Character");
+                    DDLogVerbose(@"Illegal Character");
                 }
                 NSAssert(escapeUnicode && buffer[i] > 127, @"Illegal Character");
                 [finalString appendFormat:@"&#%d;", buffer[i]];

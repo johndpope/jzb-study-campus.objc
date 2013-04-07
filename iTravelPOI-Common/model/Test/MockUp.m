@@ -32,14 +32,14 @@ BOOL _init_model_ = TRUE;
 /*
  Cosas varias:
 
- NSLog(@"** Geocoding");
+ DDLogVerbose(@"** Geocoding");
  // 40.427382,-3.600941
  NSError *error=nil;
  NSStringEncoding encoding = -1;
  NSURL *theURL = [NSURL URLWithString:@"https://maps.googleapis.com/maps/api/geocode/xml?latlng=32.62,1.26&sensor=false&language=es"];
  NSString *str2 = [NSString stringWithContentsOfURL:theURL usedEncoding:&encoding error:&error];
- NSLog(@"Error: %@", error);
- NSLog(@"str: %@", str2);
+ DDLogVerbose(@"Error: %@", error);
+ DDLogVerbose(@"str: %@", str2);
 
  */
 
@@ -56,7 +56,7 @@ BOOL _init_model_ = TRUE;
 
     NSError *error = nil;
     if(![fileManager createDirectoryAtPath:[appDocDir path] withIntermediateDirectories:YES attributes:nil error:&error]) {
-        NSLog(@"MockUp - Error getting Application Documents Directory: %@, %@", error, [error userInfo]);
+        DDLogVerbose(@"MockUp - Error getting Application Documents Directory: %@, %@", error, [error userInfo]);
         exit(1);
     }
 
@@ -78,13 +78,13 @@ BOOL _init_model_ = TRUE;
 
     if([storeURL checkResourceIsReachableAndReturnError:&error]) {
         if(![fileManager removeItemAtURL:storeURL error:&error]) {
-            NSLog(@"Error removing data file: %@, %@", error, [error userInfo]);
+            DDLogVerbose(@"Error removing data file: %@, %@", error, [error userInfo]);
             exit(1);
         } else {
-            NSLog(@"****** DATA MODEL SQLITE FILE ERASED ******");
+            DDLogVerbose(@"****** DATA MODEL SQLITE FILE ERASED ******");
         }
     } else {
-        NSLog(@"****** DATA MODEL SQLITE FILE DIDN'T EXIST AND COULDN'T BE ERASED ******");
+        DDLogVerbose(@"****** DATA MODEL SQLITE FILE DIDN'T EXIST AND COULDN'T BE ERASED ******");
     }
 
 }
@@ -110,26 +110,26 @@ BOOL _init_model_ = TRUE;
     MPoint *point;
     NSString *baseURL1 = @"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png";
     NSString *baseURL2 = @"http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png";
+
+    point = [MPoint emptyPointWithName:@"p0" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 fullName:@"rest#" inContext:moContext]];
     
-    point = [MPoint emptyPointWithName:@"p0" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 extraInfo:@"rest#" inContext:moContext]];
+    point = [MPoint emptyPointWithName:@"p1" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 fullName:@"rest#chino#" inContext:moContext]];
+
+    point = [MPoint emptyPointWithName:@"p2" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 fullName:@"rest#veg#" inContext:moContext]];
+    point = [MPoint emptyPointWithName:@"p3" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 fullName:@"rest#veg#eco#" inContext:moContext]];
+    point = [MPoint emptyPointWithName:@"p4" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 fullName:@"rest#veg#dise#" inContext:moContext]];
+
+    point = [MPoint emptyPointWithName:@"p5" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 fullName:@"rest#trad#" inContext:moContext]];
+    point = [MPoint emptyPointWithName:@"p6" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 fullName:@"rest#trad#esp#" inContext:moContext]];
+    point = [MPoint emptyPointWithName:@"p7" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 fullName:@"rest#trad#belga#" inContext:moContext]];
+
+    point = [MPoint emptyPointWithName:@"p8" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL2 fullName:@"casas#" inContext:moContext]];
     
-    point = [MPoint emptyPointWithName:@"p1" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 extraInfo:@"rest#chino#" inContext:moContext]];
-
-    point = [MPoint emptyPointWithName:@"p2" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 extraInfo:@"rest#veg#" inContext:moContext]];
-    point = [MPoint emptyPointWithName:@"p3" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 extraInfo:@"rest#veg#eco#" inContext:moContext]];
-    point = [MPoint emptyPointWithName:@"p4" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 extraInfo:@"rest#veg#dise#" inContext:moContext]];
-
-    point = [MPoint emptyPointWithName:@"p5" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 extraInfo:@"rest#trad#" inContext:moContext]];
-    point = [MPoint emptyPointWithName:@"p6" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 extraInfo:@"rest#trad#esp#" inContext:moContext]];
-    point = [MPoint emptyPointWithName:@"p7" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 extraInfo:@"rest#trad#belga#" inContext:moContext]];
-
-    point = [MPoint emptyPointWithName:@"p8" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL2 extraInfo:@"casas#" inContext:moContext]];
-
 
     if([BaseCoreData saveContext]) {
-        NSLog(@"****** DATA MODEL SQLITE FILE PRE-POPULATED ******");
+        DDLogVerbose(@"****** DATA MODEL SQLITE FILE PRE-POPULATED ******");
     } else {
-        NSLog(@"****** ERROR SAVING PRE-POPULATED DATA MODEL ******");
+        DDLogVerbose(@"****** ERROR SAVING PRE-POPULATED DATA MODEL ******");
     }
 
 

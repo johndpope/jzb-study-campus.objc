@@ -5,7 +5,7 @@
 
 #import <CoreData/CoreData.h>
 
-#import "MBaseGMSync.h"
+#import "MMapBaseEntity.h"
 
 
 extern const struct MMapAttributes {
@@ -30,7 +30,7 @@ extern const struct MMapFetchedProperties {
 @interface MMapID : NSManagedObjectID {}
 @end
 
-@interface _MMap : MBaseGMSync {}
+@interface _MMap : MMapBaseEntity {}
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_;
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;

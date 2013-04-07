@@ -10,6 +10,8 @@
 #import "_MCategory.h"
 
 const struct MCategoryAttributes MCategoryAttributes = {
+	.fullName = @"fullName",
+	.iconBaseHREF = @"iconBaseHREF",
 	.viewCount = @"viewCount",
 };
 
@@ -57,6 +59,20 @@ const struct MCategoryFetchedProperties MCategoryFetchedProperties = {
 
 	return keyPaths;
 }
+
+
+
+
+@dynamic fullName;
+
+
+
+
+
+
+@dynamic iconBaseHREF;
+
+
 
 
 

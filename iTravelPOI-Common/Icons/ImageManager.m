@@ -40,8 +40,8 @@
 @interface ImageManager()
 
 + (NSString *) _imagePath:(NSString *)imgName;
-+ (NSImage *) _loadImageNamed:(NSString *)imgName;
-+ (NSImage *) _loadImageShadowNamed:(NSString *)imgName;
++ (JZImage *) _loadImageNamed:(NSString *)imgName;
++ (JZImage *) _loadImageShadowNamed:(NSString *)imgName;
 
 @end
 
@@ -81,7 +81,7 @@
 #pragma mark -
 #pragma mark Getter & Setter methods
 //---------------------------------------------------------------------------------------------------------------------
-- (NSImage *) image {
+- (JZImage *) image {
     
     if(_image==nil) {
         _image = [ImageManager _loadImageNamed:_shortName];
@@ -90,7 +90,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (NSImage *) shadowImage {
+- (JZImage *) shadowImage {
     
     if(_shadowImage==nil) {
         _shadowImage = [ImageManager _loadImageShadowNamed:_shortName];
@@ -142,11 +142,11 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (NSImage *) imageForName:(NSString *)name {
++ (JZImage *) imageForName:(NSString *)name {
     
     NSMutableDictionary *dict = [ImageManager _dictionaryIconsForName];
     
-    NSImage *icon = [dict objectForKey:name];
+    JZImage *icon = [dict objectForKey:name];
     if(icon==nil) {
         @synchronized(dict) {
             icon = [self _loadImageNamed:name];
@@ -193,9 +193,9 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (NSImage *) _loadImageNamed:(NSString *)imgName {
++ (JZImage *) _loadImageNamed:(NSString *)imgName {
     
-    NSImage *image = [[NSImage alloc] initWithContentsOfFile:[ImageManager _imagePath:imgName]];
+    JZImage *image = [[JZImage alloc] initWithContentsOfFile:[ImageManager _imagePath:imgName]];
     if(image==nil) {
         // AQUI SE PODRIA INTENTAR CARGAR UNA IMAGEN DE OTRO SITIO QUE NO SEA LAS DE POR DEFECTO DE GMAP
         image = [ImageManager _errorImage];
@@ -204,10 +204,10 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (NSImage *) _loadImageShadowNamed:(NSString *)imgName {
++ (JZImage *) _loadImageShadowNamed:(NSString *)imgName {
     
     NSString *imagePath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"ManagedImages.bundle/%@.shadow", imgName] ofType:@"png"];
-    NSImage *image = [[NSImage alloc] initWithContentsOfFile:imagePath];
+    JZImage *image = [[JZImage alloc] initWithContentsOfFile:imagePath];
     if(image==nil) {
         // AQUI SE PODRIA INTENTAR CARGAR UNA IMAGEN DE OTRO SITIO QUE NO SEA LAS DE POR DEFECTO DE GMAP
         image = [ImageManager _errorImage];
@@ -216,27 +216,27 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (NSImage *) _errorImage {
++ (JZImage *) _errorImage {
     
-    static __strong NSImage *__errorImage = nil;
+    static __strong JZImage *__errorImage = nil;
     
     static dispatch_once_t _predicate;
     dispatch_once(&_predicate, ^{
         NSString *imagePath = [[NSBundle mainBundle] pathForResource:@"ManagedImages.bundle/GMI_error" ofType:@"png"];
-        __errorImage = [[NSImage alloc] initWithContentsOfFile:imagePath];
+        __errorImage = [[JZImage alloc] initWithContentsOfFile:imagePath];
     });
     return __errorImage;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (NSImage *) _errorImageShadow {
++ (JZImage *) _errorImageShadow {
     
-    static __strong NSImage *__errorShadowImage = nil;
+    static __strong JZImage *__errorShadowImage = nil;
     
     static dispatch_once_t _predicate;
     dispatch_once(&_predicate, ^{
         NSString *imagePath = [[NSBundle mainBundle] pathForResource:@"ManagedImages.bundle/GMI_error.shadow" ofType:@"png"];
-        __errorShadowImage = [[NSImage alloc] initWithContentsOfFile:imagePath];
+        __errorShadowImage = [[JZImage alloc] initWithContentsOfFile:imagePath];
     });
     return __errorShadowImage;
 }

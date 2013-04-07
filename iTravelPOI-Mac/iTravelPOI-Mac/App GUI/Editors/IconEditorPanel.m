@@ -176,6 +176,7 @@
 static __strong NSArray *indexForURL = nil;
 static __strong NSDictionary *urlForIndex = nil;
 
+
 //---------------------------------------------------------------------------------------------------------------------
 - (void) loadGMapIconInfoList {
     

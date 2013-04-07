@@ -4,13 +4,13 @@
 
 #define __MPoint__IMPL__
 #define __MPoint__PROTECTED__
-#define __MBaseEntity__SUBCLASSES__PROTECTED__
-#define __MBaseGMSync__SUBCLASSES__PROTECTED__
+#define __MMapBaseEntity__SUBCLASSES__PROTECTED__
 
 #import "MPoint.h"
 #import "MMap.h"
 #import "MCategory.h"
 #import "MMapThumbnail.h"
+#import "ImageManager.h"
 #import "ErrorManagerService.h"
 
 
@@ -63,9 +63,8 @@
     if(category!=nil) {
         point.category = (MCategory *)[moContext objectWithID:category.objectID];
     } else {
-        point.category = [MCategory categoryForIconBaseHREF:DEFAULT_POINT_ICON_HREF extraInfo:nil inContext:moContext];
+        point.category = [MCategory categoryForIconHREF:DEFAULT_POINT_ICON_HREF inContext:moContext];
     }
-    [point _updateIconBaseHREF:point.category.iconBaseHREF iconExtraInfo:point.category.iconExtraInfo];
     
     [point.map updateViewCount: UPD_POINT_ADDED];
     [point.category updateViewCount: UPD_POINT_ADDED];
@@ -95,7 +94,7 @@
     NSError *localError = nil;
     NSArray *array = [map.managedObjectContext executeFetchRequest:request error:&localError];
     if(array==nil) {
-        [ErrorManagerService manageError:localError compID:@"MPoint:pointsInMap" messageWithFormat:@"Error fetching points in map '%@' with category '%@%@'", map.name, cat.iconBaseHREF, cat.iconExtraInfo];
+        [ErrorManagerService manageError:localError compID:@"MPoint:pointsInMap" messageWithFormat:@"Error fetching points in map '%@' with category '%@'-'%@'", map.name, cat.iconBaseHREF, cat.fullName];
     }
     return array;
 }
@@ -105,6 +104,14 @@
 #pragma mark -
 #pragma mark Getter & Setter methods
 //---------------------------------------------------------------------------------------------------------------------
+- (MAP_ENTITY_TYPE) entityType {
+    return MET_POINT;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (JZImage *) entityImage {
+    return [ImageManager iconDataForHREF:self.category.iconBaseHREF].image;
+}
 
 
 
@@ -134,6 +141,9 @@
     // Si ya es igual no hace nada
     if([self.category.objectID isEqual:category.objectID]) return;
     
+    //
+    self.modifiedSinceLastSyncValue = true;
+
     
     // Descuenta de la actual si no estaba marcado como borrado
     if(!self.markedAsDeletedValue) {
@@ -141,8 +151,8 @@
         [self.category updateViewCountForMap:self.map increment:UPD_POINT_REMOVED];
     }
     
+    // Cambia la categoria
     self.category = category;
-    [self _updateIconBaseHREF:category.iconBaseHREF iconExtraInfo:category.iconExtraInfo];
     
     // añade a la nueva si no estaba marcado como borrado
     if(!self.markedAsDeletedValue) {
@@ -175,7 +185,6 @@
     
     [super _resetEntityWithName:name];
         
-    [self _updateIconHREF:nil];
     self.descr = @"";
     self.latitudeValue = 0.0;
     self.longitudeValue = 0.0;

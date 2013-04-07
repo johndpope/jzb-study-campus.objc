@@ -5,7 +5,7 @@
 
 #import <CoreData/CoreData.h>
 
-#import "MBaseGMSync.h"
+#import "MMapBaseEntity.h"
 
 
 extern const struct MPointAttributes {
@@ -34,7 +34,7 @@ extern const struct MPointFetchedProperties {
 @interface MPointID : NSManagedObjectID {}
 @end
 
-@interface _MPoint : MBaseGMSync {}
+@interface _MPoint : MMapBaseEntity {}
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_;
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;

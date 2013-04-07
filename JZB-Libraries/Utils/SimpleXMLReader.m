@@ -137,7 +137,7 @@ NSString *const kXMLReaderTextNodeKey = @"text";
 - (void) parser:(NSXMLParser *)parser parseErrorOccurred:(NSError *)parseError {
     // Set the error pointer to the parser's error object
     NSString *desc = [NSString stringWithFormat:@"Error occurred while parsing data (line = %ld, column = %ld)",
-                      parser.lineNumber, parser.columnNumber];
+                      (long)parser.lineNumber, (long)parser.columnNumber];
 
     NSDictionary *errInfo = [NSDictionary dictionaryWithObjectsAndKeys:
                              desc, NSLocalizedDescriptionKey,

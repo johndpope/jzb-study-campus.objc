@@ -95,8 +95,7 @@
             self.map.name = [NSString stringWithFormat:@"@%@", name];
         }
         self.map.summary = [self.mapSummaryField string];
-        self.map.updated_date = [NSDate date];
-        self.map.modifiedSinceLastSyncValue = true;
+        [self.map updateModifiedMark];
     }
     
 }

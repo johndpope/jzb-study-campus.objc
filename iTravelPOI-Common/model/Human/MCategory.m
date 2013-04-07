@@ -50,25 +50,25 @@
     
     // Parsea el iconHREF especificado
     NSString *baseURL = nil;
-    NSString *extraInfo = nil;
-    [MBaseEntity _parseIconHREF:iconHREF baseURL:&baseURL extraInfo:&extraInfo];
-    return [MCategory categoryForIconBaseHREF:baseURL extraInfo:extraInfo inContext:moContext];
+    NSString *fullName = nil;
+    [MCategory _parseIconHREF:iconHREF baseURL:&baseURL fullName:&fullName];
+    return [MCategory categoryForIconBaseHREF:baseURL fullName:fullName inContext:moContext];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (MCategory *) categoryForIconBaseHREF:(NSString *)baseHREF extraInfo:(NSString *)extraInfo inContext:(NSManagedObjectContext *)moContext {
-
++ (MCategory *) categoryForIconBaseHREF:(NSString *)baseHREF fullName:(NSString *)fullName inContext:(NSManagedObjectContext *)moContext {
+    
     
     MCategory *cat;
     
     // Si no se ha puesto un nombre explicito a la categoria usara el del icono
-    if(extraInfo==nil || extraInfo.length==0) {
+    if(fullName==nil || fullName.length==0) {
         IconData *icon = [ImageManager iconDataForHREF:baseHREF];
-        extraInfo = icon.shortName;
+        fullName = icon.shortName;
     }
     
     // Busca la categoria requerida por si ya existe. En cuyo caso la retorna
-    cat = [MCategory _searchCategoryForIconBaseHREF:baseHREF extraInfo:extraInfo inContext:moContext];
+    cat = [MCategory _searchCategoryForIconBaseHREF:baseHREF fullName:fullName inContext:moContext];
     if(cat != nil) {
         return cat;
     }
@@ -76,25 +76,28 @@
     
     // Como no existe, itera el path de categorias "padre" para crear la ultima
     MCategory *parentCat = nil;
-    NSMutableString *partialExtraInfo = [NSMutableString string];
-    NSArray *catNames = [extraInfo componentsSeparatedByString:URL_PARAM_ITP_VAL_SEP];
+    NSMutableString *partialFullName = [NSMutableString string];
+    NSArray *catNames = [fullName componentsSeparatedByString:CAT_NAME_SEPARATOR];
     for(NSString *catName in catNames) {
         
         if(catName == nil || catName.length == 0) continue;
         
-        [partialExtraInfo appendString:catName];
-        [partialExtraInfo appendString:URL_PARAM_ITP_VAL_SEP];
+        [partialFullName appendString:catName];
+        [partialFullName appendString:CAT_NAME_SEPARATOR];
         
-        cat = [MCategory _searchCategoryForIconBaseHREF:baseHREF extraInfo:partialExtraInfo inContext:moContext];
+        cat = [MCategory _searchCategoryForIconBaseHREF:baseHREF fullName:partialFullName inContext:moContext];
         if(cat == nil) {
-            cat = [MCategory _emptyCategoryWithName:catName inContext:moContext];
+            cat = [MCategory insertInManagedObjectContext:moContext];
+            cat.name = catName;
+            cat.fullName = [partialFullName copy];
             cat.parent = parentCat;
-            [cat _updateIconBaseHREF:baseHREF iconExtraInfo:[partialExtraInfo copy]];
+            cat.iconBaseHREF = baseHREF;
+            cat.updated_date = [NSDate date];
         }
         parentCat = cat;
     }
     
-    return cat;    
+    return cat;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -119,7 +122,7 @@
     NSError *localError = nil;
     NSArray *array = [map.managedObjectContext executeFetchRequest:request error:&localError];
     if(array==nil) {
-        [ErrorManagerService manageError:localError compID:@"MCategory:categoriesWithPointsInMap" messageWithFormat:@"Error fetching categories with points in map '%@' and parent category '%@%@'", map.name, parentCat.iconBaseHREF, parentCat.iconExtraInfo];
+        [ErrorManagerService manageError:localError compID:@"MCategory:categoriesWithPointsInMap" messageWithFormat:@"Error fetching categories with points in map '%@' and parent category '%@'-'%@'", map.name, parentCat.iconBaseHREF, parentCat.fullName];
     }
     return array;
 }
@@ -129,6 +132,25 @@
 #pragma mark -
 #pragma mark Getter & Setter methods
 //---------------------------------------------------------------------------------------------------------------------
+- (MAP_ENTITY_TYPE) entityType {
+    return MET_CATEGORY;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (JZImage *) entityImage {
+    return [ImageManager iconDataForHREF:self.iconBaseHREF].image;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSString *) strViewCount {
+    return [NSString stringWithFormat:@"%03d", self.viewCountValue];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSString *) strViewCountForMap:(MMap *)map {
+    RMCViewCount *viewCountForMap = [self viewCountForMap:map];
+    return [NSString stringWithFormat:@"%03d", viewCountForMap.viewCountValue];
+}
 
 
 
@@ -136,13 +158,38 @@
 //=====================================================================================================================
 #pragma mark -
 #pragma mark Public methods
+//---------------------------------------------------------------------------------------------------------------------
+- (NSString *) iconHREF {
+    
+    NSString *value;
+    
+    if([self.iconBaseHREF indexOf:@"?"]==NSNotFound){
+        value = [NSString stringWithFormat:@"%@?%@%@", self.iconBaseHREF, URL_PARAM_CAT_INFO, self.fullName];
+    } else {
+        value = [NSString stringWithFormat:@"%@&%@%@", self.iconBaseHREF, URL_PARAM_CAT_INFO, self.fullName];
+    }
+    return value;
+}
+
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) updateDeleteMark:(BOOL) value {
+- (NSString *) pathName {
+
+    NSString *value = [self.fullName subStrFrom:0 to:self.fullName.length-self.name.length-1];
+    if([value hasSuffix:CAT_NAME_SEPARATOR]) {
+        return [value subStrFrom:0 to:value.length-1];
+    } else {
+        return value;
+    }
+}
+
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) xxx_updateDeleteMark:(BOOL) value {
     
     // Si se esta borrando, eso implica borrar todos los puntos asociados
     if(value==true) {
         for(MPoint *point in self.points) {
-            [point updateDeleteMark:true];
+            //[point updateDeleteMark:true];
         }
     }
 }
@@ -205,74 +252,32 @@
     }
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-- (void) movePointsToCategory:(MCategory *)destCategory inMap:(MMap *)map {
-    
-    // Comprueba si se quiere mover a otra categoria diferente
-    if([self.objectID isEqual:destCategory.objectID]) return;
-
-    
-    // Recopila todas las subcateforias
-    // Se hace asi por si se moviese "hacia abajo". Lo que podría hacer un bucle infinito
-    NSMutableArray *allSubCats = [NSMutableArray arrayWithObject:self];
-    [self _allSubcategories:allSubCats];
-    
-    
-    
-    // Cambia todos los puntos de cada categoria a la nueva categoria equivalente
-    // Si se indica un mapa, se restringiran los puntos a los de ese mapa
-    // Se están moviendo incluso los puntos borrados
-    NSUInteger index = self.iconExtraInfo.length;
-    for(MCategory *cat in allSubCats) {
-        
-        NSString *newExtraInfo = [NSString stringWithFormat:@"%@%@", destCategory.iconExtraInfo, [cat.iconExtraInfo subStrFrom:index]];
-        
-        MCategory *newSubCategory = [MCategory categoryForIconBaseHREF:destCategory.iconBaseHREF
-                                                             extraInfo:newExtraInfo
-                                                             inContext:self.managedObjectContext];
-        
-        NSArray *allPoints = [NSArray arrayWithArray:cat.points.allObjects];
-        for(MPoint *point in allPoints) {
-            if(map==nil || [point.map.objectID isEqual:map.objectID]) {
-                [point moveToCategory:newSubCategory];
-            }
-        }
-        
-    }
-}
-
 
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark Protected methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) _resetEntityWithName:(NSString *)name {
-    
-    [super _resetEntityWithName:name];    
-    // Lo deben establecer los puntos asociados
-    [self _updateIconHREF:nil];
-}
 
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark Private methods
 // ---------------------------------------------------------------------------------------------------------------------
-+ (MCategory *) _searchCategoryForIconBaseHREF:(NSString *)baseHREF extraInfo:(NSString *)extraInfo inContext:(NSManagedObjectContext *)moContext {
++ (MCategory *) _searchCategoryForIconBaseHREF:(NSString *)baseHREF fullName:(NSString *)fullName inContext:(NSManagedObjectContext *)moContext {
     
     // Crea la peticion de busqueda
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"MCategory"];
     
     // Se asigna una condicion de filtro
-    NSPredicate *query = [NSPredicate predicateWithFormat:@"iconBaseHREF=%@ AND iconExtraInfo=%@", baseHREF, extraInfo];
+    NSPredicate *query = [NSPredicate predicateWithFormat:@"iconBaseHREF=%@ AND fullName=%@", baseHREF, fullName];
     [request setPredicate:query];
     
     // Se ejecuta y retorna el resultado
     NSError *localError = nil;
     NSArray *array = [moContext executeFetchRequest:request error:&localError];
     if(array==nil) {
-        [ErrorManagerService manageError:localError compID:@"MCategory:_searchCategoryForIconHREF" messageWithFormat:@"Error fetching categories with iconBaseHREF '%@' and extraInfo='%@'", baseHREF, extraInfo];
+        [ErrorManagerService manageError:localError compID:@"MCategory:_searchCategoryForIconHREF" messageWithFormat:@"Error fetching categories with iconBaseHREF '%@' and fullName='%@'", baseHREF, fullName];
         return nil;
     }
     
@@ -280,7 +285,7 @@
         return nil;
     } else {
         if(array.count>1) {
-            [ErrorManagerService manageError:nil compID:@"MCategory:_searchCategoryForIconHREF" messageWithFormat:@"Error, more than one result, fetching categories with iconHREF '%@' and extraInfo='%@'", baseHREF, extraInfo];
+            [ErrorManagerService manageError:nil compID:@"MCategory:_searchCategoryForIconHREF" messageWithFormat:@"Error, more than one result, fetching categories with iconHREF '%@' and fullName='%@'", baseHREF, fullName];
         }
         MCategory *category = array[0];
         return category;
@@ -288,20 +293,49 @@
     
 }
 
-// ---------------------------------------------------------------------------------------------------------------------
-+ (MCategory *) _emptyCategoryWithName:(NSString *)name inContext:(NSManagedObjectContext *)moContext {
-    
-    MCategory *Category = [MCategory insertInManagedObjectContext:moContext];
-    [Category _resetEntityWithName:name];
-    return Category;
-}
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) _allSubcategories:(NSMutableArray *)cats {
++ (void) _parseIconHREF:(NSString *)iconHREF baseURL:(NSString **)baseURL fullName:(NSString **)fullName {
     
-    [cats addObjectsFromArray:self.subCategories.allObjects];
-    for(MCategory *subCat in self.subCategories) {
-        [subCat _allSubcategories:cats];
+    NSUInteger p1, p1_1;
+    NSUInteger p2, p2_1;
+    
+    
+    p1 = [iconHREF indexOf:URL_PARAM_CAT_INFO];
+    if(p1 == NSNotFound) {
+        p1 = iconHREF.length - URL_PARAM_CAT_INFO.length;
+        p2 = iconHREF.length;
+        p1_1 = iconHREF.length;
+        p2_1 = iconHREF.length;
+    } else {
+        p2 = [iconHREF indexOf:@"&" startIndex:p1];
+        if(p2 == NSNotFound) {
+            p2 = iconHREF.length;
+            p1_1 = p1 - 1;
+            p2_1 = p2;
+        } else {
+            p1_1 = p1;
+            p2_1 = p2 + 1;
+        }
+    }
+    
+    
+    // Compone la parte del BaseURL
+    NSString *strBefore = [iconHREF subStrFrom:0 to:p1_1];
+    NSString *strAfter = [iconHREF subStrFrom:p2_1];
+    *baseURL = [NSString stringWithFormat:@"%@%@", strBefore, strAfter];
+    
+    
+    // Compone la parte del extraInfo
+    NSString *infoValue = [iconHREF subStrFrom:p1 + URL_PARAM_CAT_INFO.length to:p2];
+    if(infoValue == nil || infoValue.length == 0) {
+        IconData *icon = [ImageManager iconDataForHREF:*baseURL];
+        infoValue = icon.shortName;
+    }
+    if([infoValue hasSuffix:CAT_NAME_SEPARATOR]) {
+        *fullName = infoValue;
+    } else {
+        *fullName = [NSString stringWithFormat:@"%@%@", infoValue, CAT_NAME_SEPARATOR];
     }
 }
 

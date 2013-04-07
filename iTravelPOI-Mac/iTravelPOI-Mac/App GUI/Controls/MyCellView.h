@@ -26,9 +26,9 @@
 @interface MyCellView : NSTableCellView
 
 
-@property (nonatomic, assign) NSString *labelText;
-@property (nonatomic, assign) NSString *badgeText;
-@property (nonatomic, assign) NSString *image;
+@property (nonatomic, readonly) NSString *labelText;
+@property (nonatomic, readonly) NSString *badgeText;
+@property (nonatomic, readonly) NSImage  *image;
 
 
 
@@ -43,6 +43,6 @@
 #pragma mark -
 #pragma mark Public methods
 // ---------------------------------------------------------------------------------------------------------------------
-
+- (void) setLabelText:(NSString *)labelText badgeText:(NSString *)badgeText image:(NSImage *)image;
 
 @end

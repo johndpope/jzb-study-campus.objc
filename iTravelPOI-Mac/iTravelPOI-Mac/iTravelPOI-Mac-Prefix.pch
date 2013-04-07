@@ -2,6 +2,10 @@
 // Prefix header for all source files of the 'iTravelPOI-Mac' target in the 'iTravelPOI-Mac' project
 //
 #ifdef __OBJC__
+
+#define OS_PLATFORM_MAC 1
+#define JZImage NSImage
+
     #import <Cocoa/Cocoa.h>
 
     #import "DDLog.h"

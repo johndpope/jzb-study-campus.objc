@@ -31,4 +31,5 @@
 - (void) moveToCategory:(MCategory *)category;
 - (BOOL) setLatitude:(double)lat longitude:(double)lng;
 
+
 @end

@@ -51,7 +51,7 @@
     // __block NSString *_errMsg = [NSString stringWithFormat:@"%@ - %@", compID, message];
     __block NSError *_err = error;
 
-    NSLog(@"%@. Error:%@, %@", _errMsg, _err, [_err userInfo]);
+    DDLogVerbose(@"%@. Error:%@, %@", _errMsg, _err, [_err userInfo]);
 
     dispatch_async(dispatch_get_main_queue(), ^{
 

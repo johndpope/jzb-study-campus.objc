@@ -534,7 +534,7 @@
 
 
 
-    DDLogVerbose(@"GMapService - processBatchCmds [%@][%lu]", map.name, batchCmds.count);
+    DDLogVerbose(@"GMapService - processBatchCmds [%@][%lu]", map.name, (unsigned long)batchCmds.count);
 
 
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

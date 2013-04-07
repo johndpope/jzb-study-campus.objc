@@ -67,7 +67,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 + (BOOL) initCDStack:(NSString *)modelName {
 
-    NSLog(@"BaseCoreData - initCDStack for model: '%@'", modelName);
+    DDLogVerbose(@"BaseCoreData - initCDStack for model: '%@'", modelName);
 
     BaseCoreData.sharedInstance.modelName = modelName;
     [self moContext];
@@ -138,7 +138,7 @@
         return _moContext;
     }
 
-    NSLog(@"BaseCoreData - Creating moContext");
+    DDLogVerbose(@"BaseCoreData - Creating moContext");
 
     NSPersistentStoreCoordinator *coor = self.psCoordinator;
     if(coor != nil) {
@@ -158,14 +158,14 @@
         return _psCoordinator;
     }
 
-    NSLog(@"BaseCoreData - Creating psCoordinator");
+    DDLogVerbose(@"BaseCoreData - Creating psCoordinator");
 
     NSManagedObjectModel *model = self.moModel;
     if(model != nil) {
 
         NSString *sqliteFileName = [NSString stringWithFormat:@"%@.sqlite", self.modelName];
         NSURL *storeURL = [self.applicationDocumentsDirectory URLByAppendingPathComponent:sqliteFileName];
-        NSLog(@"storeURL = %@", storeURL);
+        DDLogVerbose(@"storeURL = %@", storeURL);
 
 
         _psCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
@@ -189,12 +189,12 @@
         return _moModel;
     }
 
-    NSLog(@"BaseCoreData - Creating moModel");
+    DDLogVerbose(@"BaseCoreData - Creating moModel");
 
     NSURL *modelURL = [[NSBundle mainBundle] URLForResource:self.modelName withExtension:@"momd"];
     _moModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
     if(_moModel == nil) {
-        NSLog(@"BaseCoreData - Error creating the NSManagedObjectModel");
+        DDLogVerbose(@"BaseCoreData - Error creating the NSManagedObjectModel");
     }
 
     return _moModel;

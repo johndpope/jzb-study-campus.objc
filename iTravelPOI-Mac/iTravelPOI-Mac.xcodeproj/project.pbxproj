@@ -58,6 +58,9 @@
 		4293A12D16C83C63005BD7A7 /* locationEdit.png in Resources */ = {isa = PBXBuildFile; fileRef = 4293A12A16C83C63005BD7A7 /* locationEdit.png */; };
 		4293A12E16C83C63005BD7A7 /* locationGPS.png in Resources */ = {isa = PBXBuildFile; fileRef = 4293A12B16C83C63005BD7A7 /* locationGPS.png */; };
 		4293A12F16C83C63005BD7A7 /* locationMap.png in Resources */ = {isa = PBXBuildFile; fileRef = 4293A12C16C83C63005BD7A7 /* locationMap.png */; };
+		42A6F5CB1705962100E901CE /* _MMapBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A6F5CA1705962100E901CE /* _MMapBaseEntity.m */; };
+		42A6F5CE17059AA200E901CE /* MMapBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A6F5CD17059AA200E901CE /* MMapBaseEntity.m */; };
+		42A6F5D417059B3200E901CE /* MBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A6F5D317059B3200E901CE /* MBaseEntity.m */; };
 		42C90FCD16B4058900E5EF51 /* MyImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 42C90FCC16B4058900E5EF51 /* MyImageView.m */; };
 		42C90FDB16B45C5000E5EF51 /* MyCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 42C90FD916B45C5000E5EF51 /* MyCellView.m */; };
 		42C90FDC16B45C5000E5EF51 /* MyCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 42C90FDA16B45C5000E5EF51 /* MyCellView.xib */; };
@@ -115,8 +118,6 @@
 		42CCF92E16B47D4100F790A0 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42CCF92D16B47D4100F790A0 /* WebKit.framework */; };
 		42CCF93016B47D5000F790A0 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42CCF92F16B47D5000F790A0 /* CoreLocation.framework */; };
 		42CCF93216B47D6000F790A0 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42CCF93116B47D5F00F790A0 /* CoreFoundation.framework */; };
-		42CCF93516B54DEB00F790A0 /* _MBaseGMSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CCF93416B54DEB00F790A0 /* _MBaseGMSync.m */; };
-		42CCF93816B54DF900F790A0 /* MBaseGMSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CCF93716B54DF900F790A0 /* MBaseGMSync.m */; };
 		42CCF93B16B54E6500F790A0 /* _RMCViewCount.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CCF93A16B54E6500F790A0 /* _RMCViewCount.m */; };
 		42CCF93E16B54E6E00F790A0 /* RMCViewCount.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CCF93D16B54E6E00F790A0 /* RMCViewCount.m */; };
 		42D3F50516A08EAF0067FC89 /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F4F616A08EAF0067FC89 /* DDAbstractDatabaseLogger.m */; };
@@ -139,7 +140,6 @@
 		42D3F52F16A08EBC0067FC89 /* GM_Test.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F52516A08EBC0067FC89 /* GM_Test.m */; };
 		42D3F53516A098210067FC89 /* NSString+JavaStr.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F53216A098210067FC89 /* NSString+JavaStr.m */; };
 		42D3F53616A098210067FC89 /* SimpleXMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F53416A098210067FC89 /* SimpleXMLReader.m */; };
-		42D3F54516A0995C0067FC89 /* MBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F54016A0995C0067FC89 /* MBaseEntity.m */; };
 		42D3F54616A0995C0067FC89 /* MMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F54216A0995C0067FC89 /* MMap.m */; };
 		42D3F56516A09B2E0067FC89 /* _MBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F56016A09B2E0067FC89 /* _MBaseEntity.m */; };
 		42D3F56616A09B2E0067FC89 /* _MMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D3F56216A09B2E0067FC89 /* _MMap.m */; };
@@ -225,6 +225,12 @@
 		4293A12A16C83C63005BD7A7 /* locationEdit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = locationEdit.png; sourceTree = "<group>"; };
 		4293A12B16C83C63005BD7A7 /* locationGPS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = locationGPS.png; sourceTree = "<group>"; };
 		4293A12C16C83C63005BD7A7 /* locationMap.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = locationMap.png; sourceTree = "<group>"; };
+		42A6F5C91705962100E901CE /* _MMapBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MMapBaseEntity.h; sourceTree = "<group>"; };
+		42A6F5CA1705962100E901CE /* _MMapBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MMapBaseEntity.m; sourceTree = "<group>"; };
+		42A6F5CC17059AA200E901CE /* MMapBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMapBaseEntity.h; sourceTree = "<group>"; };
+		42A6F5CD17059AA200E901CE /* MMapBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMapBaseEntity.m; sourceTree = "<group>"; };
+		42A6F5D217059B3200E901CE /* MBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBaseEntity.h; sourceTree = "<group>"; };
+		42A6F5D317059B3200E901CE /* MBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBaseEntity.m; sourceTree = "<group>"; };
 		42C90FCB16B4058800E5EF51 /* MyImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyImageView.h; sourceTree = "<group>"; };
 		42C90FCC16B4058900E5EF51 /* MyImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyImageView.m; sourceTree = "<group>"; };
 		42C90FD816B45C5000E5EF51 /* MyCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCellView.h; sourceTree = "<group>"; };
@@ -327,10 +333,6 @@
 		42CCF92D16B47D4100F790A0 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		42CCF92F16B47D5000F790A0 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		42CCF93116B47D5F00F790A0 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
-		42CCF93316B54DEB00F790A0 /* _MBaseGMSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MBaseGMSync.h; sourceTree = "<group>"; };
-		42CCF93416B54DEB00F790A0 /* _MBaseGMSync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MBaseGMSync.m; sourceTree = "<group>"; };
-		42CCF93616B54DF900F790A0 /* MBaseGMSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBaseGMSync.h; sourceTree = "<group>"; };
-		42CCF93716B54DF900F790A0 /* MBaseGMSync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBaseGMSync.m; sourceTree = "<group>"; };
 		42CCF93916B54E6500F790A0 /* _RMCViewCount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _RMCViewCount.h; sourceTree = "<group>"; };
 		42CCF93A16B54E6500F790A0 /* _RMCViewCount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _RMCViewCount.m; sourceTree = "<group>"; };
 		42CCF93C16B54E6E00F790A0 /* RMCViewCount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMCViewCount.h; sourceTree = "<group>"; };
@@ -377,8 +379,6 @@
 		42D3F53216A098210067FC89 /* NSString+JavaStr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+JavaStr.m"; sourceTree = "<group>"; };
 		42D3F53316A098210067FC89 /* SimpleXMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleXMLReader.h; sourceTree = "<group>"; };
 		42D3F53416A098210067FC89 /* SimpleXMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleXMLReader.m; sourceTree = "<group>"; };
-		42D3F53F16A0995C0067FC89 /* MBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBaseEntity.h; sourceTree = "<group>"; };
-		42D3F54016A0995C0067FC89 /* MBaseEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBaseEntity.m; sourceTree = "<group>"; };
 		42D3F54116A0995C0067FC89 /* MMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMap.h; sourceTree = "<group>"; };
 		42D3F54216A0995C0067FC89 /* MMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMap.m; sourceTree = "<group>"; };
 		42D3F55F16A09B2E0067FC89 /* _MBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MBaseEntity.h; sourceTree = "<group>"; };
@@ -515,18 +515,18 @@
 		421916601691AC6300185866 /* Human */ = {
 			isa = PBXGroup;
 			children = (
+				42A6F5D217059B3200E901CE /* MBaseEntity.h */,
+				42A6F5D317059B3200E901CE /* MBaseEntity.m */,
+				42A6F5CC17059AA200E901CE /* MMapBaseEntity.h */,
+				42A6F5CD17059AA200E901CE /* MMapBaseEntity.m */,
 				4216C7F816C92952005C760D /* MMapThumbnail.h */,
 				4216C7F916C92953005C760D /* MMapThumbnail.m */,
 				42CCF93C16B54E6E00F790A0 /* RMCViewCount.h */,
 				42CCF93D16B54E6E00F790A0 /* RMCViewCount.m */,
-				42CCF93616B54DF900F790A0 /* MBaseGMSync.h */,
-				42CCF93716B54DF900F790A0 /* MBaseGMSync.m */,
 				4281590716A8A53C00471064 /* MCategory.h */,
 				4281590816A8A53D00471064 /* MCategory.m */,
 				4223D0B116A09C4700AED134 /* MPoint.h */,
 				4223D0B216A09C4700AED134 /* MPoint.m */,
-				42D3F53F16A0995C0067FC89 /* MBaseEntity.h */,
-				42D3F54016A0995C0067FC89 /* MBaseEntity.m */,
 				42D3F54116A0995C0067FC89 /* MMap.h */,
 				42D3F54216A0995C0067FC89 /* MMap.m */,
 			);
@@ -585,12 +585,12 @@
 		4223D2A216A446D700AED134 /* Editors */ = {
 			isa = PBXGroup;
 			children = (
-				42843D7C16CFBA5300EEB795 /* GMapPointEditorPanel.xib */,
-				42843D4016CFB36A00EEB795 /* GMapPointEditorPanel.h */,
-				42843D4116CFB36A00EEB795 /* GMapPointEditorPanel.m */,
 				4210E49016B3524A0059F42B /* Resources */,
 				420E844416C5932600319321 /* EntityEditorPanel.h */,
 				420E844516C5932600319321 /* EntityEditorPanel.m */,
+				42843D7C16CFBA5300EEB795 /* GMapPointEditorPanel.xib */,
+				42843D4016CFB36A00EEB795 /* GMapPointEditorPanel.h */,
+				42843D4116CFB36A00EEB795 /* GMapPointEditorPanel.m */,
 				4210E48716B350240059F42B /* IconEditorPanel.h */,
 				4210E48816B350240059F42B /* IconEditorPanel.m */,
 				4210E48916B350240059F42B /* IconEditorPanel.xib */,
@@ -859,12 +859,12 @@
 		42D3F55E16A09B2E0067FC89 /* Machine */ = {
 			isa = PBXGroup;
 			children = (
+				42A6F5C91705962100E901CE /* _MMapBaseEntity.h */,
+				42A6F5CA1705962100E901CE /* _MMapBaseEntity.m */,
 				4216C7F516C9294A005C760D /* _MMapThumbnail.h */,
 				4216C7F616C9294A005C760D /* _MMapThumbnail.m */,
 				42CCF93916B54E6500F790A0 /* _RMCViewCount.h */,
 				42CCF93A16B54E6500F790A0 /* _RMCViewCount.m */,
-				42CCF93316B54DEB00F790A0 /* _MBaseGMSync.h */,
-				42CCF93416B54DEB00F790A0 /* _MBaseGMSync.m */,
 				4281590B16A8A54B00471064 /* _MCategory.h */,
 				4281590C16A8A54B00471064 /* _MCategory.m */,
 				4223D0AD16A09C3C00AED134 /* _MPoint.h */,
@@ -1022,7 +1022,6 @@
 				42D3F52F16A08EBC0067FC89 /* GM_Test.m in Sources */,
 				42D3F53516A098210067FC89 /* NSString+JavaStr.m in Sources */,
 				42D3F53616A098210067FC89 /* SimpleXMLReader.m in Sources */,
-				42D3F54516A0995C0067FC89 /* MBaseEntity.m in Sources */,
 				42D3F54616A0995C0067FC89 /* MMap.m in Sources */,
 				42D3F56516A09B2E0067FC89 /* _MBaseEntity.m in Sources */,
 				42D3F56616A09B2E0067FC89 /* _MMap.m in Sources */,
@@ -1074,8 +1073,6 @@
 				42CCF91B16B4740E00F790A0 /* SBJsonBase.m in Sources */,
 				42CCF91C16B4740E00F790A0 /* SBJsonParser.m in Sources */,
 				42CCF91D16B4740E00F790A0 /* SBJsonWriter.m in Sources */,
-				42CCF93516B54DEB00F790A0 /* _MBaseGMSync.m in Sources */,
-				42CCF93816B54DF900F790A0 /* MBaseGMSync.m in Sources */,
 				42CCF93B16B54E6500F790A0 /* _RMCViewCount.m in Sources */,
 				42CCF93E16B54E6E00F790A0 /* RMCViewCount.m in Sources */,
 				420E844616C5932700319321 /* EntityEditorPanel.m in Sources */,
@@ -1087,6 +1084,9 @@
 				42843D4216CFB36A00EEB795 /* GMapPointEditorPanel.m in Sources */,
 				42843D7F16CFCDBB00EEB795 /* ImageManager.m in Sources */,
 				42843D8216CFCF1500EEB795 /* MyMKPointAnnotation.m in Sources */,
+				42A6F5CB1705962100E901CE /* _MMapBaseEntity.m in Sources */,
+				42A6F5CE17059AA200E901CE /* MMapBaseEntity.m in Sources */,
+				42A6F5D417059B3200E901CE /* MBaseEntity.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
