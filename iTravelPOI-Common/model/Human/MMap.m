@@ -4,12 +4,10 @@
 
 #define __MMap__IMPL__
 #define __MMap__PROTECTED__
-#define __MMapBaseEntity__SUBCLASSES__PROTECTED__
+#define __MBaseEntity__SUBCLASSES__PROTECTED__
 
 #import "MMap.h"
 #import "MPoint.h"
-#import "MCategory.h"
-#import "ImageManager.h"
 #import "ErrorManagerService.h"
 
 
@@ -81,41 +79,17 @@
 
 
 
-//=====================================================================================================================
-#pragma mark -
-#pragma mark Getter & Setter methods
-//---------------------------------------------------------------------------------------------------------------------
-- (MAP_ENTITY_TYPE) entityType {
-    return MET_MAP;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (JZImage *) entityImage {
-    return [ImageManager iconDataForHREF:DEFAULT_MAP_ICON_HREF].image;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSString *) strViewCount {
-    return [NSString stringWithFormat:@"%03d", self.viewCountValue];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSString *) strViewCountForMap:(MMap *)map {
-    if([self.objectID isEqual:map.objectID])
-        return [NSString stringWithFormat:@"%03d", self.viewCountValue];
-    else
-        return nil;
-}
-
-
-
-
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark Public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) updateDeleteMark:(BOOL) value {
+- (MODEL_ENTITY_TYPE) entityType {
+    return MET_MAP;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) markAsDeleted:(BOOL) value {
     
     // Si ya es igual no hace nada
     if(self.markedAsDeletedValue==value) return;
@@ -123,18 +97,27 @@
     // Si se esta borrando, eso implica borrar todos los puntos asociados
     if(value==true) {
         for(MPoint *point in self.points) {
-            [point updateDeleteMark:true];
+            [point markAsDeleted:true];
         }
     }
     
     // Establece el nuevo valor llamando a su clase base
-    [super _baseUpdateDeleteMark:value];
+    [super _baseMarkAsDeleted:value];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) updateViewCount:(int) increment {
-    self.viewCountValue += increment;
+- (void) markAsModified {
+
+    // Establece el nuevo valor llamando a su clase base
+    [super _baseMarkAsModified];
 }
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSString *) strViewCount {
+    return [NSString stringWithFormat:@"%03d", self.viewCountValue];
+}
+
+
 
 
 
@@ -144,8 +127,15 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void) _resetEntityWithName:(NSString *)name {
     
-    [super _resetEntityWithName:name];
+    [super _resetEntityWithName:name iconHref:DEFAULT_MAP_ICON_HREF];
+    self.viewCountValue = 0;
     self.summary = @"";
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) updateViewCount:(int) increment {
+    self.viewCountValue += increment;
+    assert(self.viewCountValue>=0);
 }
 
 

@@ -9,6 +9,7 @@
 
 extern const struct MMapThumbnailAttributes {
 	__unsafe_unretained NSString *imageData;
+	__unsafe_unretained NSString *internalID;
 	__unsafe_unretained NSString *latitude;
 	__unsafe_unretained NSString *longitude;
 } MMapThumbnailAttributes;
@@ -26,6 +27,7 @@ extern const struct MMapThumbnailFetchedProperties {
 
 
 
+
 @interface MMapThumbnailID : NSManagedObjectID {}
 @end
 
@@ -37,85 +39,142 @@ extern const struct MMapThumbnailFetchedProperties {
 
 
 
+//------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
+
+
+	
+
+		
+			
+				
+					@property (nonatomic, strong) NSData* imageData;
+				
+			
+		
+
+		
 
+	//- (BOOL)validateImageData:(id*)value_ error:(NSError**)error_;
+	
+	
 
 
+
+	
 
+		
+			
+				
+					#ifndef __MMapThumbnail__PROTECTED__
+					@property (nonatomic, strong, readonly) NSNumber* internalID;
+					#else
+					@property (nonatomic, strong) NSNumber* internalID;
+					#endif
+				
+			
+		
 
-@property (nonatomic, strong) NSData* imageData;
+		
+			
+				
+					#ifndef __MMapThumbnail__PROTECTED__
+					@property (readonly) int64_t internalIDValue;
+					- (int64_t)internalIDValue;
+					#else
+					@property int64_t internalIDValue;
+					- (int64_t)internalIDValue;
+					- (void)setInternalIDValue:(int64_t)value_;
+					#endif
+				
+			
+		
 
+	//- (BOOL)validateInternalID:(id*)value_ error:(NSError**)error_;
+	
+	
 
 
 
+	
 
+		
+			
+				
+					@property (nonatomic, strong) NSNumber* latitude;
+				
+			
+		
 
-//- (BOOL)validateImageData:(id*)value_ error:(NSError**)error_;
+		
+			
+				
+					@property double latitudeValue;
+					- (double)latitudeValue;
+					- (void)setLatitudeValue:(double)value_;
+				
+			
+		
 
+	//- (BOOL)validateLatitude:(id*)value_ error:(NSError**)error_;
+	
+	
 
 
 
+	
 
+		
+			
+				
+					@property (nonatomic, strong) NSNumber* longitude;
+				
+			
+		
 
+		
+			
+				
+					@property double longitudeValue;
+					- (double)longitudeValue;
+					- (void)setLongitudeValue:(double)value_;
+				
+			
+		
 
+	//- (BOOL)validateLongitude:(id*)value_ error:(NSError**)error_;
+	
+	
 
-@property (nonatomic, strong) NSNumber* latitude;
 
 
 
 
+//------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
 
 
+	
+		
+			
+				@property (nonatomic, strong) MPoint *point;
+			
+		
 
+		//- (BOOL)validatePoint:(id*)value_ error:(NSError**)error_;
 
-@property double latitudeValue;
-- (double)latitudeValue;
-- (void)setLatitudeValue:(double)value_;
+	
 
 
 
 
 
-//- (BOOL)validateLatitude:(id*)value_ error:(NSError**)error_;
 
 
 
 
-
-
-
-
-@property (nonatomic, strong) NSNumber* longitude;
-
-
-
-
-
-
-
-
-@property double longitudeValue;
-- (double)longitudeValue;
-- (void)setLongitudeValue:(double)value_;
-
-
-
-
-
-//- (BOOL)validateLongitude:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-
-
-
-@property (nonatomic, strong) MPoint *point;
-
-
-
-
-//- (BOOL)validatePoint:(id*)value_ error:(NSError**)error_;
+//------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
 
 
 
@@ -130,6 +189,15 @@ extern const struct MMapThumbnailFetchedProperties {
 
 - (NSData*)primitiveImageData;
 - (void)setPrimitiveImageData:(NSData*)value;
+
+
+
+
+- (NSNumber*)primitiveInternalID;
+- (void)setPrimitiveInternalID:(NSNumber*)value;
+
+- (int64_t)primitiveInternalIDValue;
+- (void)setPrimitiveInternalIDValue:(int64_t)value_;
 
 
 

@@ -4,7 +4,6 @@
 
 
 #import "_MBaseEntity.h"
-@class MMap;
 
 //*********************************************************************************************************************
 #pragma mark -
@@ -15,7 +14,7 @@ typedef enum {
     MET_MAP = 1,
     MET_POINT = 2,
     MET_CATEGORY = 3
-} MAP_ENTITY_TYPE;
+} MODEL_ENTITY_TYPE;
 
 
 
@@ -31,15 +30,44 @@ typedef enum {
 #pragma mark -
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
++ (NSString *) stringFromDate:(NSDate *)date;
++ (int64_t) _generateInternalID;
+
 
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (MAP_ENTITY_TYPE) entityType;
+- (MODEL_ENTITY_TYPE) entityType;
 - (JZImage *) entityImage;
-- (NSString *) strViewCount;
-- (NSString *) strViewCountForMap:(MMap *)map;
+
+- (void) markAsDeleted:(BOOL) value;
+- (void) markAsModified;
+- (BOOL) wasSynchronizedValue;
+
+
+
+//=====================================================================================================================
+#pragma mark -
+#pragma mark SUBCLASSES PROTECTED methods
+//---------------------------------------------------------------------------------------------------------------------
+#ifdef __MBaseEntity__SUBCLASSES__PROTECTED__
+- (void) _resetEntityWithName:(NSString *)name iconHref:(NSString *)iconHref;
+- (void) _baseMarkAsDeleted:(BOOL) value;
+- (void) _baseMarkAsModified;
+#endif
+
+
+//=====================================================================================================================
+#pragma mark -
+#pragma mark SYNCHRONIZATION PROTECTED methods
+//---------------------------------------------------------------------------------------------------------------------
+#ifdef __MBaseEntity__SYNCHRONIZATION__PROTECTED__
+- (void) _updateBasicInfoWithGID:(NSString *)gID etag:(NSString *)etag creationTime:(NSDate *)creationTime updateTime:(NSDate *)updateTime;
+- (void) _cleanMarkAsModified;
+#endif
+
+
 
 @end

@@ -64,6 +64,18 @@
 #pragma mark -
 #pragma mark CLASS methods
 //---------------------------------------------------------------------------------------------------------------------
++ (MMapThumbnail *) emptyThumnailInContext:(NSManagedObjectContext *)moContext {
+
+    MMapThumbnail *me = [MMapThumbnail insertInManagedObjectContext:moContext];
+    me.internalIDValue = [MBaseEntity _generateInternalID];
+    me.point = nil;
+    me.imageData = nil;
+    me.latitudeValue = 0.0;
+    me.longitudeValue = 0.0;
+    return me;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 + (NSData *) staticMapZero {
     
     static NSData * _imgZeroData = nil;
@@ -138,7 +150,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (MMapThumbnailTicket *) asyncUpdateLatitude:(double)lat longitude:(double)lng callback:(TBlock_blockDefinition)callback {
     
-    // Almacena nuestro objID y los datos pasados
+    // Almacena nuestro objID y los datos pasados para usarlos en el contexto hijo
     __block NSManagedObjectID *objID = self.objectID;
     __block double latitude = lat;
     __block double longitude = lng;

@@ -44,11 +44,12 @@
 
     va_list args;
     va_start(args, message);
-
-    __block NSString *_errMsg = [NSString stringWithFormat:message, args];
+    NSString *errMsg1 = [[NSString alloc] initWithFormat:message arguments:args];
+    NSString *errMsg2 = [NSString stringWithFormat:@"%@ - %@", compID, errMsg1];
+    
     va_end(args);
 
-    // __block NSString *_errMsg = [NSString stringWithFormat:@"%@ - %@", compID, message];
+    __block NSString *_errMsg = errMsg2;
     __block NSError *_err = error;
 
     DDLogVerbose(@"%@. Error:%@, %@", _errMsg, _err, [_err userInfo]);

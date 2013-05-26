@@ -7,11 +7,15 @@
 //
 
 #import "AppDelegate.h"
-#import "MainViewController.h"
+#import "ItemListViewController.h"
+#import "TestViewController.h"
 
 #import "BaseCoreData.h"
 #import "MockUp.h"
 #import "DDTTYLogger.h"
+
+#import "VisualMapEditorViewController.h"
+#import "MyMKPointAnnotation.h"
 
 
 
@@ -19,6 +23,8 @@
 #pragma mark -
 #pragma mark PRIVATE interface definition
 // *********************************************************************************************************************
+@interface AppDelegate() <VisualMapEditorDelegate>
+@end
 
 
 
@@ -26,7 +32,7 @@
 #pragma mark -
 #pragma mark Implementation
 // *********************************************************************************************************************
-@implementation AppDelegate
+@implementation AppDelegate 
 
 
 
@@ -38,20 +44,51 @@
 {
     // Override point for customization after application launch.
 
+    
+    // Establece un gestor especial de excepciones
     NSSetUncaughtExceptionHandler(&_uncaughtExceptionHandler);
 
+    // Inicializa el sistema de logging
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
+    
+    // Inicializa el modelo de datos
     [self _initDataModel];
     
+    // Indica que se muestre un "spinner" en la barra de estado cuando se acceda a la red
+    [application setNetworkActivityIndicatorVisible:YES];
     
+    // Se crea la ventana y controller inicial de la aplicación
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
-    UIViewController *controller = [MainViewController mainViewController];
-
-    self.window.rootViewController = controller;
+    UINavigationController *navController = [[UINavigationController alloc] init];
+    navController.navigationBar.barStyle = UIBarStyleBlack;
+    [ItemListViewController pushItemListViewControllerWithMap:nil category:nil navController:navController];
+    //[navController pushViewController:[TestViewController startTestController] animated:TRUE];
+    
+    
+    
+    /*-------------------------------------------------------------------------------------------*
+    MyMKPointAnnotation *annotation = [[MyMKPointAnnotation alloc] init];
+    annotation.title = @"hola";
+    annotation.iconHREF = @"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png";
+    CLLocationCoordinate2D coord = {.latitude = 41.464003, .longitude = -2.862453};
+    annotation.coordinate = coord;
+    VisualMapEditorViewController *controller = [[VisualMapEditorViewController alloc] initWithNibName:@"VisualMapEditorViewController" bundle:nil];
+    controller.delegate = self;
+    controller.annotations = [NSArray arrayWithObject:annotation];
+    *-------------------------------------------------------------------------------------------*/
+    
+    self.window.rootViewController = navController;
     [self.window makeKeyAndVisible];
+    
     return YES;
 }
+
+
+- (BOOL) closeVisualMapEditor:(VisualMapEditorViewController *)senderEditor annotations:(NSArray *)annotations {
+    return FALSE;
+}
+
 
 // ------------------------------------------------------------------------------------------------------------------
 - (void)applicationWillResignActive:(UIApplication *)application

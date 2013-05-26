@@ -128,6 +128,9 @@
 
 @end
 
+@interface TDBadgedCell()
+@property (nonatomic, strong) UIImageView *leftCheckedView;
+@end
 
 @implementation TDBadgedCell
 
@@ -149,6 +152,8 @@
 	if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
 	{
 		[self configureSelf];
+        self.leftCheckedView = [[UIImageView alloc] initWithFrame:CGRectMake(-30, (self.frame.size.height-26)/2, 26, 26)];
+        [self.imageView addSubview:self.leftCheckedView];
 	}
 	return self;
 }
@@ -191,6 +196,14 @@
 	if(self.badgeString)
 	{
         [self configureSelf];
+        
+        if(self.editing) {
+            if(self.leftChecked) {
+                self.leftCheckedView.image = [UIImage imageNamed:@"checkmark-checked"];
+            } else {
+                self.leftCheckedView.image = [UIImage imageNamed:@"checkmark-unchecked"];
+            }
+        }
         
 		// Force badges to hide on edit.
 		if(self.editing)

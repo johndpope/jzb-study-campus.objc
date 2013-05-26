@@ -11,7 +11,7 @@
 
 const struct MCategoryAttributes MCategoryAttributes = {
 	.fullName = @"fullName",
-	.iconBaseHREF = @"iconBaseHREF",
+	.hierarchyID = @"hierarchyID",
 	.viewCount = @"viewCount",
 };
 
@@ -51,6 +51,11 @@ const struct MCategoryFetchedProperties MCategoryFetchedProperties = {
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
+	if ([key isEqualToString:@"hierarchyIDValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"hierarchyID"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
 	if ([key isEqualToString:@"viewCountValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"viewCount"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
@@ -70,8 +75,29 @@ const struct MCategoryFetchedProperties MCategoryFetchedProperties = {
 
 
 
-@dynamic iconBaseHREF;
+@dynamic hierarchyID;
 
+
+
+- (int64_t)hierarchyIDValue {
+	NSNumber *result = [self hierarchyID];
+	return [result longLongValue];
+}
+
+
+- (void)setHierarchyIDValue:(int64_t)value_ {
+	[self setHierarchyID:[NSNumber numberWithLongLong:value_]];
+}
+
+
+- (int64_t)primitiveHierarchyIDValue {
+	NSNumber *result = [self primitiveHierarchyID];
+	return [result longLongValue];
+}
+
+- (void)setPrimitiveHierarchyIDValue:(int64_t)value_ {
+	[self setPrimitiveHierarchyID:[NSNumber numberWithLongLong:value_]];
+}
 
 
 

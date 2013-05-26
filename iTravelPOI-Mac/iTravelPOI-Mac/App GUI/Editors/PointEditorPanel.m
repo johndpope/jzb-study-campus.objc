@@ -136,7 +136,7 @@
 - (IBAction) btnLocationMapClicked:(id)sender {
     
     CLLocationCoordinate2D pinCoordinates = {.latitude = self.latitude, .longitude = self.longitude};
-    MyMKPointAnnotation *pin = [[MyMKPointAnnotation alloc] init];
+    MyMKPointAnnotation2 *pin = [[MyMKPointAnnotation2 alloc] init];
     pin.title = self.pointNameField.stringValue;
     pin.subtitle = @"pepe";
     pin.coordinate = pinCoordinates;
@@ -182,10 +182,10 @@
     if(self.point) {
         [self showGPSAccuracyForLocation:self.locMgr.location];
         
-        [self setImageFieldFromHREF:self.point.category.iconBaseHREF];
+        [self setImageFieldFromHREF:self.point.iconHREF];
 
-        self.iconBaseHREF = self.point.category.iconBaseHREF;
-        self.pointCategoryField.stringValue = self.point.category.fullName;
+        self.iconBaseHREF = self.point.iconHREF;
+        self.pointCategoryField.stringValue = @"xxxx";
 
         self.pointNameField.stringValue = self.point.name;
 
@@ -196,8 +196,8 @@
 
         self.pointDescrField.string = self.point.descr;
         self.pointExtraInfo.stringValue = [NSString stringWithFormat:@"Published:\t%@\nUpdated:\t%@\nETAG:\t%@",
-                                           [MMapBaseEntity stringFromDate:self.point.published_date],
-                                           [MMapBaseEntity stringFromDate:self.point.updated_date],
+                                           [MBaseEntity stringFromDate:self.point.creationTime],
+                                           [MBaseEntity stringFromDate:self.point.updateTime],
                                            self.point.etag];
         
     }
@@ -221,14 +221,8 @@
 
         self.point.descr = [self.pointDescrField string];
 
-        NSString *cleanCatFullName = [self.pointCategoryField.stringValue replaceStr:@"&" with:@"%"];
-        MCategory *destCat = [MCategory categoryForIconBaseHREF:self.iconBaseHREF
-                                                       fullName:cleanCatFullName
-                                                      inContext:self.point.managedObjectContext];
-        [self.point moveToCategory:destCat];
 
-        [self.point updateModifiedMark];
-        [self.point.map updateModifiedMark];
+        [self.point markAsModified];
     }
 }
 
@@ -249,7 +243,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) editorPanelSaveChanges:(GMapPointEditorPanel *)sender {
 
-    MyMKPointAnnotation *pin = sender.annotations[0];
+    MyMKPointAnnotation2 *pin = sender.annotations[0];
     [self showAndStoreLatitude:pin.coordinate.latitude longitude:pin.coordinate.longitude];
 }
 

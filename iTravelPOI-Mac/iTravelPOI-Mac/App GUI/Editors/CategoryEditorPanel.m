@@ -116,20 +116,20 @@
 - (void) setFieldValuesFromEntity {
 
     if(self.category) {
-        [self setImageFieldFromHREF:self.category.iconBaseHREF];
-        self.iconBaseHREF = self.category.iconBaseHREF;
-        [self.categoryPathField setStringValue:self.category.fullName];
+        [self setImageFieldFromHREF:self.category.iconHREF];
+        self.iconBaseHREF = self.category.iconHREF;
+        [self.categoryPathField setStringValue:self.category.name];
 
         [self.categoryNameField setStringValue:self.category.name];
         [self.categoryDescrField setString:@""];
         [self.categoryExtraInfo setStringValue:[NSString stringWithFormat:@"Updated:\t%@\n",
-                                              [MMapBaseEntity stringFromDate:self.category.updated_date]]];
+                                              [MBaseEntity stringFromDate:self.category.updateTime]]];
     }
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) setEntityFromFieldValues {
-
+/*
     if(self.category) {
         
         // Los cambios en esta entidad son, REALMENTE, CAMBIOS EN LOS PUNTOS ASOCIADOS
@@ -139,10 +139,11 @@
                                                            inContext:self.category.managedObjectContext];
 
         // Si hubo cambios relevantes actualiza los puntos impactados
-        if(![self.category.objectID isEqual:destCategory.objectID]) {
+        if(![self.category.internalIDValue isEqual:destCategory.internalIDValue]) {
             [self _movePointsFromCategory:self.category toCategory:destCategory inMap:self.map];
         }
     }
+ */
 }
 
 
@@ -162,9 +163,9 @@
 #pragma mark PRIVATE methods
 //---------------------------------------------------------------------------------------------------------------------
 - (void) _movePointsFromCategory:(MCategory *)origCategory toCategory:(MCategory *)destCategory inMap:(MMap *)map {
-    
+/*
     // Comprueba si se quiere mover a otra categoria diferente
-    if([origCategory.objectID isEqual:destCategory.objectID]) return;
+    if([origCategory.internalIDValue isEqual:destCategory.internalIDValue]) return;
     
     // Longitud del nombre base
     NSUInteger baseFullNameLength = origCategory.fullName.length;
@@ -180,7 +181,7 @@
     for(MCategory *cat in allSubCats) {
         
         // Caso especial en el que se mueve "hacia abajo"
-        if([cat.objectID isEqual:destCategory.objectID]) continue;
+        if([cat.internalIDValue isEqual:destCategory.internalIDValue]) continue;
         
         
         NSString *newFullName = [NSString stringWithFormat:@"%@%@", destCategory.fullName, [cat.fullName subStrFrom:baseFullNameLength]];
@@ -191,7 +192,7 @@
         
         NSArray *allPoints = [NSArray arrayWithArray:cat.points.allObjects];
         for(MPoint *point in allPoints) {
-            if(map==nil || [point.map.objectID isEqual:map.objectID]) {
+            if(map==nil || [point.map.internalIDValue isEqual:map.internalIDValue]) {
                 [point moveToCategory:newSubCategory];
                 [point updateModifiedMark];
                 [point.map updateModifiedMark];
@@ -202,6 +203,7 @@
     // Marca la hora de actualizacion de ambas categorias
     origCategory.updated_date = [NSDate date];
     destCategory.updated_date = [NSDate date];
+ */
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

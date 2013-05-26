@@ -10,7 +10,7 @@
 
 extern const struct MCategoryAttributes {
 	__unsafe_unretained NSString *fullName;
-	__unsafe_unretained NSString *iconBaseHREF;
+	__unsafe_unretained NSString *hierarchyID;
 	__unsafe_unretained NSString *viewCount;
 } MCategoryAttributes;
 
@@ -44,113 +44,205 @@ extern const struct MCategoryFetchedProperties {
 
 
 
+//------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
 
 
+	
 
+		
+			
+				
+					#ifndef __MCategory__PROTECTED__
+					@property (nonatomic, strong, readonly) NSString* fullName;
+					#else
+					@property (nonatomic, strong) NSString* fullName;
+					#endif
+				
+			
+		
 
+		
 
-#ifndef __MCategory__PROTECTED__
-@property (nonatomic, strong, readonly) NSString* fullName;
-#else
-@property (nonatomic, strong) NSString* fullName;
-#endif
+	//- (BOOL)validateFullName:(id*)value_ error:(NSError**)error_;
+	
+	
 
 
 
+	
 
+		
+			
+				
+					@property (nonatomic, strong) NSNumber* hierarchyID;
+				
+			
+		
 
+		
+			
+				
+					@property int64_t hierarchyIDValue;
+					- (int64_t)hierarchyIDValue;
+					- (void)setHierarchyIDValue:(int64_t)value_;
+				
+			
+		
 
-//- (BOOL)validateFullName:(id*)value_ error:(NSError**)error_;
+	//- (BOOL)validateHierarchyID:(id*)value_ error:(NSError**)error_;
+	
+	
 
 
 
+	
 
+		
+			
+				
+					#ifndef __MCategory__PROTECTED__
+					@property (nonatomic, strong, readonly) NSNumber* viewCount;
+					#else
+					@property (nonatomic, strong) NSNumber* viewCount;
+					#endif
+				
+			
+		
 
+		
+			
+				
+					#ifndef __MCategory__PROTECTED__
+					@property (readonly) int16_t viewCountValue;
+					- (int16_t)viewCountValue;
+					#else
+					@property int16_t viewCountValue;
+					- (int16_t)viewCountValue;
+					- (void)setViewCountValue:(int16_t)value_;
+					#endif
+				
+			
+		
 
+	//- (BOOL)validateViewCount:(id*)value_ error:(NSError**)error_;
+	
+	
 
 
-#ifndef __MCategory__PROTECTED__
-@property (nonatomic, strong, readonly) NSString* iconBaseHREF;
-#else
-@property (nonatomic, strong) NSString* iconBaseHREF;
-#endif
 
 
 
+//------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
 
 
+	
 
-//- (BOOL)validateIconBaseHREF:(id*)value_ error:(NSError**)error_;
+		
 
+			
+				#ifndef __MCategory__PROTECTED__
+				@property (nonatomic, strong, readonly) NSSet *mapViewCounts;
+				#else
+				@property (nonatomic, strong) NSSet *mapViewCounts;
+				#endif
+			
 
 
+		
 
 
+		
+			#ifndef __MCategory__PROTECTED__
+			- (NSMutableSet*)mapViewCountsSet;
+			#endif
+		
 
 
+	
 
-#ifndef __MCategory__PROTECTED__
-@property (nonatomic, strong, readonly) NSNumber* viewCount;
-#else
-@property (nonatomic, strong) NSNumber* viewCount;
-#endif
 
 
+	
+		
+			
+				#ifndef __MCategory__PROTECTED__
+				@property (nonatomic, strong, readonly) MCategory *parent;
+				#else
+				@property (nonatomic, strong) MCategory *parent;
+				#endif
+			
+		
 
+		//- (BOOL)validateParent:(id*)value_ error:(NSError**)error_;
 
+	
 
 
 
+	
 
-#ifndef __MCategory__PROTECTED__
-@property (readonly) int16_t viewCountValue;
-- (int16_t)viewCountValue;
-#else
-@property int16_t viewCountValue;
-- (int16_t)viewCountValue;
-- (void)setViewCountValue:(int16_t)value_;
-#endif
+		
 
+			
+				#ifndef __MCategory__PROTECTED__
+				@property (nonatomic, strong, readonly) NSSet *points;
+				#else
+				@property (nonatomic, strong) NSSet *points;
+				#endif
+			
 
 
+		
 
 
-//- (BOOL)validateViewCount:(id*)value_ error:(NSError**)error_;
+		
+			#ifndef __MCategory__PROTECTED__
+			- (NSMutableSet*)pointsSet;
+			#endif
+		
 
 
+	
 
 
 
-@property (nonatomic, strong) NSSet *mapViewCounts;
+	
 
-- (NSMutableSet*)mapViewCountsSet;
+		
 
+			
+				#ifndef __MCategory__PROTECTED__
+				@property (nonatomic, strong, readonly) NSSet *subCategories;
+				#else
+				@property (nonatomic, strong) NSSet *subCategories;
+				#endif
+			
 
 
+		
 
 
+		
+			#ifndef __MCategory__PROTECTED__
+			- (NSMutableSet*)subCategoriesSet;
+			#endif
+		
 
 
-@property (nonatomic, strong) MCategory *parent;
+	
 
 
 
 
-//- (BOOL)validateParent:(id*)value_ error:(NSError**)error_;
 
 
 
 
-@property (nonatomic, strong) NSSet *points;
 
-- (NSMutableSet*)pointsSet;
-
-
-
-
-@property (nonatomic, strong) NSSet *subCategories;
-
-- (NSMutableSet*)subCategoriesSet;
+//------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
 
 
 
@@ -190,8 +282,11 @@ extern const struct MCategoryFetchedProperties {
 
 
 
-- (NSString*)primitiveIconBaseHREF;
-- (void)setPrimitiveIconBaseHREF:(NSString*)value;
+- (NSNumber*)primitiveHierarchyID;
+- (void)setPrimitiveHierarchyID:(NSNumber*)value;
+
+- (int64_t)primitiveHierarchyIDValue;
+- (void)setPrimitiveHierarchyIDValue:(int64_t)value_;
 
 
 

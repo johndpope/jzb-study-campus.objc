@@ -5,6 +5,7 @@
 // Created by Jose Zarzuela on 29/08/12.
 // Copyright (c) 2012 Jose Zarzuela. All rights reserved.
 //
+#define __MBaseEntity__SYNCHRONIZATION__PROTECTED__
 
 #import "SyncDataService.h"
 #import "GMapSyncService.h"
@@ -132,10 +133,10 @@
     GMTMap *gmMap = [GMTMap emptyMap];
     
     gmMap.name = localMap.name;
-    gmMap.gmID = localMap.gmID;
+    gmMap.gmID = localMap.gID;
     gmMap.etag = localMap.etag;
-    gmMap.published_Date = localMap.published_date;
-    gmMap.updated_Date = localMap.updated_date;
+    gmMap.published_Date = localMap.creationTime;
+    gmMap.updated_Date = localMap.updateTime;
     gmMap.summary = localMap.summary;
     
     return gmMap;
@@ -160,16 +161,11 @@
         return false;
     }
     
+    [localMap _updateBasicInfoWithGID:gmMap.gmID etag:gmMap.etag creationTime:gmMap.published_Date updateTime:gmMap.updated_Date];
     localMap.name = gmMap.name;
-    localMap.gmID = gmMap.gmID;
-    localMap.etag = gmMap.etag;
-    localMap.published_date = gmMap.published_Date;
-    localMap.updated_date = gmMap.updated_Date;
-    
     localMap.summary = gmMap.summary;
-    
-    [localMap updateDeleteMark:false];
-    localMap.modifiedSinceLastSyncValue = false;
+    [localMap markAsDeleted:FALSE];
+    [localMap _cleanMarkAsModified];
     
     return true;
 }
@@ -179,8 +175,8 @@
     
     if(err != nil) *err = nil;
     
-    [localMap updateDeleteMark:true];
-    localMap.modifiedSinceLastSyncValue = false;
+    [localMap markAsDeleted:true];
+    [localMap _cleanMarkAsModified];
     
     return true;
 }
@@ -202,16 +198,22 @@
     GMTPoint *gmPoint = [GMTPoint emptyPoint];
     
     gmPoint.name = localPoint.name;
-    gmPoint.gmID = localPoint.gmID;
+    gmPoint.gmID = localPoint.gID;
     gmPoint.etag = localPoint.etag;
-    gmPoint.published_Date = localPoint.published_date;
-    gmPoint.updated_Date = localPoint.updated_date;
+    gmPoint.published_Date = localPoint.creationTime;
+    gmPoint.updated_Date = localPoint.updateTime;
     
     gmPoint.descr = localPoint.descr;
-    gmPoint.iconHREF = localPoint.category.iconHREF;
+    gmPoint.iconHREF = localPoint.iconHREF;
     gmPoint.latitude = localPoint.latitudeValue;
     gmPoint.longitude = localPoint.longitudeValue;
     
+    
+    /**************************************************************************************************/
+    //@TODO: Hay que conseguir la informacion de las categorias de algun sitio del punto
+    @throw [NSException exceptionWithName:@"TODO_Exception" reason:@"Hay que extraer la informacion de las categorias" userInfo:nil];
+    /**************************************************************************************************/
+
     return gmPoint;
 }
 
@@ -220,8 +222,7 @@
     
     if(err != nil) *err = nil;
     
-    MCategory *cat = [MCategory categoryForIconHREF:gmPoint.iconHREF inContext:map.managedObjectContext];
-    MPoint *localPoint = [MPoint emptyPointWithName:gmPoint.name inMap:map withCategory:cat];
+    MPoint *localPoint = [MPoint emptyPointWithName:gmPoint.name inMap:map];
     [self updateLocalPoint:localPoint withRemotePoint:gmPoint error:err];
     
     return localPoint;
@@ -235,18 +236,21 @@
         return false;
     }
     
+    [localPoint _updateBasicInfoWithGID:gmPoint.gmID etag:gmPoint.etag creationTime:gmPoint.published_Date updateTime:gmPoint.updated_Date];
     localPoint.name = gmPoint.name;
-    localPoint.gmID = gmPoint.gmID;
-    localPoint.etag = gmPoint.etag;
-    localPoint.published_date = gmPoint.published_Date;
-    localPoint.updated_date = gmPoint.updated_Date;
-    
     localPoint.descr = gmPoint.descr;
-    [localPoint moveToCategory:[MCategory categoryForIconHREF:gmPoint.iconHREF inContext:localPoint.managedObjectContext]];
+    localPoint.iconHREF = gmPoint.iconHREF;
     [localPoint setLatitude:gmPoint.latitude longitude:gmPoint.longitude];
     
-    [localPoint updateDeleteMark:false];
-    localPoint.modifiedSinceLastSyncValue = false;
+    
+    /**************************************************************************************************/
+    //@TODO: Hay que conseguir la informacion de las categorias de algun sitio del punto
+    @throw [NSException exceptionWithName:@"TODO_Exception" reason:@"Hay que extraer la informacion de las categorias" userInfo:nil];
+    /**************************************************************************************************/
+
+    
+    [localPoint markAsDeleted:FALSE];
+    [localPoint _cleanMarkAsModified];
     
     return true;
 }
@@ -256,8 +260,8 @@
     
     if(err != nil) *err = nil;
     
-    [localPoint updateDeleteMark:true];
-    localPoint.map.modifiedSinceLastSyncValue = false;
+    [localPoint markAsDeleted:TRUE];
+    [localPoint _cleanMarkAsModified];
     
     return true;
 }

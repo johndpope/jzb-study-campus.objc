@@ -12,9 +12,7 @@
 #pragma mark -
 #pragma mark Public Enumerations & definitions
 //*********************************************************************************************************************
-#define CAT_NAME_SEPARATOR  @"#"
-#define URL_PARAM_CAT_INFO  @"catInfo="
-
+#define CATEGORY_NAME_SEPARATOR @"."
 
 
 //*********************************************************************************************************************
@@ -29,10 +27,16 @@
 #pragma mark -
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (MCategory *) categoryForIconHREF:(NSString *)iconHREF inContext:(NSManagedObjectContext *)moContext;
-+ (MCategory *) categoryForIconBaseHREF:(NSString *)baseHREF fullName:(NSString *)fullName inContext:(NSManagedObjectContext *)moContext;
++ (MCategory *) categoryWithFullName:(NSString *)fullName inContext:(NSManagedObjectContext *)moContext;
++ (NSArray *) allCategoriesInContext:(NSManagedObjectContext *)moContext includeMarkedAsDeleted:(BOOL)withDeleted;
 
 + (NSArray *) categoriesWithPointsInMap:(MMap *)map parentCategory:(MCategory *)parentCat;
+
++ (NSArray *) rootCategoriesWithPointsInMap:(MMap *)map;
++ (NSArray *) frequentRootCategoriesWithPointsNotInMap:(MMap *)map;
++ (NSArray *) otherRootCategoriesWithPointsNotInMap:(MMap *)map;
+
++ (void) purgeEmptyCategoriesInContext:(NSManagedObjectContext *)moContext;
 
 
 
@@ -40,15 +44,28 @@
 #pragma mark -
 #pragma mark INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (NSString *) iconHREF;
-- (NSString *) pathName;
+- (NSArray *) allInHierarchy;
+- (BOOL) isRelatedTo:(MCategory *)cat;
+- (BOOL) isDescendatOf:(MCategory *)cat;
+- (MCategory *) rootParent;
 
-- (void) updateViewCount:(int) increment;
-
-- (RMCViewCount *) viewCountForMap:(MMap *)map;
-- (void) updateViewCountForMap:(MMap *)map increment:(int) increment;
+- (void) transferTo:(MCategory *)destCategory inMap:(MMap *)map;
+- (MCategory *) transferToParent:(MCategory *)destParent inMap:(MMap *)map;
 
 - (void) deletePointsInMap:(MMap *)map;
+
+- (NSString *) strViewCount;
+- (NSString *) strViewCountForMap:(MMap *)map;
+
+
+
+//=====================================================================================================================
+#pragma mark -
+#pragma mark SUBCLASSES PROTECTED methods
+//---------------------------------------------------------------------------------------------------------------------
+#ifdef __MBaseEntity__SUBCLASSES__PROTECTED__
+- (void) updateViewCount:(int)increment inMap:(MMap *)map;
+#endif
 
 
 @end

@@ -51,6 +51,7 @@
     cacheMC.map = map;
     cacheMC.category = (MCategory *)[moContext objectWithID:category.objectID];
     cacheMC.viewCount = 0;
+    cacheMC.internalIDValue = [MBaseEntity _generateInternalID];
     
     return cacheMC;
 }
@@ -72,6 +73,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void) updateViewCount:(int) increment {
     self.viewCountValue += increment;
+    assert(self.viewCountValue>=0);
 }
 
 

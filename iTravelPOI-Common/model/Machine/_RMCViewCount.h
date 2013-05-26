@@ -8,6 +8,7 @@
 
 
 extern const struct RMCViewCountAttributes {
+	__unsafe_unretained NSString *internalID;
 	__unsafe_unretained NSString *viewCount;
 } RMCViewCountAttributes;
 
@@ -24,6 +25,7 @@ extern const struct RMCViewCountFetchedProperties {
 
 
 
+
 @interface RMCViewCountID : NSManagedObjectID {}
 @end
 
@@ -35,16 +37,117 @@ extern const struct RMCViewCountFetchedProperties {
 
 
 
+//------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
+
+
+	
+
+		
+			
+				
+					#ifndef __RMCViewCount__PROTECTED__
+					@property (nonatomic, strong, readonly) NSNumber* internalID;
+					#else
+					@property (nonatomic, strong) NSNumber* internalID;
+					#endif
+				
+			
+		
+
+		
+			
+				
+					#ifndef __RMCViewCount__PROTECTED__
+					@property (readonly) int64_t internalIDValue;
+					- (int64_t)internalIDValue;
+					#else
+					@property int64_t internalIDValue;
+					- (int64_t)internalIDValue;
+					- (void)setInternalIDValue:(int64_t)value_;
+					#endif
+				
+			
+		
+
+	//- (BOOL)validateInternalID:(id*)value_ error:(NSError**)error_;
+	
+	
+
+
+
+	
+
+		
+			
+				
+					#ifndef __RMCViewCount__PROTECTED__
+					@property (nonatomic, strong, readonly) NSNumber* viewCount;
+					#else
+					@property (nonatomic, strong) NSNumber* viewCount;
+					#endif
+				
+			
+		
+
+		
+			
+				
+					#ifndef __RMCViewCount__PROTECTED__
+					@property (readonly) int16_t viewCountValue;
+					- (int16_t)viewCountValue;
+					#else
+					@property int16_t viewCountValue;
+					- (int16_t)viewCountValue;
+					- (void)setViewCountValue:(int16_t)value_;
+					#endif
+				
+			
+		
+
+	//- (BOOL)validateViewCount:(id*)value_ error:(NSError**)error_;
+	
+	
 
 
 
 
 
-#ifndef __RMCViewCount__PROTECTED__
-@property (nonatomic, strong, readonly) NSNumber* viewCount;
-#else
-@property (nonatomic, strong) NSNumber* viewCount;
-#endif
+//------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
+
+
+	
+		
+			
+				#ifndef __RMCViewCount__PROTECTED__
+				@property (nonatomic, strong, readonly) MCategory *category;
+				#else
+				@property (nonatomic, strong) MCategory *category;
+				#endif
+			
+		
+
+		//- (BOOL)validateCategory:(id*)value_ error:(NSError**)error_;
+
+	
+
+
+
+	
+		
+			
+				#ifndef __RMCViewCount__PROTECTED__
+				@property (nonatomic, strong, readonly) MMap *map;
+				#else
+				@property (nonatomic, strong) MMap *map;
+				#endif
+			
+		
+
+		//- (BOOL)validateMap:(id*)value_ error:(NSError**)error_;
+
+	
 
 
 
@@ -53,47 +156,9 @@ extern const struct RMCViewCountFetchedProperties {
 
 
 
-#ifndef __RMCViewCount__PROTECTED__
-@property (readonly) int16_t viewCountValue;
-- (int16_t)viewCountValue;
-#else
-@property int16_t viewCountValue;
-- (int16_t)viewCountValue;
-- (void)setViewCountValue:(int16_t)value_;
-#endif
 
-
-
-
-
-//- (BOOL)validateViewCount:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-
-
-
-@property (nonatomic, strong) MCategory *category;
-
-
-
-
-//- (BOOL)validateCategory:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-
-
-@property (nonatomic, strong) MMap *map;
-
-
-
-
-//- (BOOL)validateMap:(id*)value_ error:(NSError**)error_;
+//------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
 
 
 
@@ -104,6 +169,15 @@ extern const struct RMCViewCountFetchedProperties {
 
 
 @interface _RMCViewCount (CoreDataGeneratedPrimitiveAccessors)
+
+
+- (NSNumber*)primitiveInternalID;
+- (void)setPrimitiveInternalID:(NSNumber*)value;
+
+- (int64_t)primitiveInternalIDValue;
+- (void)setPrimitiveInternalIDValue:(int64_t)value_;
+
+
 
 
 - (NSNumber*)primitiveViewCount;

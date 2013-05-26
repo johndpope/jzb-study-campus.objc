@@ -11,6 +11,7 @@
 
 const struct MMapThumbnailAttributes MMapThumbnailAttributes = {
 	.imageData = @"imageData",
+	.internalID = @"internalID",
 	.latitude = @"latitude",
 	.longitude = @"longitude",
 };
@@ -48,6 +49,11 @@ const struct MMapThumbnailFetchedProperties MMapThumbnailFetchedProperties = {
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
+	if ([key isEqualToString:@"internalIDValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"internalID"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
 	if ([key isEqualToString:@"latitudeValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"latitude"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
@@ -67,6 +73,34 @@ const struct MMapThumbnailFetchedProperties MMapThumbnailFetchedProperties = {
 
 @dynamic imageData;
 
+
+
+
+
+
+@dynamic internalID;
+
+
+
+- (int64_t)internalIDValue {
+	NSNumber *result = [self internalID];
+	return [result longLongValue];
+}
+
+
+- (void)setInternalIDValue:(int64_t)value_ {
+	[self setInternalID:[NSNumber numberWithLongLong:value_]];
+}
+
+
+- (int64_t)primitiveInternalIDValue {
+	NSNumber *result = [self primitiveInternalID];
+	return [result longLongValue];
+}
+
+- (void)setPrimitiveInternalIDValue:(int64_t)value_ {
+	[self setPrimitiveInternalID:[NSNumber numberWithLongLong:value_]];
+}
 
 
 

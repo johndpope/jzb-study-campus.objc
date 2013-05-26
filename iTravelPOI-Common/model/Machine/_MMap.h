@@ -5,7 +5,7 @@
 
 #import <CoreData/CoreData.h>
 
-#import "MMapBaseEntity.h"
+#import "MBaseEntity.h"
 
 
 extern const struct MMapAttributes {
@@ -30,7 +30,7 @@ extern const struct MMapFetchedProperties {
 @interface MMapID : NSManagedObjectID {}
 @end
 
-@interface _MMap : MMapBaseEntity {}
+@interface _MMap : MBaseEntity {}
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_;
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
@@ -38,69 +38,131 @@ extern const struct MMapFetchedProperties {
 
 
 
+//------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
+
+
+	
+
+		
+			
+				
+					@property (nonatomic, strong) NSString* summary;
+				
+			
+		
+
+		
+
+	//- (BOOL)validateSummary:(id*)value_ error:(NSError**)error_;
+	
+	
+
+
+
+	
+
+		
+			
+				
+					#ifndef __MMap__PROTECTED__
+					@property (nonatomic, strong, readonly) NSNumber* viewCount;
+					#else
+					@property (nonatomic, strong) NSNumber* viewCount;
+					#endif
+				
+			
+		
+
+		
+			
+				
+					#ifndef __MMap__PROTECTED__
+					@property (readonly) int16_t viewCountValue;
+					- (int16_t)viewCountValue;
+					#else
+					@property int16_t viewCountValue;
+					- (int16_t)viewCountValue;
+					- (void)setViewCountValue:(int16_t)value_;
+					#endif
+				
+			
+		
+
+	//- (BOOL)validateViewCount:(id*)value_ error:(NSError**)error_;
+	
+	
 
 
 
 
 
-@property (nonatomic, strong) NSString* summary;
+//------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
+
+
+	
+
+		
+
+			
+				#ifndef __MMap__PROTECTED__
+				@property (nonatomic, strong, readonly) NSSet *catViewCounts;
+				#else
+				@property (nonatomic, strong) NSSet *catViewCounts;
+				#endif
+			
+
+
+		
+
+
+		
+			#ifndef __MMap__PROTECTED__
+			- (NSMutableSet*)catViewCountsSet;
+			#endif
+		
+
+
+	
+
+
+
+	
+
+		
+
+			
+				#ifndef __MMap__PROTECTED__
+				@property (nonatomic, strong, readonly) NSSet *points;
+				#else
+				@property (nonatomic, strong) NSSet *points;
+				#endif
+			
+
+
+		
+
+
+		
+			#ifndef __MMap__PROTECTED__
+			- (NSMutableSet*)pointsSet;
+			#endif
+		
+
+
+	
 
 
 
 
 
 
-//- (BOOL)validateSummary:(id*)value_ error:(NSError**)error_;
 
 
 
-
-
-
-
-
-#ifndef __MMap__PROTECTED__
-@property (nonatomic, strong, readonly) NSNumber* viewCount;
-#else
-@property (nonatomic, strong) NSNumber* viewCount;
-#endif
-
-
-
-
-
-
-
-
-#ifndef __MMap__PROTECTED__
-@property (readonly) int16_t viewCountValue;
-- (int16_t)viewCountValue;
-#else
-@property int16_t viewCountValue;
-- (int16_t)viewCountValue;
-- (void)setViewCountValue:(int16_t)value_;
-#endif
-
-
-
-
-
-//- (BOOL)validateViewCount:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSSet *catViewCounts;
-
-- (NSMutableSet*)catViewCountsSet;
-
-
-
-
-@property (nonatomic, strong) NSSet *points;
-
-- (NSMutableSet*)pointsSet;
+//------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
 
 
 

@@ -8,6 +8,7 @@
 
 
 #define __AppTesting__IMPL__
+#define __MBaseEntity__SYNCHRONIZATION__PROTECTED__
 #import "AppTesting.h"
 
 #import "DDLog.h"
@@ -120,7 +121,7 @@
     GMTMap *gmMap = [GMTMap emptyMap];
 
     gmMap.name = localMap.name;
-    gmMap.gmID = localMap.gmID;
+    gmMap.gmID = localMap.gID;
     gmMap.etag = localMap.etag;
     // gmMap.published_Date = localMap.published_Date; --> STR => DATE
     // gmMap.updated_Date = localMap.updated_Date; --> STR => DATE
@@ -147,12 +148,9 @@
     if(err != nil) *err = nil;
 
     localMap.name = gmMap.name;
-    localMap.gmID = gmMap.gmID;
-    localMap.etag = gmMap.etag;
-    [localMap updateDeleteMark:false];
-    localMap.modifiedSinceLastSyncValue = false;
-    // localMap.published_Date = gmMap.published_Date; --> STR => DATE
-    // localMap.updated_Date = gmMap.updated_Date; --> STR => DATE
+    [localMap _updateBasicInfoWithGID:gmMap.gmID etag:gmMap.etag creationTime:gmMap.published_Date updateTime:gmMap.updated_Date];
+    [localMap markAsDeleted:false];
+    [localMap _cleanMarkAsModified];
 
     localMap.summary = gmMap.summary;
 
@@ -164,8 +162,8 @@
 
     if(err != nil) *err = nil;
 
-    [localMap updateDeleteMark:true];
-    localMap.modifiedSinceLastSyncValue = true;
+    [localMap markAsDeleted:true];
+    [localMap _cleanMarkAsModified];
 
     return true;
 }
@@ -187,13 +185,13 @@
     GMTPoint *gmPoint = [GMTPoint emptyPoint];
 
     gmPoint.name = localPoint.name;
-    gmPoint.gmID = localPoint.gmID;
+    gmPoint.gmID = localPoint.gID;
     gmPoint.etag = localPoint.etag;
     // gmPoint.published_Date = localPoint.published_Date; --> STR => DATE
     // gmPoint.updated_Date = localPoint.updated_Date; --> STR => DATE
 
     gmPoint.descr = localPoint.descr;
-    gmPoint.iconHREF = localPoint.category.iconHREF;
+    gmPoint.iconHREF = localPoint.iconHREF;
     gmPoint.latitude = localPoint.latitudeValue;
     gmPoint.longitude = localPoint.longitudeValue;
 
@@ -205,8 +203,7 @@
 
     if(err != nil) *err = nil;
 
-    MCategory *cat = [MCategory categoryForIconHREF:gmPoint.iconHREF inContext:map.managedObjectContext];
-    MPoint *localPoint = [MPoint emptyPointWithName:gmPoint.name inMap:map withCategory:cat];
+    MPoint *localPoint = [MPoint emptyPointWithName:gmPoint.name inMap:map];
     [self updateLocalPoint:localPoint withRemotePoint:gmPoint error:err];
 
     return localPoint;
@@ -217,18 +214,14 @@
 
     if(err != nil) *err = nil;
 
+    [localPoint _updateBasicInfoWithGID:gmPoint.gmID etag:gmPoint.etag creationTime:gmPoint.published_Date updateTime:gmPoint.updated_Date];
     localPoint.name = gmPoint.name;
-    localPoint.gmID = gmPoint.gmID;
-    localPoint.etag = gmPoint.etag;
-    [localPoint updateDeleteMark:false];
-    localPoint.modifiedSinceLastSyncValue = false;
-    // localPoint.published_Date = gmMap.published_Date; --> STR => DATE
-    // localPoint.updated_Date = gmMap.updated_Date; --> STR => DATE
-
     localPoint.descr = gmPoint.descr;
-    [localPoint moveToCategory:[MCategory categoryForIconHREF:gmPoint.iconHREF inContext:localPoint.managedObjectContext]];
+    localPoint.iconHREF=gmPoint.iconHREF;
     [localPoint setLatitude:gmPoint.latitude longitude:gmPoint.longitude];
 
+    [localPoint markAsDeleted:false];
+    [localPoint _cleanMarkAsModified];
     return true;
 }
 
@@ -237,8 +230,8 @@
 
     if(err != nil) *err = nil;
 
-    [localPoint updateDeleteMark:true];
-    localPoint.map.modifiedSinceLastSyncValue = true;
+    [localPoint markAsDeleted:true];
+    [localPoint _cleanMarkAsModified];
 
     return true;
 }

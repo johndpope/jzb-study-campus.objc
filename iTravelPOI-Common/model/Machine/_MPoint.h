@@ -5,7 +5,7 @@
 
 #import <CoreData/CoreData.h>
 
-#import "MMapBaseEntity.h"
+#import "MBaseEntity.h"
 
 
 extern const struct MPointAttributes {
@@ -15,7 +15,7 @@ extern const struct MPointAttributes {
 } MPointAttributes;
 
 extern const struct MPointRelationships {
-	__unsafe_unretained NSString *category;
+	__unsafe_unretained NSString *categories;
 	__unsafe_unretained NSString *map;
 	__unsafe_unretained NSString *thumbnail;
 } MPointRelationships;
@@ -34,7 +34,7 @@ extern const struct MPointFetchedProperties {
 @interface MPointID : NSManagedObjectID {}
 @end
 
-@interface _MPoint : MMapBaseEntity {}
+@interface _MPoint : MBaseEntity {}
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_;
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
@@ -42,68 +42,158 @@ extern const struct MPointFetchedProperties {
 
 
 
+//------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
 
 
+	
+
+		
+			
+				
+					@property (nonatomic, strong) NSString* descr;
+				
+			
+		
 
+		
 
+	//- (BOOL)validateDescr:(id*)value_ error:(NSError**)error_;
+	
+	
 
-@property (nonatomic, strong) NSString* descr;
 
 
+	
 
+		
+			
+				
+					#ifndef __MPoint__PROTECTED__
+					@property (nonatomic, strong, readonly) NSNumber* latitude;
+					#else
+					@property (nonatomic, strong) NSNumber* latitude;
+					#endif
+				
+			
+		
 
+		
+			
+				
+					#ifndef __MPoint__PROTECTED__
+					@property (readonly) double latitudeValue;
+					- (double)latitudeValue;
+					#else
+					@property double latitudeValue;
+					- (double)latitudeValue;
+					- (void)setLatitudeValue:(double)value_;
+					#endif
+				
+			
+		
 
+	//- (BOOL)validateLatitude:(id*)value_ error:(NSError**)error_;
+	
+	
 
-//- (BOOL)validateDescr:(id*)value_ error:(NSError**)error_;
 
 
+	
 
+		
+			
+				
+					#ifndef __MPoint__PROTECTED__
+					@property (nonatomic, strong, readonly) NSNumber* longitude;
+					#else
+					@property (nonatomic, strong) NSNumber* longitude;
+					#endif
+				
+			
+		
 
+		
+			
+				
+					#ifndef __MPoint__PROTECTED__
+					@property (readonly) double longitudeValue;
+					- (double)longitudeValue;
+					#else
+					@property double longitudeValue;
+					- (double)longitudeValue;
+					- (void)setLongitudeValue:(double)value_;
+					#endif
+				
+			
+		
 
+	//- (BOOL)validateLongitude:(id*)value_ error:(NSError**)error_;
+	
+	
 
 
 
-#ifndef __MPoint__PROTECTED__
-@property (nonatomic, strong, readonly) NSNumber* latitude;
-#else
-@property (nonatomic, strong) NSNumber* latitude;
-#endif
 
 
+//------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
 
 
+	
 
+		
 
+			
+				#ifndef __MPoint__PROTECTED__
+				@property (nonatomic, strong, readonly) NSSet *categories;
+				#else
+				@property (nonatomic, strong) NSSet *categories;
+				#endif
+			
 
 
-#ifndef __MPoint__PROTECTED__
-@property (readonly) double latitudeValue;
-- (double)latitudeValue;
-#else
-@property double latitudeValue;
-- (double)latitudeValue;
-- (void)setLatitudeValue:(double)value_;
-#endif
+		
 
 
+		
+			#ifndef __MPoint__PROTECTED__
+			- (NSMutableSet*)categoriesSet;
+			#endif
+		
 
 
+	
 
-//- (BOOL)validateLatitude:(id*)value_ error:(NSError**)error_;
 
 
+	
+		
+			
+				#ifndef __MPoint__PROTECTED__
+				@property (nonatomic, strong, readonly) MMap *map;
+				#else
+				@property (nonatomic, strong) MMap *map;
+				#endif
+			
+		
 
+		//- (BOOL)validateMap:(id*)value_ error:(NSError**)error_;
 
+	
 
 
 
+	
+		
+			
+				@property (nonatomic, strong) MMapThumbnail *thumbnail;
+			
+		
 
-#ifndef __MPoint__PROTECTED__
-@property (nonatomic, strong, readonly) NSNumber* longitude;
-#else
-@property (nonatomic, strong) NSNumber* longitude;
-#endif
+		//- (BOOL)validateThumbnail:(id*)value_ error:(NSError**)error_;
 
+	
 
 
 
@@ -111,78 +201,10 @@ extern const struct MPointFetchedProperties {
 
 
 
-#ifndef __MPoint__PROTECTED__
-@property (readonly) double longitudeValue;
-- (double)longitudeValue;
-#else
-@property double longitudeValue;
-- (double)longitudeValue;
-- (void)setLongitudeValue:(double)value_;
-#endif
 
 
-
-
-
-//- (BOOL)validateLongitude:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-
-
-
-
-#ifndef __MPoint__PROTECTED__
-@property (nonatomic, strong, readonly) MCategory *category;
-#else
-@property (nonatomic, strong) MCategory *category;
-#endif
-
-
-
-
-
-//- (BOOL)validateCategory:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-
-
-
-#ifndef __MPoint__PROTECTED__
-@property (nonatomic, strong, readonly) MMap *map;
-#else
-@property (nonatomic, strong) MMap *map;
-#endif
-
-
-
-
-
-//- (BOOL)validateMap:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-
-
-
-#ifndef __MPoint__PROTECTED__
-@property (nonatomic, strong, readonly) MMapThumbnail *thumbnail;
-#else
-@property (nonatomic, strong) MMapThumbnail *thumbnail;
-#endif
-
-
-
-
-
-//- (BOOL)validateThumbnail:(id*)value_ error:(NSError**)error_;
+//------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
 
 
 
@@ -190,6 +212,13 @@ extern const struct MPointFetchedProperties {
 
 @end
 
+
+@interface _MPoint (CategoriesCoreDataGeneratedAccessors)
+- (void)addCategories:(NSSet*)value_;
+- (void)removeCategories:(NSSet*)value_;
+- (void)addCategoriesObject:(MCategory*)value_;
+- (void)removeCategoriesObject:(MCategory*)value_;
+@end
 
 
 @interface _MPoint (CoreDataGeneratedPrimitiveAccessors)
@@ -220,8 +249,8 @@ extern const struct MPointFetchedProperties {
 
 
 
-- (MCategory*)primitiveCategory;
-- (void)setPrimitiveCategory:(MCategory*)value;
+- (NSMutableSet*)primitiveCategories;
+- (void)setPrimitiveCategories:(NSMutableSet*)value;
 
 
 

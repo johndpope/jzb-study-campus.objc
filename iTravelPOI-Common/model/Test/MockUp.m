@@ -104,27 +104,97 @@ BOOL _init_model_ = TRUE;
 
     // -------------------------------------------------------
     MMap *map1 = [MMap emptyMapWithName:@"@map1" inContext:moContext];
+    MMap *map2 = [MMap emptyMapWithName:@"@map2" inContext:moContext];
+    MMap *map3 = [MMap emptyMapWithName:@"@map3" inContext:moContext];
+
+    
+    // -------------------------------------------------------
+    MCategory *cat1 = [MCategory categoryWithFullName:@"rest" inContext:moContext];
+    MCategory *cat1_1 = [MCategory categoryWithFullName:@"rest.chino" inContext:moContext];
+    MCategory *cat1_2 = [MCategory categoryWithFullName:@"rest.veg" inContext:moContext];
+    MCategory *cat1_2_1 = [MCategory categoryWithFullName:@"rest.veg.eco" inContext:moContext];
+    MCategory *cat1_2_2 = [MCategory categoryWithFullName:@"rest.veg.dise" inContext:moContext];
+    MCategory *cat1_3 = [MCategory categoryWithFullName:@"rest.trad" inContext:moContext];
+    MCategory *cat1_3_1 = [MCategory categoryWithFullName:@"rest.trad.esp" inContext:moContext];
+    MCategory *cat1_3_2 = [MCategory categoryWithFullName:@"rest.trad.belga" inContext:moContext];
+    MCategory *cat2 = [MCategory categoryWithFullName:@"casas" inContext:moContext];
+
+    MCategory *cat3_1 = [MCategory categoryWithFullName:@"ny.cpark" inContext:moContext];
+    MCategory *cat3_2 = [MCategory categoryWithFullName:@"ny.soho" inContext:moContext];
+    MCategory *cat4_1 = [MCategory categoryWithFullName:@"francia.loira" inContext:moContext];
+    MCategory *cat4_2 = [MCategory categoryWithFullName:@"francia.bretaña" inContext:moContext];
 
     
     // -------------------------------------------------------
     MPoint *point;
-    NSString *baseURL1 = @"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png";
-    NSString *baseURL2 = @"http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png";
+    NSString *iconHref_0 = @"http://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png";
+    NSString *iconHref_1 = @"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png";
+    NSString *iconHref_2 = @"http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png";
 
-    point = [MPoint emptyPointWithName:@"p0" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 fullName:@"rest#" inContext:moContext]];
+    point = [MPoint emptyPointWithName:@"p0" inMap:map1];
+    point.iconHREF=iconHref_0;
+
+    point = [MPoint emptyPointWithName:@"p1" inMap:map1];
+    point.iconHREF=iconHref_1;
+    [point addToCategory:cat1];
     
-    point = [MPoint emptyPointWithName:@"p1" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 fullName:@"rest#chino#" inContext:moContext]];
+    point = [MPoint emptyPointWithName:@"p2" inMap:map1];
+    point.iconHREF=iconHref_1;
+    [point addToCategory:cat1_1];
 
-    point = [MPoint emptyPointWithName:@"p2" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 fullName:@"rest#veg#" inContext:moContext]];
-    point = [MPoint emptyPointWithName:@"p3" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 fullName:@"rest#veg#eco#" inContext:moContext]];
-    point = [MPoint emptyPointWithName:@"p4" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 fullName:@"rest#veg#dise#" inContext:moContext]];
-
-    point = [MPoint emptyPointWithName:@"p5" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 fullName:@"rest#trad#" inContext:moContext]];
-    point = [MPoint emptyPointWithName:@"p6" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 fullName:@"rest#trad#esp#" inContext:moContext]];
-    point = [MPoint emptyPointWithName:@"p7" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL1 fullName:@"rest#trad#belga#" inContext:moContext]];
-
-    point = [MPoint emptyPointWithName:@"p8" inMap:map1 withCategory:[MCategory categoryForIconBaseHREF:baseURL2 fullName:@"casas#" inContext:moContext]];
+    point = [MPoint emptyPointWithName:@"p3" inMap:map1];
+    point.iconHREF=iconHref_1;
+    [point addToCategory:cat1_2];
     
+    point = [MPoint emptyPointWithName:@"p4" inMap:map1];
+    point.iconHREF=iconHref_1;
+    [point addToCategory:cat1_2_1];
+    
+    point = [MPoint emptyPointWithName:@"p5" inMap:map1];
+    point.iconHREF=iconHref_1;
+    [point addToCategory:cat1_2_2];
+
+    point = [MPoint emptyPointWithName:@"p6" inMap:map1];
+    point.iconHREF=iconHref_1;
+    [point addToCategory:cat1_3];
+
+    point = [MPoint emptyPointWithName:@"p7" inMap:map1];
+    point.iconHREF=iconHref_2;
+    [point addToCategory:cat1_3_1];
+
+    point = [MPoint emptyPointWithName:@"p8" inMap:map1];
+    point.iconHREF=iconHref_2;
+    [point addToCategory:cat1_3_2];
+
+    point = [MPoint emptyPointWithName:@"p99" inMap:map1];
+    point.iconHREF=iconHref_2;
+    [point addToCategory:cat2];
+    [point setLatitude:41.464003 longitude:-2.862453];
+    
+    
+    // -----------------------------
+    point = [MPoint emptyPointWithName:@"pA" inMap:map2];
+    point.iconHREF=iconHref_2;
+    [point addToCategory:cat3_1];
+
+    point = [MPoint emptyPointWithName:@"pb" inMap:map2];
+    point.iconHREF=iconHref_2;
+    [point addToCategory:cat3_2];
+    
+    point = [MPoint emptyPointWithName:@"pC" inMap:map2];
+    point.iconHREF=iconHref_2;
+    [point addToCategory:cat4_1];
+
+    point = [MPoint emptyPointWithName:@"pD" inMap:map2];
+    point.iconHREF=iconHref_2;
+    [point addToCategory:cat2];
+
+    // -----------------------------
+    point = [MPoint emptyPointWithName:@"pX" inMap:map3];
+    point.iconHREF=iconHref_2;
+    [point addToCategory:cat4_2];
+
+
 
     if([BaseCoreData saveContext]) {
         DDLogVerbose(@"****** DATA MODEL SQLITE FILE PRE-POPULATED ******");

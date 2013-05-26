@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2061" systemVersion="12D78" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="MBaseEntity" representedClassName="MBaseEntity" isAbstract="YES" syncable="YES">
+        <attribute name="name" attributeType="String" syncable="YES"/>
+        <attribute name="updated_date" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="MCategory" representedClassName="MCategory" parentEntity="MBaseEntity" syncable="YES">
+        <attribute name="fullName" attributeType="String" indexed="YES" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <attribute name="iconBaseHREF" attributeType="String" indexed="YES" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <attribute name="viewCount" attributeType="Integer 16" defaultValueString="0" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <relationship name="mapViewCounts" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="RMCViewCount" inverseName="category" inverseEntity="RMCViewCount" syncable="YES"/>
+        <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MCategory" inverseName="subCategories" inverseEntity="MCategory" syncable="YES"/>
+        <relationship name="points" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MPoint" inverseName="category" inverseEntity="MPoint" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </relationship>
+        <relationship name="subCategories" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="MCategory" inverseName="parent" inverseEntity="MCategory" syncable="YES"/>
+    </entity>
+    <entity name="MMap" representedClassName="MMap" parentEntity="MMapBaseEntity" syncable="YES">
+        <attribute name="summary" attributeType="String" syncable="YES"/>
+        <attribute name="viewCount" attributeType="Integer 16" defaultValueString="0" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <relationship name="catViewCounts" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="RMCViewCount" inverseName="map" inverseEntity="RMCViewCount" syncable="YES"/>
+        <relationship name="points" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="MPoint" inverseName="map" inverseEntity="MPoint" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </relationship>
+    </entity>
+    <entity name="MMapBaseEntity" representedClassName="MMapBaseEntity" isAbstract="YES" parentEntity="MBaseEntity" syncable="YES">
+        <attribute name="etag" attributeType="String" syncable="YES"/>
+        <attribute name="gmID" attributeType="String" syncable="YES"/>
+        <attribute name="markedAsDeleted" attributeType="Boolean" defaultValueString="NO" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <attribute name="modifiedSinceLastSync" attributeType="Boolean" defaultValueString="YES" syncable="YES"/>
+        <attribute name="published_date" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="MMapThumbnail" representedClassName="MMapThumbnail" syncable="YES">
+        <attribute name="imageData" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="latitude" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="longitude" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <relationship name="point" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MPoint" inverseName="thumbnail" inverseEntity="MPoint" syncable="YES"/>
+    </entity>
+    <entity name="MPoint" representedClassName="MPoint" parentEntity="MMapBaseEntity" syncable="YES">
+        <attribute name="descr" attributeType="String" syncable="YES"/>
+        <attribute name="latitude" attributeType="Double" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <attribute name="longitude" attributeType="Double" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <relationship name="category" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MCategory" inverseName="points" inverseEntity="MCategory" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </relationship>
+        <relationship name="map" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MMap" inverseName="points" inverseEntity="MMap" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </relationship>
+        <relationship name="thumbnail" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="MMapThumbnail" inverseName="point" inverseEntity="MMapThumbnail" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </relationship>
+    </entity>
+    <entity name="RMCViewCount" representedClassName="RMCViewCount" syncable="YES">
+        <attribute name="viewCount" attributeType="Integer 16" defaultValueString="0" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <relationship name="category" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MCategory" inverseName="mapViewCounts" inverseEntity="MCategory" syncable="YES"/>
+        <relationship name="map" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MMap" inverseName="catViewCounts" inverseEntity="MMap" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="MBaseEntity" positionX="-1343" positionY="-3006" width="128" height="73"/>
+        <element name="MCategory" positionX="-1422" positionY="-2752" width="128" height="148"/>
+        <element name="MMap" positionX="-902" positionY="-2862" width="128" height="103"/>
+        <element name="MMapBaseEntity" positionX="-1017" positionY="-3046" width="128" height="118"/>
+        <element name="MMapThumbnail" positionX="-1055" positionY="-2686" width="128" height="103"/>
+        <element name="MPoint" positionX="-1116" positionY="-2862" width="128" height="133"/>
+        <element name="RMCViewCount" positionX="-900" positionY="-2599" width="128" height="88"/>
+    </elements>
+</model>

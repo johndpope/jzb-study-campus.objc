@@ -77,8 +77,8 @@
         [self.mapNameField setStringValue:self.map.name];
         [self.mapSummaryField setString:self.map.summary];
         [self.mapExtraInfo setStringValue:[NSString stringWithFormat:@"Published:\t%@\nUpdated:\t%@\nETAG:\t%@",
-                                           [GMTItem stringFromDate:self.map.published_date],
-                                           [GMTItem stringFromDate:self.map.updated_date],
+                                           [GMTItem stringFromDate:self.map.creationTime],
+                                           [GMTItem stringFromDate:self.map.updateTime],
                                            self.map.etag]];
     }
 }
@@ -95,7 +95,7 @@
             self.map.name = [NSString stringWithFormat:@"@%@", name];
         }
         self.map.summary = [self.mapSummaryField string];
-        [self.map updateModifiedMark];
+        [self.map markAsModified];
     }
     
 }

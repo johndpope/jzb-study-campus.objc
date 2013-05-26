@@ -138,13 +138,13 @@
     
     if(self.selectedCategory != nil) {
         
-        NSManagedObjectID *objID = self.selectedCategory.objectID;
+        NSManagedObjectID *objID = self.selectedCategory.internalIDValue;
         self.selectedCategory = self.selectedCategory.parent;
         [self loadTableDataSelectingObjWithID:objID];
         
     } else if(self.selectedMap != nil) {
         
-        NSManagedObjectID *objID = self.selectedMap.objectID;
+        NSManagedObjectID *objID = self.selectedMap.internalIDValue;
         self.selectedMap = nil;
         [self loadTableDataSelectingObjWithID:objID];
         
@@ -163,10 +163,13 @@
         MMap *copiedMap = nil;
         MCategory *copiedCategory = nil;
         
-        if(self.selectedMap!=nil) copiedMap = (MMap *)[moc objectWithID:self.selectedMap.objectID];
-        if(self.selectedCategory!=nil) copiedCategory = (MCategory *)[moc objectWithID:self.selectedCategory.objectID];
+        if(self.selectedMap!=nil) copiedMap = (MMap *)[moc objectWithID:self.selectedMap.internalIDValue];
+        if(self.selectedCategory!=nil) copiedCategory = (MCategory *)[moc objectWithID:self.selectedCategory.internalIDValue];
         
-        MPoint *newPoint = [MPoint emptyPointWithName:@"" inMap:copiedMap withCategory:copiedCategory];
+        MPoint *newPoint = [MPoint emptyPointWithName:@"" inMap:copiedMap];
+        if(self.selectedCategory) {
+            [newPoint addToCategory:self.selectedCategory];
+        }
         [PointEditorPanel startEditPoint:newPoint delegate:self];
     }
 }
@@ -177,10 +180,10 @@
     NSInteger index = [self.tableViewItems selectedRow];
     if(index < 0) return;
     
-    MMapBaseEntity *item = self.loadedItems[index];
+    MBaseEntity *item = self.loadedItems[index];
     
     NSManagedObjectContext *moc = [BaseCoreData moChildContext];
-    MMapBaseEntity *selectedItemCopy = (MMapBaseEntity *)[moc objectWithID:item.objectID];
+    MBaseEntity *selectedItemCopy = (MBaseEntity *)[moc objectWithID:item.internalIDValue];
     
     
     if([item isKindOfClass:[MMap class]]) {
@@ -225,13 +228,13 @@
     NSInteger index = [self.tableViewItems selectedRow];
     if(index < 0 || returnCode != NSAlertFirstButtonReturn) return;
     
-    MMapBaseEntity *item = self.loadedItems[index];
+    MBaseEntity *item = self.loadedItems[index];
     
     // Esto no funciona con las categorias
     if([item isKindOfClass:[MCategory class]]) {
         [((MCategory *)item) deletePointsInMap:self.selectedMap];
     } else {
-        [item updateDeleteMark:true];
+        [item markAsDeleted:true];
     }
     
     [BaseCoreData saveContext];
@@ -290,11 +293,11 @@
     // Tiene que salvar la informacion del contexto hijo al padre y de este a disco
     [BaseCoreData saveMOContext:moc saveAll:TRUE];
     
-    MMapBaseEntity *savedEntity = (MMapBaseEntity *)[[BaseCoreData moContext] objectWithID:sender.entity.objectID];
+    MBaseEntity *savedEntity = (MBaseEntity *)[[BaseCoreData moContext] objectWithID:sender.entity.internalIDValue];
     
     // Un cambio de nombre al editar o un nuevo elemento hace que la lista se desordene
     // mejor recargar la informacion de nuevo
-    [self loadTableDataSelectingObjWithID:savedEntity.objectID];
+    [self loadTableDataSelectingObjWithID:savedEntity.internalIDValue];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -358,8 +361,8 @@
         loadedItems = [MMap allMapsInContext:moc includeMarkedAsDeleted:false];
     } else {
         NSArray *cats = [MCategory categoriesWithPointsInMap:self.selectedMap parentCategory:self.selectedCategory];
-        NSArray *points = [MPoint pointsInMap:self.selectedMap category:self.selectedCategory];
         NSMutableArray *allItems = [NSMutableArray arrayWithArray:cats];
+        NSArray *points = [MPoint pointsInMap:self.selectedMap andCategory:self.selectedCategory];
         [allItems addObjectsFromArray:points];
         loadedItems = allItems;
     }
@@ -369,8 +372,8 @@
     
     if(objID != nil) {
         for(NSInteger n = 0; n < self.loadedItems.count; n++) {
-            MMapBaseEntity *item = self.loadedItems[n];
-            if([item.objectID isEqual:objID]) {
+            MBaseEntity *item = self.loadedItems[n];
+            if([item.internalIDValue isEqual:objID]) {
                 [self.tableViewItems selectRowIndexes:[NSIndexSet indexSetWithIndex:n] byExtendingSelection:false];
                 [self.tableViewItems scrollRowToVisible:n];
                 break;

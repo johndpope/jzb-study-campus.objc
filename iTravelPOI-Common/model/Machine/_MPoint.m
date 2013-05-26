@@ -16,7 +16,7 @@ const struct MPointAttributes MPointAttributes = {
 };
 
 const struct MPointRelationships MPointRelationships = {
-	.category = @"category",
+	.categories = @"categories",
 	.map = @"map",
 	.thumbnail = @"thumbnail",
 };
@@ -130,8 +130,17 @@ const struct MPointFetchedProperties MPointFetchedProperties = {
 
 
 
-@dynamic category;
+@dynamic categories;
 
+	
+- (NSMutableSet*)categoriesSet {
+	[self willAccessValueForKey:@"categories"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"categories"];
+  
+	[self didAccessValueForKey:@"categories"];
+	return result;
+}
 	
 
 @dynamic map;

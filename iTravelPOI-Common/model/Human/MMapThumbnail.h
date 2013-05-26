@@ -33,7 +33,7 @@ typedef void (^TBlock_blockDefinition)(double lat, double lng, NSData *imageData
 #pragma mark -
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-
++ (MMapThumbnail *) emptyThumnailInContext:(NSManagedObjectContext *)moContext;
 
 
 //=====================================================================================================================

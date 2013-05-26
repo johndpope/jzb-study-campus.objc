@@ -210,7 +210,7 @@
     JZImage *image = [[JZImage alloc] initWithContentsOfFile:imagePath];
     if(image==nil) {
         // AQUI SE PODRIA INTENTAR CARGAR UNA IMAGEN DE OTRO SITIO QUE NO SEA LAS DE POR DEFECTO DE GMAP
-        image = [ImageManager _errorImage];
+        image = [ImageManager _errorImageShadow];
     }
     return image;
 }
@@ -264,7 +264,7 @@
                 p2 = [iconHREF length];
             }
             
-            fileName = [NSString stringWithFormat:@"Pin_Letter_%@", [iconHREF subStrFrom:p1 + 5 to:p2]];
+            fileName = [NSString stringWithFormat:@"GMap/Pin_Letter_%@", [iconHREF subStrFrom:p1 + 5 to:p2]];
             fileName = [fileName replaceStr:@"|" with:@"_"];
         }
     }
@@ -279,7 +279,7 @@
                 p2 = [iconHREF length];
             }
             
-            fileName = [NSString stringWithFormat:@"Pin_Letter_%@", [iconHREF subStrFrom:p1 + 1 to:p2]];
+            fileName = [NSString stringWithFormat:@"GMap/Pin_Letter_%@", [iconHREF subStrFrom:p1 + 1 to:p2]];
         }
     }
     // -----------------------------------------------------------
@@ -293,7 +293,7 @@
                 p2 = [iconHREF length];
             }
             
-            fileName = [NSString stringWithFormat:@"GMI_%@", [iconHREF subStrFrom:p1 + 1 to:p2]];
+            fileName = [NSString stringWithFormat:@"GMap/GMI_%@", [iconHREF subStrFrom:p1 + 1 to:p2]];
         }
     }
     // -----------------------------------------------------------
@@ -307,7 +307,7 @@
                 p2 = [iconHREF length];
             }
             
-            fileName = [NSString stringWithFormat:@"GMI_%@", [iconHREF subStrFrom:p1 + 1 to:p2]];
+            fileName = [NSString stringWithFormat:@"GMap/GMI_%@", [iconHREF subStrFrom:p1 + 1 to:p2]];
         }
     }
     
