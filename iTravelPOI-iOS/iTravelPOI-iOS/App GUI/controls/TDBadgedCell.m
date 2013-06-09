@@ -147,12 +147,14 @@
 	return self;
 }
 
+
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
 	if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
 	{
 		[self configureSelf];
-        self.leftCheckedView = [[UIImageView alloc] initWithFrame:CGRectMake(-30, (self.frame.size.height-26)/2, 26, 26)];
+        UIImage *img = TDBadgedCell.leftCheckedImage;
+        self.leftCheckedView = [[UIImageView alloc] initWithFrame:CGRectMake(-img.size.width, 0, img.size.width, img.size.height)];
         [self.imageView addSubview:self.leftCheckedView];
 	}
 	return self;
@@ -189,28 +191,71 @@
 
 #pragma mark - Drawing Methods
 
+//---------------------------------------------------------------------------------------------------------------------
++ (UIImage *) leftCheckDisabledImage {
+    
+    static UIImage *__leftCheckDisabledImage = nil;
+    if(__leftCheckDisabledImage == nil) {
+        __leftCheckDisabledImage = [UIImage imageNamed:@"badgedCell-LCheckDisabled"];
+    }
+    return __leftCheckDisabledImage;
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------
++ (UIImage *) leftCheckedImage {
+    
+    static UIImage *__leftcheckedImage = nil;
+    if(__leftcheckedImage == nil) {
+        __leftcheckedImage = [UIImage imageNamed:@"badgedCell-LCheckOn"];
+    }
+    return __leftcheckedImage;
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------
++ (UIImage *) leftUncheckedImage {
+    
+    static UIImage *__leftuncheckedImage = nil;
+    if(__leftuncheckedImage == nil) {
+        __leftuncheckedImage = [UIImage imageNamed:@"badgedCell-LCheckOff"];
+    }
+    return __leftuncheckedImage;
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------
 - (void) layoutSubviews
 {
 	[super layoutSubviews];
 	
-	if(self.badgeString)
+    if(self.editing) {
+        switch (self.leftCheckState) {
+            case ST_CHECKED:
+                self.leftCheckedView.image = TDBadgedCell.leftCheckedImage;
+                break;
+            case ST_UNCHECKED:
+                self.leftCheckedView.image = TDBadgedCell.leftUncheckedImage;
+                break;
+            case ST_DISABLED:
+                self.leftCheckedView.image = TDBadgedCell.leftCheckDisabledImage;
+                break;
+        }
+    } else {
+        self.leftCheckedView.image = nil;
+    }
+
+	
+    if(self.badgeString)
 	{
         [self configureSelf];
         
-        if(self.editing) {
-            if(self.leftChecked) {
-                self.leftCheckedView.image = [UIImage imageNamed:@"checkmark-checked"];
-            } else {
-                self.leftCheckedView.image = [UIImage imageNamed:@"checkmark-unchecked"];
-            }
-        }
         
 		// Force badges to hide on edit.
 		if(self.editing)
 			[self.badge setHidden:YES];
 		else
 			[self.badge setHidden:NO];
-		
 		
         // Calculate the size of the bage from the badge string
 		CGSize badgeSize = [self.badgeString sizeWithFont:[UIFont boldSystemFontOfSize: self.badge.fontSize]];
@@ -296,6 +341,7 @@
 	}
 	else
 	{
+        self.leftCheckState = ST_UNCHECKED;
 		self.badge.hidden = NO;
 		[self.badge setNeedsDisplay];
 		[self setNeedsDisplay];

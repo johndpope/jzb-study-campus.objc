@@ -12,20 +12,24 @@
 #import "MPoint.h"
 #import "BaseCoreData.h"
 
-#import "EntityEditorDelegate.h"
 #import "MapEditorViewController.h"
 #import "CategoryEditorViewController.h"
 #import "PointEditorViewController.h"
-
+#import "VisualMapEditorViewController.h"
 
 #import "TDBadgedCell.h"
+#import "BreadcrumbBar.h"
+#import "ScrollableToolbar.h"
+
 
 
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark Private Enumerations & definitions
 //*********************************************************************************************************************
-
+#define BTN_ID_ADD      1001
+#define BTN_ID_DELETE   1002
+#define BTN_ID_MOVE_TO  1003
 
 
 
@@ -33,17 +37,21 @@
 #pragma mark -
 #pragma mark PRIVATE interface definition
 //*********************************************************************************************************************
-@interface ItemListViewController() <UITableViewDelegate, UITableViewDataSource, EntityEditorDelegate>
+@interface ItemListViewController() <UITableViewDelegate, UITableViewDataSource, BreadcrumbBarDelegate>
 
 @property (nonatomic, assign) IBOutlet UITableView *tableViewItemList;
+@property (nonatomic, assign) IBOutlet BreadcrumbBar *breadcrumbBar;
+@property (nonatomic, assign) IBOutlet ScrollableToolbar *scrollableToolbar;
 
 
 @property (nonatomic, strong) NSArray *itemLists;
 
 @property (nonatomic, strong) MMap *selectedMap;
 @property (nonatomic, strong) MCategory *selectedCategory;
-
-
+@property (nonatomic, strong) NSMutableSet *selectedEditingItems;
+@property (nonatomic, assign) BOOL multiselection;
+@property (nonatomic, assign) BOOL canSelectCategories;
+@property (nonatomic, strong) NSIndexPath *lastSelectedIndexPath;
 
 @end
 
@@ -61,18 +69,6 @@
 //=====================================================================================================================
 #pragma mark -
 #pragma mark CLASS methods
-//---------------------------------------------------------------------------------------------------------------------
-+ (void) pushItemListViewControllerWithMap:(MMap *)map category:(MCategory *)category navController:(UINavigationController*) navController {
-
-    ItemListViewController *me = [ItemListViewController itemListViewController];
-    me.selectedMap = map;
-    me.selectedCategory = category;
-    me.title = category!=nil?category.name:(map!=nil?map.name:@"Map List");
-    [navController pushViewController:me animated:TRUE];
-    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:me action:@selector(navBarAddEntity:)];
-    navController.navigationBar.topItem.rightBarButtonItem = addButton;
-}
-
 //---------------------------------------------------------------------------------------------------------------------
 + (ItemListViewController *) itemListViewController {
 
@@ -100,31 +96,18 @@
 {
     [super viewDidLoad];
     
-    // Do any additional setup after loading the view from its nib.
-    [self _loadItemListScrollingTo:nil];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-    self.tableViewItemList = nil;
-    self.itemLists = nil;
-    self.selectedMap = nil;
-    self.selectedCategory = nil;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)viewWillAppear:(BOOL)animated {
     
-    // Un ViewController posterior podría haber borrado la lista porque se edito algo
-    // Se debe recargar de nuevo la lista con datos actualizados con el cambio
-    if(self.itemLists==nil) {
-        [self _loadItemListScrollingTo:nil];
-    }
+    // Do any additional setup after loading the view from its nib.
+    self.selectedEditingItems = [NSMutableSet set];
+    self.breadcrumbBar.delegate = self;
+    [self.breadcrumbBar addItemWithTitle:nil image:[UIImage imageNamed:@"btn-home"] data:nil];
+
+    
+    self.tableViewItemList.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"myTableBg"]];
+    self.tableViewItemList.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"myTableBgSepLine"]];
+
+    [self _navigateToSelectedItem:nil addBreadCrumb:NO goingBack:NO];
+
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -135,20 +118,44 @@
 
 
 
+
 //=====================================================================================================================
 #pragma mark -
-#pragma mark <UINavigationBarDelegate> protocol methods
+#pragma mark <BreadcrumbBarDelegate> protocol methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) navBarAddEntity:(UIBarButtonItem *)sender {
+- (void) itemRemovedFromBreadcrumbBar:(BreadcrumbBar *)sender
+                     removedItemTitle:(NSString *)title
+                      removedItemData:(id)data {
+    
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) activeItemUptatedInBreadcrumbBar:(BreadcrumbBar *)sender
+                          activeItemTitle:(NSString *)title
+                           activeItemData:(id)data
+                        removedItemsCount:(NSUInteger)removedItemsCount {
+    
+    
+    MBaseEntity *item = (MBaseEntity *)data;
+    [self _navigateToSelectedItem:item addBreadCrumb:NO goingBack:YES];
+}
+
+
+
+//=====================================================================================================================
+#pragma mark -
+#pragma mark <ScrollableToolbar> action methods
+//---------------------------------------------------------------------------------------------------------------------
+- (void) addNewEntity:(UIButton *)sender {
     
     NSManagedObjectContext *moc = [BaseCoreData moChildContext];
     
     if(self.selectedMap == nil) {
         MMap *newMap = [MMap emptyMapWithName:@"" inContext:moc];
-        [MapEditorViewController startEditingMap:newMap delegate:self];
+        [[MapEditorViewController editor] modalEditEntity:newMap isNew:YES controller:self];
     } else {
         MMap *copiedMap = (MMap *)[moc objectWithID:self.selectedMap.objectID];
-
+        
         MCategory *copiedCategory = nil;
         if(self.selectedCategory!=nil) copiedCategory = (MCategory *)[moc objectWithID:self.selectedCategory.objectID];
         
@@ -157,17 +164,109 @@
             MCategory *copiedCat = (MCategory *)[moc objectWithID:self.selectedCategory.objectID];
             [newPoint addToCategory:copiedCat];
         }
-        [PointEditorViewController startEditingPoint:newPoint delegate:self];
+        [[PointEditorViewController editor] modalEditEntity:newPoint isNew:YES controller:self];
     }
+
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (void) deleteEntities:(UIButton *)sender {
+    
+    // Se prepara para editar
+    [self _startToolbarEditingWithMultiselection:YES canSelectCategories:NO];
+    
+    // Pone la barra en ediccion con la opcion indicada
+    [self.scrollableToolbar activateEditModeForItemWithTagID:BTN_ID_DELETE animated:YES confirmBlock:^{
+        
+        NSMutableArray *indexPathsToRemove = [NSMutableArray array];
+        
+        // Borra todos los elementos seleccionados del modelo y la tabla
+        [self.selectedEditingItems enumerateObjectsUsingBlock:^(MBaseEntity *item, BOOL *stop) {
+
+            // Las categorias tienen un borrado especial
+            if([item isKindOfClass:[MCategory class]]) {
+                [((MCategory *)item) deletePointsInMap:self.selectedMap];
+            } else {
+                [item markAsDeleted:true];
+            }
+
+            // Prepara el elemento para ser borrado visualmente de la tabla
+            NSUInteger index = [self.itemLists indexOfObject:item];
+            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:index inSection:0];
+            [indexPathsToRemove addObject:indexPath];
+        }];
+
+        // Persiste todos los cambios
+        [BaseCoreData saveContext];
+        
+        // Elimina los elementos del array actual
+        NSMutableArray *reducedItems = [NSMutableArray arrayWithArray:self.itemLists];
+        [reducedItems removeObjectsInArray:self.selectedEditingItems.allObjects];
+        self.itemLists = reducedItems;
+
+        // Elimina el elemento de la tabla
+        [self.tableViewItemList deleteRowsAtIndexPaths:indexPathsToRemove withRowAnimation:UITableViewRowAnimationAutomatic];
+
+        // Sale del modo de edicion
+        [self _endToolbarEditing];
+
+    } cancelBlock:^{
+        
+        // Sale del modo de edicion
+        [self _endToolbarEditing];
+    }];
+}
+//---------------------------------------------------------------------------------------------------------------------
+- (void) moveEntities:(UIButton *)sender {
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) viewInMap:(UIButton *)sender {
+
+
+    // Consigue todos los puntos en el mapa y categoria(recursivo) seleccionados
+    NSArray *points = [MPoint pointsInMap:self.selectedMap andCategoryRecursive:self.selectedCategory];
+    [VisualMapEditorViewController startEditingMPoints:points delegate:self];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _startToolbarEditingWithMultiselection:(BOOL)multiselection canSelectCategories:(BOOL)canSelectCategories {
+
+    // Se prepara para editar las entidades desde una accion de la barra
+    self.breadcrumbBar.enabled = NO;
+    self.multiselection = multiselection;
+    self.canSelectCategories = canSelectCategories;
+    self.lastSelectedIndexPath=nil;
+    
+    // Hay que reajustar la informacion de seleccion que tienen los elementos que ahora estan visibles
+    [self.tableViewItemList.indexPathsForVisibleRows enumerateObjectsUsingBlock:^(NSIndexPath *indexPath, NSUInteger idx, BOOL *stop) {
+
+        MBaseEntity *itemShown = (MBaseEntity *)[self.itemLists objectAtIndex:[indexPath indexAtPosition:1]];
+        TDBadgedCell *cell = (TDBadgedCell *)[self.tableViewItemList cellForRowAtIndexPath:indexPath];
+        [self _setLeftCheckStatusFor:itemShown cell:cell];
+    }];
+
+    // Pasa la tabla a edicion
+    [self.tableViewItemList setEditing:YES animated:YES];
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _endToolbarEditing {
+
+    // Reestablece todo despues de terminar de editar
+    self.breadcrumbBar.enabled = YES;
+    [self.selectedEditingItems removeAllObjects];
+    self.lastSelectedIndexPath=nil;
+    [self.tableViewItemList setEditing:NO animated:YES];
+}
 
 
 //=====================================================================================================================
 #pragma mark -
-#pragma mark <EntityEditorDelegate> protocol methods
+#pragma mark <EntityEditorViewController> callback methods
 //---------------------------------------------------------------------------------------------------------------------
-- (BOOL) editorSaveChanges:(UIViewController<EntityEditorViewController> *)senderEditor modifiedEntity:(MBaseEntity *)modifiedEntity {
+- (BOOL) _editorSaveChanges:(EntityEditorViewController *)senderEditor modifiedEntity:(MBaseEntity *)modifiedEntity {
 
     // Almacena la informacion del contexto hijo al padre y de este a disco
     [BaseCoreData saveMOContext:modifiedEntity.managedObjectContext saveAll:TRUE];
@@ -175,21 +274,12 @@
     // Un cambio de nombre al editar o un nuevo elemento hace que la lista se desordene
     // mejor recargar la informacion de nuevo
     MBaseEntity *savedEntity = (MBaseEntity *)[[BaseCoreData moContext] objectWithID:modifiedEntity.objectID];
-    [self _loadItemListScrollingTo:savedEntity];
-
-    // Avisa al stack de que tienen que refrescar ellos tambien borrandoles la informacion que tenian en ese momento
-    [self _warnParentControllersToReloadData];
-    
-    // Indica que se cierre el editor
-    return TRUE;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (BOOL) editorCancelChanges:(UIViewController<EntityEditorViewController> *)senderEditor {
+    [self _loadItemListScrollingTo:savedEntity animated:NO goingBack:NO];
 
     // Indica que se cierre el editor
     return TRUE;
 }
+
 
 
 
@@ -197,31 +287,10 @@
 #pragma mark -
 #pragma mark <UITableViewDelegate> protocol methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        
-        MBaseEntity *item = (MBaseEntity *)self.itemLists[indexPath.row];
-        
-        // Esto no funciona con las categorias
-        if([item isKindOfClass:[MCategory class]]) {
-            [((MCategory *)item) deletePointsInMap:self.selectedMap];
-        } else {
-            [item markAsDeleted:true];
-        }
-        
-        [BaseCoreData saveContext];
-        
-        NSMutableArray *reducedItems = [NSMutableArray arrayWithArray:self.itemLists];
-        [reducedItems removeObjectAtIndex:indexPath.row];
-        self.itemLists = reducedItems;
-        
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-        
-        // Avisa al stack de que tienen que refrescar ellos tambien borrandoles la informacion que tenian en ese momento
-        [self _warnParentControllersToReloadData];
-
-    }
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    // Inhibe que las filas se puedan borrar pasando el dedo
+    return UITableViewCellEditingStyleNone;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -237,16 +306,16 @@
     // Carga la tabla dependiendo de que esta seleccionado
     switch (copyOfItem.entityType) {
         case MET_MAP:
-            [MapEditorViewController startEditingMap:(MMap *)copyOfItem delegate:self];
+            [[MapEditorViewController editor] modalEditEntity:copyOfItem isNew:NO controller:self];
             break;
             
         case MET_CATEGORY:
             copyOfMap = (MMap *)[moc objectWithID:self.selectedMap.objectID];
-            [CategoryEditorViewController startEditingCategory:(MCategory *)copyOfItem inMap:copyOfMap delegate:self];
+            [[CategoryEditorViewController editorWithAssociatedMap:copyOfMap] modalEditEntity:copyOfItem isNew:NO controller:self];
             break;
             
         case MET_POINT:
-            [PointEditorViewController startEditingPoint:(MPoint *)copyOfItem delegate:self];
+            [[PointEditorViewController editor] modalEditEntity:copyOfItem isNew:NO controller:self];
             break;
             
         default:
@@ -259,23 +328,57 @@
     
     MBaseEntity *selectedItem = self.itemLists[[indexPath indexAtPosition:1]];
     
-    // Carga la tabla dependiendo de que esta seleccionado
-    switch (selectedItem.entityType) {
-        case MET_MAP:
-            [ItemListViewController pushItemListViewControllerWithMap:(MMap *)selectedItem category:nil navController:self.navigationController];
-            break;
-            
-        case MET_CATEGORY:
-            [ItemListViewController pushItemListViewControllerWithMap:self.selectedMap category:(MCategory *)selectedItem navController:self.navigationController];
-            break;
-            
-        case MET_POINT:
-            // ¿AQUI QUE HACEMOS?
-            break;
-            
-        default:
-            break;
+    
+    // El comportamiento depende de si esta en ediccion o no
+    if(tableView.isEditing) {
+
+        // Chequea si el elemento en cuestion se puede seleccionar
+        if(!self.canSelectCategories && selectedItem.entityType == MET_CATEGORY) {
+            return nil;
+        }
+        
+        // Cambia el estado de seleccion
+        if([self.selectedEditingItems containsObject:selectedItem]) {
+            [self.selectedEditingItems removeObject:selectedItem];
+        } else {
+            if(!self.multiselection) {
+                // Elimina lo que hubiese selecionado de antes
+                [self.selectedEditingItems removeAllObjects];
+                if(self.lastSelectedIndexPath!=nil) {
+                    [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:self.lastSelectedIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                }
+            }
+            [self.selectedEditingItems addObject:selectedItem];
+        }
+        // Recarga los elementos afectados
+        [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        self.lastSelectedIndexPath = indexPath;
+        
+        // Actualiza el boton de confirmacion
+        [self.scrollableToolbar enableConfirmButton:self.selectedEditingItems.count>0 count:self.selectedEditingItems.count];
+        
+    } else {
+        
+        // Navega, recargando la informacion de la tabla, dependiendo de que se ha seleccionado
+        switch (selectedItem.entityType) {
+            case MET_MAP:
+                [self _navigateToSelectedItem:selectedItem addBreadCrumb:YES goingBack:NO];
+                break;
+                
+            case MET_CATEGORY:
+                [self _navigateToSelectedItem:selectedItem addBreadCrumb:YES goingBack:NO];
+                break;
+                
+            case MET_POINT:
+                // ¿AQUI QUE HACEMOS?
+                break;
+                
+            default:
+                break;
+        }
     }
+
+    
     
     // No dejamos nada seleccionado
     return nil;
@@ -293,7 +396,7 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-
+    
     static NSString *myViewCellID = @"myViewCellID";
     
     TDBadgedCell *cell = (TDBadgedCell *)[tableView dequeueReusableCellWithIdentifier:myViewCellID];
@@ -325,6 +428,10 @@
         }
     }
     
+    if(tableView.isEditing) {
+        [self _setLeftCheckStatusFor:itemToShow cell:cell];
+    }
+    
     return cell;
 }
 
@@ -341,20 +448,74 @@
 #pragma mark -
 #pragma mark Private methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) _warnParentControllersToReloadData {
+- (void) _navigateToSelectedItem:(MBaseEntity *)selectedEntity addBreadCrumb:(BOOL)addBreadCrumb goingBack:(BOOL)goingBack {
+ 
+    // Solo se contempla que sea nulo o un mapa  o una categoria
+    if(selectedEntity==nil) {
+        self.selectedMap = nil;
+        self.selectedCategory =nil;
+    } else if(selectedEntity.entityType == MET_MAP) {
+        self.selectedMap = (MMap *)selectedEntity;
+        self.selectedCategory =nil;
+    } else {
+        self.selectedCategory = (MCategory *)selectedEntity;
+    }
     
-    // Avisa al stack de que tienen que refrescar ellos tambien borrandoles la informacion que tenian en ese momento
-    NSArray *viewControllers = self.navigationController.viewControllers;
-    for(UIViewController *controller in viewControllers) {
-        if(controller!=self && [controller isKindOfClass:[ItemListViewController class]]){
-            ((ItemListViewController *)controller).itemLists = nil;
-            [((ItemListViewController *)controller).tableViewItemList reloadData];
-        }
+    if(addBreadCrumb) {
+        [self.breadcrumbBar addItemWithTitle:selectedEntity.name image:nil data:selectedEntity];
+    }
+    
+    [self _loadItemListScrollingTo:nil animated:YES goingBack:addBreadCrumb];
+    
+    [self _adjustToolBarForSelectedItems:goingBack];
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) _adjustToolBarForSelectedItems:(BOOL)goingBack {
+    
+    // Calcula que barra mostrar
+    NSArray *items = self.selectedMap==nil ? self.tbItemsForMapList : self.tbItemsForPointList;
+    
+    // Solo habra animacion de la toobar cuando se cambie entre lista de mapas y los elementos de uno
+    BOOL animated = goingBack ? self.breadcrumbBar.count<2 : self.breadcrumbBar.count<3;
+    [self.scrollableToolbar setItems:items animated:animated];
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) _setLeftCheckStatusFor:(MBaseEntity *)item cell:(TDBadgedCell *)cell {
+    
+    if(!self.canSelectCategories && item.entityType==MET_CATEGORY) {
+        cell.leftCheckState = ST_DISABLED;
+    } else {
+        cell.leftCheckState = [self.selectedEditingItems containsObject:item] ? ST_CHECKED : ST_UNCHECKED;
     }
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) _loadItemListScrollingTo:(MBaseEntity *)selectedEntity {
+- (NSArray *) tbItemsForMapList {
+    
+    NSArray *__tbItemsForMapList = [NSArray arrayWithObjects:
+                                    [STBItem itemWithTitle:@"Add Map" image:[UIImage imageNamed:@"btn-edit"] tagID:BTN_ID_ADD target:self action:@selector(addNewEntity:)],
+                                    [STBItem itemWithTitle:@"Delete" image:[UIImage imageNamed:@"btn-delete"] tagID:BTN_ID_DELETE target:self action:@selector(deleteEntities:)],
+                                    nil];
+    return __tbItemsForMapList;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (NSArray *) tbItemsForPointList {
+    
+    NSArray *__tbItemsForPointList = [NSArray arrayWithObjects:
+                                      [STBItem itemWithTitle:@"Add Point" image:[UIImage imageNamed:@"btn-edit"] tagID:BTN_ID_ADD target:self action:@selector(addNewEntity:)],
+                                      [STBItem itemWithTitle:@"Move" image:[UIImage imageNamed:@"btn-move-to"] tagID:BTN_ID_MOVE_TO target:self action:@selector(moveEntities:)],
+                                      [STBItem itemWithTitle:@"In Map" image:[UIImage imageNamed:@"btn-map"] tagID:BTN_ID_MOVE_TO target:self action:@selector(viewInMap:)],
+                                      [STBItem itemWithTitle:@"????" image:[UIImage imageNamed:@"btn-view"] tagID:BTN_ID_MOVE_TO target:self action:@selector(moveEntities:)],
+                                      [STBItem itemWithTitle:@"Delete" image:[UIImage imageNamed:@"btn-delete"] tagID:BTN_ID_DELETE target:self action:@selector(deleteEntities:)],
+                                      nil];
+    return __tbItemsForPointList;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) _loadItemListScrollingTo:(MBaseEntity *)selectedEntity animated:(BOOL)animated goingBack:(BOOL)goingBack {
     
     // De momento, vamos a presuponer que las consultas son lo suficientemente rapidas como para hacerlas en el hilo principal
     
@@ -376,7 +537,14 @@
        
     // Se carga la lista en las propiedades y la tabla
     self.itemLists = loadedItemList;
-    [self.tableViewItemList reloadData];
+    UITableViewRowAnimation animation;
+    if(animated) {
+        animation = goingBack ? UITableViewRowAnimationLeft : UITableViewRowAnimationRight;
+    } else {
+        animation = UITableViewRowAnimationNone;
+    }
+        
+    [self.tableViewItemList reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:animation];
     
     
     // Si se indico un elemento a mostrar haciendo scroll, lo busca y lo muestra

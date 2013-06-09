@@ -7,11 +7,16 @@
 //
 
 #define __MapEditorViewController__IMPL__
+#define __EntityEditorViewController__SUBCLASSES__PROTECTED__
 
 #import <QuartzCore/QuartzCore.h>
-
 #import "MapEditorViewController.h"
+
+#import "MMap.h"
+
 #import "UIView+FirstResponder.h"
+#import "UIPlaceHolderTextView.h"
+
 
 
 //*********************************************************************************************************************
@@ -29,16 +34,10 @@
 @interface MapEditorViewController() <UITextFieldDelegate, UITextViewDelegate>
 
 
-@property (nonatomic, assign) IBOutlet UITextField *nameField;
-@property (nonatomic, assign) IBOutlet UITextView *summaryField;
-@property (nonatomic, assign) IBOutlet UILabel *extraInfo;
+@property (nonatomic, assign) IBOutlet UITextField *fName;
+@property (nonatomic, assign) IBOutlet UIPlaceHolderTextView *fSummary;
+@property (nonatomic, assign) IBOutlet UILabel *fExtraInfo;
 
-@property (nonatomic, assign) IBOutlet UIScrollView *contentScrollView;
-@property (nonatomic, assign) IBOutlet UINavigationBar *navigationBar;
-@property (nonatomic, strong) IBOutlet UIView *kbToolView;
-
-@property (nonatomic, assign) UIViewController<EntityEditorDelegate> *delegate;
-@property (nonatomic, strong) NSManagedObjectContext *moContext;
 
 @end
 
@@ -58,24 +57,11 @@
 #pragma mark -
 #pragma mark CLASS methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (UIViewController<EntityEditorViewController> *) startEditingMap:(MMap *)map
-                                                          delegate:(UIViewController<EntityEditorDelegate> *)delegate {
-
-    if(map!=nil && delegate!=nil) {
-        MapEditorViewController *me = [[MapEditorViewController alloc] initWithNibName:@"MapEditorViewController" bundle:nil];
-        me.delegate = delegate;
-        me.map = map;
-        me.moContext = map.managedObjectContext; // La referencia es weak y se pierde
-        me.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-        [delegate presentViewController:me animated:YES completion:nil];
-        return me;
-    } else {
-        DDLogVerbose(@"Warning: MapEditorViewController-startEditingMap called with nil Map or Delegate");
-        return nil;
-    }
++ (MapEditorViewController *) editor {
+    
+    MapEditorViewController *me = [[MapEditorViewController alloc] initWithNibName:@"MapEditorViewController" bundle:nil];
+    return me;
 }
-
-
 
 
 
@@ -84,77 +70,12 @@
 #pragma mark -
 #pragma mark <UIViewController> superclass methods
 //---------------------------------------------------------------------------------------------------------------------
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
 - (void)viewDidLoad {
     
     [super viewDidLoad];
     
-    // Le pone un borde al editor de la descripción
-    self.summaryField.layer.borderColor = [[[UIColor grayColor] colorWithAlphaComponent:0.5] CGColor];
-    self.summaryField.layer.borderWidth = 2.0;
-    self.summaryField.layer.cornerRadius = 10.0;
-    self.summaryField.clipsToBounds = YES;
-    
-
-    // Se prepara para editar con el teclado adecuadamente
-    UIView *lastControl = self.extraInfo;
-    self.contentScrollView.contentSize = CGSizeMake(self.contentScrollView.frame.size.width,
-                                                    lastControl.frame.origin.y + lastControl.frame.size.height);
-    
-    
-    self.kbToolView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"kbToolBar.png"]];
-
-    // Botones de Save & Cancel
-    UIBarButtonItem *cancelBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-                                                                                         target:self
-                                                                                         action:@selector(_btnCloseCancel:)];
-
-    UIBarButtonItem *saveBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
-                                                                                         target:self
-                                                                                         action:@selector(_btnCloseSave:)];
-
-    self.navigationBar.topItem.leftBarButtonItem = cancelBarButtonItem;
-    self.navigationBar.topItem.rightBarButtonItem = saveBarButtonItem;
-    
-    // Actualiza los campos desde la entidad a editar
-    [self _setFieldValuesFromEntity];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)viewWillAppear:(BOOL)animated {
-    
-    // register for keyboard notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow:)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillHide:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)viewWillDisappear:(BOOL)animated {
-    
-    // unregister for keyboard notifications while not visible.
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillShowNotification
-                                                  object:nil];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillHideNotification
-                                                  object:nil];
-    
+    // Establece el valor del placeholder del editor del sumario
+    self.fSummary.placeholder = @"Summary goes here";
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -168,78 +89,8 @@
 
 //=====================================================================================================================
 #pragma mark -
-#pragma mark <UITextFieldDelegate, UITextViewDelegate> and Keyboard Notification methods
-//---------------------------------------------------------------------------------------------------------------------
--(void)keyboardWillShow:(NSNotification*)notification {
-    
-    NSDictionary* info = [notification userInfo];
-    CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
-    
-    CGFloat maxScrollHeight = self.view.frame.size.height - self.navigationBar.frame.size.height;
-    
-    self.contentScrollView.frame = CGRectMake(self.contentScrollView.frame.origin.x,
-                                              self.contentScrollView.frame.origin.y,
-                                              self.contentScrollView.contentSize.width,
-                                              maxScrollHeight - keyboardSize.height);
-}
-
-//---------------------------------------------------------------------------------------------------------------------
--(void)keyboardWillHide:(NSNotification*)notification {
-    
-    CGFloat maxScrollHeight = self.view.frame.size.height - self.navigationBar.frame.size.height;
-
-    self.contentScrollView.frame = CGRectMake(self.contentScrollView.frame.origin.x,
-                                              self.contentScrollView.frame.origin.y,
-                                              self.contentScrollView.contentSize.width,
-                                              maxScrollHeight);
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (IBAction)kbToolBarOKAction:(UIButton *)sender {
-    [self.view findFirstResponderAndResign];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
--(void)textFieldDidBeginEditing:(UITextField *)sender {
-    
-    [self.contentScrollView scrollRectToVisible:sender.frame animated:YES];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (BOOL)textFieldShouldReturn:(UITextField *)sender {
-    
-    [sender resignFirstResponder];
-    return YES;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (BOOL) textViewShouldBeginEditing:(UITextView *)sender {
-    [sender setInputAccessoryView:self.kbToolView];
-    return YES;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)textViewDidBeginEditing:(UITextView *)sender {
-
-    [self.contentScrollView scrollRectToVisible:sender.frame animated:YES];
-}
-
-
-
-
-//=====================================================================================================================
-#pragma mark -
-#pragma mark Getter & Setter methods
-//---------------------------------------------------------------------------------------------------------------------
-
-
-
-
-//=====================================================================================================================
-#pragma mark -
 #pragma mark Public methods
 //---------------------------------------------------------------------------------------------------------------------
-
 
 
 
@@ -247,59 +98,58 @@
 #pragma mark -
 #pragma mark Private methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) _dismissEditor {
-
-    [self.view findFirstResponderAndResign];
-    [self dismissViewControllerAnimated:YES completion:nil];
-
-    // Set properties to nil
-    self.map = nil;
-    self.delegate = nil;
-    self.moContext = nil;
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) _btnCloseSave:(id)sender {
-    
-    [self _setEntityFromFieldValues];
-    if([self.delegate editorSaveChanges:self modifiedEntity:self.map]) {
-        [self _dismissEditor];
-    }
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) _btnCloseCancel:(id)sender {
-    
-    if([self.delegate editorCancelChanges:self]) {
-        [self _dismissEditor];
-    }
+- (NSString *) _editorTitle {
+        return @"Map Editor";
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) _setFieldValuesFromEntity {
+- (void) _setFieldValuesFromEntity:(MBaseEntity *)entity {
     
-    self.nameField.text = self.map.name;
-    self.summaryField.text = self.map.summary;
-    self.extraInfo.text = [NSString stringWithFormat:@"Published:\t%@\nUpdated:\t%@\nETAG:\t%@",
-                                       [MBaseEntity stringFromDate:self.map.creationTime],
-                                       [MBaseEntity stringFromDate:self.map.updateTime],
-                                       self.map.etag];
+    MMap *map = (MMap *)entity;
+    
+    self.fName.text = map.name;
+    self.fSummary.text = map.summary;
+    self.fExtraInfo.text = [NSString stringWithFormat:@"Published:\t%@\nUpdated:\t%@\nETAG:\t%@",
+                            [MBaseEntity stringFromDate:map.creationTime],
+                            [MBaseEntity stringFromDate:map.updateTime],
+                            map.etag];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) _setEntityFromFieldValues {
+- (void) _setEntityFromFieldValues:(MBaseEntity *)entity {
 
+    MMap *map = (MMap *)entity;
+
+    
     // *** CONTROL DE SEGURIDAD (@name) PARA NO TOCAR MAPAS BUENOS ***
-    NSString *name = self.nameField.text;
+    NSString *name = self.fName.text;
     if([name hasPrefix:@"@"]) {
-        self.map.name = name;
+        map.name = name;
     } else {
-        self.map.name = [NSString stringWithFormat:@"@%@", name];
+        map.name = [NSString stringWithFormat:@"@%@", name];
     }
-    self.map.summary = self.summaryField.text;
-    [self.map markAsModified];
+    map.summary = self.fSummary.text;
+    [map markAsModified];
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
+- (NSArray *) _tbItemsForEditingOthers {
+    return nil;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) _enableFieldsForEditing {
+
+    self.fName.enabled = YES;
+    self.fSummary.editable = YES;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) _disableFieldsFromEditing {
+
+    self.fName.enabled = NO;
+    self.fSummary.editable = NO;
+}
 
 
 @end

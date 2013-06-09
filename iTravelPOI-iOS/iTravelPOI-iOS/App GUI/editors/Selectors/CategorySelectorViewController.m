@@ -11,11 +11,13 @@
 
 #import "CategorySelectorViewController.h"
 #import "TExpandableTableItem.h"
-#import "CategoryEditorViewController.h"
-#import "TDBadgedCell.h"
-#import "BaseCoreData.h"
-#import "MCategory.h"
 
+#import "MCategory.h"
+#import "BaseCoreData.h"
+
+#import "CategoryEditorViewController.h"
+
+#import "TDBadgedCell.h"
 #import "ImageManager.h"
 
 
@@ -31,7 +33,7 @@
 #pragma mark -
 #pragma mark PRIVATE interface definition
 //*********************************************************************************************************************
-@interface CategorySelectorViewController() <UITableViewDelegate, UITableViewDataSource, EntityEditorDelegate>
+@interface CategorySelectorViewController() <UITableViewDelegate, UITableViewDataSource>
 
 
 @property (nonatomic, assign) IBOutlet UINavigationBar *navigationBar;
@@ -153,7 +155,9 @@
     MCategory *newCat = [MCategory categoryWithFullName:@"name" inContext:moc];
     MMap *copyMap = self.selectedMap!=nil ? (MMap *)[moc objectWithID:self.selectedMap.objectID] : nil;
     
-    [CategoryEditorViewController startEditingCategory:newCat inMap:copyMap delegate:self];
+    
+    CategoryEditorViewController *catEditor=[CategoryEditorViewController editorWithAssociatedMap:copyMap];
+    [catEditor modalEditEntity:newCat isNew:YES controller:self];
 }
 
 
@@ -162,7 +166,7 @@
 #pragma mark -
 #pragma mark <UITableViewDataSource> protocol methods
 //---------------------------------------------------------------------------------------------------------------------
-- (BOOL) editorSaveChanges:(UIViewController<EntityEditorViewController> *)senderEditor modifiedEntity:(MBaseEntity *)modifiedEntity {
+- (BOOL) _editorSaveChanges:(EntityEditorViewController *)senderEditor modifiedEntity:(MBaseEntity *)modifiedEntity {
     
     [BaseCoreData saveMOContext:modifiedEntity.managedObjectContext saveAll:NO];
     MCategory *newCat = (MCategory *)[self.moContext objectWithID:modifiedEntity.objectID];
@@ -201,10 +205,6 @@
     return TRUE;
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-- (BOOL) editorCancelChanges:(UIViewController<EntityEditorViewController> *)senderEditor {
-    return TRUE;
-}
 
 
 

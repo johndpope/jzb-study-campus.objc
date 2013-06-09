@@ -273,6 +273,25 @@
 #pragma mark -
 #pragma mark Public methods
 //---------------------------------------------------------------------------------------------------------------------
+- (NSArray *) allDescendantSorted:(BOOL)sorted selfIncluded:(BOOL)selfIncluded {
+
+    // Crea el array de resultado y se incluye o no segun le indiquen
+    NSMutableArray *descendants = selfIncluded ? [NSMutableArray arrayWithObject:self] : [NSMutableArray array];
+
+    // Rellena de forma recursiva con las subcategorias
+    [self _fillWithDescendantInArray:descendants];
+
+    // Ordena por nombre si asi se pidio
+    if(sorted) {
+        return [descendants sortedArrayUsingComparator:^NSComparisonResult(MCategory *cat1, MCategory *cat2) {
+            return [cat1.fullName compare:cat2.fullName];
+        }];
+    } else {
+        return  descendants;
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 - (NSArray *) allInHierarchy {
     
     // Crea la peticion de busqueda
@@ -559,6 +578,14 @@
     return viewCount;
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _fillWithDescendantInArray:(NSMutableArray *)array {
+    
+    [array addObjectsFromArray:self.subCategories.allObjects];
+    for(MCategory *subCat in self.subCategories) {
+        [subCat _fillWithDescendantInArray:array];
+    }
+}
 
 
 @end

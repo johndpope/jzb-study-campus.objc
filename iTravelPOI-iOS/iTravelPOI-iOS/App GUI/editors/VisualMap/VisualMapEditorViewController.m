@@ -12,9 +12,12 @@
 #import <MapKit/MapKit.h>
 
 #import "VisualMapEditorViewController.h"
+
+#import "ScrollableToolbar.h"
 #import "MyMKPointAnnotation.h"
 #import "DPAnnotationView.h"
 #import "ImageManager.h"
+#import "MPoint.h"
 
 
 
@@ -22,8 +25,8 @@
 #pragma mark -
 #pragma mark Private Enumerations & definitions
 //*********************************************************************************************************************
-#define LAT_SPAN_VERT 0.006469
-#define LNG_SPAN_VERT 0.006824
+#define BTN_ID_SHOW_MY_LOC    1001
+#define BTN_ID_SHOW_NEXT      1002
 
 
 
@@ -37,6 +40,8 @@
 
 @property (nonatomic, assign) IBOutlet MKMapView *mapView;
 @property (nonatomic, assign) IBOutlet UINavigationBar *navigationBar;
+@property (nonatomic, assign) IBOutlet ScrollableToolbar *scrollableToolbar;
+@property (nonatomic, assign) NSUInteger lastAnnotationIndex;
 
 
 @end
@@ -56,6 +61,25 @@
 //=====================================================================================================================
 #pragma mark -
 #pragma mark CLASS methods
+//---------------------------------------------------------------------------------------------------------------------
++ (VisualMapEditorViewController *) startEditingMPoints:(NSArray *)mpoints delegate:(UIViewController<VisualMapEditorDelegate> *)delegate {
+    
+    NSMutableArray *annotations = [NSMutableArray array];
+    
+    // Crea un array de anotaciones a partir de los puntos
+    for(MPoint *point in mpoints) {
+        MyMKPointAnnotation *annotation = [[MyMKPointAnnotation alloc] init];
+        annotation.iconHREF = point.iconHREF;
+        annotation.coordinate = CLLocationCoordinate2DMake(point.latitudeValue, point.longitudeValue);
+        [annotations addObject:annotation];
+        if(annotation.coordinate.latitude>90 || annotation.coordinate.latitude<-90 || annotation.coordinate.longitude>180 || annotation.coordinate.longitude<-180) {
+            NSLog(@"punto raro %@", point);
+        }
+    }
+    
+    return [VisualMapEditorViewController startEditingAnnotations:annotations delegate:delegate];
+}
+
 //---------------------------------------------------------------------------------------------------------------------
 + (VisualMapEditorViewController *) startEditingAnnotations:(NSArray *)annotations delegate:(UIViewController<VisualMapEditorDelegate> *)delegate {
 
@@ -106,6 +130,9 @@
 
     self.navigationBar.topItem.leftBarButtonItem = cancelBarButtonItem;
     self.navigationBar.topItem.rightBarButtonItem = saveBarButtonItem;
+    
+    [self.scrollableToolbar setItems:self.toolbarItems animated:YES];
+
     
     // Actualiza los campos desde la entidad a editar
     [self _setFieldValuesFromEntity];
@@ -379,26 +406,96 @@
  
     [self.mapView addAnnotations:self.annotations];
     
-    CLLocationCoordinate2D centerCoordinates;
-    if(self.annotations.count>0) {
-        MKPointAnnotation *pin = self.annotations[0];
-        centerCoordinates.latitude = pin.coordinate.latitude;
-        centerCoordinates.longitude = pin.coordinate.longitude;
-    } else {
+    CLLocationDegrees regMinLat=1000, regMaxLat=-1000, regMinLng=1000, regMaxLng=-1000;
+    CLLocationCoordinate2D regCenter = CLLocationCoordinate2DMake(0, 0);
+    MKCoordinateSpan regSpan = MKCoordinateSpanMake(0, 0);
+
+    if(self.annotations.count==0) {
+        
         MKUserLocation *uloc=self.mapView.userLocation;
-        centerCoordinates.latitude = uloc.coordinate.latitude;
-        centerCoordinates.longitude = uloc.coordinate.longitude;
+        regCenter.latitude = uloc.coordinate.latitude;
+        regCenter.longitude = uloc.coordinate.longitude;
+        regSpan.latitudeDelta = 0.05;
+        regSpan.longitudeDelta = 0.05;
+        
+    } else if(self.annotations.count==1) {
+        
+        MKPointAnnotation *pin = self.annotations[0];
+        regCenter.latitude = pin.coordinate.latitude;
+        regCenter.longitude = pin.coordinate.longitude;
+        regSpan.latitudeDelta = 0.05;
+        regSpan.longitudeDelta = 0.05;
+        
+    } else {
+
+        // Calcula los extremos
+        for(MKPointAnnotation *pin in self.annotations) {
+            
+            if(pin.coordinate.latitude<regMinLat) {
+                regMinLat=pin.coordinate.latitude;
+            }
+            if(pin.coordinate.latitude>regMaxLat) {
+                regMaxLat=pin.coordinate.latitude;
+            }
+            
+            if(pin.coordinate.longitude<regMinLng) {
+                regMinLng=pin.coordinate.longitude;
+            }
+            if(pin.coordinate.longitude>regMaxLng) {
+                regMaxLng=pin.coordinate.longitude;
+            }
+        }
+        
+        // Establece el centro
+        regCenter.latitude = regMinLat+(regMaxLat-regMinLat)/2;
+        regCenter.longitude = regMinLng+(regMaxLng-regMinLng)/2;
+        
+        // Establece el span
+        regSpan.latitudeDelta = regMaxLat-regMinLat;
+        regSpan.longitudeDelta = regMaxLng-regMinLng;
     }
     
-    MKCoordinateRegion region = MKCoordinateRegionMake(centerCoordinates, MKCoordinateSpanMake(LAT_SPAN_VERT, LNG_SPAN_VERT));
+    // Ajusta la vista del mapa a la region
+    MKCoordinateRegion region = MKCoordinateRegionMake(regCenter, regSpan);
     [self.mapView setRegion:region animated:TRUE];
-    self.mapView.centerCoordinate = centerCoordinates;
+    self.mapView.centerCoordinate = regCenter;
 
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) _setEntityValuesFromFields {
 
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) _centerAtUserLocation:(UIButton *)sender {
+    
+    MKUserLocation *uloc=self.mapView.userLocation;
+    [self.mapView setCenterCoordinate:uloc.coordinate animated:YES];
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) _centerAtNextPoint:(UIButton *)sender {
+    
+    if(self.annotations.count>0) {
+        self.lastAnnotationIndex = (self.lastAnnotationIndex + 1) % self.annotations.count;
+        MKPointAnnotation *pin = (MKPointAnnotation *)self.annotations[self.lastAnnotationIndex];
+        [self.mapView setCenterCoordinate:pin.coordinate animated:YES];
+    }
+    
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (NSArray *) toolbarItems {
+    
+    static NSArray *__toolbarItems;
+    if(__toolbarItems==nil) {
+        __toolbarItems = [NSArray arrayWithObjects:
+                          [STBItem itemWithTitle:@"My Location" image:[UIImage imageNamed:@"btn-edit"] tagID:BTN_ID_SHOW_MY_LOC target:self action:@selector(_centerAtUserLocation:)],
+                          [STBItem itemWithTitle:@"Next Point" image:[UIImage imageNamed:@"btn-delete"] tagID:BTN_ID_SHOW_NEXT target:self action:@selector(_centerAtNextPoint:)],
+                          nil];
+    }
+    return __toolbarItems;
 }
 
 

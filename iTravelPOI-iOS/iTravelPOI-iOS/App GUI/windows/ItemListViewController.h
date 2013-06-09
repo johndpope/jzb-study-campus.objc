@@ -36,7 +36,6 @@
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
 + (ItemListViewController *) itemListViewController;
-+ (void) pushItemListViewControllerWithMap:(MMap *)map category:(MCategory *)category navController:(UINavigationController*) navController;
 
 
 

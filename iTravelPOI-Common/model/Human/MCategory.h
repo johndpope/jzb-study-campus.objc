@@ -44,7 +44,9 @@
 #pragma mark -
 #pragma mark INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
+- (NSArray *) allDescendantSorted:(BOOL)sorted selfIncluded:(BOOL)selfIncluded;
 - (NSArray *) allInHierarchy;
+
 - (BOOL) isRelatedTo:(MCategory *)cat;
 - (BOOL) isDescendatOf:(MCategory *)cat;
 - (MCategory *) rootParent;

@@ -47,6 +47,7 @@
 #pragma mark -
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
++ (VisualMapEditorViewController *) startEditingMPoints:(NSArray *)mpoints delegate:(UIViewController<VisualMapEditorDelegate> *)delegate;
 + (VisualMapEditorViewController *) startEditingAnnotations:(NSArray *)annotations delegate:(UIViewController<VisualMapEditorDelegate> *)delegate;
 
 

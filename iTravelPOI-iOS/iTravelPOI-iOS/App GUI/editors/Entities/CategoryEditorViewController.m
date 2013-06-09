@@ -7,17 +7,22 @@
 //
 
 #define __CategoryEditorViewController__IMPL__
+#define __EntityEditorViewController__SUBCLASSES__PROTECTED__
 
 #import <QuartzCore/QuartzCore.h>
-
 #import "CategoryEditorViewController.h"
+
+#import "MCategory.h"
+#import "MPoint.h"
+
 #import "IconEditorViewController.h"
 #import "CategorySelectorViewController.h"
+
 #import "TDBadgedCell.h"
 #import "UIView+FirstResponder.h"
-#import "ImageManager.h"
 #import "NSString+JavaStr.h"
-#import "MPoint.h"
+
+#import "ImageManager.h"
 
 
 
@@ -42,14 +47,9 @@
 @property (nonatomic, assign) IBOutlet UITextField *nameField;
 @property (nonatomic, assign) IBOutlet UILabel *extraInfo;
 @property (nonatomic, assign) IBOutlet UITableView *parentCatTable;
-
-@property (nonatomic, assign) IBOutlet UIScrollView *contentScrollView;
-@property (nonatomic, assign) IBOutlet UINavigationBar *navigationBar;
 @property (nonatomic, assign) IBOutlet UISwitch *modifyInAllMaps;
-@property (nonatomic, strong) IBOutlet UIView *kbToolView;
 
-@property (nonatomic, assign) UIViewController<EntityEditorDelegate> *delegate;
-@property (nonatomic, strong) NSManagedObjectContext *moContext;
+@property (nonatomic, strong) MMap *map;
 @property (nonatomic, strong) MCategory *parentCat;
 @property (nonatomic, strong) NSString *catIconHREF;
 
@@ -71,28 +71,12 @@
 #pragma mark -
 #pragma mark CLASS methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (UIViewController<EntityEditorViewController> *) startEditingCategory:(MCategory *)category
-                                                                  inMap:(MMap *)map
-                                                               delegate:(UIViewController<EntityEditorDelegate> *)delegate {
-
-    if(category!=nil && delegate!=nil) {
-        CategoryEditorViewController *me = [[CategoryEditorViewController alloc] initWithNibName:@"CategoryEditorViewController" bundle:nil];
-        me.delegate = delegate;
-        me.category = category;
-        me.parentCat = category.parent;
-        me.catIconHREF = category.iconHREF;
-        me.map = map;
-        me.moContext = category.managedObjectContext; // La referencia es weak y se pierde
-        me.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-        [delegate presentViewController:me animated:YES completion:nil];
-        return me;
-    } else {
-        DDLogVerbose(@"Warning: CategoryEditorViewController-startEditingMap called with nil Category or Delegate");
-        return nil;
-    }
++ (CategoryEditorViewController *) editorWithAssociatedMap:(MMap *)map {
+    
+    CategoryEditorViewController *me = [[CategoryEditorViewController alloc] initWithNibName:@"CategoryEditorViewController" bundle:nil];
+    me.map = map;
+    return me;
 }
-
-
 
 
 
@@ -101,78 +85,21 @@
 #pragma mark -
 #pragma mark <UIViewController> superclass methods
 //---------------------------------------------------------------------------------------------------------------------
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
 - (void)viewDidLoad {
     
     [super viewDidLoad];
 
-    // Se prepara para editar con el teclado adecuadamente
-    UIView *lastControl = self.extraInfo;
-    self.contentScrollView.contentSize = CGSizeMake(self.contentScrollView.frame.size.width,
-                                                    lastControl.frame.origin.y + lastControl.frame.size.height);
-    
-    
-    self.kbToolView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"kbToolBar.png"]];
-
-    // Botones de Save & Cancel
-    UIBarButtonItem *cancelBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-                                                                                         target:self
-                                                                                         action:@selector(_btnCloseCancel:)];
-
-    UIBarButtonItem *saveBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
-                                                                                         target:self
-                                                                                         action:@selector(_btnCloseSave:)];
-
-    self.navigationBar.topItem.leftBarButtonItem = cancelBarButtonItem;
-    self.navigationBar.topItem.rightBarButtonItem = saveBarButtonItem;
-    
+    // Borra el color de fondo de la tabla
     self.parentCatTable.backgroundColor = [UIColor clearColor];
-    
-    // Actualiza los campos desde la entidad a editar
-    [self _setFieldValuesFromEntity];
-
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)viewDidAppear:(BOOL)animated {
-    [self _rotateImageField];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)viewWillAppear:(BOOL)animated {
     
-    // register for keyboard notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow:)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
+    [super viewDidAppear:animated];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillHide:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)viewWillDisappear:(BOOL)animated {
-    
-    // unregister for keyboard notifications while not visible.
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillShowNotification
-                                                  object:nil];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillHideNotification
-                                                  object:nil];
-    
+    // Rota la imagen con el icono para indicar que esditable
+    [self _rotateImageField:self.iconImageField];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -186,65 +113,17 @@
 
 //=====================================================================================================================
 #pragma mark -
-#pragma mark <UITextFieldDelegate, UITextViewDelegate> and Keyboard Notification methods
+#pragma mark Public methods
 //---------------------------------------------------------------------------------------------------------------------
--(void)keyboardWillShow:(NSNotification*)notification {
-    
-    NSDictionary* info = [notification userInfo];
-    CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
-    
-    CGFloat maxScrollHeight = self.view.frame.size.height - self.navigationBar.frame.size.height;
-    
-    self.contentScrollView.frame = CGRectMake(self.contentScrollView.frame.origin.x,
-                                              self.contentScrollView.frame.origin.y,
-                                              self.contentScrollView.contentSize.width,
-                                              maxScrollHeight - keyboardSize.height);
-    
-    self.parentCatTable.allowsSelection = NO;
+- (MCategory *)category {
+    return (MCategory *)self.entity;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
--(void)keyboardWillHide:(NSNotification*)notification {
-    
-    CGFloat maxScrollHeight = self.view.frame.size.height - self.navigationBar.frame.size.height;
-
-    self.contentScrollView.frame = CGRectMake(self.contentScrollView.frame.origin.x,
-                                              self.contentScrollView.frame.origin.y,
-                                              self.contentScrollView.contentSize.width,
-                                              maxScrollHeight);
-
-    self.parentCatTable.allowsSelection = YES;
+- (void) setCategory:(MCategory *)category {
+    self.entity = category;
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-- (IBAction)kbToolBarOKAction:(UIButton *)sender {
-    [self.view findFirstResponderAndResign];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
--(void)textFieldDidBeginEditing:(UITextField *)sender {
-    
-    [self.contentScrollView scrollRectToVisible:sender.frame animated:YES];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (BOOL)textFieldShouldReturn:(UITextField *)sender {
-    
-    [sender resignFirstResponder];
-    return YES;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (BOOL) textViewShouldBeginEditing:(UITextView *)sender {
-    [sender setInputAccessoryView:self.kbToolView];
-    return YES;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)textViewDidBeginEditing:(UITextView *)sender {
-
-    [self.contentScrollView scrollRectToVisible:sender.frame animated:YES];
-}
 
 
 
@@ -360,10 +239,6 @@
 }
 
 
-//=====================================================================================================================
-#pragma mark -
-#pragma mark Public methods
-//---------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -372,48 +247,18 @@
 #pragma mark -
 #pragma mark Private methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) _dismissEditor {
-    
-    [self.view findFirstResponderAndResign];
-    [self dismissViewControllerAnimated:YES completion:nil];
-
-    // Set properties to nil
-    self.category = nil;
-    self.map = nil;
-    self.delegate = nil;
-    self.moContext = nil;
-    self.catIconHREF = nil;
-    self.parentCat = nil;
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) _btnCloseSave:(id)sender {
-    
-    [self _setEntityFromFieldValues];
-    if([self.delegate editorSaveChanges:self modifiedEntity:self.category]) {
-        [self _dismissEditor];
-    }
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) _btnCloseCancel:(id)sender {
-    
-    if([self.delegate editorCancelChanges:self]) {
-        [self _dismissEditor];
-    }
+- (NSString *) _editorTitle {
+    return @"Category Editor";
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) _rotateImageField {
+- (void) _nullifyEditor {
     
-    CABasicAnimation *rotate = [CABasicAnimation animationWithKeyPath:@"transform.rotation.y"];
-    rotate.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-    rotate.fromValue = [NSNumber numberWithFloat:0];
-    rotate.toValue = [NSNumber numberWithFloat:2*M_PI];
-    rotate.duration = 0.7f;
-    rotate.repeatCount = 1;
-    [self.iconImageField.layer setAnchorPoint:CGPointMake(0.5, 0.5)];
-    [self.iconImageField.layer addAnimation:rotate forKey:@"trans_rotation"];
+    [super _nullifyEditor];
+    
+    self.map = nil;
+    self.catIconHREF = nil;
+    self.parentCat = nil;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -426,12 +271,15 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) _setFieldValuesFromEntity {
+- (void) _setFieldValuesFromEntity:(MBaseEntity *)entity {
     
-    self.nameField.text = self.category.name;
-    [self _setImageFieldFromIconHREF:self.category.iconHREF];
+    MCategory *category = (MCategory *)entity;
+    
+    self.parentCat = category.parent;
+    self.nameField.text = category.name;
+    [self _setImageFieldFromIconHREF:category.iconHREF];
     self.extraInfo.text = [NSString stringWithFormat:@"Updated:\t%@\n",
-                                       [MBaseEntity stringFromDate:self.category.updateTime]];
+                                       [MBaseEntity stringFromDate:category.updateTime]];
     
     self.modifyInAllMaps.on = YES;
     self.modifyInAllMaps.enabled = (self.map!=nil);
@@ -440,8 +288,9 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) _setEntityFromFieldValues {
+- (void) _setEntityFromFieldValues:(MBaseEntity *)entity {
 
+    MCategory *category = (MCategory *)entity;
     
     NSString *catName = [self.nameField.text trim];
     if(catName.length==0) {
@@ -463,16 +312,16 @@
     MCategory *destCat = [MCategory categoryWithFullName:destFullName inContext:self.moContext];
     
     // Si ha habido cambios en el nombre o la categoria padre hay que transferir la informacion
-    if(self.category.internalIDValue!=destCat.internalIDValue) {
+    if(category.internalIDValue!=destCat.internalIDValue) {
         destCat.iconHREF = self.catIconHREF;
         MMap *useMap = self.modifyInAllMaps.on ? nil : self.map;
-        [self.category transferTo:destCat inMap:useMap];
-        [self.category markAsModified];
+        [category transferTo:destCat inMap:useMap];
+        [category markAsModified];
         self.category = destCat;
     }
     
-    self.category.iconHREF = self.catIconHREF;
-    [self.category markAsModified];
+    category.iconHREF = self.catIconHREF;
+    [category markAsModified];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -482,6 +331,25 @@
     for(MCategory *subCat in cat.subCategories) {
         [self _allSubcategoriesFor:subCat allSubCats:allSubCats];
     }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (NSArray *) _tbItemsForEditingOthers {
+    return nil;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) _enableFieldsForEditing {
+    
+    //self.fName.enabled = YES;
+    //self.fSummary.editable = YES;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) _disableFieldsFromEditing {
+    
+    //self.fName.enabled = NO;
+    //self.fSummary.editable = NO;
 }
 
 

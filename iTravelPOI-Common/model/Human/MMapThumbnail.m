@@ -27,15 +27,13 @@
 @interface MMapThumbnailTicket ()
 
 @property (atomic, strong) TBlock_blockDefinition callback;
-@property (atomic, assign) BOOL mustSave;
 
 @end
 
 //=====================================================================================================================
 @implementation MMapThumbnailTicket
 
-- (void) cancelNotificationSaving:(BOOL)mustSave {
-    self.mustSave = mustSave;
+- (void) cancelNotification {
     self.callback = nil;
 }
 
@@ -150,38 +148,29 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (MMapThumbnailTicket *) asyncUpdateLatitude:(double)lat longitude:(double)lng callback:(TBlock_blockDefinition)callback {
     
-    // Almacena nuestro objID y los datos pasados para usarlos en el contexto hijo
-    __block NSManagedObjectID *objID = self.objectID;
-    __block double latitude = lat;
-    __block double longitude = lng;
-
     // Crea el ticket a retornar
     __block MMapThumbnailTicket *ticket = [[MMapThumbnailTicket alloc] init];
     ticket.callback = callback;
-    ticket.mustSave = FALSE;
     
     // Ejecuta la actualizacion en background
     NSManagedObjectContext *childContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
     childContext.parentContext = BaseCoreData.moContext;
     [childContext performBlock:^{
         
-        NSData *imgData = [MMapThumbnail downloadThumbnailForLatitude:latitude longitude:longitude];
-        // Graba lo descargado si asi esta indicado
-        if(imgData!=nil && ticket.mustSave) {
-            MMapThumbnail *thumbnail = (MMapThumbnail *)[childContext objectWithID:objID];
-            thumbnail.latitudeValue = latitude;
-            thumbnail.longitudeValue = longitude;
-            thumbnail.imageData = imgData;
-            [BaseCoreData saveMOContext:childContext saveAll:TRUE];
-        }
-        
-        // Avisamos de que hemos terminado si el ticket aun esta vigente
-        if(ticket.callback) {
-            ticket.callback(latitude, longitude, imgData);
-        }
-        
-        // Libera la informacion del ticket
-        ticket.callback = nil;
+        // Consigue la informacion
+        __block NSData *imgData = [MMapThumbnail downloadThumbnailForLatitude:lat longitude:lng];
+
+        // Avisa que ha terminado en el hilo principal
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            // Llama al callback si el ticket aun esta vigente
+            if(ticket.callback) {
+                ticket.callback(lat, lng, imgData);
+            }
+            
+            // Libera la informacion del ticket
+            ticket.callback = nil;
+        });
     }];
     
     

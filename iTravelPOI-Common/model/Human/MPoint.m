@@ -92,6 +92,39 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
++ (NSArray *) pointsInMap:(MMap *)map andCategoryRecursive:(MCategory *)cat {
+    
+    // Crea la peticion de busqueda
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"MPoint"];
+    
+    // Se asigna una condicion de filtro
+    NSString *queryStr;
+    NSArray *allCats;
+    if(cat==nil) {
+        queryStr = @"markedAsDeleted=NO AND map=%@";
+    } else {
+        allCats = [cat allDescendantSorted:NO selfIncluded:YES];
+        queryStr = @"markedAsDeleted=NO AND map=%@ AND SUBQUERY(self.categories, $X, $X IN %@).@count>0";
+    }
+    NSPredicate *query = [NSPredicate predicateWithFormat:queryStr, map, allCats];
+    [request setPredicate:query];
+    
+    // Se asigna el criterio de ordenacion
+    NSSortDescriptor *sortDescriptor1 = [NSSortDescriptor sortDescriptorWithKey:@"iconHREF" ascending:TRUE];
+    NSSortDescriptor *sortDescriptor2 = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:TRUE];
+    NSArray *sortDescriptors = [NSArray arrayWithObjects:sortDescriptor1, sortDescriptor2, nil];
+    [request setSortDescriptors:sortDescriptors];
+    
+    // Se ejecuta y retorna el resultado
+    NSError *localError = nil;
+    NSArray *array = [map.managedObjectContext executeFetchRequest:request error:&localError];
+    if(array==nil) {
+        [ErrorManagerService manageError:localError compID:@"MPoint:pointsInMap" messageWithFormat:@"Error fetching points in map '%@' with category (and descendant) '%@'", map.name, cat.fullName];
+    }
+    return array;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 + (NSArray *) pointsInMap:(MMap *)map andCategory:(MCategory *)cat {
     
     // Crea la peticion de busqueda
@@ -166,9 +199,16 @@
     
     // Si hay un cambio de coordenadas las establece
     if(self.latitudeValue!=lat || self.longitudeValue!=lng) {
-        self.latitudeValue = lat;
-        self.longitudeValue = lng;
-        return TRUE;
+        
+        if(lat<-90.0 || lat>90.0 || lng<-180 || lng>180) {
+            NSException *ex=[NSException exceptionWithName:@"Error in coordinates" reason:[NSString stringWithFormat:@"lat = %f, lng = %f",lat,lng] userInfo:nil];
+            [ex raise];
+            return FALSE;
+        } else {
+            self.latitudeValue = lat;
+            self.longitudeValue = lng;
+            return TRUE;
+        }
     } else {
         return FALSE;
     }

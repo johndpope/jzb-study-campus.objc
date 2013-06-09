@@ -33,6 +33,13 @@
 #endif
 #endif
 
+typedef enum {
+    ST_UNCHECKED    = 1,
+    ST_CHECKED      = 2,
+    ST_DISABLED     = 3,
+} TLeftCheckState;
+
+
 @interface TDBadgeView : UIView
 {
 }
@@ -62,6 +69,6 @@
 @property (nonatomic, assign)       CGFloat badgeLeftOffset;
 @property (nonatomic, assign)       CGFloat badgeRightOffset;
 @property (nonatomic, TD_STRONG)    NSMutableArray *resizeableLabels;
-@property (nonatomic, assign)       BOOL leftChecked;
+@property (nonatomic, assign)       TLeftCheckState leftCheckState;
 
 @end

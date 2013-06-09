@@ -59,11 +59,9 @@
     
     // Se crea la ventana y controller inicial de la aplicación
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-
-    UINavigationController *navController = [[UINavigationController alloc] init];
-    navController.navigationBar.barStyle = UIBarStyleBlack;
-    [ItemListViewController pushItemListViewControllerWithMap:nil category:nil navController:navController];
-    //[navController pushViewController:[TestViewController startTestController] animated:TRUE];
+    
+    UIViewController *controller = [ItemListViewController itemListViewController];
+    //UIViewController *controller = [TestViewController startTestController];
     
     
     
@@ -78,7 +76,7 @@
     controller.annotations = [NSArray arrayWithObject:annotation];
     *-------------------------------------------------------------------------------------------*/
     
-    self.window.rootViewController = navController;
+    self.window.rootViewController = controller;
     [self.window makeKeyAndVisible];
     
     return YES;

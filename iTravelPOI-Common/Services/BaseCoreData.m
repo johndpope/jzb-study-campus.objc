@@ -75,6 +75,13 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
++ (NSManagedObjectContext *) moChildContextFrom:(NSManagedObjectContext *)context {
+    NSManagedObjectContext *childContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+    childContext.parentContext = context;
+    return childContext;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
 + (NSManagedObjectContext *) moChildContext {
     NSManagedObjectContext *childContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
     childContext.parentContext = BaseCoreData.moContext;
@@ -99,13 +106,12 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-+ (BOOL) saveMOContext:(NSManagedObjectContext *)moContext saveAll:(BOOL) saveAll{
-
++ (BOOL) saveMOContext:(NSManagedObjectContext *)moContext upToParentMOContext:(NSManagedObjectContext *)parentContext {
     
     __block BOOL allOK = TRUE;
-
+    
     NSManagedObjectContext *moc = moContext;
-    while (moc!=nil) {
+    while (moc!=parentContext) {
         
         [moc performBlockAndWait:^{
             
@@ -120,7 +126,12 @@
     }
     
     return allOK;
+}
 
+// ---------------------------------------------------------------------------------------------------------------------
++ (BOOL) saveMOContext:(NSManagedObjectContext *)moContext saveAll:(BOOL) saveAll{
+
+    return [BaseCoreData saveMOContext:moContext upToParentMOContext:nil];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

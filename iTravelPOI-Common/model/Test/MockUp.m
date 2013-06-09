@@ -96,6 +96,12 @@ BOOL _init_model_ = TRUE;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
++ (void) _setRandomLocationForPoint:(MPoint *)point {
+    //[point setLatitude:((int)(arc4random() % 180) - 90) longitude:((int)(arc4random() % 360) - 180)];
+    [point setLatitude:(41+(int)(arc4random() % 10) - 5) longitude:(-3+(int)(arc4random() % 10) - 5)];
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
 + (void) populateModel {
 
     if(!_init_model_) return;
@@ -132,41 +138,51 @@ BOOL _init_model_ = TRUE;
     NSString *iconHref_2 = @"http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png";
 
     point = [MPoint emptyPointWithName:@"p0" inMap:map1];
+    [MockUp _setRandomLocationForPoint:point];
     point.iconHREF=iconHref_0;
 
     point = [MPoint emptyPointWithName:@"p1" inMap:map1];
+    [MockUp _setRandomLocationForPoint:point];
     point.iconHREF=iconHref_1;
     [point addToCategory:cat1];
     
     point = [MPoint emptyPointWithName:@"p2" inMap:map1];
+    [MockUp _setRandomLocationForPoint:point];
     point.iconHREF=iconHref_1;
     [point addToCategory:cat1_1];
 
     point = [MPoint emptyPointWithName:@"p3" inMap:map1];
+    [MockUp _setRandomLocationForPoint:point];
     point.iconHREF=iconHref_1;
     [point addToCategory:cat1_2];
     
     point = [MPoint emptyPointWithName:@"p4" inMap:map1];
+    [MockUp _setRandomLocationForPoint:point];
     point.iconHREF=iconHref_1;
     [point addToCategory:cat1_2_1];
     
     point = [MPoint emptyPointWithName:@"p5" inMap:map1];
+    [MockUp _setRandomLocationForPoint:point];
     point.iconHREF=iconHref_1;
     [point addToCategory:cat1_2_2];
 
     point = [MPoint emptyPointWithName:@"p6" inMap:map1];
+    [MockUp _setRandomLocationForPoint:point];
     point.iconHREF=iconHref_1;
     [point addToCategory:cat1_3];
 
     point = [MPoint emptyPointWithName:@"p7" inMap:map1];
+    [MockUp _setRandomLocationForPoint:point];
     point.iconHREF=iconHref_2;
     [point addToCategory:cat1_3_1];
 
     point = [MPoint emptyPointWithName:@"p8" inMap:map1];
+    [MockUp _setRandomLocationForPoint:point];
     point.iconHREF=iconHref_2;
     [point addToCategory:cat1_3_2];
 
-    point = [MPoint emptyPointWithName:@"p99" inMap:map1];
+    point = [MPoint emptyPointWithName:@"p_pos_fija" inMap:map1];
+    [MockUp _setRandomLocationForPoint:point];
     point.iconHREF=iconHref_2;
     [point addToCategory:cat2];
     [point setLatitude:41.464003 longitude:-2.862453];
@@ -174,23 +190,28 @@ BOOL _init_model_ = TRUE;
     
     // -----------------------------
     point = [MPoint emptyPointWithName:@"pA" inMap:map2];
+    [MockUp _setRandomLocationForPoint:point];
     point.iconHREF=iconHref_2;
     [point addToCategory:cat3_1];
 
     point = [MPoint emptyPointWithName:@"pb" inMap:map2];
+    [MockUp _setRandomLocationForPoint:point];
     point.iconHREF=iconHref_2;
     [point addToCategory:cat3_2];
     
     point = [MPoint emptyPointWithName:@"pC" inMap:map2];
+    [MockUp _setRandomLocationForPoint:point];
     point.iconHREF=iconHref_2;
     [point addToCategory:cat4_1];
 
     point = [MPoint emptyPointWithName:@"pD" inMap:map2];
+    [MockUp _setRandomLocationForPoint:point];
     point.iconHREF=iconHref_2;
     [point addToCategory:cat2];
 
     // -----------------------------
     point = [MPoint emptyPointWithName:@"pX" inMap:map3];
+    [MockUp _setRandomLocationForPoint:point];
     point.iconHREF=iconHref_2;
     [point addToCategory:cat4_2];
 

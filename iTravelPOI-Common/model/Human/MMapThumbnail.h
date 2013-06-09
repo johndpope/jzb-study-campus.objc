@@ -16,7 +16,7 @@ typedef void (^TBlock_blockDefinition)(double lat, double lng, NSData *imageData
 //=====================================================================================================================
 @interface MMapThumbnailTicket: NSObject
 
-- (void) cancelNotificationSaving:(BOOL)mustSave;
+- (void) cancelNotification;
 
 @end
 

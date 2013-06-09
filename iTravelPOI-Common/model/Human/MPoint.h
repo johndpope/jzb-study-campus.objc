@@ -21,6 +21,7 @@
 + (MPoint *) emptyPointWithName:(NSString *)name inMap:(MMap *)map;
 + (NSArray *) allPointsInContext:(NSManagedObjectContext *)moContext includeMarkedAsDeleted:(BOOL)withDeleted;
 
++ (NSArray *) pointsInMap:(MMap *)map andCategoryRecursive:(MCategory *)cat;
 + (NSArray *) pointsInMap:(MMap *)map andCategory:(MCategory *)cat;
 
 
