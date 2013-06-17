@@ -12,13 +12,12 @@
 #import <QuartzCore/QuartzCore.h>
 #import "CategoryEditorViewController.h"
 
-#import "MCategory.h"
 #import "MPoint.h"
 
 #import "IconEditorViewController.h"
 #import "CategorySelectorViewController.h"
+#import "NSManagedObjectContext+Utils.h"
 
-#import "TDBadgedCell.h"
 #import "UIView+FirstResponder.h"
 #import "NSString+JavaStr.h"
 
@@ -30,6 +29,8 @@
 #pragma mark -
 #pragma mark Private Enumerations & definitions
 //*********************************************************************************************************************
+#define TAG_VIEW_ICON              8001
+#define TAG_VIEW_TAGS              8002
 
 
 
@@ -38,18 +39,15 @@
 #pragma mark -
 #pragma mark PRIVATE interface definition
 //*********************************************************************************************************************
-@interface CategoryEditorViewController() <UITextFieldDelegate, UITextViewDelegate,
-                                           UITableViewDelegate, UITableViewDataSource,
-                                           CategorySelectorDelegate, IconEditorDelegate>
+@interface CategoryEditorViewController() <IconEditorDelegate>
 
 
-@property (nonatomic, assign) IBOutlet UIImageView *iconImageField;
-@property (nonatomic, assign) IBOutlet UITextField *nameField;
-@property (nonatomic, assign) IBOutlet UILabel *extraInfo;
-@property (nonatomic, assign) IBOutlet UITableView *parentCatTable;
-@property (nonatomic, assign) IBOutlet UISwitch *modifyInAllMaps;
+@property (nonatomic, assign) IBOutlet UIImageView              *fIconImage;
+@property (nonatomic, assign) IBOutlet UITextField              *fName;
+@property (nonatomic, assign) IBOutlet UILabel                  *fExtraInfo;
+@property (nonatomic, assign) IBOutlet UIView                   *vCategoriesSection;
+@property (nonatomic, assign) IBOutlet UISwitch                 *fModifyInAllMaps;
 
-@property (nonatomic, strong) MMap *map;
 @property (nonatomic, strong) MCategory *parentCat;
 @property (nonatomic, strong) NSString *catIconHREF;
 
@@ -71,13 +69,34 @@
 #pragma mark -
 #pragma mark CLASS methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (CategoryEditorViewController *) editorWithAssociatedMap:(MMap *)map {
++ (CategoryEditorViewController *) editorWithNewCategoryInContext:(NSManagedObjectContext *)moContext
+                                                   parentCategory:(MCategory *)parentCategory
+                                                    associatedMap:(MMap *)map {
     
-    CategoryEditorViewController *me = [[CategoryEditorViewController alloc] initWithNibName:@"CategoryEditorViewController" bundle:nil];
-    me.map = map;
+    // Crea un contexto hijo en el que crea una entidad vacia que empezara a editar
+    NSManagedObjectContext *childContext = moContext.childContext;
+    MCategory *newCat = [MCategory categoryWithName:@"" parentCategory:parentCategory inContext:childContext];
+    
+    // Asocia el mapa pasado al contexto hijo
+    MMap *copiedMap = (MMap *)[childContext objectWithID:map.objectID];
+        
+    // Crea el editor desde el NIB y lo inicializa con la entidad (y contexto) especificada
+    CategoryEditorViewController *me = [CategoryEditorViewController editorWithCategory:newCat associatedMap:copiedMap moContext:childContext];
+    me.wasNewAdded = YES;
+    
+    // Retorna el editor sobre la entidad recien creada comenzando en modo de edicion
     return me;
 }
 
+//---------------------------------------------------------------------------------------------------------------------
++ (CategoryEditorViewController *) editorWithCategory:(MCategory *)category associatedMap:(MMap *)map moContext:(NSManagedObjectContext *)moContext {
+
+    // Crea el editor desde el NIB y lo inicializa con la entidad (y contexto) especificada
+    CategoryEditorViewController *me = [[CategoryEditorViewController alloc] initWithNibName:@"CategoryEditorViewController" bundle:nil];
+    [me initWithEntity:category moContext:category.managedObjectContext];
+    me.associatedEntity = map;
+    return me;
+}
 
 
 
@@ -88,18 +107,16 @@
 - (void)viewDidLoad {
     
     [super viewDidLoad];
-
-    // Borra el color de fondo de la tabla
-    self.parentCatTable.backgroundColor = [UIColor clearColor];
+    
+    // Establece los TAGs para poder localizar a las vistas
+    self.fIconImage.tag = TAG_VIEW_ICON;
+    self.vCategoriesSection.tag = TAG_VIEW_TAGS;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)viewDidAppear:(BOOL)animated {
     
     [super viewDidAppear:animated];
-    
-    // Rota la imagen con el icono para indicar que esditable
-    [self _rotateImageField:self.iconImageField];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -124,6 +141,10 @@
     self.entity = category;
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (MMap *) map {
+    return (MMap *)self.associatedEntity;
+}
 
 
 
@@ -140,105 +161,60 @@
 
 //=====================================================================================================================
 #pragma mark -
-#pragma mark <CategorySelectorDelegate> protocol methods
-//---------------------------------------------------------------------------------------------------------------------
-- (BOOL) closeCategorySelector:(CategorySelectorViewController *)senderEditor selectedCategories:(NSArray *)selectedCategories {
-
-    MCategory *selectedCat = nil;
-    if(selectedCategories.count>0) {
-         selectedCat = selectedCategories[0];
-    }
-    
-    // No puede ser su categoria padre ni el mismo, ni ningun descendiente suyo
-    if(selectedCat.internalIDValue!=self.category.internalIDValue && ![selectedCat isDescendatOf:self.category]) {
-        self.parentCat = selectedCat;
-        [self.parentCatTable reloadData];
-    }
-    
-    return YES;
-}
-
-
-
-//=====================================================================================================================
-#pragma mark -
-#pragma mark <UITableViewDelegate> protocol methods
-//---------------------------------------------------------------------------------------------------------------------
-- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    // No dejamos nada seleccionado
-    [CategorySelectorViewController startCategoriesSelectorInContext:self.moContext
-                                                         selectedMap:self.map
-                                                 currentSelectedCats:self.parentCat!=nil ? [NSArray arrayWithObject:self.parentCat] : nil
-                                                 excludeFromCategory:self.category
-                                                      multiSelection:NO
-                                                            delegate:self];
-    return nil;
-}
-
-
-
-//=====================================================================================================================
-#pragma mark -
-#pragma mark <UITableViewDataSource> protocol methods
-//---------------------------------------------------------------------------------------------------------------------
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
-    return 1;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return @"Parent Category";
-}
-
-
-//---------------------------------------------------------------------------------------------------------------------
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    static NSString *myViewCellID = @"myViewCellID";
-    
-    
-    TDBadgedCell *cell = (TDBadgedCell *)[tableView dequeueReusableCellWithIdentifier:myViewCellID];
-    if (cell == nil) {
-        cell = [[TDBadgedCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:myViewCellID];
-        cell.selectionStyle = UITableViewCellSelectionStyleGray;
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    }
-    
-
-    if(self.parentCat!=nil) {
-        cell.imageView.image = self.parentCat.entityImage;
-        cell.textLabel.text = self.parentCat.fullName;
-    } else {
-        cell.imageView.image = nil;
-        cell.textLabel.text = @"<none>";
-    }
-    
-    return cell;
-}
-
-
-
-//=====================================================================================================================
-#pragma mark -
 #pragma mark BIAction methods
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)iconImageTapAction:(UITapGestureRecognizer *)sender {
     
-    // Aquí se hacia una comprobación de que no se estuviese editando un texto????
     if(sender.state == UIGestureRecognizerStateEnded) {
+        
+        // Retira, si estaba, el teclado
         [self.view findFirstResponderAndResign];
+        
+        // Muestra el editor de iconos
         [IconEditorViewController startEditingIcon:self.catIconHREF delegate:self];
     }
 }
 
-
+//---------------------------------------------------------------------------------------------------------------------
+- (IBAction)vCategoriesTapAction:(UITapGestureRecognizer *)sender {
+    
+    if(sender.state == UIGestureRecognizerStateEnded) {
+        
+        // Retira, si estaba, el teclado
+        [self.view findFirstResponderAndResign];
+        
+        // Si esta en edicion se habra creado un contexto hijo y la parentCat estara aun en el padre
+        if(self.parentCat) {
+            self.parentCat = (MCategory *)[self.moContext objectWithID:self.parentCat.objectID];
+        }
+        
+        // Creamos el selector de categorias
+        CategorySelectorViewController *editor = [CategorySelectorViewController categoriesSelectorInContext:self.moContext
+                                                                                                 selectedMap:self.map
+                                                                                         currentSelectedCats:self.parentCat!=nil ? [NSArray arrayWithObject:self.parentCat] : nil
+                                                                                              multiSelection:NO];
+        
+        // Lo abrimos de forma modal y gestionamos la seleccion
+        [editor showModalWithController:self closeCallback:^(NSArray *selectedCategories) {
+            
+            MCategory *selectedCat = nil;
+            if(selectedCategories.count>0) {
+                selectedCat = selectedCategories[0];
+            }
+            
+            // Su categoria padre no puede ser el mismo
+            if(selectedCat.internalIDValue!=self.category.internalIDValue)
+            {
+                self.parentCat = selectedCat;
+                if(self.parentCat) {
+                    [self _createTagsViewContent:self.vCategoriesSection categories:[NSArray arrayWithObject:self.parentCat] nextView:nil];
+                } else {
+                    [self _createTagsViewContent:self.vCategoriesSection categories:[NSArray array] nextView:nil];
+                }
+            }
+        }];
+    }
+}
 
 
 
@@ -248,7 +224,7 @@
 #pragma mark Private methods
 //---------------------------------------------------------------------------------------------------------------------
 - (NSString *) _editorTitle {
-    return @"Category Editor";
+    return @"Tag Information";
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -256,9 +232,18 @@
     
     [super _nullifyEditor];
     
-    self.map = nil;
     self.catIconHREF = nil;
     self.parentCat = nil;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (NSString *) _validateFields {
+    
+    self.fName.text = [self.fName.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if(self.fName.text.length == 0) {
+        return @"Name can't be empty";
+    }
+    return nil;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -266,33 +251,33 @@
     
     IconData *icon = [ImageManager iconDataForHREF:iconHREF];
     self.catIconHREF = iconHREF;
-    self.iconImageField.image = icon.image;
+    self.fIconImage.image = icon.image;
 }
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) _setFieldValuesFromEntity:(MBaseEntity *)entity {
+- (void) _setFieldValuesFromEntity {
     
-    MCategory *category = (MCategory *)entity;
-    
-    self.parentCat = category.parent;
-    self.nameField.text = category.name;
-    [self _setImageFieldFromIconHREF:category.iconHREF];
-    self.extraInfo.text = [NSString stringWithFormat:@"Updated:\t%@\n",
-                                       [MBaseEntity stringFromDate:category.updateTime]];
-    
-    self.modifyInAllMaps.on = YES;
-    self.modifyInAllMaps.enabled = (self.map!=nil);
+    self.parentCat = self.category.parent;
+    if(self.parentCat) {
+        [self _createTagsViewContent:self.vCategoriesSection categories:[NSArray arrayWithObject:self.parentCat] nextView:nil];
+    } else {
+        [self _createTagsViewContent:self.vCategoriesSection categories:[NSArray array] nextView:nil];
+    }
 
-    [self.parentCatTable reloadData];
+    self.fName.text = self.category.name;
+    [self _setImageFieldFromIconHREF:self.category.iconHREF];
+    self.fExtraInfo.text = [NSString stringWithFormat:@"Updated:\t%@\n",
+                                       [MBaseEntity stringFromDate:self.category.updateTime]];
+    
+    self.fModifyInAllMaps.on = YES;
+    self.fModifyInAllMaps.enabled = (self.map!=nil);
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) _setEntityFromFieldValues:(MBaseEntity *)entity {
+- (void) _setEntityFromFieldValues {
 
-    MCategory *category = (MCategory *)entity;
-    
-    NSString *catName = [self.nameField.text trim];
+    NSString *catName = [self.fName.text trim];
     if(catName.length==0) {
         IconData *icon = [ImageManager iconDataForHREF:self.catIconHREF];
         catName = icon.shortName;
@@ -312,16 +297,16 @@
     MCategory *destCat = [MCategory categoryWithFullName:destFullName inContext:self.moContext];
     
     // Si ha habido cambios en el nombre o la categoria padre hay que transferir la informacion
-    if(category.internalIDValue!=destCat.internalIDValue) {
+    if(self.category.internalIDValue!=destCat.internalIDValue) {
         destCat.iconHREF = self.catIconHREF;
-        MMap *useMap = self.modifyInAllMaps.on ? nil : self.map;
-        [category transferTo:destCat inMap:useMap];
-        [category markAsModified];
+        MMap *useMap = self.fModifyInAllMaps.on ? nil : self.map;
+        [self.category transferTo:destCat inMap:useMap];
+        [self.category markAsModified];
         self.category = destCat;
     }
     
-    category.iconHREF = self.catIconHREF;
-    [category markAsModified];
+    self.category.iconHREF = self.catIconHREF;
+    [self.category markAsModified];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -341,15 +326,25 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) _enableFieldsForEditing {
     
-    //self.fName.enabled = YES;
-    //self.fSummary.editable = YES;
+    self.fName.enabled = YES;
+    self.fModifyInAllMaps.enabled = YES;
+    ((UIGestureRecognizer *)self.fIconImage.gestureRecognizers[0]).enabled = YES;
+    ((UIGestureRecognizer *)self.vCategoriesSection.gestureRecognizers[0]).enabled = YES;
+    
+    // Rota la imagen con el icono para indicar que esditable
+    [self _rotateView:self.fIconImage];
+    [self _rotateView:self.vCategoriesSection];
+
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) _disableFieldsFromEditing {
     
-    //self.fName.enabled = NO;
-    //self.fSummary.editable = NO;
+    self.fName.enabled = NO;
+    self.fModifyInAllMaps.enabled = NO;
+    ((UIGestureRecognizer *)self.fIconImage.gestureRecognizers[0]).enabled = NO;
+    ((UIGestureRecognizer *)self.vCategoriesSection.gestureRecognizers[0]).enabled = NO;
+    
 }
 
 

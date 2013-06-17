@@ -42,7 +42,7 @@
 
 
 @synthesize name = _name;
-@synthesize gmID = _gmID;
+@synthesize gID = _gID;
 @synthesize etag = _etag;
 @synthesize published_Date = _published_Date;
 @synthesize updated_Date = _updated_Date;
@@ -80,11 +80,11 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (NSString *) editLink {
 
-    NSUInteger lastIndex = [self.gmID lastIndexOf:@"/"];
+    NSUInteger lastIndex = [self.gID lastIndexOf:@"/"];
     if(lastIndex != NSNotFound) {
         NSString *url = [NSString stringWithFormat:@"%@/full%@",
-                         [self.gmID substringToIndex:lastIndex],
-                         [self.gmID substringFromIndex:lastIndex]];
+                         [self.gID substringToIndex:lastIndex],
+                         [self.gID substringFromIndex:lastIndex]];
         return url;
     } else {
         return nil;
@@ -98,7 +98,7 @@
 - (void) resetEntityWithName:(NSString *)name {
 
     self.name = name;
-    self.gmID = GM_LOCAL_ID;
+    self.gID = GM_LOCAL_ID;
     self.etag = GM_NO_SYNC_ETAG;
     self.published_Date = [NSDate date];
     self.updated_Date = self.published_Date;
@@ -107,8 +107,8 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) atomEntryDataContent:(NSMutableString *)atomStr {
 
-    if(self.gmID != nil && self.gmID.length > 0 && ![self.gmID isEqualToString:GM_LOCAL_ID]) {
-        [atomStr appendFormat:@"  <atom:id>%@</atom:id>", self.gmID];
+    if(self.gID != nil && self.gID.length > 0 && ![self.gID isEqualToString:GM_LOCAL_ID]) {
+        [atomStr appendFormat:@"  <atom:id>%@</atom:id>", self.gID];
         [atomStr appendFormat:@"  <atom:link rel='edit' type='application/atom+xml' href='%@'/>", self.editLink];
     }
 
@@ -126,7 +126,7 @@
     NSMutableArray *result = [NSMutableArray arrayWithCapacity:8];
 
     if(self.name == nil) [result addObject:@"name"];
-    if(self.gmID == nil) [result addObject:@"gmID"];
+    if(self.gID == nil) [result addObject:@"gID"];
     if(self.etag == nil) [result addObject:@"etag"];
     if(self.published_Date == nil) [result addObject:@"published_Date"];
     if(self.updated_Date == nil) [result addObject:@"updated_Date"];
@@ -147,7 +147,7 @@
     [desc appendFormat:@"%@ {\n", [self __itemTypeName]];
 
     [desc appendFormat:@"  name        = '%@'\n", self.name];
-    [desc appendFormat:@"  gmID        = '%@'\n", self.gmID];
+    [desc appendFormat:@"  gID        = '%@'\n", self.gID];
     [desc appendFormat:@"  etag        = '%@'\n", self.etag];
 
     [self __descriptionPutExtraFields:desc];

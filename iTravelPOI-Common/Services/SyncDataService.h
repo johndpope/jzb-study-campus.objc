@@ -8,21 +8,16 @@
 
 #import <Foundation/Foundation.h>
 #import "GMTCompTuple.h"
+#import "GMPSyncDelegate.h"
+
 
 
 // *********************************************************************************************************************
 #pragma mark -
 #pragma mark Service public enumerations & definitions
 // ---------------------------------------------------------------------------------------------------------------------
-@protocol PSyncDataDelegate <NSObject>
+@protocol SyncDataDelegate <GMPSyncDelegate>
 
-- (void) syncFinished:(BOOL)allOK;
-
-- (void) willGetRemoteMapList;
-- (void) didGetRemoteMapList;
-- (void) willSyncMapTupleList:(NSArray *)compTuples;
-- (void) willSyncMapTuple:(GMTCompTuple *)tuple withIndex:(int)index;
-- (void) didSyncMapTuple:(GMTCompTuple *)tuple withIndex:(int)index syncOK:(BOOL)syncOK;
 
 @end
 
@@ -34,7 +29,10 @@
 // ---------------------------------------------------------------------------------------------------------------------
 @interface SyncDataService : NSObject
 
-+ (SyncDataService *) syncDataServiceWithMOContext:(NSManagedObjectContext *)moContext delegate:(id<PSyncDataDelegate>)delegate;
+@property (atomic, assign) BOOL isRunning;
+
+
++ (SyncDataService *) syncDataServiceWithChildContext:(NSManagedObjectContext *)moChildContext delegate:(id<SyncDataDelegate>)delegate;
 
 - (void) startMapsSync;
 - (void) cancelSync;

@@ -23,7 +23,7 @@
 @interface GMTItem : NSObject
 
 @property (nonatomic, strong)   NSString *name;
-@property (nonatomic, strong)   NSString *gmID;
+@property (nonatomic, strong)   NSString *gID;
 @property (nonatomic, strong)   NSString *etag;
 @property (nonatomic, readonly) NSString *editLink;
 @property (nonatomic, strong)   NSDate *published_Date;

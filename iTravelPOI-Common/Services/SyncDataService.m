@@ -6,15 +6,18 @@
 // Copyright (c) 2012 Jose Zarzuela. All rights reserved.
 //
 #define __MBaseEntity__SYNCHRONIZATION__PROTECTED__
-
 #import "SyncDataService.h"
+
+#import "NSManagedObjectContext+Utils.h"
+
 #import "GMapSyncService.h"
 #import "GMTItem.h"
 #import "GMTMap.h"
 #import "GMTPoint.h"
+#import "GMTCompTuple.h"
+
 #import "MMap.h"
 #import "MPoint.h"
-#import "GMTCompTuple.h"
 
 
 
@@ -29,12 +32,11 @@
 #pragma mark -
 #pragma mark SyncDataService Service private interface definition
 // ---------------------------------------------------------------------------------------------------------------------
-@interface SyncDataService () <GMPSyncDelegate>
+@interface SyncDataService () <GMPSyncDataSource, GMPSyncDelegate>
 
-@property (nonatomic, strong) NSManagedObjectContext *moContext;
-@property (nonatomic, assign) id<PSyncDataDelegate> delegate;
+@property (nonatomic, strong) NSManagedObjectContext *moChildContextAsync;
+@property (nonatomic, assign) id<SyncDataDelegate> delegate;
 @property (nonatomic, strong) GMapSyncService *syncSrvc;
-@property (nonatomic, strong) dispatch_queue_t delegateQueue;
 
 @end
 
@@ -52,12 +54,12 @@
 #pragma mark -
 #pragma mark CLASS public methods
 // ---------------------------------------------------------------------------------------------------------------------
-+ (SyncDataService *) syncDataServiceWithMOContext:(NSManagedObjectContext *)moContext delegate:(id<PSyncDataDelegate>)delegate {
++ (SyncDataService *) syncDataServiceWithChildContext:(NSManagedObjectContext *)moChildContext delegate:(id<SyncDataDelegate>)delegate {
 
     SyncDataService *me = [[SyncDataService alloc] init];
-    me.moContext = moContext;
+    me.moChildContextAsync = moChildContext;
     me.delegate = delegate;
-    me.delegateQueue = dispatch_get_current_queue();
+    me.isRunning = NO;
     
     return me;
 }
@@ -79,14 +81,18 @@
     
     __block BOOL allOK = true;
     
-    [self.moContext performBlock:^{
+    [self.moChildContextAsync performBlock:^{
         
-        DDLogVerbose(@"****** START: excuteTest ******");
+        NSError *error = nil;
         
         
-        NSError *error;
+        DDLogVerbose(@"****** Started: Async Data Synchronization ******");
         
-        self.syncSrvc = [GMapSyncService serviceWithEmail:@"jzarzuela@gmail.com" password:@"#webweb1971" delegate:self error:&error];
+        // Apunta que esta en ejecucion
+        self.isRunning = YES;
+        
+        
+        self.syncSrvc = [GMapSyncService serviceWithEmail:@"jzarzuela@gmail.com" password:@"#webweb1971" dataSource:self delegate:self error:&error];
         if(!self.syncSrvc) {
             allOK = false;
             DDLogError(@"Error en sincronizacion(login) %@", error);
@@ -94,23 +100,37 @@
         
         if(![self.syncSrvc syncMaps:&error]) {
             allOK = false;
-            DDLogError(@"Error en sincronizacion %@", error);
+            if(error!=nil) {
+                DDLogError(@"Error en sincronizacion: %@", error);
+            } else if (self.syncSrvc.wasCanceled){
+                DDLogError(@"Error en sincronizacion: Cancelada");
+            } else {
+                DDLogError(@"Error en sincronizacion: Error desconocido");
+            }
         }
         
-        DDLogVerbose(@"****** END: excuteTest ******");
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if(allOK) {
-                [self cleanDeletedMaps];
-            }
+        if(allOK) {
+            [self cleanDeletedMaps];
+        }
+
+        [self.moChildContextAsync saveChanges];
+
+        dispatch_sync(dispatch_get_main_queue(), ^{
             [self.delegate syncFinished:allOK];
         });
+        
+        DDLogVerbose(@"****** Ended: Async Data Synchronization ******");
+        
+        self.syncSrvc = nil;
+        
+        // Apunta que ya NO esta en ejecucion
+        self.isRunning = NO;
     }];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) cancelSync {
     [self.syncSrvc cancelSync];
-    self.syncSrvc = nil;
 }
 
 
@@ -121,7 +141,7 @@
 - (NSArray *) getAllLocalMapList:(NSError **)err {
     
     if(err != nil) *err = nil;
-    NSArray *allMaps = [MMap allMapsInContext:self.moContext includeMarkedAsDeleted:true];
+    NSArray *allMaps = [MMap allMapsInContext:self.moChildContextAsync includeMarkedAsDeleted:true];
     return allMaps;
 }
 
@@ -133,7 +153,7 @@
     GMTMap *gmMap = [GMTMap emptyMap];
     
     gmMap.name = localMap.name;
-    gmMap.gmID = localMap.gID;
+    gmMap.gID = localMap.gID;
     gmMap.etag = localMap.etag;
     gmMap.published_Date = localMap.creationTime;
     gmMap.updated_Date = localMap.updateTime;
@@ -147,7 +167,7 @@
     
     if(err != nil) *err = nil;
     
-    MMap *localMap = [MMap emptyMapWithName:gmMap.name inContext:self.moContext];
+    MMap *localMap = [MMap emptyMapWithName:gmMap.name inContext:self.moChildContextAsync];
     [self updateLocalMap:localMap withRemoteMap:gmMap allPointsOK:true error:err];
     
     return localMap;
@@ -161,7 +181,7 @@
         return false;
     }
     
-    [localMap _updateBasicInfoWithGID:gmMap.gmID etag:gmMap.etag creationTime:gmMap.published_Date updateTime:gmMap.updated_Date];
+    [localMap _updateBasicInfoWithGID:gmMap.gID etag:gmMap.etag creationTime:gmMap.published_Date updateTime:gmMap.updated_Date];
     localMap.name = gmMap.name;
     localMap.summary = gmMap.summary;
     [localMap markAsDeleted:FALSE];
@@ -198,7 +218,7 @@
     GMTPoint *gmPoint = [GMTPoint emptyPoint];
     
     gmPoint.name = localPoint.name;
-    gmPoint.gmID = localPoint.gID;
+    gmPoint.gID = localPoint.gID;
     gmPoint.etag = localPoint.etag;
     gmPoint.published_Date = localPoint.creationTime;
     gmPoint.updated_Date = localPoint.updateTime;
@@ -210,8 +230,8 @@
     
     
     /**************************************************************************************************/
-    //@TODO: Hay que conseguir la informacion de las categorias de algun sitio del punto
-    @throw [NSException exceptionWithName:@"TODO_Exception" reason:@"Hay que extraer la informacion de las categorias" userInfo:nil];
+    //@TODO: Hay que conseguir la informacion de las categorias de algun que extraer la informacion de las categorias" userInfo:nil];
+    DDLogVerbose(@"******> FALTA PROCESAR LA INFORMACION DE LAS CATEGORIAS");
     /**************************************************************************************************/
 
     return gmPoint;
@@ -236,7 +256,7 @@
         return false;
     }
     
-    [localPoint _updateBasicInfoWithGID:gmPoint.gmID etag:gmPoint.etag creationTime:gmPoint.published_Date updateTime:gmPoint.updated_Date];
+    [localPoint _updateBasicInfoWithGID:gmPoint.gID etag:gmPoint.etag creationTime:gmPoint.published_Date updateTime:gmPoint.updated_Date];
     localPoint.name = gmPoint.name;
     localPoint.descr = gmPoint.descr;
     localPoint.iconHREF = gmPoint.iconHREF;
@@ -245,7 +265,7 @@
     
     /**************************************************************************************************/
     //@TODO: Hay que conseguir la informacion de las categorias de algun sitio del punto
-    @throw [NSException exceptionWithName:@"TODO_Exception" reason:@"Hay que extraer la informacion de las categorias" userInfo:nil];
+    DDLogVerbose(@"******> FALTA PROCESAR LA INFORMACION DE LAS CATEGORIAS");
     /**************************************************************************************************/
 
     
@@ -272,24 +292,33 @@
 #pragma mark OPTIONAL <GMPSyncDelegate> protocol methods
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) willGetRemoteMapList {
-    dispatch_async(self.delegateQueue, ^{
+    
+    dispatch_sync(dispatch_get_main_queue(), ^{
         [self.delegate willGetRemoteMapList];
     });
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) didGetRemoteMapList {
-    dispatch_async(self.delegateQueue, ^{
+    dispatch_sync(dispatch_get_main_queue(), ^{
         [self.delegate didGetRemoteMapList];
     });
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) willSyncMapTupleList:(NSArray *)_compTuples {
-    
-    __block NSArray *compTuples = _compTuples;
-    dispatch_async(self.delegateQueue, ^{
-        [self.delegate willSyncMapTupleList:compTuples];
+- (void) willCompareLocalAndRemoteMaps {
+
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [self.delegate willCompareLocalAndRemoteMaps];
+    });
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) didCompareLocalAndRemoteMaps:(NSArray *)compTuples {
+
+    __block NSArray *_compTuples = compTuples;
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [self.delegate didCompareLocalAndRemoteMaps:_compTuples];
     });
 }
 
@@ -300,7 +329,7 @@
     __block int index = t_index;
     
     if(index>=0) {
-        dispatch_async(self.delegateQueue, ^{
+        dispatch_sync(dispatch_get_main_queue(), ^{
             [self.delegate willSyncMapTuple:tuple withIndex:index];
         });
     }
@@ -314,7 +343,11 @@
     __block BOOL syncOK = t_syncOK;
     
     if(index>=0) {
-        dispatch_async(self.delegateQueue, ^{
+        // Vamos salvando mapa a mapa el resultado de la sincronizacion
+        [self.moChildContextAsync saveChanges];
+        
+        // Avisa al delegate
+        dispatch_sync(dispatch_get_main_queue(), ^{
             [self.delegate didSyncMapTuple:tuple withIndex:index syncOK:syncOK];
         });
     }
@@ -333,7 +366,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) cleanDeletedMaps {
     
-    NSArray *allMaps = [MMap allMapsInContext:self.moContext includeMarkedAsDeleted:true];
+    NSArray *allMaps = [MMap allMapsInContext:self.moChildContextAsync includeMarkedAsDeleted:true];
     for(MMap *map in allMaps) {
         if(map.markedAsDeletedValue) {
             [map.managedObjectContext deleteObject:map];

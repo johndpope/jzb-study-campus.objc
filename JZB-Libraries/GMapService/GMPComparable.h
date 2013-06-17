@@ -16,7 +16,7 @@
 @protocol GMPComparable <NSObject>
 
 - (NSString *) name;
-- (NSString *) gmID;
+- (NSString *) gID;
 - (NSString *) etag;
 
 @end
@@ -27,7 +27,6 @@
 // *********************************************************************************************************************
 @protocol GMPComparableLocal <GMPComparable>
 
-- (NSString *) name;
 - (BOOL) markedAsDeletedValue;
 - (BOOL) wasSynchronizedValue;
 - (BOOL) modifiedSinceLastSyncValue;

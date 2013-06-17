@@ -9,8 +9,9 @@
 #import "AppDelegate.h"
 #import "ItemListViewController.h"
 #import "TestViewController.h"
+#import "GMapSyncViewController.h"
 
-#import "BaseCoreData.h"
+#import "BaseCoreDataService.h"
 #import "MockUp.h"
 #import "DDTTYLogger.h"
 
@@ -60,8 +61,9 @@
     // Se crea la ventana y controller inicial de la aplicación
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    UIViewController *controller = [ItemListViewController itemListViewController];
+    UIViewController *controller = [ItemListViewController itemListViewControllerWithContext:BaseCoreDataService.moContext];
     //UIViewController *controller = [TestViewController startTestController];
+    //UIViewController *controller = [GMapSyncViewController gmapSyncViewController];
     
     
     
@@ -142,7 +144,7 @@ void _uncaughtExceptionHandler(NSException *exception) {
     // ---------------------------------------
     
     
-    if(![BaseCoreData initCDStack:@"iTravelPOI"]) {
+    if(![BaseCoreDataService initCDStack:@"iTravelPOI"]) {
         abort();
     }
     

@@ -61,11 +61,11 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (NSString *) featuresURL {
 
-    NSUInteger lastIndex = [self.gmID lastIndexOf:@"/maps/"];
+    NSUInteger lastIndex = [self.gID lastIndexOf:@"/maps/"];
     if(lastIndex != NSNotFound) {
         NSString *url = [NSString stringWithFormat:@"%@/features/%@/full",
-                         [self.gmID substringToIndex:lastIndex],
-                         [self.gmID substringFromIndex:lastIndex + 6]];
+                         [self.gID substringToIndex:lastIndex],
+                         [self.gID substringFromIndex:lastIndex + 6]];
         return url;
     } else {
         return nil;

@@ -330,7 +330,7 @@
                           nil];
 
     NSMutableArray *allErrors = [NSMutableArray array];
-    BOOL rc = [self.service processBatchCmds:batchCmds inMap:crtMap allErrors:allErrors];
+    BOOL rc = [self.service processBatchCmds:batchCmds inMap:crtMap allErrors:allErrors checkCancelBlock:nil];
     _CHECK_TRUE_(rc, @"test_batchCreateUpdateDelete_point#processBatchCmds");
 
     [self _isGonePointWithName:NEW_POINT_NAME_X inMap:crtMap];

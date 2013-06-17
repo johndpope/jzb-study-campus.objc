@@ -28,6 +28,8 @@
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
 + (MCategory *) categoryWithFullName:(NSString *)fullName inContext:(NSManagedObjectContext *)moContext;
++ (MCategory *) categoryWithName:(NSString *)name parentCategory:(MCategory *)parentCategory inContext:(NSManagedObjectContext *)moContext;
+
 + (NSArray *) allCategoriesInContext:(NSManagedObjectContext *)moContext includeMarkedAsDeleted:(BOOL)withDeleted;
 
 + (NSArray *) categoriesWithPointsInMap:(MMap *)map parentCategory:(MCategory *)parentCat;
@@ -52,7 +54,6 @@
 - (MCategory *) rootParent;
 
 - (void) transferTo:(MCategory *)destCategory inMap:(MMap *)map;
-- (MCategory *) transferToParent:(MCategory *)destParent inMap:(MMap *)map;
 
 - (void) deletePointsInMap:(MMap *)map;
 

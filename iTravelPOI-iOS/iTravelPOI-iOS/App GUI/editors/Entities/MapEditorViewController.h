@@ -33,7 +33,9 @@
 #pragma mark -
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (MapEditorViewController *) editor;
++ (MapEditorViewController *) editorWithNewMapInContext:(NSManagedObjectContext *)moContext;
++ (MapEditorViewController *) editorWithMap:(MMap *)map moContext:(NSManagedObjectContext *)moContext;
+
 
 
 

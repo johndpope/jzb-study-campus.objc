@@ -120,7 +120,8 @@
                 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 // ******* SEGURO ***************************
                 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                if(![map.name hasPrefix:@"@"]) {
+                if(![map.name hasPrefix:@"@"] && ![map.name hasPrefix:@"T"]) {
+                    // Solo deja que "bajen" mapas remotos que empiecen con @ o T
                     continue;
                 }
 
@@ -183,6 +184,7 @@
     // ******* SEGURO ***************************
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     if(![map.name hasPrefix:@"@"]) {
+        // Solo deja añadir mapas cuyo nombre empiece por @
         *err = [self anError:@"Map name must start with @" withError:nil data:map];
         return nil;
     }
@@ -229,8 +231,8 @@
     // ******* SEGURO ***************************
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     if(![map.name hasPrefix:@"@"]) {
-        *err = [self anError:@"Map name must start with @" withError:nil data:map];
-        return nil;
+        // Solo deja actualizar mapas cuyo nombre empiece por @
+        return map;
     }
 
 
@@ -276,6 +278,7 @@
     // ******* SEGURO ***************************
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     if(![map.name hasPrefix:@"@"]) {
+        // Solo deja borrar mapas cuyo nombre empiece por @
         *err = [self anError:@"Map name must start with @" withError:nil data:map];
         return false;
     }
@@ -314,8 +317,9 @@
     // ******* SEGURO ***************************
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     if(![map.name hasPrefix:@"@"]) {
-        *err = [self anError:@"Map name must start with @" withError:nil data:map];
-        return nil;
+        // Solo dejaría leer los puntos de mapas que comienzan por @
+        //*err = [self anError:@"Map name must start with @" withError:nil data:map];
+        //return nil;
     }
 
 
@@ -391,6 +395,7 @@
     // ******* SEGURO ***************************
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     if(![map.name hasPrefix:@"@"]) {
+        // Solo deja añadir puntos a mapas cuyo nombre empiece por @
         *err = [self anError:@"Map name must start with @" withError:nil data:map];
         return nil;
     }
@@ -444,6 +449,7 @@
     // ******* SEGURO ***************************
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     if(![map.name hasPrefix:@"@"]) {
+        // Solo deja modificar puntos en mapas cuyo nombre empiece por @
         *err = [self anError:@"Map name must start with @" withError:nil data:map];
         return nil;
     }
@@ -498,6 +504,7 @@
     // ******* SEGURO ***************************
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     if(![map.name hasPrefix:@"@"]) {
+        // Solo deja borrar puntos en mapas cuyo nombre empiece por @
         *err = [self anError:@"Map name must start with @" withError:nil data:map];
         return false;
     }
@@ -526,7 +533,7 @@
 #pragma mark -
 #pragma mark General PUBLIC BATCH methods
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) processBatchCmds:(NSArray *)batchCmds inMap:(GMTMap *)map allErrors:(NSMutableArray *)allErrors {
+- (BOOL) processBatchCmds:(NSArray *)batchCmds inMap:(GMTMap *)map allErrors:(NSMutableArray *)allErrors checkCancelBlock:(CheckCancelBlock)checkCancelBlock {
 
     // --------------------------------------------------------------------------------------
     // URL con el formato: http://maps.google.com/maps/feeds/features/userID/mapID/full/batch
@@ -541,9 +548,12 @@
     // ******* SEGURO ***************************
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     if(![map.name hasPrefix:@"@"]) {
-        NSError *localError = [self anError:@"Map name must start with @" withError:nil data:map];
-        [allErrors addObject:localError];
-        return false;
+        // Solo deja procesar puntos en bacth en mapas cuyo nombre empiece por @
+        for(GMTBatchCmd *bcmd in batchCmds) {
+            bcmd.resultItem = bcmd.item;
+            bcmd.resultCode = BATCH_RC_OK;
+        }
+        return true;
     }
 
 
@@ -581,6 +591,10 @@
         if(bCmd.cmd != BATCH_CMD_UPDATE)
             continue;
 
+        // Chequea periodicamente si debe cancelar
+        if(checkCancelBlock!=nil && checkCancelBlock()) return false;
+        
+        
         NSError *localError = nil;
         GMTPoint *updPoint = [self updatePoint:(GMTPoint *)bCmd.item inMap:map error:&localError];
 
@@ -592,7 +606,12 @@
         }
     }
 
+    
+    // Chequea periodicamente si debe cancelar
+    if(checkCancelBlock!=nil && checkCancelBlock()) return false;
 
+    
+    
     // LOS UPDATES NO FUNCIONAN. EN ESTE PUNTO GESTIONA LOS INSERT y DELETE
     NSString *atomData = [self batchAtomFeedData:batchCmds];
     NSString *batchURL = [NSString stringWithFormat:@"%@/batch", map.featuresURL];
@@ -784,7 +803,7 @@
     map.summary = [[dictMapData valueForKeyPath:@"summary.text"] gtm_stringByUnescapingFromHTML];
     if(map.summary == nil) map.summary = @"";
     map.etag = [dictMapData valueForKeyPath:@"gd:etag"];
-    map.gmID = [dictMapData valueForKeyPath:@"id.text"];
+    map.gID = [dictMapData valueForKeyPath:@"id.text"];
     map.published_Date = [GMTItem dateFromString:[dictMapData valueForKeyPath:@"published.text"]];
     map.updated_Date = [GMTItem dateFromString:[dictMapData valueForKeyPath:@"updated.text"]];
 
@@ -827,7 +846,7 @@
 
 
     point.etag = [dictPointData valueForKeyPath:@"gd:etag"];
-    point.gmID = [dictPointData valueForKeyPath:@"atom:id.text"];
+    point.gID = [dictPointData valueForKeyPath:@"atom:id.text"];
     point.published_Date = [GMTItem dateFromString:[dictPointData valueForKeyPath:@"atom:published.text"]];
     point.updated_Date = [GMTItem dateFromString:[dictPointData valueForKeyPath:@"atom:updated.text"]];
 

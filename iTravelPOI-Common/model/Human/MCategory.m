@@ -47,6 +47,23 @@
 #pragma mark -
 #pragma mark CLASS methods
 //---------------------------------------------------------------------------------------------------------------------
++ (MCategory *) categoryWithName:(NSString *)name parentCategory:(MCategory *)parentCategory inContext:(NSManagedObjectContext *)moContext{
+    
+    // Nombre completo basado en el nombre local y la categoria padre
+    NSString *fullName;
+    
+    if(parentCategory!=nil) {
+        fullName = [NSString stringWithFormat:@"%@%@%@", parentCategory.fullName, CATEGORY_NAME_SEPARATOR, name];
+    } else {
+        fullName = name;
+    }
+    
+    // Retorna lo que encuentre con la información indicada
+    return [MCategory categoryWithFullName:fullName inContext:moContext];
+    
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 + (MCategory *) categoryWithFullName:(NSString *)fullName inContext:(NSManagedObjectContext *)moContext {
 
     
@@ -57,6 +74,14 @@
     if(cat != nil) {
         return cat;
     }
+    
+    // Es un caso especial si se entra con un nombre vacio
+    if(fullName==nil || fullName.length==0) {
+        cat = [MCategory insertInManagedObjectContext:moContext];
+        [cat _resetEntityWithShortName:@"" fullName:@"" parent:nil];
+        return cat;
+    }
+    
 
     // Como no existe, itera el path de categorias "padre" para crear la ultima
     MCategory *parentCat = nil;
@@ -320,82 +345,50 @@
 - (void) transferTo:(MCategory *)destCategory inMap:(MMap *)map {
     
     // Primero chequea que se esta cambiando de categoria
-    if(self.internalIDValue!=destCategory.internalIDValue) {
-        
-        // Se prohibe mover "hacia abajo", a un descendiente mio
-        if([destCategory isDescendatOf:self]) {
-            return;
-        }
-        
-        // Realmente lo que se va a hacer es mover sus puntos (para el mapa indicado)
-        for(MPoint *point in self.points.allObjects) {
-            if(map==nil || point.map.internalIDValue==map.internalIDValue) {
-                [point addToCategory:destCategory];
-                [point removeFromCategory:self];
-            }
-        }
-        
-        // De forma recursiva con sus subcategorias
-        for(MCategory *subCat in self.subCategories) {
-            NSString *subCatFullName = [NSString stringWithFormat:@"%@%@%@", destCategory.fullName, CATEGORY_NAME_SEPARATOR, subCat.name];
-            MCategory *destSubCat = [MCategory categoryWithFullName:subCatFullName inContext:self.managedObjectContext];
-            if(destSubCat.isInserted) {
-                destSubCat.iconHREF = subCat.iconHREF;
-            }
-            [subCat transferTo:destSubCat inMap:map];
+    if(self.internalIDValue==destCategory.internalIDValue) {
+        return;
+    }
+    
+    // Realmente lo que se va a hacer es mover sus puntos (para el mapa indicado)
+    for(MPoint *point in self.points.allObjects) {
+        if(map==nil || point.map.internalIDValue==map.internalIDValue) {
+            [point addToCategory:destCategory];
+            [point removeFromCategory:self];
         }
     }
-}
 
-
-//---------------------------------------------------------------------------------------------------------------------
-- (MCategory *) transferToParent:(MCategory *)destParent inMap:(MMap *)map {
-
-    // Primero chequea que se esta cambiando de categoria padre (la primera parte es para nil=nil)
-    if(self.parent.internalIDValue!=destParent.internalIDValue) {
+    
+    // Ahora debe iterar por sus subcategorias.
+    // Pero tratando de forma especial el movimiento (raro) "hacia abajo" hacia una subcateria
+    // El ser movido "hacia abajo" implica que "desaparece" y sus subcategorias cuelgan su categoria padre
+    if([destCategory isDescendatOf:self]) {
+        destCategory = self.parent;
+    }
+    
+    
+    // Itera de forma recursiva sus subcategorias moviendo al equivalente
+    for(MCategory *subCat in self.subCategories) {
         
-        
-        // Se prohibe mover "hacia abajo", a un descendiente mio
-        if([destParent isDescendatOf:self]) {
-            return self;
-        }
-        
-        // Busca a su equivalente "movido" en el padre destino
-        NSString *destFullName;
-        if(destParent==nil) {
-            // Se esta convirtiendo esta categoria como raiz
-            destFullName = self.name;
+        // El nombre destino depende de si se transforman en ROOT o aun dependenden de alquien
+        NSString *destSubCatFullName;
+        if(destCategory!=nil){
+            destSubCatFullName = [NSString stringWithFormat:@"%@%@%@", destCategory.fullName, CATEGORY_NAME_SEPARATOR, subCat.name];
         } else {
-            destFullName = [NSString stringWithFormat:@"%@%@%@", destParent.fullName,CATEGORY_NAME_SEPARATOR,self.name];
-        }
-        MCategory *destMe = [MCategory categoryWithFullName:destFullName inContext:self.managedObjectContext];
-        if(destMe.isInserted) {
-            destMe.iconHREF = self.iconHREF;
+            destSubCatFullName = subCat.name;
         }
         
-        // Realmente lo que se va a hacer es mover sus puntos (para el mapa indicado)
-        for(MPoint *point in self.points.allObjects) {
-            if(map==nil || point.map.internalIDValue==map.internalIDValue) {
-                [point addToCategory:destMe];
-                [point removeFromCategory:self];
-            }
+        // Recoge la categoria destino y, si es de nueva creacion, le asigna el icono del origen
+        MCategory *destSubCat = [MCategory categoryWithFullName:destSubCatFullName inContext:self.managedObjectContext];
+        if(destSubCat.isInserted) {
+            destSubCat.iconHREF = subCat.iconHREF;
         }
         
-        // De forma recursiva con sus subcategorias
-        for(MCategory *subCat in self.subCategories) {
-            [subCat transferToParent:destMe inMap:map];
-        }
-        
-        // Retorna su "destino"
-        return destMe;
-        
-    } else {
-        
-        // Como no hay cambio se retorna a si mismo
-        return self;
+        // Itera con el movimiento
+        [subCat transferTo:destSubCat inMap:map];
     }
     
 }
+
 
 //---------------------------------------------------------------------------------------------------------------------
 - (MODEL_ENTITY_TYPE) entityType {

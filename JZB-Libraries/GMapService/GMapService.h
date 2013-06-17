@@ -17,6 +17,7 @@
 #pragma mark -
 #pragma mark Enumeration & definitions
 // ---------------------------------------------------------------------------------------------------------------------
+typedef BOOL (^CheckCancelBlock)(void);
 
 
 
@@ -53,7 +54,7 @@
 
 - (NSArray *) getPointListFromMap:(GMTMap *)map error:(NSError **)err;
 
-- (BOOL) processBatchCmds:(NSArray *)batchCmds inMap:(GMTMap *)map allErrors:(NSMutableArray *)allErrors;
+- (BOOL) processBatchCmds:(NSArray *)batchCmds inMap:(GMTMap *)map allErrors:(NSMutableArray *)allErrors checkCancelBlock:(CheckCancelBlock)checkCancelBlock;
 
 
 - (GMTPoint *) addPoint:(GMTPoint *)point inMap:(GMTMap *)map error:(NSError **)err;

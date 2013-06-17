@@ -22,6 +22,15 @@ typedef enum {
 
 extern const NSString *TCompStatusType_Names[];
 
+typedef enum {
+    ST_Run_None = 0,
+    ST_Run_Processing = 1,
+    ST_Run_OK = 2,
+    ST_Run_Failed = 3,
+} TRunStatusType;
+
+extern const NSString *TRunStatusType_Names[];
+
 
 
 // *********************************************************************************************************************
@@ -30,10 +39,11 @@ extern const NSString *TCompStatusType_Names[];
 // *********************************************************************************************************************
 @interface GMTCompTuple : NSObject
 
-@property (nonatomic, assign) TCompStatusType status;
+@property (nonatomic, assign) TCompStatusType        compStatus;
+@property (nonatomic, assign) TRunStatusType         runStatus;
 @property (nonatomic, strong) id<GMPComparableLocal> localItem;
 @property (nonatomic, strong) id<GMPComparable>      remoteItem;
-@property (nonatomic, assign) BOOL conflicted;
+@property (nonatomic, assign) BOOL                   conflicted;
 
 
 // =====================================================================================================================
@@ -44,10 +54,10 @@ extern const NSString *TCompStatusType_Names[];
 - (id) init __attribute__ ((unavailable ("init not available")));
 #endif
 
-+ (GMTCompTuple *) tupleWithStatus:(TCompStatusType)status
-                         localItem:(id<GMPComparableLocal>)localItem
-                        remoteItem:(id<GMPComparable>)remoteItem
-                        conflicted:(BOOL)conflicted;
++ (GMTCompTuple *) tupleWithCompStatus:(TCompStatusType)compStatus
+                             localItem:(id<GMPComparableLocal>)localItem
+                            remoteItem:(id<GMPComparable>)remoteItem
+                            conflicted:(BOOL)conflicted;
 
 
 // =====================================================================================================================

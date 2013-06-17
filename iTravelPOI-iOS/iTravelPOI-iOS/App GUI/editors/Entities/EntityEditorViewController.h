@@ -17,6 +17,7 @@
 #pragma mark -
 #pragma mark Public Enumerations & definitions
 //*********************************************************************************************************************
+typedef void (^TCloseSavedCallback)(MBaseEntity *entity);
 
 
 
@@ -26,13 +27,15 @@
 //*********************************************************************************************************************
 @interface EntityEditorViewController : UIViewController
 
+@property (nonatomic, strong) MBaseEntity *entity;
+
 
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) modalEditEntity:(MBaseEntity *)entity isNew:(BOOL)isNewEntity controller:(UIViewController *)controller;
+- (void) showModalWithController:(UIViewController *)controller closeSavedCallback:(TCloseSavedCallback)closeSavedCallback;
 
 
 
@@ -42,16 +45,22 @@
 //---------------------------------------------------------------------------------------------------------------------
 #ifdef __EntityEditorViewController__SUBCLASSES__PROTECTED__
 
-@property (nonatomic, strong) MBaseEntity *entity;
 @property (nonatomic, strong) NSManagedObjectContext *moContext;
+@property (nonatomic, strong) MBaseEntity *associatedEntity;
+@property (nonatomic, assign) BOOL wasNewAdded;
+
+
+- (void) initWithEntity:(MBaseEntity *)entity moContext:(NSManagedObjectContext *)moContext;
 
 - (NSString *) _editorTitle;
 - (void) _nullifyEditor;
 
-- (void) _rotateImageField:(UIImageView *)imgField;
+- (void) _rotateView:(UIView *)view;
+- (void) _createTagsViewContent:(UIView *)view categories:(NSSet *)categories nextView:(UIView *)nextView;
 
-- (void) _setFieldValuesFromEntity:(MBaseEntity *)entity;
-- (void) _setEntityFromFieldValues:(MBaseEntity *)entity;
+- (NSString *) _validateFields;
+- (void) _setFieldValuesFromEntity;
+- (void) _setEntityFromFieldValues;
 
 - (NSArray *) _tbItemsForEditingOthers;
 - (void) _disableFieldsFromEditing;

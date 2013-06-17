@@ -43,7 +43,7 @@
 #pragma mark INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
 - (void) fillCellView:(UITableViewCell *)cell withIndex:(NSInteger)index;
-- (MCategory *) clickedAtIndex:(NSInteger)index selCats:(NSArray *)selCats excludedCat:(MCategory *)excludedCat;
+- (MCategory *) clickedAtIndex:(NSInteger)index selCats:(NSArray *)selCats;
 - (NSInteger) currentSize;
 - (BOOL) isChecked;
 - (void) clearCheck;

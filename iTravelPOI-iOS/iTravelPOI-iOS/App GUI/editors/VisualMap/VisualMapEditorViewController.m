@@ -28,6 +28,8 @@
 #define BTN_ID_SHOW_MY_LOC    1001
 #define BTN_ID_SHOW_NEXT      1002
 
+#define ITEMSETID_DEFAULT   1001
+
 
 
 
@@ -131,7 +133,7 @@
     self.navigationBar.topItem.leftBarButtonItem = cancelBarButtonItem;
     self.navigationBar.topItem.rightBarButtonItem = saveBarButtonItem;
     
-    [self.scrollableToolbar setItems:self.toolbarItems animated:YES];
+    [self.scrollableToolbar setItems:self.toolbarItems itemSetID:ITEMSETID_DEFAULT animated:YES];
 
     
     // Actualiza los campos desde la entidad a editar

@@ -7,7 +7,8 @@
 //
 
 #import "MockUp.h"
-#import "BaseCoreData.h"
+#import "NSManagedObjectContext+Utils.h"
+#import "BaseCoreDataService.h"
 #import "MMap.h"
 #import "MPoint.h"
 #import "MCategory.h"
@@ -106,7 +107,7 @@ BOOL _init_model_ = TRUE;
 
     if(!_init_model_) return;
 
-    NSManagedObjectContext *moContext = [BaseCoreData moContext];
+    NSManagedObjectContext *moContext = [BaseCoreDataService moContext];
 
     // -------------------------------------------------------
     MMap *map1 = [MMap emptyMapWithName:@"@map1" inContext:moContext];
@@ -217,7 +218,7 @@ BOOL _init_model_ = TRUE;
 
 
 
-    if([BaseCoreData saveContext]) {
+    if([moContext saveChanges]) {
         DDLogVerbose(@"****** DATA MODEL SQLITE FILE PRE-POPULATED ******");
     } else {
         DDLogVerbose(@"****** ERROR SAVING PRE-POPULATED DATA MODEL ******");

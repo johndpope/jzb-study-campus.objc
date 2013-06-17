@@ -13,6 +13,7 @@
 #import "MapEditorViewController.h"
 
 #import "MMap.h"
+#import "NSManagedObjectContext+Utils.h"
 
 #import "UIView+FirstResponder.h"
 #import "UIPlaceHolderTextView.h"
@@ -57,9 +58,26 @@
 #pragma mark -
 #pragma mark CLASS methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (MapEditorViewController *) editor {
++ (MapEditorViewController *) editorWithNewMapInContext:(NSManagedObjectContext *)moContext {
     
+    // Crea un contexto hijo en el que crea una entidad vacia que empezara a editar
+    NSManagedObjectContext *childContext = moContext.childContext;
+    MMap *newMap=[MMap emptyMapWithName:@"" inContext:childContext];
+    
+    // Crea el editor desde el NIB y lo inicializa con la entidad (y contexto) especificada
+    MapEditorViewController *me = [MapEditorViewController editorWithMap:newMap moContext:childContext];
+    me.wasNewAdded = YES;
+    
+    // Retorna el editor sobre la entidad recien creada comenzando en modo de edicion
+    return me;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
++ (MapEditorViewController *) editorWithMap:(MMap *)map moContext:(NSManagedObjectContext *)moContext {
+
+    // Crea el editor desde el NIB y lo inicializa con la entidad (y contexto) especificada
     MapEditorViewController *me = [[MapEditorViewController alloc] initWithNibName:@"MapEditorViewController" bundle:nil];
+    [me initWithEntity:map moContext:moContext];
     return me;
 }
 
@@ -91,6 +109,9 @@
 #pragma mark -
 #pragma mark Public methods
 //---------------------------------------------------------------------------------------------------------------------
+- (MMap *) map {
+    return (MMap *)self.entity;
+}
 
 
 
@@ -99,37 +120,46 @@
 #pragma mark Private methods
 //---------------------------------------------------------------------------------------------------------------------
 - (NSString *) _editorTitle {
-        return @"Map Editor";
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _setFieldValuesFromEntity:(MBaseEntity *)entity {
-    
-    MMap *map = (MMap *)entity;
-    
-    self.fName.text = map.name;
-    self.fSummary.text = map.summary;
-    self.fExtraInfo.text = [NSString stringWithFormat:@"Published:\t%@\nUpdated:\t%@\nETAG:\t%@",
-                            [MBaseEntity stringFromDate:map.creationTime],
-                            [MBaseEntity stringFromDate:map.updateTime],
-                            map.etag];
+        return @"Map Information";
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) _setEntityFromFieldValues:(MBaseEntity *)entity {
+- (NSString *) _validateFields {
+    
+    self.fName.text = [self.fName.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if(self.fName.text.length == 0) {
+        return @"Name can't be empty";
+    }
+    return nil;
+}
 
-    MMap *map = (MMap *)entity;
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _setFieldValuesFromEntity {
+    
+    self.fName.text = self.map.name;
+    self.fSummary.text = self.map.summary;
+    self.fExtraInfo.text = [NSString stringWithFormat:@"Published:\t%@\nUpdated:\t%@\nETAG:\t%@",
+                            [MBaseEntity stringFromDate:self.map.creationTime],
+                            [MBaseEntity stringFromDate:self.map.updateTime],
+                            self.map.etag];
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) _setEntityFromFieldValues {
+
+    // **********************************************************************
+    // Proteccion añadiendo una @ al nombre del mapa que se va ha crear
+    // **********************************************************************
+    if(self.wasNewAdded) {
+        self.fName.text = [NSString stringWithFormat:@"@%@",self.fName.text];
+    }
+    // **********************************************************************
 
     
-    // *** CONTROL DE SEGURIDAD (@name) PARA NO TOCAR MAPAS BUENOS ***
-    NSString *name = self.fName.text;
-    if([name hasPrefix:@"@"]) {
-        map.name = name;
-    } else {
-        map.name = [NSString stringWithFormat:@"@%@", name];
-    }
-    map.summary = self.fSummary.text;
-    [map markAsModified];
+    
+    self.map.name = self.fName.text;
+    self.map.summary = self.fSummary.text;
+    [self.map markAsModified];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -139,9 +169,17 @@
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) _enableFieldsForEditing {
-
+    
     self.fName.enabled = YES;
     self.fSummary.editable = YES;
+    
+    // **********************************************************************
+    // Proteccion haciendo que no se pueda editar el nombre
+    // **********************************************************************
+    if(!self.wasNewAdded && ![self.fName.text hasPrefix:@"@"]) {
+        self.fName.enabled = NO;
+    }
+    // **********************************************************************
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

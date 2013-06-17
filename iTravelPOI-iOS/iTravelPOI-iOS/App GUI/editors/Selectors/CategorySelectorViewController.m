@@ -13,7 +13,7 @@
 #import "TExpandableTableItem.h"
 
 #import "MCategory.h"
-#import "BaseCoreData.h"
+#import "NSManagedObjectContext+Utils.h"
 
 #import "CategoryEditorViewController.h"
 
@@ -40,17 +40,18 @@
 @property (nonatomic, assign) IBOutlet UISegmentedControl *buttonsBar;
 @property (nonatomic, assign) IBOutlet UITableView *catsTableView;
 
-@property (nonatomic, assign) UIViewController<CategorySelectorDelegate> *delegate;
 @property (nonatomic, strong) NSManagedObjectContext *moContext;
 @property (nonatomic, strong) MMap *selectedMap;
 
-@property (nonatomic, strong) NSMutableArray *selectedCategories;
-@property (nonatomic, strong) MCategory *excludedCategory;
 @property (nonatomic, assign) BOOL multiSelection;
+@property (nonatomic, strong) NSMutableArray *selectedCategories;
+
 @property (nonatomic, weak)   NSMutableArray *allCategories;
 @property (nonatomic, strong) NSMutableArray *inMapCategories;
 @property (nonatomic, strong) NSMutableArray *frequentCategories;
 @property (nonatomic, strong) NSMutableArray *otherCategories;
+
+@property (nonatomic, strong) TCloseCallback closeCallback;
 
 @end
 
@@ -69,33 +70,36 @@
 #pragma mark -
 #pragma mark CLASS methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (CategorySelectorViewController *) startCategoriesSelectorInContext:(NSManagedObjectContext *)moContext
-                                                          selectedMap:(MMap *)selectedMap
-                                                  currentSelectedCats:(NSArray *)currentSelectedCats
-                                                  excludeFromCategory:(MCategory *)excludeFromCategory
-                                                       multiSelection:(BOOL)multiSelection
-                                                             delegate:(UIViewController<CategorySelectorDelegate> *)delegate {
++ (CategorySelectorViewController *) categoriesSelectorInContext:(NSManagedObjectContext *)moContext
+                                                     selectedMap:(MMap *)selectedMap
+                                             currentSelectedCats:(NSArray *)currentSelectedCats
+                                                  multiSelection:(BOOL)multiSelection {
 
-    if(moContext!=nil && delegate!=nil) {
+    if(moContext!=nil) {
         CategorySelectorViewController *me = [[CategorySelectorViewController alloc] initWithNibName:@"CategorySelectorViewController" bundle:nil];
-        me.delegate = delegate;
         me.moContext = moContext;
         me.selectedMap = selectedMap;
         me.selectedCategories = [NSMutableArray arrayWithArray:currentSelectedCats];
-        me.excludedCategory = excludeFromCategory;
         me.multiSelection = multiSelection;
         me.allCategories = nil;
         me.inMapCategories = nil;
         me.frequentCategories = nil;
         me.otherCategories = nil;
-        me.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-        [delegate presentViewController:me animated:YES completion:nil];
         return me;
     } else {
-        DDLogVerbose(@"Warning: CategorySelectorViewController-startEditingMap called with nil moContext or Delegate");
+        DDLogVerbose(@"Warning: CategorySelectorViewController-categoriesSelectorInContext called with nil moContext");
         return nil;
     }
 }
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) showModalWithController:(UIViewController *)controller closeCallback:(TCloseCallback)closeCallback {
+    
+    self.closeCallback = closeCallback;
+    self.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    [controller presentViewController:self animated:YES completion:nil];
+}
+
 
 
 
@@ -105,15 +109,6 @@
 //=====================================================================================================================
 #pragma mark -
 #pragma mark <UIViewController> superclass methods
-//---------------------------------------------------------------------------------------------------------------------
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 //---------------------------------------------------------------------------------------------------------------------
 - (void)viewDidLoad {
     
@@ -142,69 +137,63 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)doneBarBtnClicked:(UIBarButtonItem *)sender {
-    if([self.delegate closeCategorySelector:self selectedCategories:self.selectedCategories]) {
-        [self _dismissEditor];
+    
+    // Avisa al callback
+    if(self.closeCallback) {
+        self.closeCallback(self.selectedCategories);
     }
+    
+    // Y cierra el editor
+    [self _dismissEditor];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)addBarBtnClicked:(UIBarButtonItem *)sender {
 
-    
-    NSManagedObjectContext *moc = [BaseCoreData moChildContext];
-    MCategory *newCat = [MCategory categoryWithFullName:@"name" inContext:moc];
-    MMap *copyMap = self.selectedMap!=nil ? (MMap *)[moc objectWithID:self.selectedMap.objectID] : nil;
-    
-    
-    CategoryEditorViewController *catEditor=[CategoryEditorViewController editorWithAssociatedMap:copyMap];
-    [catEditor modalEditEntity:newCat isNew:YES controller:self];
+    // Crea el editor
+    CategoryEditorViewController *catEditor= [CategoryEditorViewController editorWithNewCategoryInContext:self.moContext
+                                                                                           parentCategory:nil
+                                                                                            associatedMap:self.selectedMap];
+
+    // Y lo abre de forma modal gestionando el que se haya añadido la entidad
+    [catEditor showModalWithController:self closeSavedCallback:^(MBaseEntity *entity) {
+        
+        // Casting de la entidad añadida
+        MCategory *newCat = (MCategory *)entity;
+        
+        
+        // Borra el resto de checks
+        [self.inMapCategories enumerateObjectsUsingBlock:^(TExpandableTableItem *item, NSUInteger idx, BOOL *stop) {
+            [item clearCheck];
+        }];
+        
+        [self.frequentCategories enumerateObjectsUsingBlock:^(TExpandableTableItem *item, NSUInteger idx, BOOL *stop) {
+            [item clearCheck];
+        }];
+        
+        [self.otherCategories enumerateObjectsUsingBlock:^(TExpandableTableItem *item, NSUInteger idx, BOOL *stop) {
+            [item clearCheck];
+        }];
+        
+        // Crea un nuevo item y lo pone seleccionado y el primero
+        TExpandableTableItem *item = [TExpandableTableItem expandableTableItemWithCategory:newCat isChecked:YES];
+        if(self.selectedMap!=nil) {
+            [newCat updateViewCount:0 inMap:self.selectedMap];
+            self.buttonsBar.selectedSegmentIndex = 0;
+            [self _loadCategoriesInfo];
+        } else {
+            self.buttonsBar.selectedSegmentIndex = 1;
+            [self _loadCategoriesInfo];
+        }
+        
+        [self.allCategories insertObject:item atIndex:0];
+        
+        [self.selectedCategories removeAllObjects];
+        [self.selectedCategories addObject:newCat];
+        
+        [self.catsTableView reloadData];
+    }];
 }
-
-
-
-//=====================================================================================================================
-#pragma mark -
-#pragma mark <UITableViewDataSource> protocol methods
-//---------------------------------------------------------------------------------------------------------------------
-- (BOOL) _editorSaveChanges:(EntityEditorViewController *)senderEditor modifiedEntity:(MBaseEntity *)modifiedEntity {
-    
-    [BaseCoreData saveMOContext:modifiedEntity.managedObjectContext saveAll:NO];
-    MCategory *newCat = (MCategory *)[self.moContext objectWithID:modifiedEntity.objectID];
-
-    // Borra el resto de checks
-    [self.inMapCategories enumerateObjectsUsingBlock:^(TExpandableTableItem *item, NSUInteger idx, BOOL *stop) {
-        [item clearCheck];
-    }];
-
-    [self.frequentCategories enumerateObjectsUsingBlock:^(TExpandableTableItem *item, NSUInteger idx, BOOL *stop) {
-        [item clearCheck];
-    }];
-    
-    [self.otherCategories enumerateObjectsUsingBlock:^(TExpandableTableItem *item, NSUInteger idx, BOOL *stop) {
-        [item clearCheck];
-    }];
-    
-    // Crea un nuevo item y lo pone seleccionado y el primero
-    TExpandableTableItem *item = [TExpandableTableItem expandableTableItemWithCategory:newCat isChecked:YES];
-    if(self.selectedMap!=nil) {
-        [newCat updateViewCount:0 inMap:self.selectedMap];
-        self.buttonsBar.selectedSegmentIndex = 0;
-        [self _loadCategoriesInfo];
-    } else {
-        self.buttonsBar.selectedSegmentIndex = 1;
-        [self _loadCategoriesInfo];
-    }
-
-    [self.allCategories insertObject:item atIndex:0];
-
-    [self.selectedCategories removeAllObjects];
-    [self.selectedCategories addObject:newCat];
-    
-    [self.catsTableView reloadData];
-    
-    return TRUE;
-}
-
 
 
 
@@ -219,7 +208,7 @@
     
     // Ajustamos el estado de seleccion y expansion del elemento seleccionado
     TExpandableTableItem *item = (TExpandableTableItem *)self.allCategories[indexPath.section];
-    MCategory *selCategory = [item clickedAtIndex:indexPath.row selCats:self.selectedCategories excludedCat:self.excludedCategory];
+    MCategory *selCategory = [item clickedAtIndex:indexPath.row selCats:self.selectedCategories];
     
     if(selCategory!=nil) {
         if(item.isChecked) {
@@ -332,13 +321,12 @@
 
     // Set properties to nil
     self.selectedCategories = nil;
-    self.excludedCategory = nil;
     self.allCategories = nil;
     self.inMapCategories = nil;
     self.frequentCategories = nil;
     self.otherCategories = nil;
     self.selectedMap = nil;
-    self.delegate = nil;
+    self.closeCallback = nil;
     self.moContext = nil;
 }
 
@@ -382,11 +370,6 @@
 - (void) _addLoadedRootCategories:(NSArray *)rootCats into:(NSMutableArray *)intoCategories {
     
     for(MCategory *cat in rootCats) {
-        
-        // Comprueba si hay que excluirla
-        if(cat.internalIDValue == self.excludedCategory.internalIDValue || [cat isDescendatOf:self.excludedCategory]) {
-            continue;
-        }
         
         // Por cada categoria raiz comprueba si hay alguna seleccionada de la misma jerarquia
         MCategory *replacedCat = cat;

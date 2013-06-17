@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "GMPSyncDataSource.h"
 #import "GMPSyncDelegate.h"
 
 
@@ -43,6 +44,7 @@
 
 + (GMapSyncService *) serviceWithEmail:(NSString *)email
                               password:(NSString *)password
+                            dataSource:(id<GMPSyncDataSource>)dataSource
                               delegate:(id<GMPSyncDelegate>)delegate
                                  error:(NSError **)err;
 
@@ -54,5 +56,6 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (BOOL) syncMaps:(NSError **)err;
 - (void) cancelSync;
+- (BOOL) wasCanceled;
 
 @end

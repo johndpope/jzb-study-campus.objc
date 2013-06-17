@@ -6,7 +6,7 @@
 #define __MMapThumbnail__PROTECTED__
 
 #import "MMapThumbnail.h"
-#import "BaseCoreData.h"
+#import "NSManagedObjectContext+Utils.h"
 #import "MPoint.h"
 
 
@@ -146,16 +146,17 @@
 #pragma mark -
 #pragma mark Public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (MMapThumbnailTicket *) asyncUpdateLatitude:(double)lat longitude:(double)lng callback:(TBlock_blockDefinition)callback {
-    
+- (MMapThumbnailTicket *) asyncUpdateLatitude:(double)lat
+                                    longitude:(double)lng moContext:(NSManagedObjectContext *)moContext
+                                     callback:(TBlock_blockDefinition)callback {
+
     // Crea el ticket a retornar
     __block MMapThumbnailTicket *ticket = [[MMapThumbnailTicket alloc] init];
     ticket.callback = callback;
     
     // Ejecuta la actualizacion en background
-    NSManagedObjectContext *childContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-    childContext.parentContext = BaseCoreData.moContext;
-    [childContext performBlock:^{
+    NSManagedObjectContext *childContextAsync = moContext.ChildContextASync;
+    [childContextAsync performBlock:^{
         
         // Consigue la informacion
         __block NSData *imgData = [MMapThumbnail downloadThumbnailForLatitude:lat longitude:lng];

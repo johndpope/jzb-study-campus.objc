@@ -40,6 +40,8 @@ typedef void (^TBlock_blockDefinition)(double lat, double lng, NSData *imageData
 #pragma mark -
 #pragma mark INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (MMapThumbnailTicket *) asyncUpdateLatitude:(double)lat longitude:(double)lng callback:(TBlock_blockDefinition)callback;
+- (MMapThumbnailTicket *) asyncUpdateLatitude:(double)lat
+                                    longitude:(double)lng moContext:(NSManagedObjectContext *)moContext
+                                     callback:(TBlock_blockDefinition)callback;
 
 @end

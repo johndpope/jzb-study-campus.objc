@@ -13,10 +13,8 @@
 #import <QuartzCore/QuartzCore.h>
 #import "PointEditorViewController.h"
 
-#import "MPoint.h"
-#import "MMap.h"
-#import "MCategory.h"
 #import "MMapThumbnail.h"
+#import "NSManagedObjectContext+Utils.h"
 
 #import "IconEditorViewController.h"
 #import "LatLngEditorViewController.h"
@@ -36,6 +34,7 @@
 #pragma mark -
 #pragma mark Private Enumerations & definitions
 //*********************************************************************************************************************
+#define BTN_ID_KEYBOARD            4001
 
 
 
@@ -44,13 +43,12 @@
 #pragma mark -
 #pragma mark PRIVATE interface definition
 //*********************************************************************************************************************
-@interface PointEditorViewController() <UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate,
-                                        IconEditorDelegate, LatLngEditorDelegate, VisualMapEditorDelegate, CategorySelectorDelegate>
+@interface PointEditorViewController() <CLLocationManagerDelegate,
+                                        IconEditorDelegate, LatLngEditorDelegate, VisualMapEditorDelegate>
 
 
 @property (nonatomic, assign) IBOutlet UIImageView              *fIconImage;
 @property (nonatomic, assign) IBOutlet UITextField              *fName;
-@property (nonatomic, assign) IBOutlet UITableView              *fCategoriesTable;
 @property (nonatomic, assign) IBOutlet UIImageView              *fMapThumbnail;
 @property (nonatomic, assign) IBOutlet UILabel                  *fPointLatLng;
 @property (nonatomic, assign) IBOutlet UILabel                  *fGpsAccuracy;
@@ -58,6 +56,7 @@
 @property (nonatomic, assign) IBOutlet UIActivityIndicatorView  *fThumbnailSpinner;
 @property (nonatomic, assign) IBOutlet UIPlaceHolderTextView    *fDescription;
 @property (nonatomic, assign) IBOutlet UILabel                  *fExtraInfo;
+@property (nonatomic, assign) IBOutlet UIView                   *vOtherThings;
 @property (nonatomic, assign) IBOutlet UIView                   *vCategoriesSection;
 @property (nonatomic, assign) IBOutlet UIView                   *vLocationSection;
 
@@ -73,7 +72,6 @@
 
 @property (nonatomic, strong) CLLocationManager *locMgr;
 @property (nonatomic, assign) BOOL usingGPSLocation;
-@property (nonatomic, strong) NSMutableArray *pointCategories;
 
 @end
 
@@ -93,8 +91,37 @@
 #pragma mark -
 #pragma mark CLASS methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (PointEditorViewController *) editor {
++ (PointEditorViewController *) editorWithNewPointInContext:(NSManagedObjectContext *)moContext
+                                              associatedMap:(MMap *)map
+                                         associatedCategory:(MCategory *)category {
+    
+    
+    // Crea un contexto hijo en el que crea una entidad vacia que empezara a editar
+    NSManagedObjectContext *childContext = moContext.childContext;
+    MMap *copiedMap = (MMap *)[childContext objectWithID:map.objectID];
+    MPoint *newPoint = [MPoint emptyPointWithName:@"" inMap:copiedMap];
+    
+    // Si se ha especificado alguna categoria de entrada la asocia al punto
+    if(category!=nil) {
+        MCategory *copiedCategory = (MCategory *)[childContext objectWithID:category.objectID];
+        [newPoint addToCategory:copiedCategory];
+    }
+    
+    // Crea el editor desde el NIB y lo inicializa con la entidad (y contexto) especificada
+    PointEditorViewController *me = [PointEditorViewController editorWithPoint:newPoint moContext:childContext];
+    me.wasNewAdded = YES;
+    
+    // Retorna el editor sobre la entidad recien creada comenzando en modo de edicion
+    return me;
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------
++ (PointEditorViewController *) editorWithPoint:(MPoint *)point moContext:(NSManagedObjectContext *)moContext {
+
+    // Crea el editor desde el NIB y lo inicializa con la entidad (y contexto) especificada
    PointEditorViewController *me = [[PointEditorViewController alloc] initWithNibName:@"PointEditorViewController" bundle:nil];
+    [me initWithEntity:point moContext:point.managedObjectContext];
     return me;
 }
 
@@ -113,17 +140,9 @@
     myFrame.size.height = 460;
     self.view.frame = myFrame;
 
-    // Y del editor de texto
-    UIImage *bgEditorImg = [[UIImage imageNamed:@"shadowedBox"] resizableImageWithCapInsets:UIEdgeInsetsMake(6, 6, 6, 6) resizingMode:UIImageResizingModeStretch];
-    UIImageView *bgImgView3 = [[UIImageView alloc] initWithFrame:self.fDescription.frame];
-    bgImgView3.image = bgEditorImg;
-    [self.view insertSubview:bgImgView3 belowSubview:self.fDescription];
-    self.fDescription.backgroundColor = [UIColor clearColor];
-    self.fDescription.placeholder = @"Descripion goes here";
-    
-    
     [super viewDidLoad];
 
+    
     // Inicializa la geolocalizacion
     self.locMgr = [[CLLocationManager alloc] init];
     self.locMgr.delegate = self;
@@ -131,31 +150,32 @@
     self.locMgr.distanceFilter = kCLDistanceFilterNone; // En metros
     self.usingGPSLocation = FALSE;
     
+    
+    // Establece el color de fondo del editor de texto para la descripcion
+    UIImage *bgEditorImg = [[UIImage imageNamed:@"shadowedBox"] resizableImageWithCapInsets:UIEdgeInsetsMake(6, 6, 6, 6) resizingMode:UIImageResizingModeStretch];
+    UIImageView *bgImgView3 = [[UIImageView alloc] initWithFrame:self.fDescription.frame];
+    bgImgView3.image = bgEditorImg;
+    [self.fDescription.superview insertSubview:bgImgView3 belowSubview:self.fDescription];
+    self.fDescription.backgroundColor = [UIColor clearColor];
+    self.fDescription.placeholder = @"Descripion goes here";
+
+    
     // Carga la imagen de fondo de las diferentes secciones
     UIImage *bgSectionViewImg = [[UIImage imageNamed:@"shadowedBoxPico"] resizableImageWithCapInsets:UIEdgeInsetsMake(52, 6, 6, 6) resizingMode:UIImageResizingModeStretch];
 
-    // Establece el fondo de las vistas contenedoras de secciones
-    CGSize viewSize1 = self.vCategoriesSection.frame.size;
-    UIImageView *bgImgView1 = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, viewSize1.width, viewSize1.height)];
-    bgImgView1.image = bgSectionViewImg;
-    [self.vCategoriesSection insertSubview:bgImgView1 atIndex:0];
-    self.vCategoriesSection.backgroundColor = [UIColor clearColor];
-
+    // Establece el fondo para datos de LOCALIZACION
     CGSize viewSize2 = self.vLocationSection.frame.size;
     UIImageView *bgImgView2 = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, viewSize2.width, viewSize2.height)];
     bgImgView2.image = bgSectionViewImg;
     [self.vLocationSection insertSubview:bgImgView2 atIndex:0];
     self.vLocationSection.backgroundColor = [UIColor clearColor];
-    
+
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)viewDidAppear:(BOOL)animated {
 
     [super viewDidAppear:animated];
-
-    // Rota la imagen con el icono para indicar que esditable
-    [self _rotateImageField:self.fIconImage];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -180,7 +200,7 @@
 
 //=====================================================================================================================
 #pragma mark -
-#pragma mark <IconEditorDelegate, LatLngEditorDelegate, VisualMapEditorDelegate, CategorySelectorDelegate> protocol methods
+#pragma mark <IconEditorDelegate, LatLngEditorDelegate, VisualMapEditorDelegate> protocol methods
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL) closeIconEditor:(IconEditorViewController *)senderEditor {
 
@@ -207,13 +227,6 @@
     return TRUE;
 }
 
-// ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) closeCategorySelector:(CategorySelectorViewController *)senderEditor selectedCategories:(NSArray *)selectedCategories {
-
-    self.pointCategories = [NSArray arrayWithArray:selectedCategories];
-    return TRUE;
-}
-
 
 
 
@@ -237,40 +250,6 @@
 
 
 
-
-// =====================================================================================================================
-#pragma mark -
-#pragma mark <UITableViewDataSource> protocol methods
-// ---------------------------------------------------------------------------------------------------------------------
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.pointCategories.count==0 ? 1 : self.pointCategories.count;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    static NSString *myViewCellID = @"myPointViewCellID";
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:myViewCellID];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:myViewCellID];
-        cell.selectionStyle = UITableViewCellSelectionStyleGray;
-    }
-    
-    if(self.pointCategories.count==0) {
-        cell.textLabel.text = @"no categories";
-    } else {
-        MCategory *catToShow = (MCategory *)[self.pointCategories objectAtIndex:[indexPath indexAtPosition:1]];
-        cell.textLabel.text = catToShow.fullName;
-        cell.imageView.image = catToShow.entityImage;
-    }
-    return cell;
-}
-
-
-
-
-
 //=====================================================================================================================
 #pragma mark -
 #pragma mark BIAction methods
@@ -278,13 +257,37 @@
 - (IBAction)iconImageTapAction:(UITapGestureRecognizer *)sender {
     
     if(sender.state == UIGestureRecognizerStateEnded) {
+        
+        // Retira, si estaba, el teclado
         [self.view findFirstResponderAndResign];
+        
+        // Muestra el editor de iconos
         [IconEditorViewController startEditingIcon:self.iconHREF delegate:self];
     }
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (IBAction) btnLocationGPSClicked:(id)sender {
+- (IBAction)vCategoriesTapAction:(UITapGestureRecognizer *)sender {
+    
+    if(sender.state == UIGestureRecognizerStateEnded) {
+
+        // Retira, si estaba, el teclado
+        [self.view findFirstResponderAndResign];
+        
+        // Muestra el editor de categorias
+        CategorySelectorViewController *editor = [CategorySelectorViewController categoriesSelectorInContext:self.moContext
+                                                                                                 selectedMap:self.point.map
+                                                                                         currentSelectedCats:self.point.categories.allObjects
+                                                                                              multiSelection:YES];
+        [editor showModalWithController:self closeCallback:^(NSArray *selectedCategories) {
+            [self.point replaceCategories:selectedCategories];
+            [self _createTagsViewContent:self.vCategoriesSection categories:self.point.categories nextView:self.vOtherThings];
+        }];
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _btnLocationGPSClicked:(id)sender {
     
     [self.view findFirstResponderAndResign];
     self.usingGPSLocation = TRUE;
@@ -293,7 +296,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (IBAction) btnLocationEditorClicked:(id)sender {
+- (void) _btnLocationEditorClicked:(id)sender {
     
     [self.view findFirstResponderAndResign];
     self.usingGPSLocation = FALSE;
@@ -302,7 +305,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (IBAction)btnLocationMapClicked:(UIButton *)sender {
+- (void) _btnLocationMapClicked:(UIButton *)sender {
     
     [self.view findFirstResponderAndResign];
     self.usingGPSLocation = FALSE;
@@ -320,17 +323,6 @@
     [VisualMapEditorViewController startEditingAnnotations:annotations delegate:self];
 }
 
-// ---------------------------------------------------------------------------------------------------------------------
-- (IBAction)btnEditCategories:(UIButton *)sender {
-    
-    [CategorySelectorViewController startCategoriesSelectorInContext:self.moContext
-                                                         selectedMap:self.point.map
-                                                 currentSelectedCats:self.pointCategories
-                                                 excludeFromCategory:nil
-                                                      multiSelection:YES
-                                                            delegate:self];
-}
-
 
 
 
@@ -339,7 +331,7 @@
 #pragma mark Private methods
 //---------------------------------------------------------------------------------------------------------------------
 - (NSString *) _editorTitle {
-    return @"Point Editor";
+    return @"Point Information";
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -348,8 +340,17 @@
     [super _nullifyEditor];
     self.ticket = nil;
     self.thumbnail_imgData = nil;
-    self.pointCategories = nil;
     self.iconHREF = nil;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (NSString *) _validateFields {
+    
+    self.fName.text = [self.fName.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if(self.fName.text.length == 0) {
+        return @"Name can't be empty";
+    }
+    return nil;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -362,57 +363,47 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) _setFieldValuesFromEntity:(MBaseEntity *)entity {
+- (void) _setFieldValuesFromEntity {
     
-    MPoint *point = (MPoint *)entity;
+    self.fName.text = self.point.name;
     
+    [self _createTagsViewContent:self.vCategoriesSection categories:self.point.categories nextView:self.vOtherThings];
     
-    self.fName.text = point.name;
-    
-    [self _setImageFieldFromHREF:point.iconHREF];
+    [self _setImageFieldFromHREF:self.point.iconHREF];
 
     [self _showGPSAccuracyForLocation:self.locMgr.location];
     
-    self.pointCategories = [NSMutableArray arrayWithArray:point.categories.allObjects];
-
-    self.thumbnail_latitude = point.thumbnail.latitudeValue;
-    self.thumbnail_longitude = point.thumbnail.longitudeValue;
-    self.thumbnail_imgData = point.thumbnail.imageData;
-    [self _showAndStoreLatitude:point.latitudeValue longitude:point.longitudeValue];
+    self.thumbnail_latitude = self.point.thumbnail.latitudeValue;
+    self.thumbnail_longitude = self.point.thumbnail.longitudeValue;
+    self.thumbnail_imgData = self.point.thumbnail.imageData;
+    [self _showAndStoreLatitude:self.point.latitudeValue longitude:self.point.longitudeValue];
     
-    self.fDescription.text = point.descr;
+    self.fDescription.text = self.point.descr;
     
     self.fExtraInfo.text = [NSString stringWithFormat:@"Published:\t%@\nUpdated:\t%@\nETAG:\t%@",
-                            [MBaseEntity stringFromDate:point.creationTime],
-                            [MBaseEntity stringFromDate:point.updateTime],
-                            point.etag];
+                            [MBaseEntity stringFromDate:self.point.creationTime],
+                            [MBaseEntity stringFromDate:self.point.updateTime],
+                            self.point.etag];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) _setEntityFromFieldValues:(MBaseEntity *)entity {
+- (void) _setEntityFromFieldValues {
 
     
-    MPoint *point = (MPoint *)entity;
-    
-    if(point) {
-        // *** CONTROL DE SEGURIDAD (@name) PARA NO TOCAR Points BUENOS ***
-        NSString *name = self.fName.text;
-        if([name hasPrefix:@"@"]) {
-            point.name = name;
-        } else {
-            point.name = [NSString stringWithFormat:@"@%@", name];
-        }
+    if(self.point) {
         
-        point.descr = self.fDescription.text;
-        point.iconHREF = self.iconHREF;
-        [point setLatitude:self.latitude longitude:self.longitude];
+        self.point.name = self.fName.text;
+        
+        self.point.descr = self.fDescription.text;
+        self.point.iconHREF = self.iconHREF;
+        [self.point setLatitude:self.latitude longitude:self.longitude];
         
         
         self.point.thumbnail.latitudeValue = self.thumbnail_latitude;
         self.point.thumbnail.longitudeValue = self.thumbnail_longitude;
         self.point.thumbnail.imageData = self.thumbnail_imgData;
 
-        [point markAsModified];
+        [self.point markAsModified];
     }
 }
 
@@ -460,6 +451,7 @@
         // Abre un nuevo ticket
         self.ticket = [self.point.thumbnail asyncUpdateLatitude:lat
                                                       longitude:lng
+                                                      moContext:self.moContext
                                                        callback:^void (double lat, double lng, NSData *imageData) {
                                                            
                                                            if(imageData!=nil) {
@@ -487,22 +479,40 @@
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (NSArray *) _tbItemsForEditingOthers {
-    return nil;
+    NSArray *items = [NSArray arrayWithObjects:
+                      [STBItem itemWithTitle:@"GPS" image:[UIImage imageNamed:@"btn-GPSLocation"] tagID:BTN_ID_KEYBOARD target:self action:@selector(_btnLocationGPSClicked:)],
+                      [STBItem itemWithTitle:@"Manual" image:[UIImage imageNamed:@"btn-keyboard"] tagID:BTN_ID_KEYBOARD target:self action:@selector(_btnLocationEditorClicked:)],
+                      [STBItem itemWithTitle:@"In Map" image:[UIImage imageNamed:@"btn-map2"] tagID:BTN_ID_KEYBOARD target:self action:@selector(_btnLocationMapClicked:)],
+                      nil];
+
+    return items;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) _enableFieldsForEditing {
     
-    //self.fName.enabled = YES;
-    //self.fSummary.editable = YES;
+    self.fName.enabled = YES;
+    self.fDescription.editable = YES;
+    ((UIGestureRecognizer *)self.fIconImage.gestureRecognizers[0]).enabled = YES;
+    ((UIGestureRecognizer *)self.vCategoriesSection.gestureRecognizers[0]).enabled = YES;
+    
+    // Rota la imagen con el icono para indicar que esditable
+    [self _rotateView:self.fIconImage];
+    [self _rotateView:self.vCategoriesSection];
+
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) _disableFieldsFromEditing {
     
-    //self.fName.enabled = NO;
-    //self.fSummary.editable = NO;
+    self.fName.enabled = NO;
+    self.fDescription.editable = NO;
+    ((UIGestureRecognizer *)self.fIconImage.gestureRecognizers[0]).enabled = NO;
+    ((UIGestureRecognizer *)self.vCategoriesSection.gestureRecognizers[0]).enabled = NO;
 }
+
+
+
 
 
 

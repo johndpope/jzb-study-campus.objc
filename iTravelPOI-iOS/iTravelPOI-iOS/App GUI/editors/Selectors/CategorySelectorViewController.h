@@ -16,21 +16,9 @@
 #pragma mark -
 #pragma mark Public Enumerations & definitions
 //*********************************************************************************************************************
+typedef void (^TCloseCallback)(NSArray *selectedCategories);
 
 
-
-
-//*********************************************************************************************************************
-#pragma mark -
-#pragma mark Public Delegate Protocol
-//*********************************************************************************************************************
-@class CategorySelectorViewController;
-@protocol CategorySelectorDelegate <NSObject>
-
-- (BOOL) closeCategorySelector:(CategorySelectorViewController *)senderEditor
-            selectedCategories:(NSArray *)selectedCategories;
-
-@end
 
 
 //*********************************************************************************************************************
@@ -40,17 +28,18 @@
 @interface CategorySelectorViewController : UIViewController
 
 
+
+
 //=====================================================================================================================
 #pragma mark -
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (CategorySelectorViewController *) startCategoriesSelectorInContext:(NSManagedObjectContext *)moContext
-                                                          selectedMap:(MMap *)selectedMap
-                                                  currentSelectedCats:(NSArray *)currentSelectedCats
-                                                  excludeFromCategory:(MCategory *)excludeFromCategory
-                                                       multiSelection:(BOOL)multiSelection
-                                                             delegate:(UIViewController<CategorySelectorDelegate> *)delegate;
++ (CategorySelectorViewController *) categoriesSelectorInContext:(NSManagedObjectContext *)moContext
+                                                     selectedMap:(MMap *)selectedMap
+                                             currentSelectedCats:(NSArray *)currentSelectedCats
+                                                  multiSelection:(BOOL)multiSelection;
 
+- (void) showModalWithController:(UIViewController *)controller closeCallback:(TCloseCallback)closeCallback;
 
 
 @end

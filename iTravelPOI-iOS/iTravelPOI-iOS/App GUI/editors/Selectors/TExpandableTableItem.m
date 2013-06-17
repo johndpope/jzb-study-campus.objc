@@ -116,7 +116,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (MCategory *) clickedAtIndex:(NSInteger)index selCats:(NSArray *)selCats excludedCat:(MCategory *)excludedCat{
+- (MCategory *) clickedAtIndex:(NSInteger)index selCats:(NSArray *)selCats {
 
     // Categoria seleccionada en la seccion
     MCategory *selCategory = nil;
@@ -139,16 +139,8 @@
         MCategory *oldRoot=self.categories[0];
         [self.categories removeAllObjects];
         
-        // Comprueba si se debe filtrar algo o se añade tal cual
-        if(excludedCat==nil) {
-            [self.categories addObjectsFromArray:oldRoot.allInHierarchy];
-        } else {
-            for(MCategory *cat in oldRoot.allInHierarchy) {
-                if(cat.internalIDValue != excludedCat.internalIDValue && ![cat isDescendatOf:excludedCat]){
-                    [self.categories addObject:cat];
-                }
-            }
-        }
+        // Ce añade tal cual
+        [self.categories addObjectsFromArray:oldRoot.allInHierarchy];
         
         // Si habia un FAULT debe ajustar el indice del elemento chequeado ahora que los tiene
         if(self.checkedIndex==INDEX_CHECK_FAULT) {

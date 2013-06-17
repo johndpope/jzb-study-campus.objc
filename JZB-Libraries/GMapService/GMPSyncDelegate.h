@@ -19,26 +19,15 @@
 // *********************************************************************************************************************
 @protocol GMPSyncDelegate <NSObject>
 
-- (NSArray *) getAllLocalMapList:(NSError **)err;
-
-- (GMTMap *) gmMapFromLocalMap:(id)localMap error:(NSError **)err;
-- (id) createLocalMapFrom:(GMTMap *)gmMap error:(NSError **)err;
-- (BOOL) updateLocalMap:(id)localMap withRemoteMap:(GMTMap *)remoteMap allPointsOK:(BOOL)allPointsOK error:(NSError **)err;
-- (BOOL) deleteLocalMap:(id)localMap error:(NSError **)err;
-
-- (NSArray *) localPointListForMap:(id)localMap error:(NSError **)err;
-
-- (GMTPoint *) gmPointFromLocalPoint:(id)localPoint error:(NSError **)err;
-- (id) createLocalPointFrom:(GMTPoint *)gmPoint inLocalMap:(id)map error:(NSError **)err;
-- (BOOL) updateLocalPoint:(id)localPoint withRemotePoint:(GMTPoint *)remotePoint error:(NSError **)err;
-- (BOOL) deleteLocalPoint:(id)localPoint inLocalMap:(id)map error:(NSError **)err;
-
-
 @optional
+- (void) syncFinished:(BOOL)wasAllOK;
 
 - (void) willGetRemoteMapList;
 - (void) didGetRemoteMapList;
-- (void) willSyncMapTupleList:(NSArray *)compTuples;
+
+- (void) willCompareLocalAndRemoteMaps;
+- (void) didCompareLocalAndRemoteMaps:(NSArray *)compTuples;
+
 - (void) willSyncMapTuple:(GMTCompTuple *)tuple withIndex:(int)index;
 - (void) didSyncMapTuple:(GMTCompTuple *)tuple withIndex:(int)index syncOK:(BOOL)syncOK;
 

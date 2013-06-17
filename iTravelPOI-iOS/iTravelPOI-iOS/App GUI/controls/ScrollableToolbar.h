@@ -15,6 +15,7 @@
 #pragma mark -
 #pragma mark Public Enumerations & definitions
 //*********************************************************************************************************************
+#define ITEMSETID_NONE 0
 typedef void (^TConfirmBlock)(void);
 typedef void (^TCancelBlock)(void);
 
@@ -47,6 +48,8 @@ typedef void (^TCancelBlock)(void);
 @interface ScrollableToolbar : UIView
 
 
+@property (nonatomic, readonly) NSUInteger  itemSetID;
+
 
 //=====================================================================================================================
 #pragma mark -
@@ -59,7 +62,7 @@ typedef void (^TCancelBlock)(void);
 #pragma mark INSTANCE public methods
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) addItem:(STBItem *)item;
-- (void) setItems:(NSArray *)items animated:(BOOL)animated;
+- (void) setItems:(NSArray *)items itemSetID:(NSUInteger)itemSetID animated:(BOOL)animated;
 - (void) removeAllItemsAnimated:(BOOL)animated;
 
 - (void) activateEditModeForItemWithTagID:(NSUInteger)tagID

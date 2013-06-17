@@ -21,7 +21,7 @@
 @interface FakeItem : NSObject <GMPComparableLocal>
 
 @property (nonatomic, strong) NSString *name;
-@property (nonatomic, strong) NSString *gmID;
+@property (nonatomic, strong) NSString *gID;
 @property (nonatomic, strong) NSString *etag;
 @property (nonatomic, assign) BOOL markedAsDeletedValue;
 @property (nonatomic, assign) BOOL wasSynchronizedValue;
@@ -32,7 +32,7 @@
 @implementation FakeItem
 
 @synthesize name = _name;
-@synthesize gmID = _gmID;
+@synthesize gID = _gID;
 @synthesize etag = _etag;
 @synthesize markedAsDeletedValue = _markedAsDeletedValue;
 @synthesize wasSynchronizedValue = _wasSynchronizedValue;
@@ -45,7 +45,7 @@
 #pragma mark -
 #pragma mark PRIVATE interface definition
 // *********************************************************************************************************************
-@interface GM_SyncTest () <GMPSyncDelegate>
+@interface GM_SyncTest () <GMPSyncDataSource, GMPSyncDelegate>
 
 @property (nonatomic, strong) GMapSyncService *service;
 
@@ -120,7 +120,7 @@
 
     GM_SyncTest *me = [[GM_SyncTest alloc] init];
 
-    GMapSyncService *srvc = [GMapSyncService serviceWithEmail:email password:password delegate:me error:err];
+    GMapSyncService *srvc = [GMapSyncService serviceWithEmail:email password:password dataSource:me delegate:me error:err];
     if(srvc == nil) {
         DDLogError(@"**** Error - GM_SyncTest - testWithEmail - GMapService failed to initialize: %@", [*err localizedDescription]);
         DDLogError(@"Error info: %@", *err);
@@ -190,7 +190,7 @@
 
     FakeItem *fakeMap1 = [[FakeItem alloc] init];
     fakeMap1.name = @"@fakeMap1";
-    fakeMap1.gmID = @"http://maps.google.com/maps/feeds/maps/212026791974164037226/0004d2e0687a695f7a032"; // GM_LOCAL_ID;
+    fakeMap1.gID = @"http://maps.google.com/maps/feeds/maps/212026791974164037226/0004d2e0687a695f7a032"; // GM_LOCAL_ID;
     fakeMap1.etag = @"W/\"C0QHQX0_eyp7I2A9WhNUF0s.\"";  // GM_NO_SYNC_ETAG;
     fakeMap1.markedAsDeletedValue = false;
     fakeMap1.wasSynchronizedValue = true;
@@ -209,7 +209,7 @@
 
     FakeItem *fakePoint1 = [[FakeItem alloc] init];
     fakePoint1.name = @"@fakePoint1";
-    fakePoint1.gmID = @"http://maps.google.com/maps/feeds/features/212026791974164037226/0004d2e0687a695f7a032/0004d2e06a3a38f3140ee"; // GM_LOCAL_ID;
+    fakePoint1.gID = @"http://maps.google.com/maps/feeds/features/212026791974164037226/0004d2e0687a695f7a032/0004d2e06a3a38f3140ee"; // GM_LOCAL_ID;
     fakePoint1.etag = @"W/\"C0UEQns - eCp7I2A9WhNUF0s.\""; // GM_NO_SYNC_ETAG;
     fakePoint1.markedAsDeletedValue = false;
     fakePoint1.wasSynchronizedValue = true;
@@ -228,7 +228,7 @@
 
     GMTMap *map = [GMTMap emptyMap];
     map.name = fakeMap.name;
-    map.gmID = fakeMap.gmID;
+    map.gID = fakeMap.gID;
     map.etag = fakeMap.etag;
     map.summary = @"nothing to say - updated 222";
 
@@ -244,7 +244,7 @@
 
     GMTPoint *point = [GMTPoint emptyPoint];
     point.name = fakePoint.name;
-    point.gmID = fakePoint.gmID;
+    point.gID = fakePoint.gID;
     point.etag = fakePoint.etag;
     point.descr = @"nothing to say - updated 444";
     point.iconHREF = GM_DEFAULT_POINT_ICON_HREF;
@@ -258,7 +258,7 @@
 - (id) createLocalMapFrom:(GMTMap *)remoteMap error:(NSError **)err {
 
     DDLogVerbose(@"+ GM_SyncTest **** createLocalMapFrom [%@] ****", remoteMap.name);
-    DDLogVerbose(@"Map mgID=%@", remoteMap.gmID);
+    DDLogVerbose(@"Map mgID=%@", remoteMap.gID);
     DDLogVerbose(@"Map etag=%@", remoteMap.etag);
     return @"localMap";
 }
@@ -274,7 +274,7 @@
 - (id) createLocalPointFrom:(GMTPoint *)remotePoint inLocalMap:(id)map error:(NSError **)err {
 
     DDLogVerbose(@"+ GM_SyncTest **** createLocalPointFrom [%@] ****", remotePoint.name);
-    DDLogVerbose(@"Point mgID=%@", remotePoint.gmID);
+    DDLogVerbose(@"Point mgID=%@", remotePoint.gID);
     DDLogVerbose(@"Point etag=%@", remotePoint.etag);
     return @"localPoint";
 }
@@ -290,7 +290,7 @@
 - (BOOL) updateLocalMap:(id)localMap withRemoteMap:(GMTMap *)remoteMap allPointsOK:(BOOL)allPointsOK error:(NSError **)err {
 
     DDLogVerbose(@"+ GM_SyncTest **** updateLocalMap [%@] ****", ((FakeItem *)localMap).name);
-    DDLogVerbose(@"Map mgID=%@", remoteMap.gmID);
+    DDLogVerbose(@"Map mgID=%@", remoteMap.gID);
     DDLogVerbose(@"Map etag=%@", remoteMap.etag);
     return true;
 }
@@ -299,7 +299,7 @@
 - (BOOL) updateLocalPoint:(id)localPoint withRemotePoint:(GMTPoint *)remotePoint error:(NSError **)err {
 
     DDLogVerbose(@"+ GM_SyncTest **** updateLocalPoint [%@] ****", ((FakeItem *)localPoint).name);
-    DDLogVerbose(@"Point mgID=%@", remotePoint.gmID);
+    DDLogVerbose(@"Point mgID=%@", remotePoint.gID);
     DDLogVerbose(@"Point etag=%@", remotePoint.etag);
     return true;
 }

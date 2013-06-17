@@ -10,6 +10,7 @@
 #import "ScrollableToolbar.h"
 
 #import <QuartzCore/QuartzCore.h>
+#import "CPAnimationSequence.h"
 
 
 
@@ -66,6 +67,7 @@ typedef void (^AnimationBlock)(void);
 
 @property (nonatomic, assign) UIButton *editingModeBtn;
 @property (nonatomic, strong) NSMutableArray *btnItems;
+@property (nonatomic, assign) NSUInteger itemSetID;
 @property (nonatomic, strong) TConfirmBlock confirmBlock;
 @property (nonatomic, strong) TCancelBlock  cancelBlock;
 @property (nonatomic, assign) BOOL editingWasAnimated;
@@ -147,10 +149,12 @@ typedef void (^AnimationBlock)(void);
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) setItems:(NSArray *)items animated:(BOOL)animated {
+- (void) setItems:(NSArray *)items itemSetID:(NSUInteger)itemSetID animated:(BOOL)animated {
 
     __block NSArray *theItems = items;
     
+    // Almacena el item set para que el llamante pueda saber que coleccion de opciones establecio
+    self.itemSetID = itemSetID;
     
     // Cancela el modo de edicion
     if(self.editingModeBtn!=nil) {
@@ -169,17 +173,33 @@ typedef void (^AnimationBlock)(void);
 
     // Actua dependiendo de si hay que animar el trabajo o no
     if(animated) {
-        [UIView animateWithDuration:0.2 animations:^{
+        
+
+        // Secuencia de animaciones para quitar y poner la siguiente barra de elementos
+        CPAnimationSequence* animations = [CPAnimationSequence sequenceWithSteps:
+                                           [CPAnimationStep  for:0.05 animate:^{
+            
+            self.scrollView.frame = CGRectMakeFromFrame(0, -5, self.scrollView.frame);
+
+        }], [CPAnimationStep for:(self.btnItems.count>0 ? 0.2 : 0.0) animate:^{
+            
             self.scrollView.frame = CGRectMakeFromFrame(0, self.frame.size.height, self.scrollView.frame);
-        } completion:^(BOOL finished) {
-            [UIView animateWithDuration:0.0 animations:^{
-                setItemsBlock();
-            } completion:^(BOOL finished) {
-                [UIView animateWithDuration:0.2 animations:^{
-                    self.scrollView.frame = CGRectMakeFromFrame(0, 0, self.scrollView.frame);
-                }];
-            }];
-        }];
+            
+        }], [CPAnimationStep for:0.0 animate:^{
+            
+            setItemsBlock();
+            
+        }], [CPAnimationStep for:0.2 animate:^{
+            
+            self.scrollView.frame = CGRectMakeFromFrame(0, -5, self.scrollView.frame);
+            
+        }], [CPAnimationStep for:0.05 animate:^{
+            
+            self.scrollView.frame = CGRectMakeFromFrame(0, 0, self.scrollView.frame);
+            
+        }], nil];
+        [animations runAnimated:YES];
+        
     } else {
         setItemsBlock();
     }
@@ -364,6 +384,9 @@ typedef void (^AnimationBlock)(void);
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) _initializeView {
+    
+    // No tiene botones
+    self.itemSetID = ITEMSETID_NONE;
     
     // Indica que no esta editando
     self.editingModeBtn = nil;

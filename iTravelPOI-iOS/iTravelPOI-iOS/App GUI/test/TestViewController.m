@@ -9,6 +9,10 @@
 #define __TestViewController__IMPL__
 #import "TestViewController.h"
 
+#import <MapKit/MapKit.h>
+
+#import "ImageManager.h"
+
 
 
 //*********************************************************************************************************************
@@ -81,6 +85,172 @@
 
     // Pone el color de fondo para los editorres
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"myTableBg"]];
+    
+    
+    NSArray *labels = [NSArray arrayWithObjects:@"Normandia", @"Puntos chulos", @"Rentaurantes", @"Compras", @"Zona norte con nombre largo", nil];
+    NSArray *icons = [NSArray arrayWithObjects:@"red-dot", @"camera", @"restaurant", @"convienancestore", @"campground", nil];
+    NSMutableArray *tags = [NSMutableArray arrayWithCapacity:labels.count];
+    for(int n=0;n<labels.count;n++) {
+        UIImage *iconImg = [ImageManager imageForName:[NSString stringWithFormat:@"GMap/GMI_%@",icons[n]]];
+        UIImageView *tagImgView = [self tagImageViewWithlabel:labels[n] icon:iconImg];
+        tags[n] = tagImgView;
+    }
+
+    [tags sortUsingComparator:^NSComparisonResult(UIImageView *tagImgView1, UIImageView *tagImgView2) {
+        return [[NSNumber numberWithFloat:tagImgView1.frame.size.width] compare:[NSNumber numberWithFloat:tagImgView2.frame.size.width]];
+    }];
+    
+    CGFloat py = 260;
+    CGFloat initPX = 10;
+    CGFloat maxPX = self.view.frame.size.width-2*initPX;
+    CGFloat px = initPX;
+    for(int n=0;n<tags.count;n++) {
+        
+        UIImageView *tagImgView = tags[n];
+        
+        if(px+tagImgView.frame.size.width>maxPX) {
+            px = initPX;
+            py += tagImgView.frame.size.height;
+        }
+        
+        tagImgView.frame = CGRectOffset(tagImgView.frame, px, py);
+        [self.view addSubview:tagImgView];
+        
+        px += tagImgView.frame.size.width;
+    }
+    
+    /*
+    tagImgView = [self tagImageViewAtX:40 y:260 label:@"Normandia" icon:[ImageManager imageForName:@"GMap/GMI_red-dot"]];
+    [self.view addSubview:tagImgView];
+
+    tagImgView = [self tagImageViewAtX:40+tagImgView.frame.size.width y:260 label:@"Puntos Chulos" icon:[ImageManager imageForName:@"GMap/GMI_camera"]];
+    [self.view addSubview:tagImgView];
+     */
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (UIImageView *) tagImageViewAtX:(CGFloat)x y:(CGFloat)y label:(NSString *)label icon:(UIImage *)icon {
+    
+    // Retorna el UIImageView resultante posicionado en el punto indicado
+    UIImageView *tagImgView = [self tagImageViewWithlabel:label icon:icon];
+    tagImgView.frame = CGRectOffset(tagImgView.frame, x, y);
+    return tagImgView;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (UIImageView *) tagImageViewWithlabel:(NSString *)label icon:(UIImage *)icon {
+    
+    // Font a utilizar en la creacion de las etiquetas
+    static UIFont *_lblFont = nil;
+    if(_lblFont==nil) {
+        _lblFont = [UIFont fontWithName:@"BanglaSangamMN-Bold" size:11];
+    }
+    
+    // Color para el texto
+    UIColor *_lblColor = nil;
+    if(_lblColor==nil) {
+        _lblColor = [UIColor colorWithRed:0.1961 green:0.3098 blue:0.5216 alpha:1.0];
+    }
+    
+    // Imagen de fondo de las etiquetas
+    static UIImage *_tagBgImg = nil;
+    if(_tagBgImg==nil) {
+        _tagBgImg = [[UIImage imageNamed:@"Tag"] resizableImageWithCapInsets:UIEdgeInsetsMake(8, 28, 8, 14) resizingMode:UIImageResizingModeStretch];
+    }
+    
+    
+    // Calcula el tamaño del texto estableciendo 100x24 pt como el maximo
+    CGSize _lblSize=[label sizeWithFont:_lblFont constrainedToSize:CGSizeMake(100, 24) lineBreakMode:NSLineBreakByCharWrapping];
+    
+    // Calcula las dimensiones totales de la etiqueta
+    CGSize totalSize = CGSizeMake(28 + _lblSize.width + 14, _tagBgImg.size.height);
+    
+    // Crea el UIImageView
+    UIImageView *tagImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, -2, totalSize.width, totalSize.height)];
+    tagImgView.image = _tagBgImg;
+    
+    // Añade el texto
+    UILabel *lbl = [[UILabel alloc] initWithFrame:CGRectMake(28, 1+(_tagBgImg.size.height-_lblSize.height)/2, _lblSize.width, _lblSize.height)];
+    lbl.backgroundColor = [UIColor clearColor];
+    lbl.textColor = _lblColor;
+    lbl.text = label;
+    lbl.font = _lblFont;
+    [tagImgView addSubview:lbl];
+    
+    // Añade el icono reducido a 16x16
+    UIImageView *_tagIcon = [[UIImageView alloc] initWithImage:[self scaleImage:icon toSize:CGSizeMake(16.0, 16.0)]];
+    _tagIcon.frame = CGRectOffset(_tagIcon.frame, 6.5, 6);
+    [tagImgView addSubview:_tagIcon];
+    
+    // Retorna el UIImageView resultante
+    return tagImgView;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (UIImageView *) _tagImageViewAtX:(CGFloat)x y:(CGFloat)y label:(NSString *)label icon:(UIImage *)icon {
+    
+    // Font a utilizar en la creacion de las etiquetas
+    static UIFont *_lblFont = nil;
+    if(_lblFont==nil) {
+        //_lblFont = [UIFont fontWithName:@"BanglaSangamMN-Bold" size:13];
+        _lblFont = [UIFont boldSystemFontOfSize:15];
+    }
+    
+    // Color para el texto
+    UIColor *_lblColor = nil;
+    if(_lblColor==nil) {
+        _lblColor = [UIColor colorWithRed:0.1961 green:0.3098 blue:0.5216 alpha:1.0];
+    }
+    
+    // Imagen de fondo de las etiquetas
+    static UIImage *_tagBgImg = nil;
+    if(_tagBgImg==nil) {
+        _tagBgImg = [[UIImage imageNamed:@"Tag"] resizableImageWithCapInsets:UIEdgeInsetsMake(8, 28, 8, 14) resizingMode:UIImageResizingModeStretch];
+    }
+    
+    
+    // Reduce el icono a 16x16
+    UIImage *_tagIcon = [self scaleImage:icon toSize:CGSizeMake(16.0, 16.0)];
+    
+    // Calcula el tamaño del texto estableciendo 150x24 pt como el maximo
+    CGSize _lblSize=[label sizeWithFont:_lblFont constrainedToSize:CGSizeMake(150, 24) lineBreakMode:NSLineBreakByCharWrapping];
+
+    // Calcula las dimensiones totales de la etiqueta
+    CGSize totalSize = CGSizeMake(28 + _lblSize.width + 14, _tagBgImg.size.height);
+
+    // Pinta el conjunto de elementos
+    UIGraphicsBeginImageContext(totalSize);
+    [_tagBgImg drawInRect:CGRectMake(0, 0, totalSize.width, totalSize.height)];
+    [_tagIcon drawAtPoint:CGPointMake(7, 6)];
+    [_lblColor set];
+    [label drawAtPoint:CGPointMake(28, 1+(_tagBgImg.size.height-_lblSize.height)/2) withFont:_lblFont];
+    
+    // Obtiene la imagen resultante y la retorna
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    // Retorna el UIImageView resultante posicionado en el punto indicado
+    UIImageView *imgView = [[UIImageView alloc] initWithImage:newImage];
+    imgView.frame = CGRectOffset(imgView.frame, x, y);
+    
+    UILabel *lbl = [[UILabel alloc] initWithFrame:CGRectMake(28, 1+(_tagBgImg.size.height-_lblSize.height)/2, _lblSize.width, _lblSize.height)];
+    lbl.backgroundColor = [UIColor clearColor];
+    lbl.textColor = _lblColor;
+    lbl.text = label;
+    lbl.font = _lblFont;
+    [imgView addSubview:lbl];
+    
+    return  imgView;
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+-(UIImage*) scaleImage: (UIImage*)image toSize:(CGSize)newSize {
+    UIGraphicsBeginImageContext(newSize);
+    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
 }
 
 
@@ -155,6 +325,76 @@
     NSLog(@"result = %@", scriptResult);
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (IBAction)_btnTest:(UIButton *)sender {
+    
+    NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps?q=%f,%f", 32.0, 10.0];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
+    
+    BOOL sup = [self isAppSupported:ExternalNavigationAppGoogleMaps];
+}
+
+typedef enum {
+    ExternalNavigationAppGoogleMaps,
+    ExternalNavigationAppNavigon,
+    ExternalNavigationAppTomTom
+} ExternalNavigationApp;
+
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSString *)googleMapsUrlWithTipName:(NSString *)tipName tipLat:(CLLocationDegrees)tipLat tipLng:(CLLocationDegrees)tipLng from:(CLLocationCoordinate2D)from {
+    NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps?saddr=%1.6f,%1.6f&daddr=%1.6f,%1.6f",
+                           from.latitude, from.longitude,
+                           tipLat, tipLng];
+    return urlString;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSString *)navigonAppUrlWithTipName:(NSString *)tipName tipLat:(CLLocationDegrees)tipLat tipLng:(CLLocationDegrees)tipLng from:(CLLocationCoordinate2D)from {
+    NSString *urlString = [NSString stringWithFormat:@"navigon://%@|%@||||||%f|%f",
+                           [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
+                           tipName,
+                           tipLng,
+                           tipLat];
+    
+    return urlString;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSString *)tomtomAppUrlWithTipName:(NSString *)tipName tipLat:(CLLocationDegrees)tipLat tipLng:(CLLocationDegrees)tipLng from:(CLLocationCoordinate2D)from {
+    
+    return nil;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSURL *)urlForApp:(ExternalNavigationApp)navigationApp withTipName:(NSString *)tipName tipLat:(CLLocationDegrees)tipLat tipLng:(CLLocationDegrees)tipLng from:(CLLocationCoordinate2D)from {
+    
+    NSString *urlString = nil;
+    if ( ExternalNavigationAppNavigon == navigationApp ) {
+        urlString = [self navigonAppUrlWithTipName:tipName tipLat:tipLat tipLng:tipLng from:from];
+    } else if ( ExternalNavigationAppTomTom == navigationApp ) {
+        urlString = [self tomtomAppUrlWithTipName:tipName tipLat:tipLat tipLng:tipLng from:from];
+    } else if ( ExternalNavigationAppGoogleMaps == navigationApp ) {
+        urlString = [self googleMapsUrlWithTipName:tipName tipLat:tipLat tipLng:tipLng from:from];
+    }
+    
+    if ( urlString == nil )
+        return nil;
+    
+    return [NSURL URLWithString:[urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL) isAppSupported:(ExternalNavigationApp)navigationApp {
+    
+    CLLocationCoordinate2D coord;
+    NSURL *url = [self urlForApp:navigationApp withTipName:nil tipLat:0 tipLng:0 from:coord];
+    
+    if ( url == nil )
+        return NO;
+    
+    return [[UIApplication sharedApplication]canOpenURL:url];
+}
 
 
 @end

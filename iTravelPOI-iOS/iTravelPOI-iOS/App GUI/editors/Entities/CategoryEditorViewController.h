@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 #import "EntityEditorViewController.h"
+#import "MCategory.h"
 #import "MMap.h"
 
 
@@ -34,7 +35,13 @@
 #pragma mark -
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (CategoryEditorViewController *) editorWithAssociatedMap:(MMap *)map;
++ (CategoryEditorViewController *) editorWithNewCategoryInContext:(NSManagedObjectContext *)moContext
+                                                   parentCategory:(MCategory *)parentCategory
+                                                    associatedMap:(MMap *)map;
+
++ (CategoryEditorViewController *) editorWithCategory:(MCategory *)category
+                                        associatedMap:(MMap *)map
+                                            moContext:(NSManagedObjectContext *)moContext;
 
 
 @end

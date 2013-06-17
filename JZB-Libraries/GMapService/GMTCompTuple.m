@@ -21,6 +21,13 @@ const NSString *TCompStatusType_Names[] = {
     @"ST_Comp_Update_Local", @"ST_Comp_Update_Remote"
 };
 
+const NSString *TRunStatusType_Names[] = {
+    @"ST_Run_None",
+    @"ST_Run_Processing",
+    @"ST_Run_OK",
+    @"ST_Run_Failed"
+};
+
 
 // *********************************************************************************************************************
 #pragma mark -
@@ -40,23 +47,19 @@ const NSString *TCompStatusType_Names[] = {
 @implementation GMTCompTuple
 
 
-@synthesize status = _status;
-@synthesize localItem = _localItem;
-@synthesize remoteItem = _remoteItem;
-@synthesize conflicted = _conflicted;
-
 
 // =====================================================================================================================
 #pragma mark -
 #pragma mark CLASS methods
 // ---------------------------------------------------------------------------------------------------------------------
-+ (GMTCompTuple *) tupleWithStatus:(TCompStatusType)status
-                         localItem:(id<GMPComparableLocal>)localItem
-                        remoteItem:(id<GMPComparable>)remoteItem
-                        conflicted:(BOOL)conflicted {
++ (GMTCompTuple *) tupleWithCompStatus:(TCompStatusType)compStatus
+                             localItem:(id<GMPComparableLocal>)localItem
+                            remoteItem:(id<GMPComparable>)remoteItem
+                            conflicted:(BOOL)conflicted {
 
     GMTCompTuple *tuple = [[GMTCompTuple alloc] init];
-    tuple.status = status;
+    tuple.compStatus = compStatus;
+    tuple.runStatus = ST_Run_None;
     tuple.localItem = localItem;
     tuple.remoteItem = remoteItem;
     tuple.conflicted = conflicted;
@@ -75,7 +78,7 @@ const NSString *TCompStatusType_Names[] = {
 #pragma mark General PUBLIC methods
 // ---------------------------------------------------------------------------------------------------------------------
 - (NSString *)description {
-    return [NSString stringWithFormat:@"local = %@, remote = %@, status = %@", self.localItem.name, self.remoteItem.name, TCompStatusType_Names[self.status]];
+    return [NSString stringWithFormat:@"local = %@, remote = %@, compStatus = %@, runStatus = %@", self.localItem.name, self.remoteItem.name, TCompStatusType_Names[self.compStatus], TRunStatusType_Names[self.runStatus]];
 }
 
 @end

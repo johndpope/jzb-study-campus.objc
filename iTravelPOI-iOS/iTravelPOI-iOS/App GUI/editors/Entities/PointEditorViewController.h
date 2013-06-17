@@ -10,6 +10,10 @@
 
 #import "EntityEditorViewController.h"
 
+#import "MPoint.h"
+#import "MMap.h"
+#import "MCategory.h"
+
 
 
 //*********************************************************************************************************************
@@ -32,7 +36,11 @@
 #pragma mark -
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (PointEditorViewController *) editor;
++ (PointEditorViewController *) editorWithNewPointInContext:(NSManagedObjectContext *)moContext
+                                              associatedMap:(MMap *)map
+                                         associatedCategory:(MCategory *)category;
+
++ (PointEditorViewController *) editorWithPoint:(MPoint *)point moContext:(NSManagedObjectContext *)moContext;
 
 
 
