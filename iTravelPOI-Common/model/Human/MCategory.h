@@ -54,6 +54,7 @@
 - (MCategory *) rootParent;
 
 - (void) transferTo:(MCategory *)destCategory inMap:(MMap *)map;
+- (MCategory *) transferToParent:(MCategory *)destParent inMap:(MMap *)map;
 
 - (void) deletePointsInMap:(MMap *)map;
 

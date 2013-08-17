@@ -16,7 +16,6 @@
 #import "DDTTYLogger.h"
 
 #import "VisualMapEditorViewController.h"
-#import "MyMKPointAnnotation.h"
 
 
 
@@ -24,7 +23,7 @@
 #pragma mark -
 #pragma mark PRIVATE interface definition
 // *********************************************************************************************************************
-@interface AppDelegate() <VisualMapEditorDelegate>
+@interface AppDelegate()
 @end
 
 
@@ -54,29 +53,13 @@
     
     // Inicializa el modelo de datos
     [self _initDataModel];
-    
-    // Indica que se muestre un "spinner" en la barra de estado cuando se acceda a la red
-    [application setNetworkActivityIndicatorVisible:YES];
-    
+        
     // Se crea la ventana y controller inicial de la aplicación
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     UIViewController *controller = [ItemListViewController itemListViewControllerWithContext:BaseCoreDataService.moContext];
     //UIViewController *controller = [TestViewController startTestController];
     //UIViewController *controller = [GMapSyncViewController gmapSyncViewController];
-    
-    
-    
-    /*-------------------------------------------------------------------------------------------*
-    MyMKPointAnnotation *annotation = [[MyMKPointAnnotation alloc] init];
-    annotation.title = @"hola";
-    annotation.iconHREF = @"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png";
-    CLLocationCoordinate2D coord = {.latitude = 41.464003, .longitude = -2.862453};
-    annotation.coordinate = coord;
-    VisualMapEditorViewController *controller = [[VisualMapEditorViewController alloc] initWithNibName:@"VisualMapEditorViewController" bundle:nil];
-    controller.delegate = self;
-    controller.annotations = [NSArray arrayWithObject:annotation];
-    *-------------------------------------------------------------------------------------------*/
     
     self.window.rootViewController = controller;
     [self.window makeKeyAndVisible];
@@ -139,7 +122,7 @@ void _uncaughtExceptionHandler(NSException *exception) {
     
     // ---------------------------------------
     // ---------------------------------------
-    [MockUp resetModel:@"iTravelPOI"];
+    //[MockUp resetModel:@"iTravelPOI"];
     // ---------------------------------------
     // ---------------------------------------
     
@@ -148,20 +131,10 @@ void _uncaughtExceptionHandler(NSException *exception) {
         abort();
     }
     
-    /*
-     if(![ModelDAO createInitialData:BaseCoreData.moContext]) {
-     [[NSApplication sharedApplication] terminate:nil];
-     }
-     */
-    
     
     // ---------------------------------------
     // ---------------------------------------
-    
-    [MockUp populateModel];
-     /*
-     [AppTesting excuteTestWithMOContext:BaseCoreData.moContext];
-     */
+    //[MockUp populateModel];
     // ---------------------------------------
     // ---------------------------------------
     

@@ -12,6 +12,8 @@
 #import <MapKit/MapKit.h>
 
 #import "ImageManager.h"
+#import "OpenInActionSheetViewController.h"
+
 
 
 
@@ -328,10 +330,13 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)_btnTest:(UIButton *)sender {
     
+    [OpenInActionSheetViewController showOpenInActionSheetWithController:self point:nil];
+    /*
     NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps?q=%f,%f", 32.0, 10.0];
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
     
     BOOL sup = [self isAppSupported:ExternalNavigationAppGoogleMaps];
+     */
 }
 
 typedef enum {
@@ -395,6 +400,7 @@ typedef enum {
     
     return [[UIApplication sharedApplication]canOpenURL:url];
 }
+
 
 
 @end

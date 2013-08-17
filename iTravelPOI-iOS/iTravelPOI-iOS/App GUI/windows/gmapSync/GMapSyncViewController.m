@@ -47,7 +47,7 @@
 @property (nonatomic, assign)           UILabel *titleBar;
 @property (nonatomic, assign)           ScrollableToolbar *scrollableToolbar;
 
-@property (nonatomic, strong)           TCloseCallback closeCallback;
+@property (nonatomic, strong)           GSCloseCallback closeCallback;
 @property (nonatomic, strong)           SyncDataService *syncService;
 
 @property (nonatomic, strong)           NSManagedObjectContext *moContext;
@@ -86,7 +86,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) showModalWithController:(UIViewController *)controller closeCallback:(TCloseCallback)closeCallback {
+- (void) showModalWithController:(UIViewController *)controller closeCallback:(GSCloseCallback)closeCallback {
     
     self.closeCallback = closeCallback;
     self.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;

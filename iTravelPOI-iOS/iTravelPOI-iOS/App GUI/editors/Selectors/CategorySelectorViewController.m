@@ -51,7 +51,7 @@
 @property (nonatomic, strong) NSMutableArray *frequentCategories;
 @property (nonatomic, strong) NSMutableArray *otherCategories;
 
-@property (nonatomic, strong) TCloseCallback closeCallback;
+@property (nonatomic, strong) CSCloseCallback closeCallback;
 
 @end
 
@@ -93,7 +93,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) showModalWithController:(UIViewController *)controller closeCallback:(TCloseCallback)closeCallback {
+- (void) showModalWithController:(UIViewController *)controller closeCallback:(CSCloseCallback)closeCallback {
     
     self.closeCallback = closeCallback;
     self.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
@@ -156,7 +156,7 @@
                                                                                             associatedMap:self.selectedMap];
 
     // Y lo abre de forma modal gestionando el que se haya añadido la entidad
-    [catEditor showModalWithController:self closeSavedCallback:^(MBaseEntity *entity) {
+    [catEditor showModalWithController:self startEditing:NO closeSavedCallback:^(MBaseEntity *entity) {
         
         // Casting de la entidad añadida
         MCategory *newCat = (MCategory *)entity;

@@ -16,7 +16,7 @@
 #pragma mark -
 #pragma mark Public Enumerations & definitions
 //*********************************************************************************************************************
-typedef void (^TCloseCallback)(NSArray *selectedCategories);
+typedef void (^CSCloseCallback)(NSArray *selectedCategories);
 
 
 
@@ -39,7 +39,7 @@ typedef void (^TCloseCallback)(NSArray *selectedCategories);
                                              currentSelectedCats:(NSArray *)currentSelectedCats
                                                   multiSelection:(BOOL)multiSelection;
 
-- (void) showModalWithController:(UIViewController *)controller closeCallback:(TCloseCallback)closeCallback;
+- (void) showModalWithController:(UIViewController *)controller closeCallback:(CSCloseCallback)closeCallback;
 
 
 @end

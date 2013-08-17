@@ -1,5 +1,5 @@
 //
-//  MyMKPointAnnotation.h
+//  MPointMapAnnotation.h
 //  iTravelPOI-Mac
 //
 //  Created by Jose Zarzuela on 16/02/13.
@@ -7,6 +7,7 @@
 //
 
 #import <MapKit/MapKit.h>
+#import "MPoint.h"
 
 
 
@@ -22,17 +23,19 @@
 #pragma mark -
 #pragma mark Public Interface definition
 //*********************************************************************************************************************
-@interface MyMKPointAnnotation : MKPointAnnotation
+@interface MPointMapAnnotation : MKPointAnnotation
 
 
-@property (nonatomic, strong) NSString *iconHREF;
+@property (nonatomic, readonly) MPoint *point;
+@property (nonatomic, readonly) UIImage *image;
 
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-
++ (MPointMapAnnotation *) annotationWithPoint:(MPoint *)point;
++ (MPointMapAnnotation *) annotationWithTitle:(NSString *)title image:(UIImage *)image lat:(CGFloat)lat lng:(CGFloat)lng;
 
 
 //=====================================================================================================================

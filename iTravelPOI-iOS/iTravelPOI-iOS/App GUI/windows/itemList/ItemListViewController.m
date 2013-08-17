@@ -15,8 +15,9 @@
 #import "MapEditorViewController.h"
 #import "CategoryEditorViewController.h"
 #import "PointEditorViewController.h"
-#import "VisualMapEditorViewController.h"
 #import "GMapSyncViewController.h"
+#import "CategorySelectorViewController.h"
+#import "VisualMapEditorViewController.h"
 
 #import "TDBadgedCell.h"
 #import "BreadcrumbBar.h"
@@ -163,11 +164,11 @@
         editor = [PointEditorViewController editorWithNewPointInContext:self.moContext associatedMap:self.selectedMap associatedCategory:self.selectedCategory];
     }
     
-    [editor showModalWithController:self closeSavedCallback:^(MBaseEntity *entity) {
+    [editor showModalWithController:self startEditing:NO closeSavedCallback:^(MBaseEntity *entity) {
         
         // Un cambio de nombre al editar o un nuevo elemento hace que la lista se desordene
         // mejor recargar la informacion de nuevo
-        [self _loadItemListScrollingTo:entity animated:NO goingBack:NO];
+        [self _loadItemListScrollingTo:entity animated:YES goingBack:NO];
     }];
 
 }
@@ -176,7 +177,7 @@
 - (void) deleteEntities:(UIButton *)sender {
     
     // Se prepara para editar
-    [self _startToolbarEditingWithMultiselection:YES canSelectCategories:NO];
+    [self _startToolbarEditingWithMultiselection:YES canSelectCategories:YES];
     
     // Pone la barra en ediccion con la opcion indicada
     [self.scrollableToolbar activateEditModeForItemWithTagID:BTN_ID_DELETE animated:YES confirmBlock:^{
@@ -221,6 +222,66 @@
 }
 //---------------------------------------------------------------------------------------------------------------------
 - (void) moveEntities:(UIButton *)sender {
+    
+        
+    // Se prepara para editar
+    [self _startToolbarEditingWithMultiselection:YES canSelectCategories:YES];
+    
+    
+    // Pone la barra en ediccion con la opcion indicada
+    [self.scrollableToolbar activateEditModeForItemWithTagID:BTN_ID_MOVE_TO animated:YES confirmBlock:^{
+        
+        // Muestra el selector de categorias para indicar el destino
+        CategorySelectorViewController *selector = [CategorySelectorViewController categoriesSelectorInContext:self.moContext
+                                                                                                   selectedMap:self.selectedMap
+                                                                                           currentSelectedCats:nil
+                                                                                                multiSelection:NO];
+
+        // Muestra el selector de categorias
+        __block __weak ItemListViewController *weakSelf = self;
+        [selector showModalWithController:self closeCallback:^(NSArray *selectedCategories) {
+            
+            // Recoge la categoria selecionada
+            // NOTA: Seleccionar "NADA" implica mover al raiz
+            MCategory *destCategory = selectedCategories.count>0 ? selectedCategories[0] : nil;
+
+            
+            // No se procesara si el destino es igual a la actual
+            if(weakSelf.selectedCategory.internalIDValue==destCategory.internalIDValue) {
+                // Aqui deberia dar un aviso al usuario
+            } else {
+                
+                // Itera los elementos seleccionados moviendolos a la categoria destino
+                for(MBaseEntity *item in weakSelf.selectedEditingItems) {
+                    
+                    // El movimiento depende del tipo de elemento
+                    if([item isKindOfClass:[MCategory class]]) {
+                        [((MCategory *)item) transferToParent:destCategory inMap:self.selectedMap];
+                    } else {
+                        MPoint *point = (MPoint *)item;
+                        [point removeFromCategory:self.selectedCategory];
+                        if(destCategory) {
+                            [point addToCategory:destCategory];
+                        }
+                    }
+                }
+                
+                // Persiste todos los cambios
+                [weakSelf.moContext saveChanges];
+                
+                // Recarga toda la tabla puesto que ha habido cambios importantes
+                [weakSelf _loadItemListScrollingTo:nil animated:YES goingBack:NO];
+            }
+            
+            // Sale del modo de edicion
+            [self _endToolbarEditing];
+        }];
+        
+    } cancelBlock:^{
+        
+        // Sale del modo de edicion
+        [self _endToolbarEditing];
+    }];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -228,17 +289,25 @@
     
     GMapSyncViewController *controller = [GMapSyncViewController gmapSyncViewControllerWithContext:self.moContext];
     [controller showModalWithController:self closeCallback:^{
-        [self _loadItemListScrollingTo:nil animated:NO goingBack:NO];
+        [self _loadItemListScrollingTo:nil animated:YES goingBack:NO];
     }];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) viewInMap:(UIButton *)sender {
 
-
     // Consigue todos los puntos en el mapa y categoria(recursivo) seleccionados
     NSArray *points = [MPoint pointsInMap:self.selectedMap andCategoryRecursive:self.selectedCategory];
-    [VisualMapEditorViewController startEditingMPoints:points delegate:self];
+    
+    // Los muestra en el mapa
+    [VisualMapEditorViewController showPoints:points withContext:self.moContext controller:self modifiedCallback:^{
+        
+        // Un cambio de nombre al editar o un nuevo elemento hace que la lista se desordene
+        // mejor recargar la informacion de nuevo
+        [self _loadItemListScrollingTo:nil animated:YES goingBack:NO];
+        
+    }];
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -310,11 +379,11 @@
             break;
     }
     
-    [editor showModalWithController:self closeSavedCallback:^(MBaseEntity *entity) {
+    [editor showModalWithController:self startEditing:NO closeSavedCallback:^(MBaseEntity *entity) {
         
         // Un cambio de nombre al editar o un nuevo elemento hace que la lista se desordene
         // mejor recargar la informacion de nuevo
-        [self _loadItemListScrollingTo:entity animated:NO goingBack:NO];
+        [self _loadItemListScrollingTo:entity animated:YES goingBack:NO];
     }];
     
 }
@@ -367,11 +436,11 @@
                 
             case MET_POINT: {
                 EntityEditorViewController *editor = [PointEditorViewController editorWithPoint:(MPoint *)selectedItem  moContext:self.moContext];
-                [editor showModalWithController:self closeSavedCallback:^(MBaseEntity *entity) {
+                [editor showModalWithController:self startEditing:NO closeSavedCallback:^(MBaseEntity *entity) {
                     
                     // Un cambio de nombre al editar o un nuevo elemento hace que la lista se desordene
                     // mejor recargar la informacion de nuevo
-                    [self _loadItemListScrollingTo:entity animated:NO goingBack:NO];
+                    [self _loadItemListScrollingTo:entity animated:YES goingBack:NO];
                 }];
                 }
                 break;
@@ -484,7 +553,7 @@
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) _setLeftCheckStatusFor:(MBaseEntity *)item cell:(TDBadgedCell *)cell {
-    
+
     if(!self.canSelectCategories && item.entityType==MET_CATEGORY) {
         cell.leftCheckState = ST_DISABLED;
     } else {

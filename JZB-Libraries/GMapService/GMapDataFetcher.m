@@ -9,6 +9,9 @@
 #import "GMapDataFetcher.h"
 #import "DDLog.h"
 #import "SimpleXMLReader.h"
+#import "NetworkProgressWheelController.h"
+
+
 
 
 // *********************************************************************************************************************
@@ -88,7 +91,9 @@
     [request setHTTPBody:[self encodeParamsInDictionary:paramsDict]];
 
     NSHTTPURLResponse *response = nil;
+    [NetworkProgressWheelController start];
     NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:err];
+    [NetworkProgressWheelController stop];
 
     if(*err != nil || (response != nil && response.statusCode != 200)) {
 
@@ -121,46 +126,15 @@
 
     // DDLogVerbose(@"GMapDataFetcher - getServiceInfo");
 
-
     __autoreleasing NSError *localError = nil;
     if(err == nil) err = &localError;
     *err = nil;
-
-
-
+    
+    
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:feedStrURL]];
-    [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
-    [request setTimeoutInterval:GMAPDataFetcher_Timeout];
     [request setHTTPMethod:@"GET"];
-    [request setValue:@"myCompany-myAppName-v1.0(gzip)" forHTTPHeaderField:@"User-Agent"];
-    [request setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
-    [request setValue:@"2.0" forHTTPHeaderField:@"GData-Version"];
-    [request setValue:@"no-cache" forHTTPHeaderField:@"Cache-Control"];
-    [request setValue:@"no-cache" forHTTPHeaderField:@"Pragma"];
-    if(self.authToken != nil) {
-        [request setValue:[NSString stringWithFormat:@"GoogleLogin auth=%@", self.authToken] forHTTPHeaderField:@"Authorization"];
-    }
 
-
-    NSDictionary *dictResult = nil;
-    NSHTTPURLResponse *response = nil;
-    NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:err];
-
-
-    //NSString *content = [[NSString alloc] initWithData:returnData encoding:NSUTF8StringEncoding];
-    //DDLogVerbose(@"content: %@", content);
-
-    if(*err != nil || (response != nil && response.statusCode != 200)) {
-
-        *err = [self anError:@"Calling GMap service" withError:*err returnData:returnData];
-
-    } else {
-
-        dictResult = [SimpleXMLReader dictionaryForXMLData:returnData error:err];
-        // DDLogVerbose(@"NSDictionary object value: %@", dictResult);
-    }
-
-    // Retorna el resultado
+    NSDictionary *dictResult = [self _processNetworkRequest:request error:err];
     return dictResult;
 }
 
@@ -169,45 +143,16 @@
 
     // DDLogVerbose(@"GMapDataFetcher - putServiceInfo");
 
-
     __autoreleasing NSError *localError = nil;
     if(err == nil) err = &localError;
     *err = nil;
 
 
-
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:feedStrURL]];
-    [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
-    [request setTimeoutInterval:GMAPDataFetcher_Timeout];
     [request setHTTPMethod:@"POST"];
-    [request setValue:@"application/atom+xml;charset=UTF-8" forHTTPHeaderField:@"Content-type"];
-    [request setValue:@"myCompany-myAppName-v1.0(gzip)" forHTTPHeaderField:@"User-Agent"];
-    [request setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
-    [request setValue:@"2.0" forHTTPHeaderField:@"GData-Version"];
-    [request setValue:@"no-cache" forHTTPHeaderField:@"Cache-Control"];
-    [request setValue:@"no-cache" forHTTPHeaderField:@"Pragma"];
-
-    if(self.authToken != nil) {
-        [request setValue:[NSString stringWithFormat:@"GoogleLogin auth=%@", self.authToken] forHTTPHeaderField:@"Authorization"];
-    }
-
     [request setHTTPBody:[feedData dataUsingEncoding:NSUTF8StringEncoding]];
 
-
-    NSDictionary *dictResult = nil;
-    NSHTTPURLResponse *response = nil;
-    NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:err];
-
-    if(*err != nil || (response != nil && (response.statusCode != 200 && response.statusCode != 201))) {
-
-        *err = [self anError:@"Calling GMap service" withError:*err returnData:returnData];
-
-    } else {
-        dictResult = [SimpleXMLReader dictionaryForXMLData:returnData error:err];
-        // DDLogVerbose(@"NSDictionary object value: %@", dictResult);
-    }
-
-    // Retorna el resultado
+    NSDictionary *dictResult = [self _processNetworkRequest:request error:err];
     return dictResult;
 }
 
@@ -216,46 +161,17 @@
 
     // DDLogVerbose(@"GMapDataFetcher - putServiceInfo");
 
-
     __autoreleasing NSError *localError = nil;
     if(err == nil) err = &localError;
     *err = nil;
 
-
-
+    
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:feedStrURL]];
-    [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
-    [request setTimeoutInterval:GMAPDataFetcher_Timeout];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"PUT" forHTTPHeaderField:@"X-HTTP-Method-Override"];
-    [request setValue:@"application/atom+xml;charset=UTF-8" forHTTPHeaderField:@"Content-type"];
-    [request setValue:@"myCompany-myAppName-v1.0(gzip)" forHTTPHeaderField:@"User-Agent"];
-    [request setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
-    [request setValue:@"2.0" forHTTPHeaderField:@"GData-Version"];
-    [request setValue:@"no-cache" forHTTPHeaderField:@"Cache-Control"];
-    [request setValue:@"no-cache" forHTTPHeaderField:@"Pragma"];
-
-    if(self.authToken != nil) {
-        [request setValue:[NSString stringWithFormat:@"GoogleLogin auth=%@", self.authToken] forHTTPHeaderField:@"Authorization"];
-    }
-
     [request setHTTPBody:[feedData dataUsingEncoding:NSUTF8StringEncoding]];
 
-
-    NSDictionary *dictResult = nil;
-    NSHTTPURLResponse *response = nil;
-    NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:err];
-
-    if(*err != nil || (response != nil && (response.statusCode != 200 && response.statusCode != 201))) {
-
-        *err = [self anError:@"Calling GMap service" withError:*err returnData:returnData];
-
-    } else {
-        dictResult = [SimpleXMLReader dictionaryForXMLData:returnData error:err];
-        // DDLogVerbose(@"NSDictionary object value: %@", dictResult);
-    }
-
-    // Retorna el resultado
+    NSDictionary *dictResult = [self _processNetworkRequest:request error:err];
     return dictResult;
 }
 
@@ -264,40 +180,17 @@
 
     // DDLogVerbose(@"GMapDataFetcher - deleteServiceInfo");
 
-
     __autoreleasing NSError *localError = nil;
     if(err == nil) err = &localError;
     *err = nil;
 
-
-
+    
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:feedStrURL]];
-    [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
-    [request setTimeoutInterval:GMAPDataFetcher_Timeout];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"DELETE" forHTTPHeaderField:@"X-HTTP-Method-Override"];
-    [request setValue:@"application/atom+xml;charset=UTF-8" forHTTPHeaderField:@"Content-type"];
-    [request setValue:@"myCompany-myAppName-v1.0(gzip)" forHTTPHeaderField:@"User-Agent"];
-    [request setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
-    [request setValue:@"2.0" forHTTPHeaderField:@"GData-Version"];
-    [request setValue:@"no-cache" forHTTPHeaderField:@"Cache-Control"];
-    [request setValue:@"no-cache" forHTTPHeaderField:@"Pragma"];
 
-    if(self.authToken != nil) {
-        [request setValue:[NSString stringWithFormat:@"GoogleLogin auth=%@", self.authToken] forHTTPHeaderField:@"Authorization"];
-    }
-
-
-    NSHTTPURLResponse *response = nil;
-    NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:err];
-
-    if(*err != nil || (response != nil && (response.statusCode != 200 && response.statusCode != 201))) {
-        *err = [self anError:@"Calling GMap service" withError:*err returnData:returnData];
-        return false;
-
-    } else {
-        return true;
-    }
+    [self _processNetworkRequest:request error:err];
+    return *err==nil;
 }
 
 // =====================================================================================================================
@@ -334,5 +227,42 @@
     NSString *encodedDictionaryStr = [parts componentsJoinedByString:@"&"];
     return [encodedDictionaryStr dataUsingEncoding:NSUTF8StringEncoding];
 }
+
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (NSDictionary *) _processNetworkRequest:(NSMutableURLRequest *)request error:(NSError **)err {
+    
+    [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
+    [request setTimeoutInterval:GMAPDataFetcher_Timeout];
+    [request setValue:@"application/atom+xml;charset=UTF-8" forHTTPHeaderField:@"Content-type"];
+    [request setValue:@"myCompany-myAppName-v1.0(gzip)" forHTTPHeaderField:@"User-Agent"];
+    [request setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
+    [request setValue:@"2.0" forHTTPHeaderField:@"GData-Version"];
+    [request setValue:@"no-cache" forHTTPHeaderField:@"Cache-Control"];
+    [request setValue:@"no-cache" forHTTPHeaderField:@"Pragma"];
+    
+    if(self.authToken != nil) {
+        [request setValue:[NSString stringWithFormat:@"GoogleLogin auth=%@", self.authToken] forHTTPHeaderField:@"Authorization"];
+    }
+    
+    NSHTTPURLResponse *response = nil;
+    [NetworkProgressWheelController start];
+    NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:err];
+    [NetworkProgressWheelController stop];
+
+    //NSString *content = [[NSString alloc] initWithData:returnData encoding:NSUTF8StringEncoding];
+    //DDLogVerbose(@"content: %@", content);
+
+    
+    if(*err != nil || (response != nil && (response.statusCode != 200 && response.statusCode != 201))) {
+        *err = [self anError:@"Calling GMap service" withError:*err returnData:returnData];
+        return nil;
+    } else {
+        NSDictionary *dictResult = [SimpleXMLReader dictionaryForXMLData:returnData error:err];
+        // DDLogVerbose(@"NSDictionary object value: %@", dictResult);
+        return dictResult;
+    }
+}
+
 
 @end

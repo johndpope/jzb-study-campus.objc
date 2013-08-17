@@ -58,7 +58,7 @@
 	return self.step;
 }
 
-- (void) runAnimated:(BOOL)animated {
+- (void) runAnimated:(BOOL)animated canceled:(CPAnimationStepBlock)canceled {
 	if (!self.consumableSteps) {
 		self.consumableSteps = [[NSMutableArray alloc] initWithArray:[self animationStepArray]];
 	}
@@ -68,7 +68,7 @@
 	}
 	CPAnimationStepBlock completionStep = ^{
 		[self.consumableSteps removeLastObject];
-		[self runAnimated:animated]; // recurse!
+		[self runAnimated:animated canceled:canceled]; // recurse!
 	};
 	CPAnimationStep* currentStep = [self.consumableSteps lastObject];
 	// Note: do not animate to short steps
@@ -80,7 +80,9 @@
 						 completion:^(BOOL finished) {
 							 if (finished) {
 								 completionStep();
-							 }
+							 } else {
+                                 if(canceled!=nil) canceled();
+                             }
 						 }];
 	} else {
 		void (^execution)(void) = ^{
@@ -97,7 +99,7 @@
 }
 
 - (void) run {
-	[self runAnimated:YES];
+	[self runAnimated:YES canceled:nil];
 }
 
 #pragma mark - pretty-print

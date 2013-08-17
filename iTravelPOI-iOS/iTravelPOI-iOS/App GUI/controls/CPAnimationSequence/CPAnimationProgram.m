@@ -6,7 +6,7 @@
 
 @interface CPAnimationStep(hidden)
 - (NSArray*) animationStepArray;
-- (CPAnimationStepBlock) animationStep:(BOOL)animated;
+- (CPAnimationStepBlock) animationStep_deleted_2:(BOOL)animated;
 @end
 
 @interface CPAnimationProgram()
@@ -73,10 +73,10 @@
 	return array;
 }
 
-- (CPAnimationStepBlock) animationStep:(BOOL)animated {
+- (CPAnimationStepBlock) animationStep_deleted_2:(BOOL)animated {
 	CPAnimationStepBlock programStep = ^{
 		for (CPAnimationStep* current in self.steps) {
-			[current runAnimated:animated];
+			//[current runAnimated:animated]; //quitado porque parece que no se llama
 		}
 	};
 	return [programStep copy];

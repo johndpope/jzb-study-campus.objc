@@ -31,10 +31,12 @@ typedef void (^TCancelBlock)(void);
 @property (nonatomic, strong) NSString      *title;
 @property (nonatomic, strong) UIImage       *image;
 @property (nonatomic, assign) NSUInteger    tagID;
+@property (nonatomic, assign) BOOL          enabled;
 @property (nonatomic, weak)   id            target;
 @property (nonatomic, assign) SEL           action;
 
 + (STBItem *) itemWithTitle:(NSString *)title image:(UIImage *)image tagID:(NSUInteger)tagID target:(id)target action:(SEL)action;
++ (STBItem *) itemWithTitle:(NSString *)title image:(UIImage *)image enabled:(BOOL)enabled tagID:(NSUInteger)tagID target:(id)target action:(SEL)action;
 
 @end
 
@@ -64,6 +66,7 @@ typedef void (^TCancelBlock)(void);
 - (void) addItem:(STBItem *)item;
 - (void) setItems:(NSArray *)items itemSetID:(NSUInteger)itemSetID animated:(BOOL)animated;
 - (void) removeAllItemsAnimated:(BOOL)animated;
+- (void) enableItemWithTagID:(NSUInteger)tagID enabled:(BOOL)enabled;
 
 - (void) activateEditModeForItemWithTagID:(NSUInteger)tagID
                                  animated:(BOOL)animated

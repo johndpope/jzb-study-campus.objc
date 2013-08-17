@@ -38,15 +38,21 @@ typedef void (^AnimationBlock)(void);
 @implementation STBItem
 
 + (STBItem * ) itemWithTitle:(NSString *)title image:(UIImage *)image tagID:(NSUInteger)tagID target:(id)target action:(SEL)action {
-   
+    return [STBItem itemWithTitle:title image:image enabled:YES tagID:tagID target:target action:action];
+}
+
++ (STBItem *) itemWithTitle:(NSString *)title image:(UIImage *)image enabled:(BOOL)enabled tagID:(NSUInteger)tagID target:(id)target action:(SEL)action {
+    
     STBItem *me = [[STBItem alloc] init];
     me.title = title;
     me.image = image;
+    me.enabled = enabled;
     me.tagID = tagID;
     me.target = target;
     me.action = action;
     return  me;
 }
+
 
 @end
 
@@ -112,6 +118,8 @@ typedef void (^AnimationBlock)(void);
     [btn setImage:item.image forState:UIControlStateNormal];
     [btn setTitle:item.title forState:UIControlStateNormal];
     btn.titleLabel.font = ScrollableToolbar.itemLabelFont;
+    btn.enabled = item.enabled;
+    [btn setTitleColor:[UIColor colorWithRed:91.0/255.0 green:91.0/255.0 blue:91.0/255.0 alpha:1] forState:UIControlStateDisabled];
     btn.tag = item.tagID;
     
     // Establece la posicion de los elementos (hay que colocar el texto 2 veces porque la primera vez podría salir truncado)
@@ -159,7 +167,7 @@ typedef void (^AnimationBlock)(void);
     // Cancela el modo de edicion
     if(self.editingModeBtn!=nil) {
         self.editModePanel.frame = CGRectMakeFromFrame(0, self.frame.size.height, self.editModePanel.frame);
-        self.scrollView.frame = CGRectMakeFromFrame(0, 0, self.scrollView.frame);
+        self.scrollView.frame = CGRectMakeFromFrame(0, SHADOW_CAP_SIZE, self.scrollView.frame);
         self.editingModeBtn = nil;
     }
     
@@ -169,6 +177,7 @@ typedef void (^AnimationBlock)(void);
         [theItems enumerateObjectsUsingBlock:^(STBItem *item, NSUInteger idx, BOOL *stop) {
             [self addItem:item];
         }];
+        self.scrollView.frame = CGRectMakeFromFrame(0, self.frame.size.height, self.scrollView.frame);
     };
 
     // Actua dependiendo de si hay que animar el trabajo o no
@@ -195,17 +204,21 @@ typedef void (^AnimationBlock)(void);
             
         }], [CPAnimationStep for:0.05 animate:^{
             
-            self.scrollView.frame = CGRectMakeFromFrame(0, 0, self.scrollView.frame);
+            self.scrollView.frame = CGRectMakeFromFrame(0, SHADOW_CAP_SIZE, self.scrollView.frame);
             
         }], nil];
-        [animations runAnimated:YES];
+        [animations runAnimated:YES canceled:^{
+            setItemsBlock();
+            self.scrollView.frame = CGRectMakeFromFrame(0, SHADOW_CAP_SIZE, self.scrollView.frame);
+        }];
         
     } else {
         setItemsBlock();
+        self.scrollView.frame = CGRectMakeFromFrame(0, SHADOW_CAP_SIZE, self.scrollView.frame);
     }
     
     // Precalcula el tamaño que tendra al finalizar para establecer las sombras por adelantado
-    CGFloat overallSize = self.btnItems.count * BTN_FIXED_WIDTH;
+    CGFloat overallSize = theItems.count * BTN_FIXED_WIDTH;
     self.scrollView.contentSize = CGSizeMake(overallSize, self.scrollView.frame.size.height);
     [self _setScrollShadows];
     
@@ -217,7 +230,7 @@ typedef void (^AnimationBlock)(void);
     // Cancela el modo de edicion
     if(self.editingModeBtn!=nil) {
         self.editModePanel.frame = CGRectMakeFromFrame(0, self.frame.size.height, self.editModePanel.frame);
-        self.scrollView.frame = CGRectMakeFromFrame(0, 0, self.scrollView.frame);
+        self.scrollView.frame = CGRectMakeFromFrame(0, SHADOW_CAP_SIZE, self.scrollView.frame);
         self.editingModeBtn = nil;
     }
     
@@ -240,14 +253,29 @@ typedef void (^AnimationBlock)(void);
             [UIView animateWithDuration:0.2
                              animations:^{
                                  removeItemsBlock();
-                                 self.scrollView.frame = CGRectMakeFromFrame(0, 0, self.scrollView.frame);
+                                 self.scrollView.frame = CGRectMakeFromFrame(0, SHADOW_CAP_SIZE, self.scrollView.frame);
+                             } completion:^(BOOL finished) {
+                                 if(!finished) {
+                                     self.scrollView.frame = CGRectMakeFromFrame(0, SHADOW_CAP_SIZE, self.scrollView.frame);
+                                 }
                              }];
         }];
         
     } else {
         removeItemsBlock();
+        self.scrollView.frame = CGRectMakeFromFrame(0, SHADOW_CAP_SIZE, self.scrollView.frame);
     }
 
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) enableItemWithTagID:(NSUInteger)tagID enabled:(BOOL)enabled {
+    
+    // Busca el item para el cual se quiere poner en modo de edicion
+    UIButton *btn = (UIButton *)[self viewWithTag:tagID];
+    if(btn==nil) return;
+    
+    btn.enabled = enabled;
 }
 
 

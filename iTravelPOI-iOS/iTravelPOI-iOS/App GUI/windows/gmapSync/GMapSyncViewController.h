@@ -15,7 +15,7 @@
 #pragma mark -
 #pragma mark Public Enumerations & definitions
 //*********************************************************************************************************************
-typedef void (^TCloseCallback)();
+typedef void (^GSCloseCallback)();
 
 
 
@@ -33,7 +33,7 @@ typedef void (^TCloseCallback)();
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
 + (GMapSyncViewController *) gmapSyncViewControllerWithContext:(NSManagedObjectContext *)moContext;
-- (void) showModalWithController:(UIViewController *)controller closeCallback:(TCloseCallback)closeCallback;
+- (void) showModalWithController:(UIViewController *)controller closeCallback:(GSCloseCallback)closeCallback;
 
 
 @end

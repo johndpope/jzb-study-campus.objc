@@ -377,7 +377,7 @@
             destSubCatFullName = subCat.name;
         }
         
-        // Recoge la categoria destino y, si es de nueva creacion, le asigna el icono del origen
+        // Consigue la nueva categoria destino y le aplica el icono del origen si es de nueva creacion
         MCategory *destSubCat = [MCategory categoryWithFullName:destSubCatFullName inContext:self.managedObjectContext];
         if(destSubCat.isInserted) {
             destSubCat.iconHREF = subCat.iconHREF;
@@ -389,6 +389,38 @@
     
 }
 
+
+//---------------------------------------------------------------------------------------------------------------------
+- (MCategory *) transferToParent:(MCategory *)destParent inMap:(MMap *)map {
+
+    // Primero chequea que se esta cambiando de categoria padre
+    if(self.parent.internalIDValue==destParent.internalIDValue) {
+        return self;
+    }
+
+    
+    // Calcula el nombre de la categoria destino resultante de cambiar de padre
+    NSString *destSelfFullName;
+    if(destParent==nil) {
+        // Se esta convirtiendo esta categoria como raiz
+        destSelfFullName = self.name;
+    } else {
+        destSelfFullName = [NSString stringWithFormat:@"%@%@%@", destParent.fullName,CATEGORY_NAME_SEPARATOR,self.name];
+    }
+
+    // Consigue la nueva categoria destino y le aplica el icono del origen si es de nueva creacion
+    MCategory *destSelfCat = [MCategory categoryWithFullName:destSelfFullName inContext:self.managedObjectContext];
+    if(destSelfCat.isInserted) {
+        destSelfCat.iconHREF = self.iconHREF;
+    }
+
+    // Mueve la informacion
+    [self transferTo:destSelfCat inMap:map];
+    
+    // Retorna la nueva categoria
+    return destSelfCat;
+    
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 - (MODEL_ENTITY_TYPE) entityType {

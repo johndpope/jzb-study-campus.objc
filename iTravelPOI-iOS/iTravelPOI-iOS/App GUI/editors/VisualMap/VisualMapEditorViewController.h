@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import <MapKit/MapKit.h>
 
 
 
@@ -15,21 +15,10 @@
 #pragma mark -
 #pragma mark Public Enumerations & definitions
 //*********************************************************************************************************************
+typedef void (^VMapCloseCallback)(CLLocationCoordinate2D coord);
+typedef void (^VMapModifiedCallback)(void);
 
 
-
-
-
-// *********************************************************************************************************************
-#pragma mark -
-#pragma mark <VisualMapEditorDelegate> Protocol
-// *********************************************************************************************************************
-@class VisualMapEditorViewController;
-@protocol VisualMapEditorDelegate <NSObject>
-
-- (BOOL) closeVisualMapEditor:(VisualMapEditorViewController *)senderEditor annotations:(NSArray *)annotations;
-
-@end
 
 
 
@@ -39,16 +28,15 @@
 //*********************************************************************************************************************
 @interface VisualMapEditorViewController : UIViewController
 
-@property (nonatomic, assign) UIViewController<VisualMapEditorDelegate> *delegate;
-@property (nonatomic, strong) NSMutableArray *annotations;
 
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (VisualMapEditorViewController *) startEditingMPoints:(NSArray *)mpoints delegate:(UIViewController<VisualMapEditorDelegate> *)delegate;
-+ (VisualMapEditorViewController *) startEditingAnnotations:(NSArray *)annotations delegate:(UIViewController<VisualMapEditorDelegate> *)delegate;
++ (VisualMapEditorViewController *) editCoordinates:(CLLocationCoordinate2D)coord title:(NSString *)title image:(UIImage *)image controller:(UIViewController *)controller closeCallback:(VMapCloseCallback)closeCallback;
++ (VisualMapEditorViewController *) showPointsWithNoEditing:(NSArray *)points controller:(UIViewController *)controller;
++ (VisualMapEditorViewController *) showPoints:(NSArray *)points withContext:(NSManagedObjectContext *)moContext controller:(UIViewController *)controller modifiedCallback:(VMapModifiedCallback)modifiedCallback;
 
 
 @end

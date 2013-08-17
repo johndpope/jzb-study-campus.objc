@@ -14,6 +14,8 @@
 
 #import "MCategory.h"
 
+#import "ScrollableToolbar.h"
+
 #import "NSManagedObjectContext+Utils.h"
 #import "UIView+FirstResponder.h"
 #import "SVProgressHUD.h"
@@ -32,9 +34,9 @@ Stuff; \
 _Pragma("clang diagnostic pop") \
 } while (0)
 
-#define BTN_ID_EDIT            4001
-#define BTN_ID_EDIT_OK         4002
-#define BTN_ID_EDIT_CANCEL     4003
+#define BTN_ID_EDIT_OK         4001
+#define BTN_ID_EDIT_CANCEL     4002
+#define BTN_ID_EDIT            4003
 
 #define ITEMSETID_VIEW      1001
 #define ITEMSETID_EDIT      1002
@@ -53,6 +55,7 @@ _Pragma("clang diagnostic pop") \
 
 @property (nonatomic, assign) BOOL isEditing;
 @property (nonatomic, assign) BOOL wasSaved;
+@property (nonatomic, assign) BOOL startEditing;
 @property (nonatomic, strong) TCloseSavedCallback closeSavedCallback;
 @property (nonatomic, assign) BOOL alreadyDismissed;
 
@@ -87,13 +90,18 @@ _Pragma("clang diagnostic pop") \
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) showModalWithController:(UIViewController *)controller closeSavedCallback:(TCloseSavedCallback)closeSavedCallback {
+- (void) showModalWithController:(UIViewController *)controller startEditing:(BOOL)startEditing closeSavedCallback:(TCloseSavedCallback)closeSavedCallback {
 
     self.closeSavedCallback = closeSavedCallback;
-    self.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    self.modalTransitionStyle = [self _editorTransitionStyle];
+    self.startEditing = startEditing;
     [controller presentViewController:self animated:YES completion:nil];
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (UIModalTransitionStyle) _editorTransitionStyle {
+    return UIModalTransitionStyleFlipHorizontal;
+}
 
 
 
@@ -130,17 +138,19 @@ _Pragma("clang diagnostic pop") \
     self.titleBar = titleBar;
 
     
+    // Crea el boton de back
+    UIButton *btnBack = [[UIButton alloc] initWithFrame:CGRectMake(0,5,50,30)];
+    [btnBack setImage:[UIImage imageNamed:@"btn-back"] forState:UIControlStateNormal];
+    [btnBack addTarget:self action:@selector(_btnCloseBack:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:btnBack];
+
+    
     // Crea la barra de herramientas con las opciones por defecto
     ScrollableToolbar *scrollableToolbar = [[ScrollableToolbar alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-51, self.view.frame.size.width, 51)];
     [self.view addSubview:scrollableToolbar];
     self.scrollableToolbar = scrollableToolbar;
 
     
-    // Crea el boton de back
-    UIButton *btnBack = [[UIButton alloc] initWithFrame:CGRectMake(0,5,50,30)];
-    [btnBack setImage:[UIImage imageNamed:@"btn-back"] forState:UIControlStateNormal];
-    [btnBack addTarget:self action:@selector(_btnCloseBack:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:btnBack];
 
     // Procesa, forma recursiva, todos los controles de edicion de texto
     [self _processAllTextControlsIn:self.view];
@@ -168,8 +178,8 @@ _Pragma("clang diagnostic pop") \
 
     [super viewDidAppear:animated];
     
-    if(self.wasNewAdded || self.isEditing) {
-        self.isEditing = YES;
+    if(self.wasNewAdded || self.startEditing || self.isEditing) {
+        if(self.wasNewAdded) self.isEditing = YES;
         [self _begingEditing];
     } else {
         if(self.scrollableToolbar.itemSetID!=ITEMSETID_VIEW) {
@@ -549,10 +559,16 @@ _Pragma("clang diagnostic pop") \
 // ---------------------------------------------------------------------------------------------------------------------
 - (NSArray *) _tbItemsForDefaultOptions {
     
-    NSArray *__tbItemsForDefaultOptions = [NSArray arrayWithObjects:
-                                           [STBItem itemWithTitle:@"Edit Info" image:[UIImage imageNamed:@"btn-edit"] tagID:BTN_ID_EDIT target:self action:@selector(_begingEditing)],
-                                           nil];
-    return __tbItemsForDefaultOptions;
+    NSMutableArray *items = [NSMutableArray arrayWithObjects:
+                             [STBItem itemWithTitle:@"Edit Info" image:[UIImage imageNamed:@"btn-edit"] tagID:BTN_ID_EDIT target:self action:@selector(_begingEditing)],
+                             nil];
+    
+    NSArray *others = [self _tbItemsDefaultOthers];
+    if(others!=nil) {
+        [items addObjectsFromArray:others];
+    }
+
+    return items;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -569,6 +585,11 @@ _Pragma("clang diagnostic pop") \
         [items addObjectsFromArray:others];
     }
     return items;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (NSArray *) _tbItemsDefaultOthers {
+    return  nil;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -646,8 +667,8 @@ _Pragma("clang diagnostic pop") \
     // Establece que ya no esta en modo de edicion
     self.isEditing = NO;
     
-    // Si se cancela la edicion de un elemento que se estaba añadiendo se cierra el editor
-    if(self.wasNewAdded || self.entity==nil) {
+    // Si se termina la edicion de un elemento que se estaba añadiendo o que comenzon editando se cierra el editor
+    if(self.wasNewAdded || self.startEditing || self.entity==nil) {
         [self _dismissEditor];
     }
 
@@ -658,13 +679,21 @@ _Pragma("clang diagnostic pop") \
     
     // Deshecha el contexto hijo con todos sus cambios (restaura los originales)
     NSManagedObjectContext *parentMoc = self.moContext.parentContext;
-    self.moContext = parentMoc;
-    MBaseEntity *copyOfEntity = (MBaseEntity *)[parentMoc objectWithID:self.entity.objectID];
-    self.entity = copyOfEntity;
-    if(self.associatedEntity!=nil) {
-        MBaseEntity *copyOfEntity = (MBaseEntity *)[parentMoc objectWithID:self.associatedEntity.objectID];
-        self.associatedEntity = copyOfEntity;
+    
+    // La entidad previa solo existira en el contexto hijo si no fue de nueva creacion (directamente en el contexto hijo)
+    if(!self.wasNewAdded) {
+        MBaseEntity *copyOfEntity = (MBaseEntity *)[parentMoc objectWithID:self.entity.objectID];
+        self.entity = copyOfEntity;
+        if(self.associatedEntity!=nil) {
+            MBaseEntity *copyOfEntity = (MBaseEntity *)[parentMoc objectWithID:self.associatedEntity.objectID];
+            self.associatedEntity = copyOfEntity;
+        }
+    } else {
+        self.entity = nil;
+        self.associatedEntity = nil;
+        
     }
+    self.moContext = parentMoc;
 
     
     // Revierte cualquier cambio que se haya podido hacer

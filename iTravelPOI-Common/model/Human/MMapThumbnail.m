@@ -8,6 +8,7 @@
 #import "MMapThumbnail.h"
 #import "NSManagedObjectContext+Utils.h"
 #import "MPoint.h"
+#import "NetworkProgressWheelController.h"
 
 
 
@@ -119,7 +120,9 @@
     
     NSError *err = nil;
     NSHTTPURLResponse *response = nil;
+    [NetworkProgressWheelController start];
     NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&err];
+    [NetworkProgressWheelController stop];
     
     if(err != nil || (response != nil && response.statusCode != 200)) {
         DDLogError(@"Error requesting thumbnail image. StatusCode = %ld, %@\nError = %@",

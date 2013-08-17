@@ -42,7 +42,7 @@ typedef CPAnimationStepBlock AnimationStep __deprecated;
 #pragma mark - execution
 
 /** Starts the step execution. */
-- (void) runAnimated:(BOOL)animated;
+- (void) runAnimated:(BOOL)animated canceled:(CPAnimationStepBlock)canceled;
 /** Shortcut for [step runAnimated:YES] */
 - (void) run;
 

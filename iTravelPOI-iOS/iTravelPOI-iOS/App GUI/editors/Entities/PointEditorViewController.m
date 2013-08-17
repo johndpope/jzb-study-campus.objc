@@ -16,11 +16,14 @@
 #import "MMapThumbnail.h"
 #import "NSManagedObjectContext+Utils.h"
 
+#import "OpenInActionSheetViewController.h"
 #import "IconEditorViewController.h"
 #import "LatLngEditorViewController.h"
 #import "CategorySelectorViewController.h"
 #import "VisualMapEditorViewController.h"
-#import "MyMKPointAnnotation.h"
+#import "MPointMapAnnotation.h"
+
+#import "ScrollableToolbar.h"
 
 #import "UIView+FirstResponder.h"
 #import "ImageManager.h"
@@ -34,7 +37,12 @@
 #pragma mark -
 #pragma mark Private Enumerations & definitions
 //*********************************************************************************************************************
-#define BTN_ID_KEYBOARD            4001
+#define BTN_ID_OPEN_IN             4001
+#define BTN_ID_VIEW_IN_MAP         4002
+
+#define BTN_ID_KEYBOARD            5001
+#define BTN_ID_GPS                 5002
+#define BTN_ID_IN_MAP              5003
 
 
 
@@ -44,7 +52,7 @@
 #pragma mark PRIVATE interface definition
 //*********************************************************************************************************************
 @interface PointEditorViewController() <CLLocationManagerDelegate,
-                                        IconEditorDelegate, LatLngEditorDelegate, VisualMapEditorDelegate>
+                                        IconEditorDelegate, LatLngEditorDelegate>
 
 
 @property (nonatomic, assign) IBOutlet UIImageView              *fIconImage;
@@ -71,7 +79,6 @@
 
 
 @property (nonatomic, strong) CLLocationManager *locMgr;
-@property (nonatomic, assign) BOOL usingGPSLocation;
 
 @end
 
@@ -119,6 +126,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 + (PointEditorViewController *) editorWithPoint:(MPoint *)point moContext:(NSManagedObjectContext *)moContext {
 
+
     // Crea el editor desde el NIB y lo inicializa con la entidad (y contexto) especificada
    PointEditorViewController *me = [[PointEditorViewController alloc] initWithNibName:@"PointEditorViewController" bundle:nil];
     [me initWithEntity:point moContext:point.managedObjectContext];
@@ -146,9 +154,8 @@
     // Inicializa la geolocalizacion
     self.locMgr = [[CLLocationManager alloc] init];
     self.locMgr.delegate = self;
-    self.locMgr.desiredAccuracy = kCLLocationAccuracyNearestTenMeters; // En metros
-    self.locMgr.distanceFilter = kCLDistanceFilterNone; // En metros
-    self.usingGPSLocation = FALSE;
+    self.locMgr.desiredAccuracy = kCLLocationAccuracyBestForNavigation; // En metros
+    self.locMgr.distanceFilter = 5; // En metros
     
     
     // Establece el color de fondo del editor de texto para la descripcion
@@ -170,12 +177,25 @@
     [self.vLocationSection insertSubview:bgImgView2 atIndex:0];
     self.vLocationSection.backgroundColor = [UIColor clearColor];
 
+    [self.fThumbnailSpinner setHidden:TRUE];
+    [self.fThumbnailSpinner stopAnimating];
+    [self.fPositionDot  setHidden:FALSE];
+
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)viewDidAppear:(BOOL)animated {
 
     [super viewDidAppear:animated];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) viewDidDisappear:(BOOL)animated {
+    
+    [super viewDidDisappear:animated];
+    
+    // Para el uso del GPS
+    [self.locMgr stopUpdatingLocation];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -200,7 +220,7 @@
 
 //=====================================================================================================================
 #pragma mark -
-#pragma mark <IconEditorDelegate, LatLngEditorDelegate, VisualMapEditorDelegate> protocol methods
+#pragma mark <IconEditorDelegate, LatLngEditorDelegate> protocol methods
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL) closeIconEditor:(IconEditorViewController *)senderEditor {
 
@@ -215,18 +235,6 @@
     return TRUE;
 }
 
-// ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) closeVisualMapEditor:(VisualMapEditorViewController *)senderEditor annotations:(NSArray *)annotations {
-    
-    // El array de anotaciones deberia tener solo un elemento. En el que solo se deberia haber modificado la posicion
-    MyMKPointAnnotation *theAnnotation = (MyMKPointAnnotation *)[annotations objectAtIndex:0];
-    if(theAnnotation!=nil) {
-        [self _showAndStoreLatitude:theAnnotation.coordinate.latitude longitude:theAnnotation.coordinate.longitude];
-    }
-    
-    return TRUE;
-}
-
 
 
 
@@ -236,10 +244,19 @@
 // ---------------------------------------------------------------------------------------------------------------------
 // Our location updates are sent here
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
-    [self _showGPSAccuracyForLocation:newLocation];
-    if(self.usingGPSLocation && newLocation!=nil) {
+
+    if(newLocation!=nil) {
+        
+        // Actualiza la información
+        [self _showGPSAccuracyForLocation:newLocation];
         [self _showAndStoreLatitude:newLocation.coordinate.latitude longitude:newLocation.coordinate.longitude];
+        
+        // Si ya tenemos una posición con suficiente precisión, para el GPS
+        if(newLocation!=nil && newLocation.horizontalAccuracy<=10) {
+            [self.locMgr stopUpdatingLocation];
+        }
     }
+    
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -286,11 +303,16 @@
     }
 }
 
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) _btnOpenIn:(id)sender {
+    [OpenInActionSheetViewController showOpenInActionSheetWithController:self point:self.point];
+}
+
 //---------------------------------------------------------------------------------------------------------------------
 - (void) _btnLocationGPSClicked:(id)sender {
     
     [self.view findFirstResponderAndResign];
-    self.usingGPSLocation = TRUE;
     [self.locMgr startUpdatingLocation];
     //[self locationManager:self.locMgr didUpdateToLocation:self.locMgr.location fromLocation:nil];
 }
@@ -299,7 +321,6 @@
 - (void) _btnLocationEditorClicked:(id)sender {
     
     [self.view findFirstResponderAndResign];
-    self.usingGPSLocation = FALSE;
     [self.locMgr stopUpdatingLocation];
     [LatLngEditorViewController startEditingLat:self.latitude Lng:self.longitude delegate:self];
 }
@@ -308,27 +329,35 @@
 - (void) _btnLocationMapClicked:(UIButton *)sender {
     
     [self.view findFirstResponderAndResign];
-    self.usingGPSLocation = FALSE;
     [self.locMgr stopUpdatingLocation];
+
+    CLLocationCoordinate2D coord = {.latitude = self.latitude, .longitude = self.longitude };
+    UIImage *image = [ImageManager iconDataForHREF:self.iconHREF].image;
+    NSString *title = self.fName.text;
+
+    [VisualMapEditorViewController editCoordinates:coord title:title image:image controller:self closeCallback:^(CLLocationCoordinate2D coord) {
+        [self _showAndStoreLatitude:coord.latitude longitude:coord.longitude];
+    }];
     
-    
-    CLLocationCoordinate2D pinCoordinates = {.latitude = self.latitude, .longitude = self.longitude};
-    MyMKPointAnnotation *pin = [[MyMKPointAnnotation alloc] init];
-    pin.title = self.fName.text;
-    pin.subtitle = @"pepe";
-    pin.coordinate = pinCoordinates;
-    pin.iconHREF = self.iconHREF;
-    NSArray *annotations = [NSArray arrayWithObject:pin];
-    
-    [VisualMapEditorViewController startEditingAnnotations:annotations delegate:self];
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _btnShowInMapClicked:(UIButton *)sender {
+    
+    // Los muestra en el mapa
+    [VisualMapEditorViewController showPointsWithNoEditing:[NSArray arrayWithObject:self.point] controller:self];
+}
 
 
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark Private methods
+//---------------------------------------------------------------------------------------------------------------------
+- (UIModalTransitionStyle) _editorTransitionStyle {
+    return UIModalTransitionStyleCrossDissolve;
+}
+
 //---------------------------------------------------------------------------------------------------------------------
 - (NSString *) _editorTitle {
     return @"Point Information";
@@ -478,11 +507,21 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
+- (NSArray *) _tbItemsDefaultOthers {
+    NSArray *items = [NSArray arrayWithObjects:
+                      [STBItem itemWithTitle:@"Open In" image:[UIImage imageNamed:@"btn-open-in"] tagID:BTN_ID_OPEN_IN target:self action:@selector(_btnOpenIn:)],
+                      [STBItem itemWithTitle:@"In Map" image:[UIImage imageNamed:@"btn-map"] tagID:BTN_ID_VIEW_IN_MAP target:self action:@selector(_btnShowInMapClicked:)],
+                      nil];
+    
+    return items;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
 - (NSArray *) _tbItemsForEditingOthers {
     NSArray *items = [NSArray arrayWithObjects:
-                      [STBItem itemWithTitle:@"GPS" image:[UIImage imageNamed:@"btn-GPSLocation"] tagID:BTN_ID_KEYBOARD target:self action:@selector(_btnLocationGPSClicked:)],
+                      [STBItem itemWithTitle:@"GPS" image:[UIImage imageNamed:@"btn-GPSLocation"] tagID:BTN_ID_GPS target:self action:@selector(_btnLocationGPSClicked:)],
+                      [STBItem itemWithTitle:@"In Map" image:[UIImage imageNamed:@"btn-map2"] tagID:BTN_ID_IN_MAP target:self action:@selector(_btnLocationMapClicked:)],
                       [STBItem itemWithTitle:@"Manual" image:[UIImage imageNamed:@"btn-keyboard"] tagID:BTN_ID_KEYBOARD target:self action:@selector(_btnLocationEditorClicked:)],
-                      [STBItem itemWithTitle:@"In Map" image:[UIImage imageNamed:@"btn-map2"] tagID:BTN_ID_KEYBOARD target:self action:@selector(_btnLocationMapClicked:)],
                       nil];
 
     return items;

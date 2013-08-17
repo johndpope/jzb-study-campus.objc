@@ -185,7 +185,7 @@
     static BaseCoreDataService *_globalModelInstance = nil;
     static dispatch_once_t _predicate;
     dispatch_once(&_predicate, ^{
-                      NSLog (@"BaseCoreDataService - Creating sharedInstance");
+                      DDLogVerbose(@"BaseCoreDataService - Creating sharedInstance");
                       _globalModelInstance = [[self alloc] init];
                   });
     return _globalModelInstance;

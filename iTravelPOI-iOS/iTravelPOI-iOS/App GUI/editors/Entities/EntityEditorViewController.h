@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "MBaseEntity.h"
-#import "ScrollableToolbar.h"
 
 
 
@@ -35,7 +34,7 @@ typedef void (^TCloseSavedCallback)(MBaseEntity *entity);
 #pragma mark -
 #pragma mark INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) showModalWithController:(UIViewController *)controller closeSavedCallback:(TCloseSavedCallback)closeSavedCallback;
+- (void) showModalWithController:(UIViewController *)controller startEditing:(BOOL)startEditing closeSavedCallback:(TCloseSavedCallback)closeSavedCallback;
 
 
 
@@ -50,8 +49,10 @@ typedef void (^TCloseSavedCallback)(MBaseEntity *entity);
 @property (nonatomic, assign) BOOL wasNewAdded;
 
 
+
 - (void) initWithEntity:(MBaseEntity *)entity moContext:(NSManagedObjectContext *)moContext;
 
+- (UIModalTransitionStyle) _editorTransitionStyle;
 - (NSString *) _editorTitle;
 - (void) _nullifyEditor;
 
@@ -62,6 +63,7 @@ typedef void (^TCloseSavedCallback)(MBaseEntity *entity);
 - (void) _setFieldValuesFromEntity;
 - (void) _setEntityFromFieldValues;
 
+- (NSArray *) _tbItemsDefaultOthers;
 - (NSArray *) _tbItemsForEditingOthers;
 - (void) _disableFieldsFromEditing;
 - (void) _enableFieldsForEditing;
