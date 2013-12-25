@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3401" systemVersion="13A603" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="MBase" representedClassName="MBase" isAbstract="YES" syncable="YES">
+        <attribute name="name" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="tCreation" attributeType="Date" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <attribute name="tUpdate" attributeType="Date" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <relationship name="icon" maxCount="1" deletionRule="Nullify" destinationEntity="MIcon" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </relationship>
+    </entity>
+    <entity name="MBaseSync" representedClassName="MBaseSync" isAbstract="YES" parentEntity="MBase" syncable="YES">
+        <attribute name="etag" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <attribute name="gID" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <attribute name="markedAsDeleted" attributeType="Boolean" defaultValueString="NO" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <attribute name="modifiedSinceLastSync" attributeType="Boolean" defaultValueString="YES" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+    </entity>
+    <entity name="MIcon" representedClassName="MIcon" syncable="YES">
+        <attribute name="iconHREF" attributeType="String" indexed="YES" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <attribute name="name" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <relationship name="tag" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MTag" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </relationship>
+    </entity>
+    <entity name="MMap" representedClassName="MMap" parentEntity="MBaseSync" syncable="YES">
+        <attribute name="summary" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="points" toMany="YES" deletionRule="Cascade" destinationEntity="MPoint" inverseName="map" inverseEntity="MPoint" syncable="YES"/>
+    </entity>
+    <entity name="MPoint" representedClassName="MPoint" parentEntity="MBaseSync" syncable="YES">
+        <attribute name="descr" attributeType="String" syncable="YES"/>
+        <attribute name="latitude" attributeType="Double" defaultValueString="0.0" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <attribute name="longitude" attributeType="Double" defaultValueString="0.0" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <relationship name="map" maxCount="1" deletionRule="Nullify" destinationEntity="MMap" inverseName="points" inverseEntity="MMap" syncable="YES"/>
+        <relationship name="tags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MTag" inverseName="points" inverseEntity="MTag" syncable="YES"/>
+    </entity>
+    <entity name="MTag" representedClassName="MTag" parentEntity="MBase" syncable="YES">
+        <attribute name="isAutoTag" attributeType="Boolean" defaultValueString="NO" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <relationship name="points" toMany="YES" deletionRule="Nullify" destinationEntity="MPoint" inverseName="tags" inverseEntity="MPoint" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="MBaseSync" positionX="-3458" positionY="-292" width="128" height="103"/>
+        <element name="MMap" positionX="-3566" positionY="-73" width="128" height="73"/>
+        <element name="MPoint" positionX="-3332" positionY="-108" width="128" height="118"/>
+        <element name="MTag" positionX="-3125" positionY="-63" width="128" height="73"/>
+        <element name="MBase" positionX="-3125" positionY="-414" width="128" height="103"/>
+        <element name="MIcon" positionX="-2918" positionY="-337" width="128" height="88"/>
+    </elements>
+</model>
