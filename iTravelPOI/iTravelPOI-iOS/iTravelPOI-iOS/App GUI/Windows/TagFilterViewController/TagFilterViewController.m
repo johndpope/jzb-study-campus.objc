@@ -71,10 +71,40 @@
         self.moContext = BaseCoreDataService.moContext;
     }
     self.filter = [NSMutableSet set];
+    /*
     self.tagList = [MTag tagsForPointsTaggedWith:self.filter InContext:self.moContext];
+     */
+    
+
     
 }
 
+- (void) viewWillAppear:(BOOL)animated {
+    [self _loadTags];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _loadTags {
+    
+    NSMutableArray *allTags = [NSMutableArray arrayWithArray:[MTag tagsForPointsTaggedWith:self.filter InContext:self.moContext]];
+    
+    for(MTag *tag in [allTags copy]) {
+        NSLog(@"Procesing tag '%@'", tag.name);
+        if(tag.parent && ![self.filter containsObject:tag.parent] && ![self.filter containsObject:tag]) {
+            for(MTag *ancestorTag in allTags) {
+                if(tag.rootIDValue==ancestorTag.rootIDValue && tag.levelValue>ancestorTag.levelValue) {
+                    NSLog(@"  Filtered from parent '%@'",ancestorTag.name);
+                    [allTags removeObject:tag];
+                    break;
+                }
+            }
+        }
+    }
+    
+    
+    self.tagList = allTags;
+    [self.tagsTable reloadData];
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -129,7 +159,7 @@
         //                                   atScrollPosition:UITableViewScrollPositionNone
         //                                           animated:TRUE];
         
-        [self.tagsTable reloadData];
+        [self _loadTags];
     }];
 
 
@@ -162,7 +192,11 @@
 
     
     MTag *itemToShow = (MTag *)[self.tagList objectAtIndex:[indexPath indexAtPosition:1]];
-    cell.textLabel.text = itemToShow.name;
+    if(itemToShow.shortName) {
+        cell.textLabel.text = itemToShow.shortName;
+    } else {
+        cell.textLabel.text = itemToShow.name;
+    }
     if([self.filter containsObject:itemToShow]) {
         cell.textLabel.textColor = [UIColor blueColor];
     } else {

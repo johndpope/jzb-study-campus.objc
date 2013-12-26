@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>mapName</key>
+  <string>BT_DEVOXX_2012</string>
+  <key>pois</key>
+  <array>
+    <dict>
+      <key>index</key>
+      <integer>1</integer>
+      <key>name</key>
+      <string><![CDATA[Radisson Blu Park Lane Hotel]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png]]></string>
+      <key>lat</key>
+      <real>51.210121</real>
+      <key>lng</key>
+      <real>4.416159</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>2</integer>
+      <key>name</key>
+      <string><![CDATA[DEVOXX]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr"></div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png]]></string>
+      <key>lat</key>
+      <real>51.245834</real>
+      <key>lng</key>
+      <real>4.417888</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>3</integer>
+      <key>name</key>
+      <string><![CDATA[Tranvia-Platin(2,6,9,15)]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png]]></string>
+      <key>lat</key>
+      <real>51.210823</real>
+      <key>lng</key>
+      <real>4.421863</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>4</integer>
+      <key>name</key>
+      <string><![CDATA[Tranvia-Station Luchtbal(6)]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png]]></string>
+      <key>lat</key>
+      <real>51.244732</real>
+      <key>lng</key>
+      <real>4.423448</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>5</integer>
+      <key>name</key>
+      <string><![CDATA[Tranvia-Metropolis(6)]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png]]></string>
+      <key>lat</key>
+      <real>51.246029</real>
+      <key>lng</key>
+      <real>4.418263</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>6</integer>
+      <key>name</key>
+      <string><![CDATA[Tranvia-Nationale Bank(4,7,12,24)]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png]]></string>
+      <key>lat</key>
+      <real>51.211697</real>
+      <key>lng</key>
+      <real>4.408618</real>
+    </dict>
+  </array>
+  <key>tags</key>
+  <array>
+    <dict>
+      <key>name</key>
+      <string>tag_1</string>
+      <key>poiIndexes</key>
+      <array>
+        <string>1</string>
+        <string>2-4</string>
+      </array>
+    </dict>
+  </array>
+</dict>
+</plist>

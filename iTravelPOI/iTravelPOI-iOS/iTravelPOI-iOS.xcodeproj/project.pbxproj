@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4272013C186AFA3E0062DF76 /* _PLISTs_.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4272013B186AFA3E0062DF76 /* _PLISTs_.bundle */; };
+		4272013E186B53960062DF76 /* reverseGeocode.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4272013D186B53960062DF76 /* reverseGeocode.txt */; };
 		42BE7A7518672C6F00AECD57 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BE7A7418672C6F00AECD57 /* Foundation.framework */; };
 		42BE7A7718672C6F00AECD57 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BE7A7618672C6F00AECD57 /* CoreGraphics.framework */; };
 		42BE7A7918672C6F00AECD57 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BE7A7818672C6F00AECD57 /* UIKit.framework */; };
@@ -107,6 +109,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4272013B186AFA3E0062DF76 /* _PLISTs_.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = _PLISTs_.bundle; sourceTree = "<group>"; };
+		4272013D186B53960062DF76 /* reverseGeocode.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = reverseGeocode.txt; sourceTree = "<group>"; };
 		42BE7A7118672C6F00AECD57 /* iTravelPOI-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iTravelPOI-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		42BE7A7418672C6F00AECD57 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		42BE7A7618672C6F00AECD57 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -352,6 +356,8 @@
 		42BE7ABA18672EA500AECD57 /* Test */ = {
 			isa = PBXGroup;
 			children = (
+				4272013D186B53960062DF76 /* reverseGeocode.txt */,
+				4272013B186AFA3E0062DF76 /* _PLISTs_.bundle */,
 				42BE7ABB18672EA500AECD57 /* MockUp.h */,
 				42BE7ABC18672EA500AECD57 /* MockUp.m */,
 			);
@@ -708,6 +714,7 @@
 				42CADFC618687E880057AE84 /* check_icon@2x.png in Resources */,
 				42CADFC918687E880057AE84 /* reload.png in Resources */,
 				42F6E828186A09A800005AFB /* actions-share-bar@2x.png in Resources */,
+				4272013E186B53960062DF76 /* reverseGeocode.txt in Resources */,
 				42F6E85C186A108F00005AFB /* openInGoogleMaps.png in Resources */,
 				42CADFC818687E880057AE84 /* home_icon@2x.png in Resources */,
 				42BE7AEE18672EB200AECD57 /* tpl_protected_int.txt in Resources */,
@@ -728,6 +735,7 @@
 				42CADFCC18687E880057AE84 /* search_icon@2x.png in Resources */,
 				42BE7A8818672C6F00AECD57 /* Main.storyboard in Resources */,
 				42F6E856186A108F00005AFB /* openInAppleMaps.png in Resources */,
+				4272013C186AFA3E0062DF76 /* _PLISTs_.bundle in Resources */,
 				42CADFAD186837410057AE84 /* reveal-icon.png in Resources */,
 				42CADFC518687E880057AE84 /* check_icon.png in Resources */,
 				42F6E834186A0B8E00005AFB /* actions-ellipse@2x.png in Resources */,

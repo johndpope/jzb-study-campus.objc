@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>mapName</key>
+  <string>HT_Venecia_2010</string>
+  <key>pois</key>
+  <array>
+    <dict>
+      <key>index</key>
+      <integer>1</integer>
+      <key>name</key>
+      <string><![CDATA[Hotel-Ca' Vendramin Di Santa Fosca]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr">Cannaregio 2400, Cannaregio <br>Venice, 30121<br>Italia<br>Teléfono	+390412750125</div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/intl/es_es/mapfiles/ms/micons/homegardenbusiness.png]]></string>
+      <key>lat</key>
+      <real>45.443008</real>
+      <key>lng</key>
+      <real>12.3328</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>2</integer>
+      <key>name</key>
+      <string><![CDATA[Piazza San Marco]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/intl/es_es/mapfiles/ms/micons/blue-dot.png]]></string>
+      <key>lat</key>
+      <real>45.43438</real>
+      <key>lng</key>
+      <real>12.338961</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>3</integer>
+      <key>name</key>
+      <string><![CDATA[VeniceConnected]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/intl/es_es/mapfiles/ms/micons/blue-dot.png]]></string>
+      <key>lat</key>
+      <real>45.432598</real>
+      <key>lng</key>
+      <real>12.337663</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>4</integer>
+      <key>name</key>
+      <string><![CDATA[Alilaguna - Madona dell'orto]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/intl/es_es/mapfiles/ms/micons/blue-dot.png]]></string>
+      <key>lat</key>
+      <real>45.447601</real>
+      <key>lng</key>
+      <real>12.332848</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>5</integer>
+      <key>name</key>
+      <string><![CDATA[Vaporetto-Murano]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png]]></string>
+      <key>lat</key>
+      <real>45.443081</real>
+      <key>lng</key>
+      <real>12.340654</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>6</integer>
+      <key>name</key>
+      <string><![CDATA[Librería Acqua Alta]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr"><br></div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png]]></string>
+      <key>lat</key>
+      <real>45.437843</real>
+      <key>lng</key>
+      <real>12.342345</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>7</integer>
+      <key>name</key>
+      <string><![CDATA[@TT_CAT]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr">#.*=Venecia</div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/intl/es_es/mapfiles/ms/micons/earthquake.png]]></string>
+      <key>lat</key>
+      <real>45.451462</real>
+      <key>lng</key>
+      <real>12.325029</real>
+    </dict>
+  </array>
+  <key>tags</key>
+  <array>
+    <dict>
+      <key>name</key>
+      <string>tag_1</string>
+      <key>poiIndexes</key>
+      <array>
+        <string>1</string>
+        <string>2-4</string>
+      </array>
+    </dict>
+  </array>
+</dict>
+</plist>

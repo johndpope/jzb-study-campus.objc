@@ -10,16 +10,26 @@
 
 extern const struct MTagAttributes {
 	__unsafe_unretained NSString *isAutoTag;
+	__unsafe_unretained NSString *level;
+	__unsafe_unretained NSString *rootID;
+	__unsafe_unretained NSString *shortName;
 } MTagAttributes;
 
 extern const struct MTagRelationships {
+	__unsafe_unretained NSString *parent;
 	__unsafe_unretained NSString *points;
+	__unsafe_unretained NSString *subtags;
 } MTagRelationships;
 
 extern const struct MTagFetchedProperties {
 } MTagFetchedProperties;
 
+@class MTag;
 @class MPoint;
+@class MTag;
+
+
+
 
 
 
@@ -73,10 +83,93 @@ extern const struct MTagFetchedProperties {
 
 
 
+	
+
+		
+			
+				
+					@property (nonatomic, strong) NSNumber* level;
+				
+			
+		
+
+		
+			
+				
+					@property int16_t levelValue;
+					- (int16_t)levelValue;
+					- (void)setLevelValue:(int16_t)value_;
+				
+			
+		
+
+	//- (BOOL)validateLevel:(id*)value_ error:(NSError**)error_;
+	
+	
+
+
+
+	
+
+		
+			
+				
+					@property (nonatomic, strong) NSNumber* rootID;
+				
+			
+		
+
+		
+			
+				
+					@property int16_t rootIDValue;
+					- (int16_t)rootIDValue;
+					- (void)setRootIDValue:(int16_t)value_;
+				
+			
+		
+
+	//- (BOOL)validateRootID:(id*)value_ error:(NSError**)error_;
+	
+	
+
+
+
+	
+
+		
+			
+				
+					@property (nonatomic, strong) NSString* shortName;
+				
+			
+		
+
+		
+
+	//- (BOOL)validateShortName:(id*)value_ error:(NSError**)error_;
+	
+	
+
+
+
 
 
 //------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------
+
+
+	
+		
+			
+				@property (nonatomic, strong) MTag *parent;
+			
+		
+
+		//- (BOOL)validateParent:(id*)value_ error:(NSError**)error_;
+
+	
+
 
 
 	
@@ -93,6 +186,27 @@ extern const struct MTagFetchedProperties {
 
 		
 			- (NSMutableSet*)pointsSet;
+		
+
+
+	
+
+
+
+	
+
+		
+
+			
+				@property (nonatomic, strong) NSSet *subtags;
+			
+
+
+		
+
+
+		
+			- (NSMutableSet*)subtagsSet;
 		
 
 
@@ -123,6 +237,13 @@ extern const struct MTagFetchedProperties {
 - (void)removePointsObject:(MPoint*)value_;
 @end
 
+@interface _MTag (SubtagsCoreDataGeneratedAccessors)
+- (void)addSubtags:(NSSet*)value_;
+- (void)removeSubtags:(NSSet*)value_;
+- (void)addSubtagsObject:(MTag*)value_;
+- (void)removeSubtagsObject:(MTag*)value_;
+@end
+
 
 @interface _MTag (CoreDataGeneratedPrimitiveAccessors)
 
@@ -136,9 +257,43 @@ extern const struct MTagFetchedProperties {
 
 
 
+- (NSNumber*)primitiveLevel;
+- (void)setPrimitiveLevel:(NSNumber*)value;
+
+- (int16_t)primitiveLevelValue;
+- (void)setPrimitiveLevelValue:(int16_t)value_;
+
+
+
+
+- (NSNumber*)primitiveRootID;
+- (void)setPrimitiveRootID:(NSNumber*)value;
+
+- (int16_t)primitiveRootIDValue;
+- (void)setPrimitiveRootIDValue:(int16_t)value_;
+
+
+
+
+- (NSString*)primitiveShortName;
+- (void)setPrimitiveShortName:(NSString*)value;
+
+
+
+
+
+- (MTag*)primitiveParent;
+- (void)setPrimitiveParent:(MTag*)value;
+
+
 
 - (NSMutableSet*)primitivePoints;
 - (void)setPrimitivePoints:(NSMutableSet*)value;
+
+
+
+- (NSMutableSet*)primitiveSubtags;
+- (void)setPrimitiveSubtags:(NSMutableSet*)value;
 
 
 @end

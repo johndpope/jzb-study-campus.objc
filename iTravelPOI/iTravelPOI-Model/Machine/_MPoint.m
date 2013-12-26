@@ -16,6 +16,7 @@ const struct MPointAttributes MPointAttributes = {
 };
 
 const struct MPointRelationships MPointRelationships = {
+	.locationTag = @"locationTag",
 	.map = @"map",
 	.tags = @"tags",
 };
@@ -128,6 +129,10 @@ const struct MPointFetchedProperties MPointFetchedProperties = {
 
 
 
+
+@dynamic locationTag;
+
+	
 
 @dynamic map;
 

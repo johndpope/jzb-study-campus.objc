@@ -1,0 +1,863 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>mapName</key>
+  <string>PREP_Burgos</string>
+  <key>pois</key>
+  <array>
+    <dict>
+      <key>index</key>
+      <integer>1</integer>
+      <key>name</key>
+      <string><![CDATA[Astorga]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Astorga]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>42.454929</real>
+      <key>lng</key>
+      <real>-6.053251</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>2</integer>
+      <key>name</key>
+      <string><![CDATA[Castrillo de los Polvazares]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Astorga]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>42.465</real>
+      <key>lng</key>
+      <real>-6.128611</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>3</integer>
+      <key>name</key>
+      <string><![CDATA[Santa Colomba de Somoza]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Astorga]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>42.4454</real>
+      <key>lng</key>
+      <real>-6.244896</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>4</integer>
+      <key>name</key>
+      <string><![CDATA[Villafranca del Bierzo]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Bierzo]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>42.608395</real>
+      <key>lng</key>
+      <real>-6.808554</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>5</integer>
+      <key>name</key>
+      <string><![CDATA[Peñalba de Santiago]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Bierzo]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>42.427368</real>
+      <key>lng</key>
+      <real>-6.540647</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>6</integer>
+      <key>name</key>
+      <string><![CDATA[Las Medulas]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Bierzo, [Carucedo]]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>42.459572</real>
+      <key>lng</key>
+      <real>-6.760106</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>7</integer>
+      <key>name</key>
+      <string><![CDATA[Lerma]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Burgos, Arlanza]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-pushpin.png]]></string>
+      <key>lat</key>
+      <real>42.025429</real>
+      <key>lng</key>
+      <real>-3.760016</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>8</integer>
+      <key>name</key>
+      <string><![CDATA[Covarrubias]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Burgos, Arlanza]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-pushpin.png]]></string>
+      <key>lat</key>
+      <real>42.061337</real>
+      <key>lng</key>
+      <real>-3.520465</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>9</integer>
+      <key>name</key>
+      <string><![CDATA[Poza de la Sal]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Burgos, La Bureba]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-pushpin.png]]></string>
+      <key>lat</key>
+      <real>42.668488</real>
+      <key>lng</key>
+      <real>-3.49937</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>10</integer>
+      <key>name</key>
+      <string><![CDATA[Oña]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Burgos, La Bureba]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-pushpin.png]]></string>
+      <key>lat</key>
+      <real>42.735958</real>
+      <key>lng</key>
+      <real>-3.413264</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>11</integer>
+      <key>name</key>
+      <string><![CDATA[Frias]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Burgos, Merindades]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-pushpin.png]]></string>
+      <key>lat</key>
+      <real>42.76231</real>
+      <key>lng</key>
+      <real>-3.294207</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>12</integer>
+      <key>name</key>
+      <string><![CDATA[Puentedey]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Burgos, Merindades]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-pushpin.png]]></string>
+      <key>lat</key>
+      <real>42.975555</real>
+      <key>lng</key>
+      <real>-3.685278</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>13</integer>
+      <key>name</key>
+      <string><![CDATA[Orbaneja del Castillo]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Burgos, Paramos]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-pushpin.png]]></string>
+      <key>lat</key>
+      <real>42.834721</real>
+      <key>lng</key>
+      <real>-3.793611</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>14</integer>
+      <key>name</key>
+      <string><![CDATA[Peñaranda de Duero]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Burgos, Ribera del Duero]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-pushpin.png]]></string>
+      <key>lat</key>
+      <real>41.68885</real>
+      <key>lng</key>
+      <real>-3.479504</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>15</integer>
+      <key>name</key>
+      <string><![CDATA[Desfiladero de la Yecla]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Burgos, Sierra de la Demanda, [Santo Domingo de Silos]]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-pushpin.png]]></string>
+      <key>lat</key>
+      <real>41.952301</real>
+      <key>lng</key>
+      <real>-3.444182</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>16</integer>
+      <key>name</key>
+      <string><![CDATA[Aguilar de Campoo]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Palencia, Valdivia]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>42.79319</real>
+      <key>lng</key>
+      <real>-4.262214</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>17</integer>
+      <key>name</key>
+      <string><![CDATA[Saldaña]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Palencia, Vega - Valdavia]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>42.518005</real>
+      <key>lng</key>
+      <real>-4.741982</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>18</integer>
+      <key>name</key>
+      <string><![CDATA[Sahagun]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Sahagun]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>42.37096</real>
+      <key>lng</key>
+      <real>-5.029949</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>19</integer>
+      <key>name</key>
+      <string><![CDATA[Ciudad Rodrigo]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Salamanca, La Socampa]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>40.602055</real>
+      <key>lng</key>
+      <real>-6.531306</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>20</integer>
+      <key>name</key>
+      <string><![CDATA[Candelario]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Salamanca, Sierra de Bejar]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>40.368294</real>
+      <key>lng</key>
+      <real>-5.744319</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>21</integer>
+      <key>name</key>
+      <string><![CDATA[La Alberca]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Salamanca, Sierra de Francia y Quilamas]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>40.489265</real>
+      <key>lng</key>
+      <real>-6.110723</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>22</integer>
+      <key>name</key>
+      <string><![CDATA[Cepeda]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Salamanca, Sierra de Francia y Quilamas]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>40.466221</real>
+      <key>lng</key>
+      <real>-6.042489</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>23</integer>
+      <key>name</key>
+      <string><![CDATA[Ayllon]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Segovia, Tierra de Ayllon]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>41.420017</real>
+      <key>lng</key>
+      <real>-3.376055</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>24</integer>
+      <key>name</key>
+      <string><![CDATA[Madriguera]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Segovia, Tierra de Ayllon]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>41.315258</real>
+      <key>lng</key>
+      <real>-3.331022</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>25</integer>
+      <key>name</key>
+      <string><![CDATA[Riaza]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Segovia, Tierra de Ayllon]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>41.279949</real>
+      <key>lng</key>
+      <real>-3.481415</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>26</integer>
+      <key>name</key>
+      <string><![CDATA[Pedraza]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Segovia, Tierra de Segovia]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>41.130711</real>
+      <key>lng</key>
+      <real>-3.811474</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>27</integer>
+      <key>name</key>
+      <string><![CDATA[Maderuelo]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Segovia, Tierra de Sepulveda]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>41.483685</real>
+      <key>lng</key>
+      <real>-3.524356</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>28</integer>
+      <key>name</key>
+      <string><![CDATA[Sepulveda]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Segovia, Tierra de Sepulveda]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>41.29744</real>
+      <key>lng</key>
+      <real>-3.748865</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>29</integer>
+      <key>name</key>
+      <string><![CDATA[Calatañazor]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Soria]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>41.699158</real>
+      <key>lng</key>
+      <real>-2.817518</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>30</integer>
+      <key>name</key>
+      <string><![CDATA[Medinaceli]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Soria, Medinaceli]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>41.171722</real>
+      <key>lng</key>
+      <real>-2.433843</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>31</integer>
+      <key>name</key>
+      <string><![CDATA[Medina del Campo]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Valladolid, Tierra de Medina]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>41.308163</real>
+      <key>lng</key>
+      <real>-4.915477</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>32</integer>
+      <key>name</key>
+      <string><![CDATA[Toro]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Zamora, Alfoz de Toro]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>41.52475</real>
+      <key>lng</key>
+      <real>-5.394138</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>33</integer>
+      <key>name</key>
+      <string><![CDATA[Santa Cruz de los Cuerragos]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Zamora, La Carballeda]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>41.939083</real>
+      <key>lng</key>
+      <real>-6.527411</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>34</integer>
+      <key>name</key>
+      <string><![CDATA[Puebla de Sanabria]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Zamora, Sanabria]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>42.054379</real>
+      <key>lng</key>
+      <real>-6.634927</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>35</integer>
+      <key>name</key>
+      <string><![CDATA[Fermoselle]]></string>
+      <key>desc</key>
+      <string><![CDATA[Castilla y Leon, Zamora, Sayago]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>41.316624</real>
+      <key>lng</key>
+      <real>-6.393952</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>36</integer>
+      <key>name</key>
+      <string><![CDATA[Etxalar]]></string>
+      <key>desc</key>
+      <string><![CDATA[Navarra, Cinco Villas]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/pink-dot.png]]></string>
+      <key>lat</key>
+      <real>43.232502</real>
+      <key>lng</key>
+      <real>-1.637719</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>37</integer>
+      <key>name</key>
+      <string><![CDATA[Lesaca]]></string>
+      <key>desc</key>
+      <string><![CDATA[Navarra, Cinco Villas]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/pink-dot.png]]></string>
+      <key>lat</key>
+      <real>43.247387</real>
+      <key>lng</key>
+      <real>-1.702194</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>38</integer>
+      <key>name</key>
+      <string><![CDATA[Bera]]></string>
+      <key>desc</key>
+      <string><![CDATA[Navarra, Cinco Villas]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/pink-dot.png]]></string>
+      <key>lat</key>
+      <real>43.280849</real>
+      <key>lng</key>
+      <real>-1.683004</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>39</integer>
+      <key>name</key>
+      <string><![CDATA[Estella]]></string>
+      <key>desc</key>
+      <string><![CDATA[Navarra, Estella Oriental]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/pink-dot.png]]></string>
+      <key>lat</key>
+      <real>42.672085</real>
+      <key>lng</key>
+      <real>-2.032452</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>40</integer>
+      <key>name</key>
+      <string><![CDATA[Monastery of Iranzu]]></string>
+      <key>desc</key>
+      <string><![CDATA[Navarra, Estella Oriental, [Abarzuza]]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/pink-dot.png]]></string>
+      <key>lat</key>
+      <real>42.720959</real>
+      <key>lng</key>
+      <real>-2.02976</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>41</integer>
+      <key>name</key>
+      <string><![CDATA[Ochagavia]]></string>
+      <key>desc</key>
+      <string><![CDATA[Navarra, Roncal - Salazar]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/pink-dot.png]]></string>
+      <key>lat</key>
+      <real>42.9561</real>
+      <key>lng</key>
+      <real>-1.077772</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>42</integer>
+      <key>name</key>
+      <string><![CDATA[Olite]]></string>
+      <key>desc</key>
+      <string><![CDATA[Navarra, Tafalla]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/pink-dot.png]]></string>
+      <key>lat</key>
+      <real>42.481426</real>
+      <key>lng</key>
+      <real>-1.650977</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>43</integer>
+      <key>name</key>
+      <string><![CDATA[Abbey of Santo Domingo de Silos]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/ylw-pushpin.png]]></string>
+      <key>lat</key>
+      <real>41.961983</real>
+      <key>lng</key>
+      <real>-3.419602</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>44</integer>
+      <key>name</key>
+      <string><![CDATA[Rio Lobo - Ermita de San Bartolomé]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/ylw-pushpin.png]]></string>
+      <key>lat</key>
+      <real>41.751595</real>
+      <key>lng</key>
+      <real>-3.06819</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>45</integer>
+      <key>name</key>
+      <string><![CDATA[Monasterio de San Pedro de Arlanza]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr"></div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/ylw-pushpin.png]]></string>
+      <key>lat</key>
+      <real>42.048477</real>
+      <key>lng</key>
+      <real>-3.466482</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>46</integer>
+      <key>name</key>
+      <string><![CDATA[Ermita de Santa Maria de la Hoz]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/grn-pushpin.png]]></string>
+      <key>lat</key>
+      <real>42.748207</real>
+      <key>lng</key>
+      <real>-3.306558</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>47</integer>
+      <key>name</key>
+      <string><![CDATA[Monasterios de las Huelgas]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/ltblue-dot.png]]></string>
+      <key>lat</key>
+      <real>42.336197</real>
+      <key>lng</key>
+      <real>-3.720252</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>48</integer>
+      <key>name</key>
+      <string><![CDATA[Arco de Santa María]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/ltblue-dot.png]]></string>
+      <key>lat</key>
+      <real>42.339825</real>
+      <key>lng</key>
+      <real>-3.70389</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>49</integer>
+      <key>name</key>
+      <string><![CDATA[Catedral de Burgos]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/ltblue-dot.png]]></string>
+      <key>lat</key>
+      <real>42.340748</real>
+      <key>lng</key>
+      <real>-3.704294</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>50</integer>
+      <key>name</key>
+      <string><![CDATA[Iglesia de San Nicolás]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/ltblue-dot.png]]></string>
+      <key>lat</key>
+      <real>42.340744</real>
+      <key>lng</key>
+      <real>-3.705449</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>51</integer>
+      <key>name</key>
+      <string><![CDATA[Plaza Mayor]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr"></div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/ltblue-dot.png]]></string>
+      <key>lat</key>
+      <real>42.341179</real>
+      <key>lng</key>
+      <real>-3.701719</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>52</integer>
+      <key>name</key>
+      <string><![CDATA[Paseo Espolón]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr"></div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/ltblue-dot.png]]></string>
+      <key>lat</key>
+      <real>42.340446</real>
+      <key>lng</key>
+      <real>-3.701633</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>53</integer>
+      <key>name</key>
+      <string><![CDATA[Casa del Cordón]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr"></div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/ltblue-dot.png]]></string>
+      <key>lat</key>
+      <real>42.341942</real>
+      <key>lng</key>
+      <real>-3.699333</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>54</integer>
+      <key>name</key>
+      <string><![CDATA[Cartuja de Miraflores]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/ltblue-dot.png]]></string>
+      <key>lat</key>
+      <real>42.337593</real>
+      <key>lng</key>
+      <real>-3.656314</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>55</integer>
+      <key>name</key>
+      <string><![CDATA[Calle la Flora]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/ltblu-pushpin.png]]></string>
+      <key>lat</key>
+      <real>42.342171</real>
+      <key>lng</key>
+      <real>-3.702596</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>56</integer>
+      <key>name</key>
+      <string><![CDATA[Calle San Juan]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr"></div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/ltblu-pushpin.png]]></string>
+      <key>lat</key>
+      <real>42.342804</real>
+      <key>lng</key>
+      <real>-3.698938</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>57</integer>
+      <key>name</key>
+      <string><![CDATA[Calle de la Paloma]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/ltblu-pushpin.png]]></string>
+      <key>lat</key>
+      <real>42.341164</real>
+      <key>lng</key>
+      <real>-3.703079</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>58</integer>
+      <key>name</key>
+      <string><![CDATA[Plaza Mío Cid]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr"></div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/ltblu-pushpin.png]]></string>
+      <key>lat</key>
+      <real>42.340721</real>
+      <key>lng</key>
+      <real>-3.699605</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>59</integer>
+      <key>name</key>
+      <string><![CDATA[Calle de Lain Calvo]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr"></div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/ltblu-pushpin.png]]></string>
+      <key>lat</key>
+      <real>42.341766</real>
+      <key>lng</key>
+      <real>-3.702393</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>60</integer>
+      <key>name</key>
+      <string><![CDATA[Mesón La Cueva]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/restaurant.png]]></string>
+      <key>lat</key>
+      <real>42.340233</real>
+      <key>lng</key>
+      <real>-3.705406</real>
+    </dict>
+  </array>
+  <key>tags</key>
+  <array>
+    <dict>
+      <key>name</key>
+      <string>tag_1</string>
+      <key>poiIndexes</key>
+      <array>
+        <string>1</string>
+        <string>2-4</string>
+      </array>
+    </dict>
+  </array>
+</dict>
+</plist>

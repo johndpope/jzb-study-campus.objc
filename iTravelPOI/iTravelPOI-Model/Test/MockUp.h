@@ -20,6 +20,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 + (void) resetModel:(NSString *)modelName;
 + (void) populateModel;
++ (void) populateModelFromPListFiles;
 + (void) listModel;
 
 

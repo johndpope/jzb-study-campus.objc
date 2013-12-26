@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>mapName</key>
+  <string>PREP_Sur Belgica</string>
+  <key>pois</key>
+  <array>
+  </array>
+  <key>tags</key>
+  <array>
+    <dict>
+      <key>name</key>
+      <string>tag_1</string>
+      <key>poiIndexes</key>
+      <array>
+        <string>1</string>
+        <string>2-4</string>
+      </array>
+    </dict>
+  </array>
+</dict>
+</plist>

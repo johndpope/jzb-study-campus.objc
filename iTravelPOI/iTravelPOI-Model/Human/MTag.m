@@ -45,6 +45,12 @@
 //---------------------------------------------------------------------------------------------------------------------
 + (MTag *) tagByName:(NSString *)name inContext:(NSManagedObjectContext *)moContext {
     
+    
+    // Se protege contra un nombre vacio
+    if(!name) {
+        return nil;
+    }
+    
     // Crea la peticion de busqueda
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"MTag"];
     
@@ -110,8 +116,9 @@
     [request setPredicate:query];
     
     // Se asigna el criterio de ordenacion
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:TRUE];
-    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+    NSSortDescriptor *sortAutoTagDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"isAutoTag" ascending:TRUE];
+    NSSortDescriptor *sortNameDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:TRUE];
+    NSArray *sortDescriptors = [NSArray arrayWithObjects:sortAutoTagDescriptor,sortNameDescriptor,nil];
     [request setSortDescriptors:sortDescriptors];
     
     // Se ejecuta y retorna el resultado
@@ -136,8 +143,9 @@
     }
     
     // Se asigna el criterio de ordenacion
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:TRUE];
-    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+    NSSortDescriptor *sortAutoTagDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"isAutoTag" ascending:TRUE];
+    NSSortDescriptor *sortNameDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:TRUE];
+    NSArray *sortDescriptors = [NSArray arrayWithObjects:sortAutoTagDescriptor,sortNameDescriptor,nil];
     [request setSortDescriptors:sortDescriptors];
     
     // Se ejecuta y retorna el resultado

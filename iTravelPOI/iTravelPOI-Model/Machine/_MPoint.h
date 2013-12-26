@@ -15,6 +15,7 @@ extern const struct MPointAttributes {
 } MPointAttributes;
 
 extern const struct MPointRelationships {
+	__unsafe_unretained NSString *locationTag;
 	__unsafe_unretained NSString *map;
 	__unsafe_unretained NSString *tags;
 } MPointRelationships;
@@ -22,6 +23,7 @@ extern const struct MPointRelationships {
 extern const struct MPointFetchedProperties {
 } MPointFetchedProperties;
 
+@class MTag;
 @class MMap;
 @class MTag;
 
@@ -141,6 +143,19 @@ extern const struct MPointFetchedProperties {
 	
 		
 			
+				@property (nonatomic, strong) MTag *locationTag;
+			
+		
+
+		//- (BOOL)validateLocationTag:(id*)value_ error:(NSError**)error_;
+
+	
+
+
+
+	
+		
+			
 				@property (nonatomic, strong) MMap *map;
 			
 		
@@ -221,6 +236,11 @@ extern const struct MPointFetchedProperties {
 - (void)setPrimitiveLongitudeValue:(double)value_;
 
 
+
+
+
+- (MTag*)primitiveLocationTag;
+- (void)setPrimitiveLocationTag:(MTag*)value;
 
 
 

@@ -11,7 +11,6 @@
 #import "NSString+JavaStr.h"
 #import "NSManagedObjectContext+Utils.h"
 #import "BaseCoreDataService.h"
-#import "ErrorManagerService.h"
 #import "MMap.h"
 #import "MPoint.h"
 #import "MTag.h"
@@ -297,11 +296,19 @@ BOOL _init_model_ = TRUE;
         }
     }
     
-    // Lanza la actualizacion de los tags de localizacion
-    //[NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(timerFired:) userInfo:nil repeats:FALSE];
-    
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
++ (NSMutableArray *) all_locations {
+    
+    static NSMutableArray *_globalModelInstance = nil;
+    static dispatch_once_t _predicate;
+    dispatch_once(&_predicate, ^{
+        DDLogVerbose(@"BaseCoreDataService - Creating sharedInstance");
+        _globalModelInstance = [NSMutableArray array];
+    });
+    return _globalModelInstance;
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 + (void) _loadPListMapFromPath:(NSString *)filePath inContext:(NSManagedObjectContext *)moContext {
@@ -343,21 +350,63 @@ BOOL _init_model_ = TRUE;
         [point setLatitude:[poiLat doubleValue] longitude:[poiLng doubleValue]];
         [point updateIcon:[MIcon iconForHref:poiIcon inContext:moContext]];
         [readPois setObject:point forKey:poiIndex];
+        
+        CLLocation *location = [[CLLocation alloc] initWithLatitude:[poiLat doubleValue]  longitude:[poiLng doubleValue]];
+        [MockUp.all_locations addObject:location];
     }
     
+    __block int count = 0;
+    CLGeocoder __block *geocoder = [[CLGeocoder alloc] init];
     
-    NSMutableDictionary *readTags = [NSMutableDictionary dictionary];
+    CLGeocodeCompletionHandler __block completionHandler=^(NSArray *placemarks, NSError *error) {
+        NSLog(@"Finding address");
+        if (error) {
+            NSLog(@"Error %@", error.description);
+        } else {
+            count++;
+            NSLog(@"count = %d", count);
+            
+            CLPlacemark *placemark = [placemarks lastObject];
+            DDLogVerbose(@"placemark:");
+            DDLogVerbose(@"  name                  = %@",placemark.name);
+            DDLogVerbose(@"  ISOcountryCode        = %@",placemark.ISOcountryCode);
+            DDLogVerbose(@"  country               = %@",placemark.country);
+            DDLogVerbose(@"  locality              = %@",placemark.locality);
+            DDLogVerbose(@"  subLocality           = %@",placemark.subLocality);
+            DDLogVerbose(@"  administrativeArea    = %@",placemark.administrativeArea);
+            DDLogVerbose(@"  subAdministrativeArea = %@",placemark.subAdministrativeArea);
+            DDLogVerbose(@"  region                = %@",placemark.region);
+            DDLogVerbose(@"  postalCode            = %@",placemark.postalCode);
+            DDLogVerbose(@"  thoroughfare          = %@",placemark.thoroughfare);
+            DDLogVerbose(@"  subThoroughfare       = %@",placemark.subThoroughfare);
+            DDLogVerbose(@"  inlandWater           = %@",placemark.inlandWater);
+            DDLogVerbose(@"  ocean                 = %@",placemark.ocean);
+            DDLogVerbose(@"  areasOfInterest   = %@",placemark.areasOfInterest);
+            DDLogVerbose(@"  addressDictionary = %@",placemark.addressDictionary);
+            
+            CLLocation *location = [MockUp.all_locations lastObject];
+            if(location) {
+                [NSThread sleepForTimeInterval:2];
+                [MockUp.all_locations removeLastObject];
+                [geocoder reverseGeocodeLocation:location completionHandler:completionHandler];
+            } else {
+                NSLog(@"ya'ta");
+            }
+            
+        }
+    };
+    
+    CLLocation *location = [MockUp.all_locations lastObject];
+    [MockUp.all_locations removeLastObject];
+    [geocoder reverseGeocodeLocation:location completionHandler:completionHandler];
+
+    
     NSArray *tagList = [mapInfo valueForKey:@"tags"];
     for(NSDictionary *tagInfo in tagList) {
-        NSNumber *tagIndex = [tagInfo valueForKey:@"index"];
         NSString *tagName = [tagInfo valueForKey:@"name"];
         MTag *tag = [MTag tagByName:tagName inContext:moContext];
-        tag.rootID = tagIndex;
-        tag.shortName = tagName;
-        [readTags setObject:tag forKey:tagIndex];
         DDLogVerbose(@"");
-        DDLogVerbose(@"  TAG name: '%@' / index: %@", tagName, tagIndex);
-        
+        DDLogVerbose(@"  TAG name: '%@'", tagName);
         NSArray *poiIndexList = [tagInfo valueForKey:@"poiIndexes"];
         for(NSString *poiIndexStr in poiIndexList) {
             NSUInteger p1 = [poiIndexStr indexOf:@"-"];
@@ -378,139 +427,9 @@ BOOL _init_model_ = TRUE;
             }
         }
     }
-    
-    for(NSDictionary *tagInfo in tagList) {
-        NSNumber *tagIndex = [tagInfo valueForKey:@"index"];
-        MTag *parentTag = [readTags objectForKey:tagIndex];
-        NSArray *tagIndexList = [tagInfo valueForKey:@"tagIndexes"];
-        for(NSString *tagIndexStr in tagIndexList) {
-            NSUInteger p1 = [tagIndexStr indexOf:@"-"];
-            if(p1==NSNotFound) {
-                NSNumber *index = [NSNumber numberWithInt:[tagIndexStr integerValue]];
-                MTag *subtag = [readTags objectForKey:index];
-                subtag.parent = parentTag;
-                subtag.rootID = parentTag.rootID;
-                subtag.levelValue = parentTag.level.intValue+1;
-                subtag.name = [NSString stringWithFormat:@"%@#%@",parentTag.name, subtag.shortName];
-            } else {
-                NSString *startStrIndex = [tagIndexStr subStrFrom:0 to:p1];
-                NSString *endStrIndex = [tagIndexStr substringFromIndex:p1+1];
-                int sIndex = [startStrIndex intValue];
-                int eIndex = [endStrIndex intValue];
-                for(int n=sIndex;n<=eIndex;n++) {
-                    NSNumber *index = [NSNumber numberWithInt:n];
-                    MTag *subtag = [readTags objectForKey:index];
-                    subtag.parent = parentTag;
-                    subtag.rootID = parentTag.rootID;
-                    subtag.levelValue = parentTag.level.intValue+1;
-                    subtag.name = [NSString stringWithFormat:@"%@#%@",parentTag.name, subtag.shortName];
-                }
-            }
-        }
-    }
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-+ (void)timerFired:(NSTimer *)timer {
-    
-    NSManagedObjectContext *moContext = [BaseCoreDataService moContext];
-    
-    // Crea la peticion de busqueda
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"MPoint"];
-    
-    // Se asigna una condicion de filtro
-    NSPredicate *query = [NSPredicate predicateWithFormat:@"locationTag=nil"];
-    [request setPredicate:query];
-    
-    // Solo queremos un elemento
-    [request setFetchLimit:1];
-    
-    // Se ejecuta y retorna el resultado
-    NSError *localError = nil;
-    NSArray *array = [moContext executeFetchRequest:request error:&localError];
-    if(array==nil) {
-        [ErrorManagerService manageError:localError compID:@"MockUp" messageWithFormat:@"MockUp:timerFired - Error fetching points without locationTag"];
-    }
-    
-    if(array.count>0) {
-        
-        MPoint *point = array[0];
-        NSManagedObjectID __block *pointMOID = point.objectID;
-        
-        CLLocation *location = [[CLLocation alloc] initWithLatitude:point.latitudeValue  longitude:point.longitudeValue];
-        CLGeocoder *geocoder = [[CLGeocoder alloc] init];
-        [geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
-            if (error) {
-                NSLog(@"Error fetching point location %@", error.description);
-            } else {
-                CLPlacemark *placemark = [placemarks lastObject];
-                
-                DDLogVerbose(@"placemark:");
-                DDLogVerbose(@"  name                  = %@",placemark.name);
-                DDLogVerbose(@"  ISOcountryCode        = %@",placemark.ISOcountryCode);
-                DDLogVerbose(@"  country               = %@",placemark.country);
-                DDLogVerbose(@"  locality              = %@",placemark.locality);
-                DDLogVerbose(@"  subLocality           = %@",placemark.subLocality);
-                DDLogVerbose(@"  administrativeArea    = %@",placemark.administrativeArea);
-                DDLogVerbose(@"  subAdministrativeArea = %@",placemark.subAdministrativeArea);
-                DDLogVerbose(@"  region                = %@",placemark.region);
-                DDLogVerbose(@"  postalCode            = %@",placemark.postalCode);
-                DDLogVerbose(@"  thoroughfare          = %@",placemark.thoroughfare);
-                DDLogVerbose(@"  subThoroughfare       = %@",placemark.subThoroughfare);
-                DDLogVerbose(@"  inlandWater           = %@",placemark.inlandWater);
-                DDLogVerbose(@"  ocean                 = %@",placemark.ocean);
-                DDLogVerbose(@"  areasOfInterest   = %@",placemark.areasOfInterest);
-                DDLogVerbose(@"  addressDictionary = %@",placemark.addressDictionary);
-                
-                
-                NSManagedObjectContext *moContext = [BaseCoreDataService moContext];
-                NSMutableSet *tags = [NSMutableSet set];
-                NSMutableString *fullTagName = [NSMutableString stringWithString:@""];
-                
-                if(placemark.country) {
-                    [fullTagName appendFormat:@"#%@",placemark.country];
-                    MTag *tag = [MTag tagByName:[fullTagName copy] inContext:moContext];
-                    tag.shortName = [NSString stringWithFormat:@"1-%@", placemark.country];
-                    [tags addObject:tag];
-                }
-                
-                if(placemark.administrativeArea) {
-                    [fullTagName appendFormat:@"#%@",placemark.administrativeArea];
-                    MTag *tag = [MTag tagByName:[fullTagName copy] inContext:moContext];
-                    tag.shortName = [NSString stringWithFormat:@"2-%@", placemark.administrativeArea];
-                    [tags addObject:tag];
-                }
-                
-                if(placemark.subAdministrativeArea) {
-                    [fullTagName appendFormat:@"#%@",placemark.subAdministrativeArea];
-                    MTag *tag = [MTag tagByName:[fullTagName copy] inContext:moContext];
-                    tag.shortName = [NSString stringWithFormat:@"3-%@", placemark.subAdministrativeArea];
-                    [tags addObject:tag];
-                }
-                
-                if(placemark.locality) {
-                    [fullTagName appendFormat:@"#%@",placemark.locality];
-                    MTag *tag = [MTag tagByName:[fullTagName copy] inContext:moContext];
-                    tag.shortName = [NSString stringWithFormat:@"4-%@", placemark.locality];
-                    [tags addObject:tag];
-                }
-                
-                
-                MPoint *point = (MPoint *)[moContext objectWithID:pointMOID];
-                [point addTags:tags];
-                point.locationTag =  [tags allObjects][0];
-                [moContext saveChanges];
-                
-                [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(timerFired:) userInfo:nil repeats:FALSE];
-            }
-        }];
-        
-    } else {
-        NSLog(@"Ya estan todos!");
-    }
-    
-    
-}
+
 
 @end
 

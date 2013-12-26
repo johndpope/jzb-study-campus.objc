@@ -257,7 +257,7 @@
 
     
     MPoint *itemToShow = (MPoint *)[self.poiList objectAtIndex:[indexPath indexAtPosition:1]];
-    cell.textLabel.text = itemToShow.name;
+    cell.textLabel.text = [NSString stringWithFormat:@"%d - %@",[indexPath indexAtPosition:1], itemToShow.name];
     cell.imageView.image = itemToShow.icon.image;
 
     /*

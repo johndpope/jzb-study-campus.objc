@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>mapName</key>
+  <string>HT_Roma_2012</string>
+  <key>pois</key>
+  <array>
+    <dict>
+      <key>index</key>
+      <integer>1</integer>
+      <key>name</key>
+      <string><![CDATA[69 Manin Street Deluxe B&B]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/homegardenbusiness.png]]></string>
+      <key>lat</key>
+      <real>41.89893</real>
+      <key>lng</key>
+      <real>12.499059</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>2</integer>
+      <key>name</key>
+      <string><![CDATA[Ciudad del Vaticano]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr"></div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/hospitals.png]]></string>
+      <key>lat</key>
+      <real>41.90226</real>
+      <key>lng</key>
+      <real>12.457316</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>3</integer>
+      <key>name</key>
+      <string><![CDATA[Basílica de Santa María la Mayor]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/hospitals.png]]></string>
+      <key>lat</key>
+      <real>41.897362</real>
+      <key>lng</key>
+      <real>12.498992</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>4</integer>
+      <key>name</key>
+      <string><![CDATA[Basilica de San Pablo de Extramuros]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/hospitals.png]]></string>
+      <key>lat</key>
+      <real>41.85902</real>
+      <key>lng</key>
+      <real>12.475292</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>5</integer>
+      <key>name</key>
+      <string><![CDATA[Basílica de San Giovanni in Laterano]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/hospitals.png]]></string>
+      <key>lat</key>
+      <real>41.886345</real>
+      <key>lng</key>
+      <real>12.505065</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>6</integer>
+      <key>name</key>
+      <string><![CDATA[Monte Palatino]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr"></div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png]]></string>
+      <key>lat</key>
+      <real>41.888332</real>
+      <key>lng</key>
+      <real>12.486944</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>7</integer>
+      <key>name</key>
+      <string><![CDATA[Coliseo]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr"></div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png]]></string>
+      <key>lat</key>
+      <real>41.890186</real>
+      <key>lng</key>
+      <real>12.492399</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>8</integer>
+      <key>name</key>
+      <string><![CDATA[Arco de Constantino]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png]]></string>
+      <key>lat</key>
+      <real>41.889744</real>
+      <key>lng</key>
+      <real>12.490641</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>9</integer>
+      <key>name</key>
+      <string><![CDATA[Foro Romano]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr"></div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png]]></string>
+      <key>lat</key>
+      <real>41.891705</real>
+      <key>lng</key>
+      <real>12.486498</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>10</integer>
+      <key>name</key>
+      <string><![CDATA[Fontana di Trevi]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr"></div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png]]></string>
+      <key>lat</key>
+      <real>41.900993</real>
+      <key>lng</key>
+      <real>12.483307</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>11</integer>
+      <key>name</key>
+      <string><![CDATA[Panteón]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr"></div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png]]></string>
+      <key>lat</key>
+      <real>41.898823</real>
+      <key>lng</key>
+      <real>12.476891</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>12</integer>
+      <key>name</key>
+      <string><![CDATA[Piazza Navona]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr"></div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png]]></string>
+      <key>lat</key>
+      <real>41.898762</real>
+      <key>lng</key>
+      <real>12.473087</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>13</integer>
+      <key>name</key>
+      <string><![CDATA[La Plaza de España]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr"></div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png]]></string>
+      <key>lat</key>
+      <real>41.905972</real>
+      <key>lng</key>
+      <real>12.482531</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>14</integer>
+      <key>name</key>
+      <string><![CDATA[Castillo de San Ángelo]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr"></div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png]]></string>
+      <key>lat</key>
+      <real>41.903072</real>
+      <key>lng</key>
+      <real>12.466347</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>15</integer>
+      <key>name</key>
+      <string><![CDATA[Trastevere]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr"></div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png]]></string>
+      <key>lat</key>
+      <real>41.889679</real>
+      <key>lng</key>
+      <real>12.470212</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>16</integer>
+      <key>name</key>
+      <string><![CDATA[Campo De' Fiori]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png]]></string>
+      <key>lat</key>
+      <real>41.895683</real>
+      <key>lng</key>
+      <real>12.472181</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>17</integer>
+      <key>name</key>
+      <string><![CDATA[Monumento a Víctor Manuel II]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png]]></string>
+      <key>lat</key>
+      <real>41.895306</real>
+      <key>lng</key>
+      <real>12.482775</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>18</integer>
+      <key>name</key>
+      <string><![CDATA[Piazza del Popolo]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png]]></string>
+      <key>lat</key>
+      <real>41.910702</real>
+      <key>lng</key>
+      <real>12.476381</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>19</integer>
+      <key>name</key>
+      <string><![CDATA[Termas de Caracalla]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr"></div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>41.878952</real>
+      <key>lng</key>
+      <real>12.492458</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>20</integer>
+      <key>name</key>
+      <string><![CDATA[Isla Tiberina]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr"></div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png]]></string>
+      <key>lat</key>
+      <real>41.890732</real>
+      <key>lng</key>
+      <real>12.477291</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>21</integer>
+      <key>name</key>
+      <string><![CDATA[Bocca della Verita]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png]]></string>
+      <key>lat</key>
+      <real>41.88813</real>
+      <key>lng</key>
+      <real>12.4814</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>22</integer>
+      <key>name</key>
+      <string><![CDATA[Circo Máximo]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr"></div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png]]></string>
+      <key>lat</key>
+      <real>41.88607</real>
+      <key>lng</key>
+      <real>12.485318</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>23</integer>
+      <key>name</key>
+      <string><![CDATA[Via Appia Antica y Catacumbas]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr"></div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png]]></string>
+      <key>lat</key>
+      <real>41.855682</real>
+      <key>lng</key>
+      <real>12.516174</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>24</integer>
+      <key>name</key>
+      <string><![CDATA[Mercado de Trajano]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>41.89526</real>
+      <key>lng</key>
+      <real>12.485769</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>25</integer>
+      <key>name</key>
+      <string><![CDATA[Villa Borghese]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr"></div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png]]></string>
+      <key>lat</key>
+      <real>41.913166</real>
+      <key>lng</key>
+      <real>12.487109</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>26</integer>
+      <key>name</key>
+      <string><![CDATA[Via Del Corso]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png]]></string>
+      <key>lat</key>
+      <real>41.905888</real>
+      <key>lng</key>
+      <real>12.478291</real>
+    </dict>
+  </array>
+  <key>tags</key>
+  <array>
+    <dict>
+      <key>name</key>
+      <string>tag_1</string>
+      <key>poiIndexes</key>
+      <array>
+        <string>1</string>
+        <string>2-4</string>
+      </array>
+    </dict>
+  </array>
+</dict>
+</plist>

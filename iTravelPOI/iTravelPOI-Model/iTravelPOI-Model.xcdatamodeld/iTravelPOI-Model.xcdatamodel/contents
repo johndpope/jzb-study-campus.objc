@@ -73,6 +73,7 @@
                 <entry key="readonly" value="YES"/>
             </userInfo>
         </attribute>
+        <relationship name="locationTag" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MTag" syncable="YES"/>
         <relationship name="map" maxCount="1" deletionRule="Nullify" destinationEntity="MMap" inverseName="points" inverseEntity="MMap" syncable="YES"/>
         <relationship name="tags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MTag" inverseName="points" inverseEntity="MTag" syncable="YES"/>
     </entity>
@@ -82,14 +83,19 @@
                 <entry key="readonly" value="YES"/>
             </userInfo>
         </attribute>
+        <attribute name="level" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="rootID" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="shortName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MTag" inverseName="subtags" inverseEntity="MTag" syncable="YES"/>
         <relationship name="points" toMany="YES" deletionRule="Nullify" destinationEntity="MPoint" inverseName="tags" inverseEntity="MPoint" syncable="YES"/>
+        <relationship name="subtags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MTag" inverseName="parent" inverseEntity="MTag" syncable="YES"/>
     </entity>
     <elements>
-        <element name="MBaseSync" positionX="-3458" positionY="-292" width="128" height="103"/>
-        <element name="MMap" positionX="-3566" positionY="-73" width="128" height="73"/>
-        <element name="MPoint" positionX="-3332" positionY="-108" width="128" height="118"/>
-        <element name="MTag" positionX="-3125" positionY="-63" width="128" height="73"/>
         <element name="MBase" positionX="-3125" positionY="-414" width="128" height="103"/>
+        <element name="MBaseSync" positionX="-3458" positionY="-292" width="128" height="103"/>
         <element name="MIcon" positionX="-2918" positionY="-337" width="128" height="88"/>
+        <element name="MMap" positionX="-3566" positionY="-73" width="128" height="73"/>
+        <element name="MPoint" positionX="-3332" positionY="-108" width="128" height="133"/>
+        <element name="MTag" positionX="-3125" positionY="-205" width="128" height="148"/>
     </elements>
 </model>

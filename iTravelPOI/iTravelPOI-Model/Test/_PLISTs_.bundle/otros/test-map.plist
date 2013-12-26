@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>mapName</key>
+  <string>test-map</string>
+  <key>pois</key>
+  <array>
+    <dict>
+      <key>index</key>
+      <integer>1</integer>
+      <key>name</key>
+      <string><![CDATA[Point-1]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr">desc</div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png]]></string>
+      <key>lat</key>
+      <real>39.15136</real>
+      <key>lng</key>
+      <real>-99.448235</real>
+    </dict>
+  </array>
+  <key>tags</key>
+  <array>
+    <dict>
+      <key>name</key>
+      <string>tag_1</string>
+      <key>poiIndexes</key>
+      <array>
+        <string>1</string>
+        <string>2-4</string>
+      </array>
+    </dict>
+  </array>
+</dict>
+</plist>

@@ -11,10 +11,15 @@
 
 const struct MTagAttributes MTagAttributes = {
 	.isAutoTag = @"isAutoTag",
+	.level = @"level",
+	.rootID = @"rootID",
+	.shortName = @"shortName",
 };
 
 const struct MTagRelationships MTagRelationships = {
+	.parent = @"parent",
 	.points = @"points",
+	.subtags = @"subtags",
 };
 
 const struct MTagFetchedProperties MTagFetchedProperties = {
@@ -48,6 +53,16 @@ const struct MTagFetchedProperties MTagFetchedProperties = {
 	
 	if ([key isEqualToString:@"isAutoTagValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"isAutoTag"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
+	if ([key isEqualToString:@"levelValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"level"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
+	if ([key isEqualToString:@"rootIDValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"rootID"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
@@ -86,6 +101,73 @@ const struct MTagFetchedProperties MTagFetchedProperties = {
 
 
 
+@dynamic level;
+
+
+
+- (int16_t)levelValue {
+	NSNumber *result = [self level];
+	return [result shortValue];
+}
+
+
+- (void)setLevelValue:(int16_t)value_ {
+	[self setLevel:[NSNumber numberWithShort:value_]];
+}
+
+
+- (int16_t)primitiveLevelValue {
+	NSNumber *result = [self primitiveLevel];
+	return [result shortValue];
+}
+
+- (void)setPrimitiveLevelValue:(int16_t)value_ {
+	[self setPrimitiveLevel:[NSNumber numberWithShort:value_]];
+}
+
+
+
+
+
+@dynamic rootID;
+
+
+
+- (int16_t)rootIDValue {
+	NSNumber *result = [self rootID];
+	return [result shortValue];
+}
+
+
+- (void)setRootIDValue:(int16_t)value_ {
+	[self setRootID:[NSNumber numberWithShort:value_]];
+}
+
+
+- (int16_t)primitiveRootIDValue {
+	NSNumber *result = [self primitiveRootID];
+	return [result shortValue];
+}
+
+- (void)setPrimitiveRootIDValue:(int16_t)value_ {
+	[self setPrimitiveRootID:[NSNumber numberWithShort:value_]];
+}
+
+
+
+
+
+@dynamic shortName;
+
+
+
+
+
+
+@dynamic parent;
+
+	
+
 @dynamic points;
 
 	
@@ -95,6 +177,19 @@ const struct MTagFetchedProperties MTagFetchedProperties = {
 	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"points"];
   
 	[self didAccessValueForKey:@"points"];
+	return result;
+}
+	
+
+@dynamic subtags;
+
+	
+- (NSMutableSet*)subtagsSet {
+	[self willAccessValueForKey:@"subtags"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"subtags"];
+  
+	[self didAccessValueForKey:@"subtags"];
 	return result;
 }
 	

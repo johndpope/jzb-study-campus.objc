@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>mapName</key>
+  <string>HT_Zona Durango_2013</string>
+  <key>pois</key>
+  <array>
+    <dict>
+      <key>index</key>
+      <integer>1</integer>
+      <key>name</key>
+      <string><![CDATA[Olazabal Azpikoa]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr">Atxodo,Bizkaia<br>619 32 22 52<br>94 465 60 16<br>http://www.olazabalazpikoa.com/index.php</div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png]]></string>
+      <key>lat</key>
+      <real>43.11076</real>
+      <key>lng</key>
+      <real>-2.598315</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>2</integer>
+      <key>name</key>
+      <string><![CDATA[Santuario de los Santos Antonios]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png]]></string>
+      <key>lat</key>
+      <real>43.100311</real>
+      <key>lng</key>
+      <real>-2.64658</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>3</integer>
+      <key>name</key>
+      <string><![CDATA[Centro de Interpretación del Parque Natural de Urkiola]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png]]></string>
+      <key>lat</key>
+      <real>43.101357</real>
+      <key>lng</key>
+      <real>-2.646692</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>4</integer>
+      <key>name</key>
+      <string><![CDATA[48220 Abadiño]]></string>
+      <key>desc</key>
+      <string><![CDATA[Vizcaya<br><a href="https://maps.google.es/maps/place?ftid=0xd4e2d6f2325a4bb:0xc3664a59379e6cb4&amp;q=Abadi%C3%B1o&amp;hl=es&amp;authuser=0&amp;cd=1&amp;cad=src:ppiwlink&amp;ei=HsBFUZfxLKLOiAbIt4H4Dg&amp;sig2=fKKteEPHIZX8VH9dDlfU-Q&amp;dtab=5" target="_blank"><img src="https://cbks0.google.com/cbk?output=thumbnail&amp;w=90&amp;h=68&amp;ll=43.151030,-2.611262&amp;thumb=0"></a>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png]]></string>
+      <key>lat</key>
+      <real>43.151031</real>
+      <key>lng</key>
+      <real>-2.611262</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>5</integer>
+      <key>name</key>
+      <string><![CDATA[Gerediaga - Ermita de San Salvador]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png]]></string>
+      <key>lat</key>
+      <real>43.169865</real>
+      <key>lng</key>
+      <real>-2.60553</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>6</integer>
+      <key>name</key>
+      <string><![CDATA[Urdaibai]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png]]></string>
+      <key>lat</key>
+      <real>43.317513</real>
+      <key>lng</key>
+      <real>-2.678509</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>7</integer>
+      <key>name</key>
+      <string><![CDATA[Bodega Berroja]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png]]></string>
+      <key>lat</key>
+      <real>43.252167</real>
+      <key>lng</key>
+      <real>-2.657103</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>8</integer>
+      <key>name</key>
+      <string><![CDATA[Durango]]></string>
+      <key>desc</key>
+      <string><![CDATA[Vizcaya<br>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png]]></string>
+      <key>lat</key>
+      <real>43.165874</real>
+      <key>lng</key>
+      <real>-2.632084</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>9</integer>
+      <key>name</key>
+      <string><![CDATA[Cueva de Sanimamiñe]]></string>
+      <key>desc</key>
+      <string><![CDATA[]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png]]></string>
+      <key>lat</key>
+      <real>43.344494</real>
+      <key>lng</key>
+      <real>-2.638264</real>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>10</integer>
+      <key>name</key>
+      <string><![CDATA[Bosque de Oma]]></string>
+      <key>desc</key>
+      <string><![CDATA[<div dir="ltr">Vizcaya</div>]]></string>
+      <key>icon</key>
+      <string><![CDATA[http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png]]></string>
+      <key>lat</key>
+      <real>43.336071</real>
+      <key>lng</key>
+      <real>-2.616999</real>
+    </dict>
+  </array>
+  <key>tags</key>
+  <array>
+    <dict>
+      <key>name</key>
+      <string>tag_1</string>
+      <key>poiIndexes</key>
+      <array>
+        <string>1</string>
+        <string>2-4</string>
+      </array>
+    </dict>
+  </array>
+</dict>
+</plist>
