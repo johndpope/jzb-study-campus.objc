@@ -170,82 +170,6 @@
 #pragma mark -
 #pragma mark Public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (RPointTag *) _relationWithPoint:(MPoint *)point mustCreate:(BOOL)mustCreate {
-    
-    for(RPointTag *rpt in self.rPoints) {
-        if([rpt.point.objectID isEqual:point.objectID]) {
-            return rpt;
-        }
-    }
-    
-    if(mustCreate) {
-        RPointTag *rpt = [RPointTag insertInManagedObjectContext:point.managedObjectContext];
-        rpt.tag = self;
-        rpt.point = point;
-        return rpt;
-    } else {
-        return nil;
-    }
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (RTagSubtag *) _relationWithSubtag:(MTag *)childTag mustCreate:(BOOL)mustCreate {
-    
-    for(RTagSubtag *rtst in self.rChildrenTags) {
-        if([rtst.childTag.objectID isEqual:childTag.objectID]) {
-            return rtst;
-        }
-    }
-    
-    if(mustCreate) {
-        RTagSubtag *rtst = [RTagSubtag insertInManagedObjectContext:childTag.managedObjectContext];
-        rtst.parentTag = self;
-        rtst.childTag = childTag;
-        return rtst;
-    } else {
-        return nil;
-    }
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _createOtherPointsTag {
-    
-    MTag *otherPointsTag = [MTag tagByName:[NSString stringWithFormat:@"%@#Others", self.name] inContext:self.managedObjectContext];
-    otherPointsTag.shortName = @"Others";
-    otherPointsTag.isAutoTagValue = TRUE;
-    self.otherPointsTag = otherPointsTag;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _deleteOtherPointsTag {
-    
-    [self.otherPointsTag.managedObjectContext deleteObject:self.otherPointsTag];
-    self.otherPointsTag = nil;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSSet *) _allParentTags {
-    
-    NSMutableSet *allParents = [NSMutableSet set];
-    for(RTagSubtag *rtag in self.rParentTags) {
-        [allParents addObject:rtag.parentTag];
-        [allParents addObjectsFromArray:[[rtag.parentTag _allParentTags] allObjects]];
-    }
-    return allParents;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSSet *) _allChildrenTags {
-    
-    NSMutableSet *allChildren = [NSMutableSet set];
-    for(RTagSubtag *rtag in self.rChildrenTags) {
-        [allChildren addObject:rtag.childTag];
-        [allChildren addObjectsFromArray:[[rtag.childTag _allChildrenTags] allObjects]];
-    }
-    return allChildren;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
 - (void) tagPoint:(MPoint *)point {
 
     NSLog(@"tagPoint tag: %@ - point: %@", self.name, point.name);
@@ -457,7 +381,80 @@
 #pragma mark -
 #pragma mark Private methods
 //---------------------------------------------------------------------------------------------------------------------
+- (RPointTag *) _relationWithPoint:(MPoint *)point mustCreate:(BOOL)mustCreate {
+    
+    for(RPointTag *rpt in self.rPoints) {
+        if([rpt.point.objectID isEqual:point.objectID]) {
+            return rpt;
+        }
+    }
+    
+    if(mustCreate) {
+        RPointTag *rpt = [RPointTag insertInManagedObjectContext:point.managedObjectContext];
+        rpt.tag = self;
+        rpt.point = point;
+        return rpt;
+    } else {
+        return nil;
+    }
+}
 
+//---------------------------------------------------------------------------------------------------------------------
+- (RTagSubtag *) _relationWithSubtag:(MTag *)childTag mustCreate:(BOOL)mustCreate {
+    
+    for(RTagSubtag *rtst in self.rChildrenTags) {
+        if([rtst.childTag.objectID isEqual:childTag.objectID]) {
+            return rtst;
+        }
+    }
+    
+    if(mustCreate) {
+        RTagSubtag *rtst = [RTagSubtag insertInManagedObjectContext:childTag.managedObjectContext];
+        rtst.parentTag = self;
+        rtst.childTag = childTag;
+        return rtst;
+    } else {
+        return nil;
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _createOtherPointsTag {
+    
+    MTag *otherPointsTag = [MTag tagByName:[NSString stringWithFormat:@"#%@#Others", self.name] inContext:self.managedObjectContext];
+    otherPointsTag.shortName = @"Others";
+    otherPointsTag.isAutoTagValue = TRUE;
+    self.otherPointsTag = otherPointsTag;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _deleteOtherPointsTag {
+    
+    [self.otherPointsTag.managedObjectContext deleteObject:self.otherPointsTag];
+    self.otherPointsTag = nil;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSSet *) _allParentTags {
+    
+    NSMutableSet *allParents = [NSMutableSet set];
+    for(RTagSubtag *rtag in self.rParentTags) {
+        [allParents addObject:rtag.parentTag];
+        [allParents addObjectsFromArray:[[rtag.parentTag _allParentTags] allObjects]];
+    }
+    return allParents;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSSet *) _allChildrenTags {
+    
+    NSMutableSet *allChildren = [NSMutableSet set];
+    for(RTagSubtag *rtag in self.rChildrenTags) {
+        [allChildren addObject:rtag.childTag];
+        [allChildren addObjectsFromArray:[[rtag.childTag _allChildrenTags] allObjects]];
+    }
+    return allChildren;
+}
 
 
 

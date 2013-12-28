@@ -83,7 +83,11 @@ typedef enum NodeExpandedStateTypes
     NSArray *allNodes = [rootNode toFlatArray:ALL_NODES];
     for(TreeNode *node in allNodes) {
         if([expandedTags containsObject:node.tag]) {
-            node.parent.isExpanded = TRUE;
+            TreeNode *me = node;
+            while(me!=rootNode) {
+                me.isExpanded = TRUE;
+                me = me.parent;
+            }
         }
     }
     
