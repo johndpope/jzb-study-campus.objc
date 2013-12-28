@@ -98,13 +98,15 @@
         MTag *tag = [MTag tagFromIcon:self];
         NSArray *points = [MPoint pointsWithIcon:self];
         for(MPoint *point in points) {
-            [point addTagsObject:tag];
+            [tag tagPoint:point];
         }
         self.tag = tag;
-    } else{
+    } else {
         // Antes lo era y debe quitar el tag de los puntos
-        NSSet *points = [self.tag.points copy];
-        [self.tag removePoints:points];
+        NSArray *points = [MPoint pointsWithIcon:self];
+        for(MPoint *point in points) {
+            [self.tag untagPoint:point];
+        }
         self.tag=nil;
     }
 }

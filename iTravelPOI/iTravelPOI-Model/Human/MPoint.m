@@ -106,12 +106,12 @@
     // Se asigna una condicion de filtro
     NSPredicate *query;
     if(map) {
-        NSString *queryStr = @"markedAsDeleted=NO AND map=%@ AND SUBQUERY(self.tags, $X, $X IN %@).@count>=%d";
+        NSString *queryStr = @"markedAsDeleted=NO AND map=%@ AND SUBQUERY(self.rTags.tag, $X, $X IN %@).@count>=%d";
         query = [NSPredicate predicateWithFormat:queryStr, map, tags, tags.count];
     } else {
         //    NSString *queryStr = @"markedAsDeleted=NO AND SUBQUERY(self.tags, $X, $X IN %@).@count>0";
         //    NSPredicate *query = [NSPredicate predicateWithFormat:queryStr, tags];
-        NSString *queryStr = @"markedAsDeleted=NO AND SUBQUERY(self.tags, $X, $X IN %@).@count>=%d";
+        NSString *queryStr = @"markedAsDeleted=NO AND SUBQUERY(self.rTags.tag, $X, $X IN %@).@count>=%d";
         query = [NSPredicate predicateWithFormat:queryStr, tags, tags.count];
     }
     [request setPredicate:query];
@@ -168,13 +168,13 @@
 - (void) updateIcon:(MIcon *)icon {
     
     // Si el icono previo era del tipo auto-tag desasigna del tag
-    [self.icon.tag removePointsObject:self];
+    [self.icon.tag untagPoint:self];
     
     // Llama a la clase base para que actualice la informacion
     [super updateIcon:icon];
 
     // Si el nuevo icono es del tipo auto-tag se asigna al tag
-    [self.icon.tag addPointsObject:self];
+    [self.icon.tag tagPoint:self];
 }
 
 //---------------------------------------------------------------------------------------------------------------------

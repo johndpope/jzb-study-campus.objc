@@ -41,7 +41,7 @@
 @property (nonatomic, assign) IBOutlet UITableView *poisTable;
 
 @property (nonatomic, strong) NSArray *poiList;
-@property (nonatomic, strong) NSMutableSet *filter;
+@property (nonatomic, strong) NSMutableArray *filter;
 
 
 @end
@@ -83,8 +83,8 @@
     if(self.moContext==nil) {
         self.moContext = BaseCoreDataService.moContext;
     }
-    if(!self.filter) self.filter = [NSMutableSet set];
-    self.poiList = [MPoint pointsTaggedWith:self.filter inMap:nil InContext:self.moContext];
+    if(!self.filter) self.filter = [NSMutableArray array];
+    self.poiList = [MPoint pointsTaggedWith:[NSSet setWithArray:self.filter] inMap:nil InContext:self.moContext];
 }
 
 
@@ -117,7 +117,7 @@
         tagFilterVC.filter = self.filter;
     } else {
         self.filter = tagFilterVC.filter;
-        self.poiList = [MPoint pointsTaggedWith:self.filter inMap:nil InContext:self.moContext];
+        self.poiList = [MPoint pointsTaggedWith:[NSSet setWithArray:self.filter] inMap:nil InContext:self.moContext];
         [self.poisTable reloadData];
     }
     [self.revealViewController rightRevealToggle:self];

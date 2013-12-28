@@ -27,6 +27,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 + (MPoint *) emptyPointWithName:(NSString *)name inMap:(MMap *)map;
 + (NSArray *) allPointsInContext:(NSManagedObjectContext *)moContext includeMarkedAsDeleted:(BOOL)withDeleted;
+
 + (NSArray *) pointsTaggedWith:(NSSet *)tags inMap:(MMap *)map InContext:(NSManagedObjectContext *)moContext;
 + (NSArray *) pointsWithIcon:(MIcon *)icon;
 

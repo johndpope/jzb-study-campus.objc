@@ -45,9 +45,9 @@ extern const struct MIconFetchedProperties {
 			
 				
 					#ifndef __MIcon__PROTECTED__
-					@property (nonatomic, strong, readonly) NSString* iconHREF;
+					  @property (nonatomic, strong, readonly) NSString* iconHREF;
 					#else
-					@property (nonatomic, strong) NSString* iconHREF;
+					  @property (nonatomic, strong) NSString* iconHREF;
 					#endif
 				
 			
@@ -67,9 +67,9 @@ extern const struct MIconFetchedProperties {
 			
 				
 					#ifndef __MIcon__PROTECTED__
-					@property (nonatomic, strong, readonly) NSString* name;
+					  @property (nonatomic, strong, readonly) NSString* name;
 					#else
-					@property (nonatomic, strong) NSString* name;
+					  @property (nonatomic, strong) NSString* name;
 					#endif
 				
 			

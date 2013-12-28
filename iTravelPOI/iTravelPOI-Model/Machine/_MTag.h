@@ -16,17 +16,17 @@ extern const struct MTagAttributes {
 } MTagAttributes;
 
 extern const struct MTagRelationships {
-	__unsafe_unretained NSString *parent;
-	__unsafe_unretained NSString *points;
-	__unsafe_unretained NSString *subtags;
+	__unsafe_unretained NSString *rChildrenTags;
+	__unsafe_unretained NSString *rParentTags;
+	__unsafe_unretained NSString *rPoints;
 } MTagRelationships;
 
 extern const struct MTagFetchedProperties {
 } MTagFetchedProperties;
 
-@class MTag;
-@class MPoint;
-@class MTag;
+@class RTagSubtag;
+@class RTagSubtag;
+@class RPointTag;
 
 
 
@@ -54,9 +54,9 @@ extern const struct MTagFetchedProperties {
 			
 				
 					#ifndef __MTag__PROTECTED__
-					@property (nonatomic, strong, readonly) NSNumber* isAutoTag;
+					  @property (nonatomic, strong, readonly) NSNumber* isAutoTag;
 					#else
-					@property (nonatomic, strong) NSNumber* isAutoTag;
+					  @property (nonatomic, strong) NSNumber* isAutoTag;
 					#endif
 				
 			
@@ -66,12 +66,12 @@ extern const struct MTagFetchedProperties {
 			
 				
 					#ifndef __MTag__PROTECTED__
-					@property (readonly) BOOL isAutoTagValue;
-					- (BOOL)isAutoTagValue;
+					  @property (readonly) BOOL isAutoTagValue;
+					  - (BOOL) isAutoTagValue;
 					#else
 					@property BOOL isAutoTagValue;
-					- (BOOL)isAutoTagValue;
-					- (void)setIsAutoTagValue:(BOOL)value_;
+					  - (BOOL) isAutoTagValue;
+					  - (void) setIsAutoTagValue:(BOOL)value_;
 					#endif
 				
 			
@@ -160,13 +160,27 @@ extern const struct MTagFetchedProperties {
 
 
 	
-		
-			
-				@property (nonatomic, strong) MTag *parent;
-			
+
 		
 
-		//- (BOOL)validateParent:(id*)value_ error:(NSError**)error_;
+			
+				#ifndef __MTag__PROTECTED__
+				@property (nonatomic, strong, readonly) NSSet *rChildrenTags;
+				#else
+				@property (nonatomic, strong) NSSet *rChildrenTags;
+				#endif
+			
+
+
+		
+
+
+		
+			#ifndef __MTag__PROTECTED__
+			- (NSMutableSet*)rChildrenTagsSet;
+			#endif
+		
+
 
 	
 
@@ -177,7 +191,11 @@ extern const struct MTagFetchedProperties {
 		
 
 			
-				@property (nonatomic, strong) NSSet *points;
+				#ifndef __MTag__PROTECTED__
+				@property (nonatomic, strong, readonly) NSSet *rParentTags;
+				#else
+				@property (nonatomic, strong) NSSet *rParentTags;
+				#endif
 			
 
 
@@ -185,7 +203,9 @@ extern const struct MTagFetchedProperties {
 
 
 		
-			- (NSMutableSet*)pointsSet;
+			#ifndef __MTag__PROTECTED__
+			- (NSMutableSet*)rParentTagsSet;
+			#endif
 		
 
 
@@ -198,7 +218,11 @@ extern const struct MTagFetchedProperties {
 		
 
 			
-				@property (nonatomic, strong) NSSet *subtags;
+				#ifndef __MTag__PROTECTED__
+				@property (nonatomic, strong, readonly) NSSet *rPoints;
+				#else
+				@property (nonatomic, strong) NSSet *rPoints;
+				#endif
 			
 
 
@@ -206,7 +230,9 @@ extern const struct MTagFetchedProperties {
 
 
 		
-			- (NSMutableSet*)subtagsSet;
+			#ifndef __MTag__PROTECTED__
+			- (NSMutableSet*)rPointsSet;
+			#endif
 		
 
 
@@ -230,18 +256,25 @@ extern const struct MTagFetchedProperties {
 @end
 
 
-@interface _MTag (PointsCoreDataGeneratedAccessors)
-- (void)addPoints:(NSSet*)value_;
-- (void)removePoints:(NSSet*)value_;
-- (void)addPointsObject:(MPoint*)value_;
-- (void)removePointsObject:(MPoint*)value_;
+@interface _MTag (RChildrenTagsCoreDataGeneratedAccessors)
+- (void)addRChildrenTags:(NSSet*)value_;
+- (void)removeRChildrenTags:(NSSet*)value_;
+- (void)addRChildrenTagsObject:(RTagSubtag*)value_;
+- (void)removeRChildrenTagsObject:(RTagSubtag*)value_;
 @end
 
-@interface _MTag (SubtagsCoreDataGeneratedAccessors)
-- (void)addSubtags:(NSSet*)value_;
-- (void)removeSubtags:(NSSet*)value_;
-- (void)addSubtagsObject:(MTag*)value_;
-- (void)removeSubtagsObject:(MTag*)value_;
+@interface _MTag (RParentTagsCoreDataGeneratedAccessors)
+- (void)addRParentTags:(NSSet*)value_;
+- (void)removeRParentTags:(NSSet*)value_;
+- (void)addRParentTagsObject:(RTagSubtag*)value_;
+- (void)removeRParentTagsObject:(RTagSubtag*)value_;
+@end
+
+@interface _MTag (RPointsCoreDataGeneratedAccessors)
+- (void)addRPoints:(NSSet*)value_;
+- (void)removeRPoints:(NSSet*)value_;
+- (void)addRPointsObject:(RPointTag*)value_;
+- (void)removeRPointsObject:(RPointTag*)value_;
 @end
 
 
@@ -282,18 +315,18 @@ extern const struct MTagFetchedProperties {
 
 
 
-- (MTag*)primitiveParent;
-- (void)setPrimitiveParent:(MTag*)value;
+- (NSMutableSet*)primitiveRChildrenTags;
+- (void)setPrimitiveRChildrenTags:(NSMutableSet*)value;
 
 
 
-- (NSMutableSet*)primitivePoints;
-- (void)setPrimitivePoints:(NSMutableSet*)value;
+- (NSMutableSet*)primitiveRParentTags;
+- (void)setPrimitiveRParentTags:(NSMutableSet*)value;
 
 
 
-- (NSMutableSet*)primitiveSubtags;
-- (void)setPrimitiveSubtags:(NSMutableSet*)value;
+- (NSMutableSet*)primitiveRPoints;
+- (void)setPrimitiveRPoints:(NSMutableSet*)value;
 
 
 @end

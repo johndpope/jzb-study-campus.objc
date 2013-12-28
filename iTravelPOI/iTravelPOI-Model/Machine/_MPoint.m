@@ -16,9 +16,8 @@ const struct MPointAttributes MPointAttributes = {
 };
 
 const struct MPointRelationships MPointRelationships = {
-	.locationTag = @"locationTag",
 	.map = @"map",
-	.tags = @"tags",
+	.rTags = @"rTags",
 };
 
 const struct MPointFetchedProperties MPointFetchedProperties = {
@@ -130,23 +129,19 @@ const struct MPointFetchedProperties MPointFetchedProperties = {
 
 
 
-@dynamic locationTag;
-
-	
-
 @dynamic map;
 
 	
 
-@dynamic tags;
+@dynamic rTags;
 
 	
-- (NSMutableSet*)tagsSet {
-	[self willAccessValueForKey:@"tags"];
+- (NSMutableSet*)rTagsSet {
+	[self willAccessValueForKey:@"rTags"];
   
-	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"tags"];
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"rTags"];
   
-	[self didAccessValueForKey:@"tags"];
+	[self didAccessValueForKey:@"rTags"];
 	return result;
 }
 	

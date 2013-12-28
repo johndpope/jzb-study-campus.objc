@@ -15,17 +15,15 @@ extern const struct MPointAttributes {
 } MPointAttributes;
 
 extern const struct MPointRelationships {
-	__unsafe_unretained NSString *locationTag;
 	__unsafe_unretained NSString *map;
-	__unsafe_unretained NSString *tags;
+	__unsafe_unretained NSString *rTags;
 } MPointRelationships;
 
 extern const struct MPointFetchedProperties {
 } MPointFetchedProperties;
 
-@class MTag;
 @class MMap;
-@class MTag;
+@class RPointTag;
 
 
 
@@ -70,9 +68,9 @@ extern const struct MPointFetchedProperties {
 			
 				
 					#ifndef __MPoint__PROTECTED__
-					@property (nonatomic, strong, readonly) NSNumber* latitude;
+					  @property (nonatomic, strong, readonly) NSNumber* latitude;
 					#else
-					@property (nonatomic, strong) NSNumber* latitude;
+					  @property (nonatomic, strong) NSNumber* latitude;
 					#endif
 				
 			
@@ -82,12 +80,12 @@ extern const struct MPointFetchedProperties {
 			
 				
 					#ifndef __MPoint__PROTECTED__
-					@property (readonly) double latitudeValue;
-					- (double)latitudeValue;
+					  @property (readonly) double latitudeValue;
+					  - (double) latitudeValue;
 					#else
 					@property double latitudeValue;
-					- (double)latitudeValue;
-					- (void)setLatitudeValue:(double)value_;
+					  - (double) latitudeValue;
+					  - (void) setLatitudeValue:(double)value_;
 					#endif
 				
 			
@@ -105,9 +103,9 @@ extern const struct MPointFetchedProperties {
 			
 				
 					#ifndef __MPoint__PROTECTED__
-					@property (nonatomic, strong, readonly) NSNumber* longitude;
+					  @property (nonatomic, strong, readonly) NSNumber* longitude;
 					#else
-					@property (nonatomic, strong) NSNumber* longitude;
+					  @property (nonatomic, strong) NSNumber* longitude;
 					#endif
 				
 			
@@ -117,12 +115,12 @@ extern const struct MPointFetchedProperties {
 			
 				
 					#ifndef __MPoint__PROTECTED__
-					@property (readonly) double longitudeValue;
-					- (double)longitudeValue;
+					  @property (readonly) double longitudeValue;
+					  - (double) longitudeValue;
 					#else
 					@property double longitudeValue;
-					- (double)longitudeValue;
-					- (void)setLongitudeValue:(double)value_;
+					  - (double) longitudeValue;
+					  - (void) setLongitudeValue:(double)value_;
 					#endif
 				
 			
@@ -143,19 +141,6 @@ extern const struct MPointFetchedProperties {
 	
 		
 			
-				@property (nonatomic, strong) MTag *locationTag;
-			
-		
-
-		//- (BOOL)validateLocationTag:(id*)value_ error:(NSError**)error_;
-
-	
-
-
-
-	
-		
-			
 				@property (nonatomic, strong) MMap *map;
 			
 		
@@ -171,7 +156,11 @@ extern const struct MPointFetchedProperties {
 		
 
 			
-				@property (nonatomic, strong) NSSet *tags;
+				#ifndef __MPoint__PROTECTED__
+				@property (nonatomic, strong, readonly) NSSet *rTags;
+				#else
+				@property (nonatomic, strong) NSSet *rTags;
+				#endif
 			
 
 
@@ -179,7 +168,9 @@ extern const struct MPointFetchedProperties {
 
 
 		
-			- (NSMutableSet*)tagsSet;
+			#ifndef __MPoint__PROTECTED__
+			- (NSMutableSet*)rTagsSet;
+			#endif
 		
 
 
@@ -203,11 +194,11 @@ extern const struct MPointFetchedProperties {
 @end
 
 
-@interface _MPoint (TagsCoreDataGeneratedAccessors)
-- (void)addTags:(NSSet*)value_;
-- (void)removeTags:(NSSet*)value_;
-- (void)addTagsObject:(MTag*)value_;
-- (void)removeTagsObject:(MTag*)value_;
+@interface _MPoint (RTagsCoreDataGeneratedAccessors)
+- (void)addRTags:(NSSet*)value_;
+- (void)removeRTags:(NSSet*)value_;
+- (void)addRTagsObject:(RPointTag*)value_;
+- (void)removeRTagsObject:(RPointTag*)value_;
 @end
 
 
@@ -239,18 +230,13 @@ extern const struct MPointFetchedProperties {
 
 
 
-- (MTag*)primitiveLocationTag;
-- (void)setPrimitiveLocationTag:(MTag*)value;
-
-
-
 - (MMap*)primitiveMap;
 - (void)setPrimitiveMap:(MMap*)value;
 
 
 
-- (NSMutableSet*)primitiveTags;
-- (void)setPrimitiveTags:(NSMutableSet*)value;
+- (NSMutableSet*)primitiveRTags;
+- (void)setPrimitiveRTags:(NSMutableSet*)value;
 
 
 @end

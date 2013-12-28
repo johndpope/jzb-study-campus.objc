@@ -1488,29 +1488,48 @@
       <key>index</key>
       <integer>1</integer>
       <key>name</key>
-      <string>Zona Norte - Oporto</string>
-      <key>poiIndexes</key>
-      <array>
-        <string>1-32</string>
-      </array>
+      <string>Zona Norte</string>
       <key>tagIndexes</key>
       <array>
-        <string>10-13</string>
+        <string>10-12</string>
       </array>
     </dict>
+    <dict>
+      <key>index</key>
+      <integer>2</integer>
+      <key>name</key>
+      <string>Zona Centro</string>
+      <key>tagIndexes</key>
+      <array>
+        <string>20-21</string>
+      </array>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>3</integer>
+      <key>name</key>
+      <string>Zona Sur</string>
+      <key>tagIndexes</key>
+      <array>
+        <string>30</string>
+      </array>
+    </dict>
+
+
+
     <dict>
       <key>index</key>
       <integer>10</integer>
       <key>name</key>
-      <string>Others</string>
-      <key>poiIndexes</key>
+      <string>Z.N. - Oporto</string>
+      <key>tagIndexes</key>
       <array>
-        <string>16</string>
+        <string>100-103</string>
       </array>
     </dict>
     <dict>
       <key>index</key>
-      <integer>11</integer>
+      <integer>100</integer>
       <key>name</key>
       <string>Guimarães</string>
       <key>poiIndexes</key>
@@ -1520,17 +1539,7 @@
     </dict>
     <dict>
       <key>index</key>
-      <integer>12</integer>
-      <key>name</key>
-      <string>Oporto</string>
-      <key>poiIndexes</key>
-      <array>
-        <string>17-32</string>
-      </array>
-    </dict>
-    <dict>
-      <key>index</key>
-      <integer>13</integer>
+      <integer>101</integer>
       <key>name</key>
       <string>Amarante</string>
       <key>poiIndexes</key>
@@ -1540,33 +1549,62 @@
     </dict>
     <dict>
       <key>index</key>
-      <integer>2</integer>
+      <integer>102</integer>
       <key>name</key>
-      <string>Zona Coimbra</string>
+      <string>Others</string>
       <key>poiIndexes</key>
       <array>
-        <string>47-56</string>
-      </array>
-      <key>tagIndexes</key>
-      <array>
-        <string>20</string>
+        <string>16</string>
       </array>
     </dict>
     <dict>
       <key>index</key>
-      <integer>20</integer>
+      <integer>103</integer>
+      <key>name</key>
+      <string>Oporto</string>
+      <key>poiIndexes</key>
+      <array>
+        <string>17-32</string>
+      </array>
+    </dict>
+
+    <dict>
+      <key>index</key>
+      <integer>11</integer>
+      <key>name</key>
+      <string>Z.N. - Coimbra</string>
+      <key>tagIndexes</key>
+      <array>
+        <string>110-112</string>
+      </array>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>110</integer>
+      <key>name</key>
+      <string>Others</string>
+      <key>poiIndexes</key>
+      <array>
+        <string>33-46</string>
+      </array>
+    </dict>
+    <dict>
+      <key>index</key>
+      <integer>112</integer>
       <key>name</key>
       <string>Coimbra</string>
       <key>poiIndexes</key>
       <array>
-        <string>33-56</string>
+        <string>47-56</string>
       </array>
     </dict>
+
+
     <dict>
       <key>index</key>
-      <integer>3</integer>
+      <integer>12</integer>
       <key>name</key>
-      <string>Zona Norte - Nazaré</string>
+      <string>Z.N. - Nazaré</string>
       <key>poiIndexes</key>
       <array>
         <string>57-70</string>
@@ -1574,9 +1612,9 @@
     </dict>
     <dict>
       <key>index</key>
-      <integer>4</integer>
+      <integer>20</integer>
       <key>name</key>
-      <string>Zona Centro - Sintra</string>
+      <string>Z.C. - Sintra</string>
       <key>poiIndexes</key>
       <array>
         <string>71-80</string>
@@ -1584,9 +1622,9 @@
     </dict>
     <dict>
       <key>index</key>
-      <integer>5</integer>
+      <integer>21</integer>
       <key>name</key>
-      <string>Zona Centro - Lisboa</string>
+      <string>Z.C. - Lisboa</string>
       <key>poiIndexes</key>
       <array>
         <string>81-96</string>
@@ -1594,9 +1632,9 @@
     </dict>
     <dict>
       <key>index</key>
-      <integer>6</integer>
+      <integer>30</integer>
       <key>name</key>
-      <string>Zona Sur - Algarbe</string>
+      <string>Z.S. - Algarbe</string>
       <key>poiIndexes</key>
       <array>
         <string>97-105</string>

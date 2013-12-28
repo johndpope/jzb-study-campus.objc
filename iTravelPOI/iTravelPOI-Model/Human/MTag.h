@@ -5,6 +5,8 @@
 
 #import "_MTag.h"
 
+@class MPoint;
+
 
 //*********************************************************************************************************************
 #pragma mark -
@@ -27,14 +29,23 @@
 //---------------------------------------------------------------------------------------------------------------------
 + (MTag *) tagByName:(NSString *)name inContext:(NSManagedObjectContext *)moContext;
 + (MTag *) tagFromIcon:(MIcon *)icon;
-+ (NSArray *) tagsForPointsTaggedWith:(NSSet *)tags InContext:(NSManagedObjectContext *)moContext;
 + (NSArray *) allTagsInContext:(NSManagedObjectContext *)moContext includeEmptyTags:(BOOL)emptyTags;
+
++ (NSArray *) tagsForPointsTaggedWith:(NSSet *)tags InContext:(NSManagedObjectContext *)moContext;
 
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
+- (void) tagPoint:(MPoint *)point;
+- (void) untagPoint:(MPoint *)point;
 
+- (void) tagChildTag:(MTag *)childTag;
+- (void) untagChildTag:(MTag *)childTag;
+
+- (BOOL) hasParentTags;
+- (BOOL) anyIsParentTag:(NSSet *)tags;
+- (BOOL) isDirectParentOfTag:(MTag *)childTag;
 
 @end

@@ -17,9 +17,9 @@ const struct MTagAttributes MTagAttributes = {
 };
 
 const struct MTagRelationships MTagRelationships = {
-	.parent = @"parent",
-	.points = @"points",
-	.subtags = @"subtags",
+	.rChildrenTags = @"rChildrenTags",
+	.rParentTags = @"rParentTags",
+	.rPoints = @"rPoints",
 };
 
 const struct MTagFetchedProperties MTagFetchedProperties = {
@@ -164,32 +164,41 @@ const struct MTagFetchedProperties MTagFetchedProperties = {
 
 
 
-@dynamic parent;
+@dynamic rChildrenTags;
 
 	
-
-@dynamic points;
-
-	
-- (NSMutableSet*)pointsSet {
-	[self willAccessValueForKey:@"points"];
+- (NSMutableSet*)rChildrenTagsSet {
+	[self willAccessValueForKey:@"rChildrenTags"];
   
-	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"points"];
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"rChildrenTags"];
   
-	[self didAccessValueForKey:@"points"];
+	[self didAccessValueForKey:@"rChildrenTags"];
 	return result;
 }
 	
 
-@dynamic subtags;
+@dynamic rParentTags;
 
 	
-- (NSMutableSet*)subtagsSet {
-	[self willAccessValueForKey:@"subtags"];
+- (NSMutableSet*)rParentTagsSet {
+	[self willAccessValueForKey:@"rParentTags"];
   
-	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"subtags"];
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"rParentTags"];
   
-	[self didAccessValueForKey:@"subtags"];
+	[self didAccessValueForKey:@"rParentTags"];
+	return result;
+}
+	
+
+@dynamic rPoints;
+
+	
+- (NSMutableSet*)rPointsSet {
+	[self willAccessValueForKey:@"rPoints"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"rPoints"];
+  
+	[self didAccessValueForKey:@"rPoints"];
 	return result;
 }
 	

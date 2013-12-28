@@ -65,9 +65,9 @@ extern const struct MBaseFetchedProperties {
 			
 				
 					#ifndef __MBase__PROTECTED__
-					@property (nonatomic, strong, readonly) NSDate* tCreation;
+					  @property (nonatomic, strong, readonly) NSDate* tCreation;
 					#else
-					@property (nonatomic, strong) NSDate* tCreation;
+					  @property (nonatomic, strong) NSDate* tCreation;
 					#endif
 				
 			
@@ -87,9 +87,9 @@ extern const struct MBaseFetchedProperties {
 			
 				
 					#ifndef __MBase__PROTECTED__
-					@property (nonatomic, strong, readonly) NSDate* tUpdate;
+					  @property (nonatomic, strong, readonly) NSDate* tUpdate;
 					#else
-					@property (nonatomic, strong) NSDate* tUpdate;
+					  @property (nonatomic, strong) NSDate* tUpdate;
 					#endif
 				
 			

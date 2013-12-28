@@ -48,9 +48,9 @@ extern const struct MBaseSyncFetchedProperties {
 			
 				
 					#ifndef __MBaseSync__PROTECTED__
-					@property (nonatomic, strong, readonly) NSString* etag;
+					  @property (nonatomic, strong, readonly) NSString* etag;
 					#else
-					@property (nonatomic, strong) NSString* etag;
+					  @property (nonatomic, strong) NSString* etag;
 					#endif
 				
 			
@@ -70,9 +70,9 @@ extern const struct MBaseSyncFetchedProperties {
 			
 				
 					#ifndef __MBaseSync__PROTECTED__
-					@property (nonatomic, strong, readonly) NSString* gID;
+					  @property (nonatomic, strong, readonly) NSString* gID;
 					#else
-					@property (nonatomic, strong) NSString* gID;
+					  @property (nonatomic, strong) NSString* gID;
 					#endif
 				
 			
@@ -92,9 +92,9 @@ extern const struct MBaseSyncFetchedProperties {
 			
 				
 					#ifndef __MBaseSync__PROTECTED__
-					@property (nonatomic, strong, readonly) NSNumber* markedAsDeleted;
+					  @property (nonatomic, strong, readonly) NSNumber* markedAsDeleted;
 					#else
-					@property (nonatomic, strong) NSNumber* markedAsDeleted;
+					  @property (nonatomic, strong) NSNumber* markedAsDeleted;
 					#endif
 				
 			
@@ -104,12 +104,12 @@ extern const struct MBaseSyncFetchedProperties {
 			
 				
 					#ifndef __MBaseSync__PROTECTED__
-					@property (readonly) BOOL markedAsDeletedValue;
-					- (BOOL)markedAsDeletedValue;
+					  @property (readonly) BOOL markedAsDeletedValue;
+					  - (BOOL) markedAsDeletedValue;
 					#else
 					@property BOOL markedAsDeletedValue;
-					- (BOOL)markedAsDeletedValue;
-					- (void)setMarkedAsDeletedValue:(BOOL)value_;
+					  - (BOOL) markedAsDeletedValue;
+					  - (void) setMarkedAsDeletedValue:(BOOL)value_;
 					#endif
 				
 			
@@ -127,9 +127,9 @@ extern const struct MBaseSyncFetchedProperties {
 			
 				
 					#ifndef __MBaseSync__PROTECTED__
-					@property (nonatomic, strong, readonly) NSNumber* modifiedSinceLastSync;
+					  @property (nonatomic, strong, readonly) NSNumber* modifiedSinceLastSync;
 					#else
-					@property (nonatomic, strong) NSNumber* modifiedSinceLastSync;
+					  @property (nonatomic, strong) NSNumber* modifiedSinceLastSync;
 					#endif
 				
 			
@@ -139,12 +139,12 @@ extern const struct MBaseSyncFetchedProperties {
 			
 				
 					#ifndef __MBaseSync__PROTECTED__
-					@property (readonly) BOOL modifiedSinceLastSyncValue;
-					- (BOOL)modifiedSinceLastSyncValue;
+					  @property (readonly) BOOL modifiedSinceLastSyncValue;
+					  - (BOOL) modifiedSinceLastSyncValue;
 					#else
 					@property BOOL modifiedSinceLastSyncValue;
-					- (BOOL)modifiedSinceLastSyncValue;
-					- (void)setModifiedSinceLastSyncValue:(BOOL)value_;
+					  - (BOOL) modifiedSinceLastSyncValue;
+					  - (void) setModifiedSinceLastSyncValue:(BOOL)value_;
 					#endif
 				
 			

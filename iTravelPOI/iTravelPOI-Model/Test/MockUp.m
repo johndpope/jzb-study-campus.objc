@@ -140,52 +140,52 @@ BOOL _init_model_ = TRUE;
     point = [MPoint emptyPointWithName:@"p0" inMap:map1];
     [MockUp _setRandomLocationForPoint:point];
     [point updateIcon: [MIcon iconForHref:iconHref_0 inContext:moContext]];
-    [point addTags:[NSSet setWithObjects:tag1, nil]];
+    [MockUp _toPoint:point addTags:[NSSet setWithObjects:tag1, nil]];
 
     point = [MPoint emptyPointWithName:@"p1" inMap:map1];
     [MockUp _setRandomLocationForPoint:point];
     [point updateIcon: [MIcon iconForHref:iconHref_1 inContext:moContext]];
-    [point addTags:[NSSet setWithObjects:tag1, tag2, nil]];
+    [MockUp _toPoint:point addTags:[NSSet setWithObjects:tag1, tag2, nil]];
     
     point = [MPoint emptyPointWithName:@"p2" inMap:map1];
     [MockUp _setRandomLocationForPoint:point];
     [point updateIcon: [MIcon iconForHref:iconHref_1 inContext:moContext]];
-    [point addTags:[NSSet setWithObjects:tag1, tag3, nil]];
+    [MockUp _toPoint:point addTags:[NSSet setWithObjects:tag1, tag3, nil]];
 
     point = [MPoint emptyPointWithName:@"p3" inMap:map1];
     [MockUp _setRandomLocationForPoint:point];
     [point updateIcon: [MIcon iconForHref:iconHref_1 inContext:moContext]];
-    [point addTags:[NSSet setWithObjects:tag1, tag4, nil]];
+    [MockUp _toPoint:point addTags:[NSSet setWithObjects:tag1, tag4, nil]];
     
     point = [MPoint emptyPointWithName:@"p4" inMap:map1];
     [MockUp _setRandomLocationForPoint:point];
     [point updateIcon: [MIcon iconForHref:iconHref_1 inContext:moContext]];
-    [point addTags:[NSSet setWithObjects:tag2, tag3, nil]];
+    [MockUp _toPoint:point addTags:[NSSet setWithObjects:tag2, tag3, nil]];
     
     point = [MPoint emptyPointWithName:@"p5" inMap:map1];
     [MockUp _setRandomLocationForPoint:point];
     [point updateIcon: [MIcon iconForHref:iconHref_1 inContext:moContext]];
-    [point addTags:[NSSet setWithObjects:tag2, tag4, nil]];
+    [MockUp _toPoint:point addTags:[NSSet setWithObjects:tag2, tag4, nil]];
 
     point = [MPoint emptyPointWithName:@"p6" inMap:map1];
     [MockUp _setRandomLocationForPoint:point];
     [point updateIcon: [MIcon iconForHref:iconHref_1 inContext:moContext]];
-    [point addTags:[NSSet setWithObjects:tag2, tag3, tag4, nil]];
+    [MockUp _toPoint:point addTags:[NSSet setWithObjects:tag2, tag3, tag4, nil]];
 
     point = [MPoint emptyPointWithName:@"p7" inMap:map1];
     [MockUp _setRandomLocationForPoint:point];
     [point updateIcon: [MIcon iconForHref:iconHref_2 inContext:moContext]];
-    [point addTags:[NSSet setWithObjects:tag1, tag4, nil]];
+    [MockUp _toPoint:point addTags:[NSSet setWithObjects:tag1, tag4, nil]];
 
     point = [MPoint emptyPointWithName:@"p8" inMap:map1];
     [MockUp _setRandomLocationForPoint:point];
     [point updateIcon: [MIcon iconForHref:iconHref_2 inContext:moContext]];
-    [point addTags:[NSSet setWithObjects:tag3, tag1, nil]];
+    [MockUp _toPoint:point addTags:[NSSet setWithObjects:tag3, tag1, nil]];
 
     point = [MPoint emptyPointWithName:@"p_pos_fija" inMap:map1];
     [MockUp _setRandomLocationForPoint:point];
     [point updateIcon: [MIcon iconForHref:iconHref_2 inContext:moContext]];
-    [point addTags:[NSSet setWithObjects:tag4, nil]];
+    [MockUp _toPoint:point addTags:[NSSet setWithObjects:tag4, nil]];
     [point setLatitude:41.464003 longitude:-2.862453];
     
     
@@ -193,28 +193,28 @@ BOOL _init_model_ = TRUE;
     point = [MPoint emptyPointWithName:@"pA" inMap:map2];
     [MockUp _setRandomLocationForPoint:point];
     [point updateIcon: [MIcon iconForHref:iconHref_2 inContext:moContext]];
-    [point addTags:[NSSet setWithObjects:tag2, nil]];
+    [MockUp _toPoint:point addTags:[NSSet setWithObjects:tag2, nil]];
 
     point = [MPoint emptyPointWithName:@"pb" inMap:map2];
     [MockUp _setRandomLocationForPoint:point];
     [point updateIcon: [MIcon iconForHref:iconHref_2 inContext:moContext]];
-    [point addTags:[NSSet setWithObjects:tag1, tag4, nil]];
+    [MockUp _toPoint:point addTags:[NSSet setWithObjects:tag1, tag4, nil]];
     
     point = [MPoint emptyPointWithName:@"pC" inMap:map2];
     [MockUp _setRandomLocationForPoint:point];
     [point updateIcon: [MIcon iconForHref:iconHref_2 inContext:moContext]];
-    [point addTags:[NSSet setWithObjects:tag2, tag3, nil]];
+    [MockUp _toPoint:point addTags:[NSSet setWithObjects:tag2, tag3, nil]];
 
     point = [MPoint emptyPointWithName:@"pD" inMap:map2];
     [MockUp _setRandomLocationForPoint:point];
     [point updateIcon: [MIcon iconForHref:iconHref_2 inContext:moContext]];
-    [point addTags:[NSSet setWithObjects:tag3, tag4, nil]];
+    [MockUp _toPoint:point addTags:[NSSet setWithObjects:tag3, tag4, nil]];
 
     // -----------------------------
     point = [MPoint emptyPointWithName:@"pX" inMap:map3];
     [MockUp _setRandomLocationForPoint:point];
     [point updateIcon: [MIcon iconForHref:iconHref_2 inContext:moContext]];
-    [point addTags:[NSSet setWithObjects:tag5, nil]];
+    [MockUp _toPoint:point addTags:[NSSet setWithObjects:tag5, nil]];
 
 
 
@@ -225,6 +225,20 @@ BOOL _init_model_ = TRUE;
     }
 
 
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
++ (void) _toPoint:(MPoint *)point addTag:(MTag *)tag  {
+    
+    [tag tagPoint:point];
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
++ (void) _toPoint:(MPoint *)point addTags:(NSSet *)tags  {
+    
+    for(MTag *tag in tags) {
+        [tag tagPoint:point];
+    }
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -254,11 +268,12 @@ BOOL _init_model_ = TRUE;
     NSSet *tags = [NSSet setWithObjects:tag1, tag5, nil];
     tags = [NSSet set];
     
+    
     NSArray *points = [MPoint pointsTaggedWith:tags inMap:nil InContext:moContext];
     for(MPoint *point in points) {
         BOOL first = TRUE;
         NSMutableString *tags = [NSMutableString stringWithString:@"["];
-        for(MTag *tag in point.tags) {
+        for(MTag *tag in [point.rTags valueForKey:@"tag"]) {
             if(!first) [tags appendString:@", "];
             [tags appendString:tag.name];
             first = FALSE;
@@ -364,7 +379,7 @@ BOOL _init_model_ = TRUE;
             if(p1==NSNotFound) {
                 NSNumber *index = [NSNumber numberWithInt:[poiIndexStr integerValue]];
                 MPoint *point = [readPois objectForKey:index];
-                [point addTagsObject:tag];
+                [MockUp _toPoint:point addTag:tag];
             } else {
                 NSString *startStrIndex = [poiIndexStr subStrFrom:0 to:p1];
                 NSString *endStrIndex = [poiIndexStr substringFromIndex:p1+1];
@@ -373,7 +388,7 @@ BOOL _init_model_ = TRUE;
                 for(int n=sIndex;n<=eIndex;n++) {
                     NSNumber *index = [NSNumber numberWithInt:n];
                     MPoint *point = [readPois objectForKey:index];
-                    [point addTagsObject:tag];
+                    [MockUp _toPoint:point addTag:tag];
                 }
             }
         }
@@ -388,10 +403,9 @@ BOOL _init_model_ = TRUE;
             if(p1==NSNotFound) {
                 NSNumber *index = [NSNumber numberWithInt:[tagIndexStr integerValue]];
                 MTag *subtag = [readTags objectForKey:index];
-                subtag.parent = parentTag;
-                subtag.rootID = parentTag.rootID;
-                subtag.levelValue = parentTag.level.intValue+1;
-                subtag.name = [NSString stringWithFormat:@"%@#%@",parentTag.name, subtag.shortName];
+                if(subtag) {
+                    [parentTag tagChildTag:subtag];
+                }
             } else {
                 NSString *startStrIndex = [tagIndexStr subStrFrom:0 to:p1];
                 NSString *endStrIndex = [tagIndexStr substringFromIndex:p1+1];
@@ -400,10 +414,9 @@ BOOL _init_model_ = TRUE;
                 for(int n=sIndex;n<=eIndex;n++) {
                     NSNumber *index = [NSNumber numberWithInt:n];
                     MTag *subtag = [readTags objectForKey:index];
-                    subtag.parent = parentTag;
-                    subtag.rootID = parentTag.rootID;
-                    subtag.levelValue = parentTag.level.intValue+1;
-                    subtag.name = [NSString stringWithFormat:@"%@#%@",parentTag.name, subtag.shortName];
+                    if(subtag) {
+                        [parentTag tagChildTag:subtag];
+                    }
                 }
             }
         }
@@ -497,8 +510,8 @@ BOOL _init_model_ = TRUE;
                 
                 
                 MPoint *point = (MPoint *)[moContext objectWithID:pointMOID];
-                [point addTags:tags];
-                point.locationTag =  [tags allObjects][0];
+                [MockUp _toPoint:point addTags:tags];
+                //point.locationTag =  [tags allObjects][0];
                 [moContext saveChanges];
                 
                 [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(timerFired:) userInfo:nil repeats:FALSE];
