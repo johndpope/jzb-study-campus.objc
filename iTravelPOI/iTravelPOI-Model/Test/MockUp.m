@@ -379,7 +379,9 @@ BOOL _init_model_ = TRUE;
             if(p1==NSNotFound) {
                 NSNumber *index = [NSNumber numberWithInt:[poiIndexStr integerValue]];
                 MPoint *point = [readPois objectForKey:index];
-                [MockUp _toPoint:point addTag:tag];
+                if(point) {
+                    [MockUp _toPoint:point addTag:tag];
+                }
             } else {
                 NSString *startStrIndex = [poiIndexStr subStrFrom:0 to:p1];
                 NSString *endStrIndex = [poiIndexStr substringFromIndex:p1+1];
@@ -388,7 +390,9 @@ BOOL _init_model_ = TRUE;
                 for(int n=sIndex;n<=eIndex;n++) {
                     NSNumber *index = [NSNumber numberWithInt:n];
                     MPoint *point = [readPois objectForKey:index];
-                    [MockUp _toPoint:point addTag:tag];
+                    if(point) {
+                        [MockUp _toPoint:point addTag:tag];
+                    }
                 }
             }
         }

@@ -16,6 +16,7 @@ extern const struct MTagAttributes {
 } MTagAttributes;
 
 extern const struct MTagRelationships {
+	__unsafe_unretained NSString *otherPointsTag;
 	__unsafe_unretained NSString *rChildrenTags;
 	__unsafe_unretained NSString *rParentTags;
 	__unsafe_unretained NSString *rPoints;
@@ -24,6 +25,7 @@ extern const struct MTagRelationships {
 extern const struct MTagFetchedProperties {
 } MTagFetchedProperties;
 
+@class MTag;
 @class RTagSubtag;
 @class RTagSubtag;
 @class RPointTag;
@@ -157,6 +159,19 @@ extern const struct MTagFetchedProperties {
 
 //------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------
+
+
+	
+		
+			
+				@property (nonatomic, strong) MTag *otherPointsTag;
+			
+		
+
+		//- (BOOL)validateOtherPointsTag:(id*)value_ error:(NSError**)error_;
+
+	
+
 
 
 	
@@ -312,6 +327,11 @@ extern const struct MTagFetchedProperties {
 - (void)setPrimitiveShortName:(NSString*)value;
 
 
+
+
+
+- (MTag*)primitiveOtherPointsTag;
+- (void)setPrimitiveOtherPointsTag:(MTag*)value;
 
 
 

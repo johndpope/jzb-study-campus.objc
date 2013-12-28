@@ -17,6 +17,7 @@ const struct MTagAttributes MTagAttributes = {
 };
 
 const struct MTagRelationships MTagRelationships = {
+	.otherPointsTag = @"otherPointsTag",
 	.rChildrenTags = @"rChildrenTags",
 	.rParentTags = @"rParentTags",
 	.rPoints = @"rPoints",
@@ -163,6 +164,10 @@ const struct MTagFetchedProperties MTagFetchedProperties = {
 
 
 
+
+@dynamic otherPointsTag;
+
+	
 
 @dynamic rChildrenTags;
 

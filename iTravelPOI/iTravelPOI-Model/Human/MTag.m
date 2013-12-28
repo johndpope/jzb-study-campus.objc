@@ -124,6 +124,7 @@
     if(array==nil) {
         [ErrorManagerService manageError:localError compID:@"Model" messageWithFormat:@"MTag:allTagsInContext - Error fetching all tags in context [emptyTags=%d]",emptyTags];
     }
+    
     return array;
 }
 
@@ -169,7 +170,7 @@
 #pragma mark -
 #pragma mark Public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (RPointTag *) _relationWithPoint:(MPoint *)point mustCreate:(BOOL)mustCreate isDirect:(BOOL)isDirect {
+- (RPointTag *) _relationWithPoint:(MPoint *)point mustCreate:(BOOL)mustCreate {
     
     for(RPointTag *rpt in self.rPoints) {
         if([rpt.point.objectID isEqual:point.objectID]) {
@@ -181,7 +182,6 @@
         RPointTag *rpt = [RPointTag insertInManagedObjectContext:point.managedObjectContext];
         rpt.tag = self;
         rpt.point = point;
-        rpt.isDirectValue = isDirect;
         return rpt;
     } else {
         return nil;
@@ -189,7 +189,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (RTagSubtag *) _relationWithSubtag:(MTag *)childTag mustCreate:(BOOL)mustCreate isDirect:(BOOL)isDirect {
+- (RTagSubtag *) _relationWithSubtag:(MTag *)childTag mustCreate:(BOOL)mustCreate {
     
     for(RTagSubtag *rtst in self.rChildrenTags) {
         if([rtst.childTag.objectID isEqual:childTag.objectID]) {
@@ -201,11 +201,26 @@
         RTagSubtag *rtst = [RTagSubtag insertInManagedObjectContext:childTag.managedObjectContext];
         rtst.parentTag = self;
         rtst.childTag = childTag;
-        rtst.isDirectValue = isDirect;
         return rtst;
     } else {
         return nil;
     }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _createOtherPointsTag {
+    
+    MTag *otherPointsTag = [MTag tagByName:[NSString stringWithFormat:@"%@#Others", self.name] inContext:self.managedObjectContext];
+    otherPointsTag.shortName = @"Others";
+    otherPointsTag.isAutoTagValue = TRUE;
+    self.otherPointsTag = otherPointsTag;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _deleteOtherPointsTag {
+    
+    [self.otherPointsTag.managedObjectContext deleteObject:self.otherPointsTag];
+    self.otherPointsTag = nil;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -234,29 +249,32 @@
 - (void) tagPoint:(MPoint *)point {
 
     NSLog(@"tagPoint tag: %@ - point: %@", self.name, point.name);
-    [self _tagPoint:point direct:TRUE];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _tagPoint:(MPoint *)point direct:(BOOL)direct {
     
-    // Obtine la relacion con el punto
-    RPointTag *rpt = [self _relationWithPoint:point mustCreate:TRUE isDirect:TRUE];
+    // ESTE PUNTO DEBE SER EL PRIMERO porque afecta a la informacion de los padres (incluido este elemento)
+    // Y la borra de sus hijos por si ese punto ya estaba taggeado mas abajo
+    for(MTag *childTag in [self _allChildrenTags]) {
+        // @TODO: Debe haber una busqueda mas eficiente de la relacion para no activar todos los elementos actualizar dos veces
+        //        algo como buscar las relaciones RPointTag donde aparezca el punto y que SELF este en mi rChildrenTag
 
-    // Actualiza el tipo de relacion
-    rpt.isDirectValue = direct;
-    
-    // Si la relacion es directa, añade una relacion indirecta con el punto a sus padres y la borra de sus hijos
-    if(direct) {
-        // Primero el borrado porque sino quedaria elimado a adicion previa
-        for(MTag *childTag in [self _allChildrenTags]){
-            [childTag untagPoint:point];
-        }
-        for(MTag *parentTag in [self _allParentTags]) {
-            [self _relationWithPoint:point mustCreate:TRUE isDirect:FALSE];
-            [parentTag _tagPoint:point direct:FALSE];
-        }
+        [childTag untagPoint:point];
     }
+
+    // Obtine/crea la relacion con el punto y la actualiza como directa
+    RPointTag *rpt = [self _relationWithPoint:point mustCreate:TRUE];
+    rpt.isDirectValue = TRUE;
+    
+    //Añade una relacion indirecta con ese punto a sus padres
+    for(MTag *parentTag in [self _allParentTags]) {
+        RPointTag *rpt2 = [parentTag _relationWithPoint:point mustCreate:TRUE];
+        rpt2.isDirectValue = FALSE;
+    }
+    
+    //***** GESTION DEL AUTO-TAG OTHERS ********************************************************
+    if(self.otherPointsTag) {
+        RPointTag *rpt2 = [self.otherPointsTag _relationWithPoint:point mustCreate:TRUE];
+        rpt2.isDirectValue = FALSE;
+    }
+
     
 }
 
@@ -264,99 +282,130 @@
 - (void) untagPoint:(MPoint *)point {
 
     NSLog(@"untagPoint tag: %@ - point: %@", self.name, point.name);
-    [self _untagPoint:point forceDelete:FALSE];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _untagPoint:(MPoint *)point forceDelete:(BOOL)forceDelete {
     
     // Obtine la relacion con el punto
     RPointTag *rpt = [self _relationWithPoint:point mustCreate:FALSE];
     
-    // Comprueba que realmenta habia una relacion con el punto
-    // El borrado dependera de si se esta forzando o si la relacion es directa
-    if(!rpt || !(rpt.isDirectValue || forceDelete)) return;
+    // Comprueba que realmenta habia una relacion, y era directa, con el punto
+    if(!rpt || !rpt.isDirectValue) return;
     
     // Borra la relacion directa con ese punto
-    [self removeRPointsObject:rpt];
+    rpt.tag = nil;
+    rpt.point = nil;
     [rpt.managedObjectContext deleteObject:rpt];
     
     // Borra la relacion indecta con ese punto en los padres
     for(MTag *parentTag in [self _allParentTags]) {
-        [parentTag _untagPoint:point forceDelete:TRUE];
+        // @TODO: Debe haber una busqueda mas eficiente de la relacion para no activar todos los elementos
+        //        algo como buscar las relaciones RPointTag donde aparezca el punto y que el tag tenga a SELF en su rChildrenTag
+        RPointTag *rpt2 = [self _relationWithPoint:point mustCreate:FALSE];
+        rpt2.tag = nil;
+        rpt2.point = nil;
+        [rpt2.managedObjectContext deleteObject:rpt];
+    }
+    
+    
+    //***** GESTION DEL AUTO-TAG OTHERS ********************************************************
+    if(self.otherPointsTag) {
+        RPointTag *rpt2 = [self.otherPointsTag _relationWithPoint:point mustCreate:FALSE];
+        rpt2.tag = nil;
+        rpt2.point = nil;
+        [rpt2.managedObjectContext deleteObject:rpt];
     }
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) tagChildTag:(MTag *)childTag {
+    
     NSLog(@"tagChildTag tag: %@ - childTag: %@", self.name, childTag.name);
-    [self _tagChildTag:childTag direct:TRUE];
-}
-
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _tagChildTag:(MTag *)childTag direct:(BOOL)direct {
     
     // @TODO: Comprobar que funciona bien taggear un elemento que era un "nieto" (movimiento en el arbol)
-
+    
     // Comprueba que no se ha creado un ciclo (taggear a alguien en la cadena de tag padres)
     NSSet *allParentTags = [self _allParentTags];
     if([allParentTags containsObject:childTag]) {
         NSAssert(TRUE, @"Child tag (%@) cannot be applied to parent/ancestor tag (%@)", self.name, childTag.name);
         return;
     }
-    
-    // Obtine la relacion con el subtag
-    RTagSubtag *rtst = [self _relationWithSubtag:childTag mustCreate:TRUE];
-    
-    // Actualiza el tipo de relacion
-    rtst.isDirectValue = direct;
 
-    // Si la relacion es directa, añade una relacion indirecta con el subtag a sus padres y la borra de sus hijos
-    // Adicionalmente, añade una relacion indirecta con los puntos del nuevo subtag (a el y a sus padres)
-    if(direct) {
-        // Primero el borrado porque sino quedaria elimado a adicion previa
-        for(MTag *childTag in [self _allChildrenTags]){
-            [childTag untagChildTag:childTag];
-        }
-        for(MTag *parentTag in [self _allParentTags]) {
-            [parentTag _tagChildTag:childTag direct:FALSE];
-            for (RPointTag *rpt in childTag.rPoints) {
-                [parentTag _tagPoint:rpt.point direct:FALSE];
-            }
-        }
+    
+    // ESTE PUNTO DEBE SER EL PRIMERO porque afecta a la informacion de los padres (incluido este elemento)
+    // Borra la relacion de sus hijos con este tag por si ese punto ya estaba taggeado mas abajo
+    for(MTag *childTag2 in [self _allChildrenTags]){
+        [childTag2 untagChildTag:childTag];
+    }
+
+    
+    // Obtine la relacion con el subtag y la actualiza como directa
+    RTagSubtag *rtst = [self _relationWithSubtag:childTag mustCreate:TRUE];
+    rtst.isDirectValue = TRUE;
+    
+
+    // Añade una relacion indirecta con los puntos del nuevo subtag
+    for (RPointTag *rpt in childTag.rPoints) {
+        RPointTag *rpt2 = [self _relationWithPoint:rpt.point mustCreate:TRUE];
+        rpt2.isDirectValue = FALSE;
+    }
+    
+    // Añade una relacion indirecta con el subtag a sus padres
+    for(MTag *parentTag in allParentTags) {
+        
+        RTagSubtag *rtst2 = [parentTag _relationWithSubtag:childTag mustCreate:TRUE];
+        rtst2.isDirectValue = FALSE;
+        
+        // Ademas, tambien añade una relacion indirecta con los puntos del nuevo subtag
         for (RPointTag *rpt in childTag.rPoints) {
-            [self _tagPoint:rpt.point direct:FALSE];
+            RPointTag *rpt2 = [parentTag _relationWithPoint:rpt.point mustCreate:TRUE];
+            rpt2.isDirectValue = FALSE;
         }
     }
+    
+    //***** GESTION DEL AUTO-TAG OTHERS ********************************************************
+    if(!self.otherPointsTag && self.rPoints.count>0) {
+        
+        [self _createOtherPointsTag];
+        for(RPointTag *rpt in self.rPoints) {
+            if(rpt.isDirectValue) {
+                RPointTag *rpt2 = [self.otherPointsTag _relationWithPoint:rpt.point mustCreate:TRUE];
+                rpt2.isDirectValue = FALSE;
+            }
+        }
+    }
+
 }
+
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) untagChildTag:(MTag *)childTag {
+    
     NSLog(@"untagChildTag tag: %@ - childTag: %@", self.name, childTag.name);
-    [self _untagChildTag:childTag forceDelete:FALSE];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _untagChildTag:(MTag *)childTag  forceDelete:(BOOL)forceDelete {
-
+    
     // Obtine la relacion con el subtag
     RTagSubtag *rtst = [self _relationWithSubtag:childTag mustCreate:FALSE];
     
-    // Comprueba que realmenta habia una relacion con el tag
-    // El borrado dependera de si se esta forzando o si la relacion es directa
-    if(!rtst || !(rtst.isDirectValue || forceDelete)) return;
+    // Comprueba que realmenta habia una relacion, y era directa, con el subtag
+    if(!rtst || !rtst.isDirectValue) return;
     
     
     // Borra la relacion directa con ese subtag
-    [self removeRChildrenTagsObject:rtst];
+    rtst.parentTag = nil;
+    rtst.childTag = nil;
     [rtst.managedObjectContext deleteObject:rtst];
     
-    // Borra la relacion indecta con ese punto en los padres
+    // Borra la relacion indecta con ese subtag en los padres
     for(MTag *parentTag in [self _allParentTags]) {
-        [parentTag _untagChildTag:childTag forceDelete:TRUE];
+        RTagSubtag *rtst2 = [parentTag _relationWithSubtag:childTag mustCreate:FALSE];
+        rtst2.parentTag = nil;
+        rtst2.childTag = nil;
+        [rtst2.managedObjectContext deleteObject:rtst];
     }
-
+    
+    
+    //***** GESTION DEL AUTO-TAG OTHERS ********************************************************
+    if(self.rChildrenTags.count==0 && self.otherPointsTag) {
+        
+        [self _deleteOtherPointsTag];
+    }
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -382,6 +431,12 @@
             return TRUE;
         }
     }
+    
+    //***** GESTION DEL AUTO-TAG OTHERS ********************************************************
+    if([childTag.objectID isEqual:self.otherPointsTag.objectID]) {
+        return TRUE;
+    }
+    
     return FALSE;
 }
 

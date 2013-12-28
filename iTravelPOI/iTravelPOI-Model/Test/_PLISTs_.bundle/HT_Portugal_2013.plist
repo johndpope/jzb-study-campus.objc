@@ -1522,6 +1522,10 @@
       <integer>10</integer>
       <key>name</key>
       <string>Z.N. - Oporto</string>
+      <key>poiIndexes</key>
+      <array>
+        <string>16</string>
+      </array>
       <key>tagIndexes</key>
       <array>
         <string>100-103</string>
@@ -1551,10 +1555,10 @@
       <key>index</key>
       <integer>102</integer>
       <key>name</key>
-      <string>Others</string>
+      <string>Others1</string>
       <key>poiIndexes</key>
       <array>
-        <string>16</string>
+        <string>16000000</string>
       </array>
     </dict>
     <dict>
@@ -1573,24 +1577,28 @@
       <integer>11</integer>
       <key>name</key>
       <string>Z.N. - Coimbra</string>
+      <key>poiIndexes</key>
+      <array>
+        <string>33-46</string>
+      </array>
       <key>tagIndexes</key>
       <array>
-        <string>110-112</string>
+        <string>110-111</string>
       </array>
     </dict>
     <dict>
       <key>index</key>
       <integer>110</integer>
       <key>name</key>
-      <string>Others</string>
+      <string>Others2</string>
       <key>poiIndexes</key>
       <array>
-        <string>33-46</string>
+        <string>33000-46000</string>
       </array>
     </dict>
     <dict>
       <key>index</key>
-      <integer>112</integer>
+      <integer>111</integer>
       <key>name</key>
       <string>Coimbra</string>
       <key>poiIndexes</key>

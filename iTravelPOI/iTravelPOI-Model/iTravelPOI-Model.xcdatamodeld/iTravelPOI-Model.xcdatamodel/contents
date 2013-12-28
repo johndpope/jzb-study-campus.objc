@@ -89,6 +89,7 @@
         <attribute name="level" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="rootID" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="shortName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="otherPointsTag" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MTag" syncable="YES"/>
         <relationship name="rChildrenTags" toMany="YES" deletionRule="Cascade" destinationEntity="RTagSubtag" inverseName="parentTag" inverseEntity="RTagSubtag" syncable="YES">
             <userInfo>
                 <entry key="readonly" value="YES"/>
@@ -121,7 +122,7 @@
         <element name="MIcon" positionX="-3195" positionY="-241" width="128" height="88"/>
         <element name="MMap" positionX="-3566" positionY="-73" width="128" height="73"/>
         <element name="MPoint" positionX="-3332" positionY="-108" width="128" height="118"/>
-        <element name="MTag" positionX="-2954" positionY="-130" width="128" height="148"/>
+        <element name="MTag" positionX="-2954" positionY="-130" width="128" height="163"/>
         <element name="RPointTag" positionX="-3141" positionY="-70" width="128" height="88"/>
         <element name="RTagSubtag" positionX="-2961" positionY="74" width="128" height="88"/>
     </elements>
