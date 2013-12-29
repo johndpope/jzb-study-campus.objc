@@ -47,5 +47,6 @@
 - (BOOL) hasParentTags;
 - (BOOL) anyIsParentTag:(NSSet *)tags;
 - (BOOL) isDirectParentOfTag:(MTag *)childTag;
+- (BOOL) isAncestorOfTag:(MTag *)childTag;
 
 @end

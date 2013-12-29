@@ -31,7 +31,7 @@ typedef enum NodeExpandedStateTypes
 
 @property (nonatomic, assign) TreeNode *parent;
 @property (nonatomic, strong) NSMutableArray *children;
-@property (nonatomic, assign) MTag *tag;
+@property (nonatomic, strong) MTag *tag;
 @property (nonatomic, assign) BOOL isExpanded;
 @property (nonatomic, assign) int deepLevel;
 @property (nonatomic, assign) int childLevel;
@@ -53,33 +53,38 @@ typedef enum NodeExpandedStateTypes
     return me;
 }
 
-+ (TreeNode *) _nodeForTag:(MTag *)tag inDict:(NSMutableDictionary *)dict rootNode:(TreeNode *)root {
+- (void) _insertChildNode:(TreeNode *)newNode {
     
-    TreeNode *node = [dict objectForKey:[tag objectID]];
-    if(!node) {
-        node = [TreeNode treeNodeWithTag:tag];
-        [dict setObject:node forKey:[tag objectID]];
-        [root _addChild:node];
+    BOOL inserted = FALSE;
+    for(TreeNode *node in [self.children copy]) {
+        if([newNode.tag isAncestorOfTag:node.tag]) {
+            [newNode _addChild:node];
+        } else if([node.tag isAncestorOfTag:newNode.tag]) {
+            [node _insertChildNode:newNode];
+            inserted = TRUE;
+        }
     }
-    return node;
+    
+    if(!inserted) {
+        [self _addChild:newNode];
+    }
 }
+
 
 + (TreeNode *) treeNodesFromTags:(NSArray *)tags expandedTags:(NSArray *)expandedTags {
     
-    NSMutableDictionary *tagToNode = [NSMutableDictionary dictionary];
+    NSDate *start = [NSDate date];
+
     TreeNode *rootNode = [TreeNode treeNodeWithTag:nil];
     rootNode.deepLevel = -1;
     
-    for(MTag *childTag in tags) {
-        TreeNode *childNode = [TreeNode _nodeForTag:childTag inDict:tagToNode rootNode:rootNode];
-        for(MTag *parentTag in tags) {
-            TreeNode *parentNode = [TreeNode _nodeForTag:parentTag inDict:tagToNode rootNode:rootNode];
-            if([parentTag isDirectParentOfTag:childTag]) {
-                [parentNode _addChild:childNode];
-            }
-        }
+    for(MTag *tag in tags) {
+        TreeNode *node = [TreeNode treeNodeWithTag:tag];
+        [rootNode _insertChildNode:node];
     }
 
+    NSLog(@"- 1 -> %f",[start timeIntervalSinceNow]);
+    
     NSArray *allNodes = [rootNode toFlatArray:ALL_NODES];
     for(TreeNode *node in allNodes) {
         if([expandedTags containsObject:node.tag]) {
@@ -91,10 +96,14 @@ typedef enum NodeExpandedStateTypes
         }
     }
     
+    NSLog(@"- 2 -> %f",[start timeIntervalSinceNow]);
+
     [rootNode _calcChildLevel:-1];
-    
-    NSLog(@"tree - %@",rootNode);
     rootNode.isExpanded = TRUE;
+    
+    NSLog(@"- 3 -> %f",[start timeIntervalSinceNow]);
+
+
     return rootNode;
 }
 
@@ -131,7 +140,6 @@ typedef enum NodeExpandedStateTypes
     child.parent = self;
     [child _setDeepLevel:self.deepLevel + 1];
     
-    NSLog(@"parent = %@ (%d)(%d) / child = %@ (%d)(%d)",self.tag.name,self.deepLevel, self.childLevel, child.tag.name, child.deepLevel, child.childLevel);
 }
 
 - (NSString *) description {
@@ -230,10 +238,16 @@ typedef enum NodeExpandedStateTypes
 //---------------------------------------------------------------------------------------------------------------------
 - (void) _loadTags {
     
+    
+    NSDate *start = [NSDate date];
+    NSLog(@"TagFilterViewController - loadTags - in");
+    
     NSMutableArray *allTags = [NSMutableArray arrayWithArray:[MTag tagsForPointsTaggedWith:[NSSet setWithArray:self.filter] InContext:self.moContext]];
     self.rootNode = [TreeNode treeNodesFromTags:allTags expandedTags:self.filter];
     self.flatNodes = [self.rootNode toFlatArray:JUST_EXPANDED];
     [self.tagsTable reloadData];
+    
+    NSLog(@"TagFilterViewController - loadTags - out = %f",[start timeIntervalSinceNow]);
 }
 
 //---------------------------------------------------------------------------------------------------------------------

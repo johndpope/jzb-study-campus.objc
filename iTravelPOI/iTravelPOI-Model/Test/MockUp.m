@@ -315,6 +315,7 @@ BOOL _init_model_ = TRUE;
     // Lanza la actualizacion de los tags de localizacion
     //[NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(timerFired:) userInfo:nil repeats:FALSE];
     
+    [BaseCoreDataService.moContext saveChanges];
 }
 
 

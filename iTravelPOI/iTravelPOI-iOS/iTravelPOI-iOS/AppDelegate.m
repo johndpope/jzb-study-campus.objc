@@ -119,7 +119,7 @@ void _uncaughtExceptionHandler(NSException *exception) {
     
     // ---------------------------------------
     // ---------------------------------------
-    [MockUp resetModel:@"iTravelPOI-Model"];
+////////    [MockUp resetModel:@"iTravelPOI-Model"];
     // ---------------------------------------
     // ---------------------------------------
     
@@ -132,13 +132,13 @@ void _uncaughtExceptionHandler(NSException *exception) {
     // ---------------------------------------
     // ---------------------------------------
     //[MockUp populateModel];
-    [MockUp populateModelFromPListFiles];
+////////    [MockUp populateModelFromPListFiles];
     // ---------------------------------------
     // ---------------------------------------
 
     // ---------------------------------------
     // ---------------------------------------
-    [MockUp listModel];
+////////    [MockUp listModel];
     // ---------------------------------------
     // ---------------------------------------
 

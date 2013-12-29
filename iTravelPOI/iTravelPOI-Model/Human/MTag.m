@@ -103,6 +103,10 @@
 //---------------------------------------------------------------------------------------------------------------------
 + (NSArray *) allTagsInContext:(NSManagedObjectContext *)moContext includeEmptyTags:(BOOL)emptyTags {
     
+    NSDate *start = [NSDate date];
+    NSLog(@"MTag - allTagsInContext - in");
+    
+    
     // Crea la peticion de busqueda
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"MTag"];
     
@@ -125,12 +129,17 @@
         [ErrorManagerService manageError:localError compID:@"Model" messageWithFormat:@"MTag:allTagsInContext - Error fetching all tags in context [emptyTags=%d]",emptyTags];
     }
     
+    NSLog(@"MTag - allTagsInContext - out = %f",[start timeIntervalSinceNow]);
+    
     return array;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 + (NSArray *) tagsForPointsTaggedWith:(NSSet *)tags InContext:(NSManagedObjectContext *)moContext {
  
+    NSDate *start = [NSDate date];
+    NSLog(@"MTag - tagsForPointsTaggedWith - in");
+    
     // Se protege contra un filtro vacio
     if(tags.count==0) {
         return [MTag allTagsInContext:moContext includeEmptyTags:NO];
@@ -158,6 +167,9 @@
     if(array==nil) {
         [ErrorManagerService manageError:localError compID:@"Model" messageWithFormat:@"MTag:tagsForPointsTaggedWith - Error fetching tags for points tagged in context [tags=%@]",tags];
     }
+    
+    NSLog(@"MTag - tagsForPointsTaggedWith - out = %f",[start timeIntervalSinceNow]);
+
     return array;
 }
 
@@ -252,6 +264,12 @@
         return;
     }
 
+
+    // Tampoco esta permitido taggearse a si mismo
+    if([self.objectID isEqual:childTag.objectID]) {
+        NSAssert(TRUE, @"Tag (%@) cannot be applied to itself (%@)", self.name, childTag.name);
+        return;
+    }
     
     // ESTE PUNTO DEBE SER EL PRIMERO porque afecta a la informacion de los padres (incluido este elemento)
     // Borra la relacion de sus hijos con este tag por si ese punto ya estaba taggeado mas abajo
@@ -344,6 +362,23 @@
         if([tags containsObject:rtst.parentTag])
             return TRUE;
     }
+    return FALSE;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL) isAncestorOfTag:(MTag *)childTag {
+    
+    for(RTagSubtag *rtst in self.rChildrenTags) {
+        if([rtst.childTag.objectID isEqual:childTag.objectID]) {
+            return TRUE;
+        }
+    }
+    
+    //***** GESTION DEL AUTO-TAG OTHERS ********************************************************
+    if([childTag.objectID isEqual:self.otherPointsTag.objectID]) {
+        return TRUE;
+    }
+    
     return FALSE;
 }
 
