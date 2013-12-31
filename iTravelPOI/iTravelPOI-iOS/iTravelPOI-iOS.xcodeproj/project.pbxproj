@@ -70,8 +70,26 @@
 		421AD5A8186ED60A00A88A57 /* RBlackTag-3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 421AD56E186ED60A00A88A57 /* RBlackTag-3@2x.png */; };
 		421AD5A9186ED60A00A88A57 /* unfolded.png in Resources */ = {isa = PBXBuildFile; fileRef = 421AD56F186ED60A00A88A57 /* unfolded.png */; };
 		421AD5AA186ED60A00A88A57 /* unfolded@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 421AD570186ED60A00A88A57 /* unfolded@2x.png */; };
+		426E9F891871B14600426F72 /* BlueMapMarker.png in Resources */ = {isa = PBXBuildFile; fileRef = 426E9F871871B14600426F72 /* BlueMapMarker.png */; };
+		426E9F8A1871B14600426F72 /* BlueMapMarker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 426E9F881871B14600426F72 /* BlueMapMarker@2x.png */; };
 		4272013C186AFA3E0062DF76 /* _PLISTs_.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4272013B186AFA3E0062DF76 /* _PLISTs_.bundle */; };
 		4272013E186B53960062DF76 /* reverseGeocode.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4272013D186B53960062DF76 /* reverseGeocode.txt */; };
+		42BBBB4A1871B1F3009813A0 /* BlackMapMarker.png in Resources */ = {isa = PBXBuildFile; fileRef = 42BBBB481871B1F3009813A0 /* BlackMapMarker.png */; };
+		42BBBB4B1871B1F3009813A0 /* BlackMapMarker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42BBBB491871B1F3009813A0 /* BlackMapMarker@2x.png */; };
+		42BBBB5018720324009813A0 /* BlackGPSIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 42BBBB4C18720324009813A0 /* BlackGPSIcon.png */; };
+		42BBBB5118720324009813A0 /* BlackGPSIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42BBBB4D18720324009813A0 /* BlackGPSIcon@2x.png */; };
+		42BBBB5218720324009813A0 /* BlueGPSIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 42BBBB4E18720324009813A0 /* BlueGPSIcon.png */; };
+		42BBBB5318720324009813A0 /* BlueGPSIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42BBBB4F18720324009813A0 /* BlueGPSIcon@2x.png */; };
+		42BBBB5C18721001009813A0 /* BlueMapIcon1-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 42BBBB5418721001009813A0 /* BlueMapIcon1-1.png */; };
+		42BBBB5D18721001009813A0 /* BlueMapIcon1-1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42BBBB5518721001009813A0 /* BlueMapIcon1-1@2x.png */; };
+		42BBBB5E18721001009813A0 /* BlueMapIcon1-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 42BBBB5618721001009813A0 /* BlueMapIcon1-2.png */; };
+		42BBBB5F18721001009813A0 /* BlueMapIcon1-2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42BBBB5718721001009813A0 /* BlueMapIcon1-2@2x.png */; };
+		42BBBB6018721001009813A0 /* BlueMapIcon2-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 42BBBB5818721001009813A0 /* BlueMapIcon2-1.png */; };
+		42BBBB6118721001009813A0 /* BlueMapIcon2-1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42BBBB5918721001009813A0 /* BlueMapIcon2-1@2x.png */; };
+		42BBBB6218721001009813A0 /* BlueMapIcon2-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 42BBBB5A18721001009813A0 /* BlueMapIcon2-2.png */; };
+		42BBBB6318721001009813A0 /* BlueMapIcon2-2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42BBBB5B18721001009813A0 /* BlueMapIcon2-2@2x.png */; };
+		42BBBB6618722C1F009813A0 /* BlueMapMarkerGlow.png in Resources */ = {isa = PBXBuildFile; fileRef = 42BBBB6418722C1F009813A0 /* BlueMapMarkerGlow.png */; };
+		42BBBB6718722C1F009813A0 /* BlueMapMarkerGlow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42BBBB6518722C1F009813A0 /* BlueMapMarkerGlow@2x.png */; };
 		42BE7A7518672C6F00AECD57 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BE7A7418672C6F00AECD57 /* Foundation.framework */; };
 		42BE7A7718672C6F00AECD57 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BE7A7618672C6F00AECD57 /* CoreGraphics.framework */; };
 		42BE7A7918672C6F00AECD57 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BE7A7818672C6F00AECD57 /* UIKit.framework */; };
@@ -128,6 +146,13 @@
 		42CADFCB18687E880057AE84 /* search_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 42CADFC118687E880057AE84 /* search_icon.png */; };
 		42CADFCC18687E880057AE84 /* search_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42CADFC218687E880057AE84 /* search_icon@2x.png */; };
 		42CADFD31868B5E80057AE84 /* TagFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CADFD21868B5E80057AE84 /* TagFilterViewController.m */; };
+		42E9D76518717C090039FC2F /* myTableBgSepLine.png in Resources */ = {isa = PBXBuildFile; fileRef = 42E9D76118717C090039FC2F /* myTableBgSepLine.png */; };
+		42E9D76618717C090039FC2F /* myTableBgSepLine@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42E9D76218717C090039FC2F /* myTableBgSepLine@2x.png */; };
+		42E9D76718717C090039FC2F /* myTableBgSepLineV.png in Resources */ = {isa = PBXBuildFile; fileRef = 42E9D76318717C090039FC2F /* myTableBgSepLineV.png */; };
+		42E9D76818717C090039FC2F /* myTableBgSepLineV@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42E9D76418717C090039FC2F /* myTableBgSepLineV@2x.png */; };
+		42E9D76A18718D260039FC2F /* ScreenShot-Location.png in Resources */ = {isa = PBXBuildFile; fileRef = 42E9D76918718D260039FC2F /* ScreenShot-Location.png */; };
+		42E9D76C18718F740039FC2F /* ScreenShot-Tags.png in Resources */ = {isa = PBXBuildFile; fileRef = 42E9D76B18718F740039FC2F /* ScreenShot-Tags.png */; };
+		42E9D7701871A2580039FC2F /* POIEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42E9D76F1871A2570039FC2F /* POIEditorViewController.m */; };
 		42F6E80A1869D61500005AFB /* MBaseSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F6E8091869D61500005AFB /* MBaseSync.m */; };
 		42F6E80D1869D65A00005AFB /* _MBaseSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F6E80C1869D65A00005AFB /* _MBaseSync.m */; };
 		42F6E8101869DF8B00005AFB /* MIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F6E80F1869DF8B00005AFB /* MIcon.m */; };
@@ -240,8 +265,26 @@
 		421AD56E186ED60A00A88A57 /* RBlackTag-3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RBlackTag-3@2x.png"; sourceTree = "<group>"; };
 		421AD56F186ED60A00A88A57 /* unfolded.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = unfolded.png; sourceTree = "<group>"; };
 		421AD570186ED60A00A88A57 /* unfolded@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "unfolded@2x.png"; sourceTree = "<group>"; };
+		426E9F871871B14600426F72 /* BlueMapMarker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BlueMapMarker.png; sourceTree = "<group>"; };
+		426E9F881871B14600426F72 /* BlueMapMarker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlueMapMarker@2x.png"; sourceTree = "<group>"; };
 		4272013B186AFA3E0062DF76 /* _PLISTs_.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = _PLISTs_.bundle; sourceTree = "<group>"; };
 		4272013D186B53960062DF76 /* reverseGeocode.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = reverseGeocode.txt; sourceTree = "<group>"; };
+		42BBBB481871B1F3009813A0 /* BlackMapMarker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BlackMapMarker.png; sourceTree = "<group>"; };
+		42BBBB491871B1F3009813A0 /* BlackMapMarker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlackMapMarker@2x.png"; sourceTree = "<group>"; };
+		42BBBB4C18720324009813A0 /* BlackGPSIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BlackGPSIcon.png; sourceTree = "<group>"; };
+		42BBBB4D18720324009813A0 /* BlackGPSIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlackGPSIcon@2x.png"; sourceTree = "<group>"; };
+		42BBBB4E18720324009813A0 /* BlueGPSIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BlueGPSIcon.png; sourceTree = "<group>"; };
+		42BBBB4F18720324009813A0 /* BlueGPSIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlueGPSIcon@2x.png"; sourceTree = "<group>"; };
+		42BBBB5418721001009813A0 /* BlueMapIcon1-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlueMapIcon1-1.png"; sourceTree = "<group>"; };
+		42BBBB5518721001009813A0 /* BlueMapIcon1-1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlueMapIcon1-1@2x.png"; sourceTree = "<group>"; };
+		42BBBB5618721001009813A0 /* BlueMapIcon1-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlueMapIcon1-2.png"; sourceTree = "<group>"; };
+		42BBBB5718721001009813A0 /* BlueMapIcon1-2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlueMapIcon1-2@2x.png"; sourceTree = "<group>"; };
+		42BBBB5818721001009813A0 /* BlueMapIcon2-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlueMapIcon2-1.png"; sourceTree = "<group>"; };
+		42BBBB5918721001009813A0 /* BlueMapIcon2-1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlueMapIcon2-1@2x.png"; sourceTree = "<group>"; };
+		42BBBB5A18721001009813A0 /* BlueMapIcon2-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlueMapIcon2-2.png"; sourceTree = "<group>"; };
+		42BBBB5B18721001009813A0 /* BlueMapIcon2-2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlueMapIcon2-2@2x.png"; sourceTree = "<group>"; };
+		42BBBB6418722C1F009813A0 /* BlueMapMarkerGlow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BlueMapMarkerGlow.png; sourceTree = "<group>"; };
+		42BBBB6518722C1F009813A0 /* BlueMapMarkerGlow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlueMapMarkerGlow@2x.png"; sourceTree = "<group>"; };
 		42BE7A7118672C6F00AECD57 /* iTravelPOI-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iTravelPOI-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		42BE7A7418672C6F00AECD57 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		42BE7A7618672C6F00AECD57 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -326,6 +369,14 @@
 		42CADFC218687E880057AE84 /* search_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search_icon@2x.png"; sourceTree = "<group>"; };
 		42CADFD11868B5E80057AE84 /* TagFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagFilterViewController.h; sourceTree = "<group>"; };
 		42CADFD21868B5E80057AE84 /* TagFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagFilterViewController.m; sourceTree = "<group>"; };
+		42E9D76118717C090039FC2F /* myTableBgSepLine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = myTableBgSepLine.png; sourceTree = "<group>"; };
+		42E9D76218717C090039FC2F /* myTableBgSepLine@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "myTableBgSepLine@2x.png"; sourceTree = "<group>"; };
+		42E9D76318717C090039FC2F /* myTableBgSepLineV.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = myTableBgSepLineV.png; sourceTree = "<group>"; };
+		42E9D76418717C090039FC2F /* myTableBgSepLineV@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "myTableBgSepLineV@2x.png"; sourceTree = "<group>"; };
+		42E9D76918718D260039FC2F /* ScreenShot-Location.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ScreenShot-Location.png"; sourceTree = "<group>"; };
+		42E9D76B18718F740039FC2F /* ScreenShot-Tags.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ScreenShot-Tags.png"; sourceTree = "<group>"; };
+		42E9D76E1871A2570039FC2F /* POIEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POIEditorViewController.h; sourceTree = "<group>"; };
+		42E9D76F1871A2570039FC2F /* POIEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = POIEditorViewController.m; sourceTree = "<group>"; };
 		42F6E8081869D61500005AFB /* MBaseSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBaseSync.h; sourceTree = "<group>"; };
 		42F6E8091869D61500005AFB /* MBaseSync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBaseSync.m; sourceTree = "<group>"; };
 		42F6E80B1869D65A00005AFB /* _MBaseSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MBaseSync.h; sourceTree = "<group>"; };
@@ -641,6 +692,7 @@
 		42CADF8518674DDE0057AE84 /* Windows */ = {
 			isa = PBXGroup;
 			children = (
+				42E9D76D1871A2570039FC2F /* POIEditorViewController */,
 				42CADFD01868B5E80057AE84 /* TagFilterViewController */,
 				42CADFB018683A760057AE84 /* POIListViewController */,
 				42CADF8618674DDE0057AE84 /* MapListViewController */,
@@ -762,6 +814,15 @@
 			path = TagFilterViewController;
 			sourceTree = "<group>";
 		};
+		42E9D76D1871A2570039FC2F /* POIEditorViewController */ = {
+			isa = PBXGroup;
+			children = (
+				42E9D76E1871A2570039FC2F /* POIEditorViewController.h */,
+				42E9D76F1871A2570039FC2F /* POIEditorViewController.m */,
+			);
+			path = POIEditorViewController;
+			sourceTree = "<group>";
+		};
 		42F6E8141869FDFC00005AFB /* Utils */ = {
 			isa = PBXGroup;
 			children = (
@@ -779,6 +840,30 @@
 		42F6E823186A09A800005AFB /* resources */ = {
 			isa = PBXGroup;
 			children = (
+				42BBBB6418722C1F009813A0 /* BlueMapMarkerGlow.png */,
+				42BBBB6518722C1F009813A0 /* BlueMapMarkerGlow@2x.png */,
+				42BBBB5418721001009813A0 /* BlueMapIcon1-1.png */,
+				42BBBB5518721001009813A0 /* BlueMapIcon1-1@2x.png */,
+				42BBBB5618721001009813A0 /* BlueMapIcon1-2.png */,
+				42BBBB5718721001009813A0 /* BlueMapIcon1-2@2x.png */,
+				42BBBB5818721001009813A0 /* BlueMapIcon2-1.png */,
+				42BBBB5918721001009813A0 /* BlueMapIcon2-1@2x.png */,
+				42BBBB5A18721001009813A0 /* BlueMapIcon2-2.png */,
+				42BBBB5B18721001009813A0 /* BlueMapIcon2-2@2x.png */,
+				42BBBB4C18720324009813A0 /* BlackGPSIcon.png */,
+				42BBBB4D18720324009813A0 /* BlackGPSIcon@2x.png */,
+				42BBBB4E18720324009813A0 /* BlueGPSIcon.png */,
+				42BBBB4F18720324009813A0 /* BlueGPSIcon@2x.png */,
+				42BBBB481871B1F3009813A0 /* BlackMapMarker.png */,
+				42BBBB491871B1F3009813A0 /* BlackMapMarker@2x.png */,
+				426E9F871871B14600426F72 /* BlueMapMarker.png */,
+				426E9F881871B14600426F72 /* BlueMapMarker@2x.png */,
+				42E9D76B18718F740039FC2F /* ScreenShot-Tags.png */,
+				42E9D76918718D260039FC2F /* ScreenShot-Location.png */,
+				42E9D76118717C090039FC2F /* myTableBgSepLine.png */,
+				42E9D76218717C090039FC2F /* myTableBgSepLine@2x.png */,
+				42E9D76318717C090039FC2F /* myTableBgSepLineV.png */,
+				42E9D76418717C090039FC2F /* myTableBgSepLineV@2x.png */,
 				42F6E824186A09A800005AFB /* toolbar */,
 			);
 			path = resources;
@@ -917,9 +1002,11 @@
 			files = (
 				42F6E85B186A108F00005AFB /* openInASheetCancelBtn@2x.png in Resources */,
 				42F6E82D186A0A8800005AFB /* actions-sort.png in Resources */,
+				42BBBB5318720324009813A0 /* BlueGPSIcon@2x.png in Resources */,
 				421AD59F186ED60A00A88A57 /* LBlackTag-2.png in Resources */,
 				421AD57E186ED60A00A88A57 /* DBlueTag-3@2x.png in Resources */,
 				42CADFCB18687E880057AE84 /* search_icon.png in Resources */,
+				42BBBB5218720324009813A0 /* BlueGPSIcon.png in Resources */,
 				42F6E85D186A108F00005AFB /* openInGoogleMaps@2x.png in Resources */,
 				42F6E859186A108F00005AFB /* openInASheetBg@2x.png in Resources */,
 				421AD57C186ED60A00A88A57 /* DBlueTag-2@2x.png in Resources */,
@@ -927,9 +1014,11 @@
 				421AD5A3186ED60A00A88A57 /* RBlackTag-1.png in Resources */,
 				42BE7A8D18672C6F00AECD57 /* Images.xcassets in Resources */,
 				42F6E84A186A0E7A00005AFB /* openInAppInfo.plist in Resources */,
+				42BBBB6018721001009813A0 /* BlueMapIcon2-1.png in Resources */,
 				421AD587186ED60A00A88A57 /* DOrangeTag-2.png in Resources */,
 				421AD5A9186ED60A00A88A57 /* unfolded.png in Resources */,
 				42CADFC718687E880057AE84 /* home_icon.png in Resources */,
+				42BBBB5F18721001009813A0 /* BlueMapIcon1-2@2x.png in Resources */,
 				42CADFC418687E880057AE84 /* action_icon@2x.png in Resources */,
 				42F6E837186A0BEE00005AFB /* actions-delete.png in Resources */,
 				42F6E833186A0B8E00005AFB /* actions-ellipse.png in Resources */,
@@ -937,11 +1026,18 @@
 				421AD57F186ED60A00A88A57 /* DGreenTag-1.png in Resources */,
 				421AD593186ED60A00A88A57 /* OrangeTag-1.png in Resources */,
 				421AD597186ED60A00A88A57 /* OrangeTag-2.png in Resources */,
+				42BBBB5118720324009813A0 /* BlackGPSIcon@2x.png in Resources */,
 				421AD585186ED60A00A88A57 /* DOrangeTag-1.png in Resources */,
 				421AD5AA186ED60A00A88A57 /* unfolded@2x.png in Resources */,
 				42CADFC918687E880057AE84 /* reload.png in Resources */,
 				42F6E828186A09A800005AFB /* actions-share-bar@2x.png in Resources */,
+				42BBBB6618722C1F009813A0 /* BlueMapMarkerGlow.png in Resources */,
+				42E9D76518717C090039FC2F /* myTableBgSepLine.png in Resources */,
+				426E9F8A1871B14600426F72 /* BlueMapMarker@2x.png in Resources */,
+				42E9D76718717C090039FC2F /* myTableBgSepLineV.png in Resources */,
 				4272013E186B53960062DF76 /* reverseGeocode.txt in Resources */,
+				42BBBB5018720324009813A0 /* BlackGPSIcon.png in Resources */,
+				426E9F891871B14600426F72 /* BlueMapMarker.png in Resources */,
 				421AD574186ED60A00A88A57 /* BlueTag-1@2x.png in Resources */,
 				421AD591186ED60A00A88A57 /* GreenTag-3.png in Resources */,
 				421AD58D186ED60A00A88A57 /* GreenTag-11@2x.png in Resources */,
@@ -959,25 +1055,32 @@
 				42F6E858186A108F00005AFB /* openInASheetBg.png in Resources */,
 				421AD579186ED60A00A88A57 /* DBlueTag-1.png in Resources */,
 				42BE7A7F18672C6F00AECD57 /* InfoPlist.strings in Resources */,
+				42BBBB5C18721001009813A0 /* BlueMapIcon1-1.png in Resources */,
 				42F6E822186A01A600005AFB /* MapIconImages.bundle in Resources */,
 				421AD5A6186ED60A00A88A57 /* RBlackTag-2@2x.png in Resources */,
 				421AD584186ED60A00A88A57 /* DGreenTag-3@2x.png in Resources */,
 				421AD59B186ED60A00A88A57 /* folded.png in Resources */,
 				42F6E857186A108F00005AFB /* openInAppleMaps@2x.png in Resources */,
+				42E9D76A18718D260039FC2F /* ScreenShot-Location.png in Resources */,
 				42BE7AEB18672EB200AECD57 /* README.txt in Resources */,
 				421AD58C186ED60A00A88A57 /* GreenTag-11.png in Resources */,
 				421AD594186ED60A00A88A57 /* OrangeTag-11.png in Resources */,
 				42CADFC318687E880057AE84 /* action_icon.png in Resources */,
+				42BBBB6718722C1F009813A0 /* BlueMapMarkerGlow@2x.png in Resources */,
 				421AD578186ED60A00A88A57 /* BlueTag-3@2x.png in Resources */,
 				421AD590186ED60A00A88A57 /* GreenTag-2@2x.png in Resources */,
 				421AD57B186ED60A00A88A57 /* DBlueTag-2.png in Resources */,
 				42F6E85E186A108F00005AFB /* openInTomtom.png in Resources */,
 				421AD59E186ED60A00A88A57 /* LBlackTag-1@2x.png in Resources */,
+				42E9D76618717C090039FC2F /* myTableBgSepLine@2x.png in Resources */,
 				421AD589186ED60A00A88A57 /* DOrangeTag-3.png in Resources */,
+				42E9D76818717C090039FC2F /* myTableBgSepLineV@2x.png in Resources */,
 				421AD5A4186ED60A00A88A57 /* RBlackTag-1@2x.png in Resources */,
 				42F6E830186A0A8800005AFB /* mobile-icon-toolbar-kindle@2x.png in Resources */,
 				421AD5A5186ED60A00A88A57 /* RBlackTag-2.png in Resources */,
 				421AD580186ED60A00A88A57 /* DGreenTag-1@2x.png in Resources */,
+				42E9D76C18718F740039FC2F /* ScreenShot-Tags.png in Resources */,
+				42BBBB6318721001009813A0 /* BlueMapIcon2-2@2x.png in Resources */,
 				42BE7AED18672EB200AECD57 /* tpl_interface.txt in Resources */,
 				421AD595186ED60A00A88A57 /* OrangeTag-11@2x.png in Resources */,
 				42CADFAE186837410057AE84 /* reveal-icon@2x.png in Resources */,
@@ -989,6 +1092,7 @@
 				42CADFCC18687E880057AE84 /* search_icon@2x.png in Resources */,
 				421AD5A2186ED60A00A88A57 /* LBlackTag-3@2x.png in Resources */,
 				421AD577186ED60A00A88A57 /* BlueTag-3.png in Resources */,
+				42BBBB5E18721001009813A0 /* BlueMapIcon1-2.png in Resources */,
 				42BE7A8818672C6F00AECD57 /* Main.storyboard in Resources */,
 				421AD57D186ED60A00A88A57 /* DBlueTag-3.png in Resources */,
 				42F6E856186A108F00005AFB /* openInAppleMaps.png in Resources */,
@@ -1001,22 +1105,27 @@
 				42F6E827186A09A800005AFB /* actions-share-bar.png in Resources */,
 				421AD5A7186ED60A00A88A57 /* RBlackTag-3.png in Resources */,
 				421AD59C186ED60A00A88A57 /* folded@2x.png in Resources */,
+				42BBBB4A1871B1F3009813A0 /* BlackMapMarker.png in Resources */,
 				421AD571186ED60A00A88A57 /* BlackTag-1.png in Resources */,
 				42F6E82F186A0A8800005AFB /* mobile-icon-toolbar-kindle.png in Resources */,
 				42F6E838186A0BEE00005AFB /* actions-delete@2x.png in Resources */,
 				421AD58B186ED60A00A88A57 /* GreenTag-1.png in Resources */,
 				421AD598186ED60A00A88A57 /* OrangeTag-2@2x.png in Resources */,
 				421AD58A186ED60A00A88A57 /* DOrangeTag-3@2x.png in Resources */,
+				42BBBB6118721001009813A0 /* BlueMapIcon2-1@2x.png in Resources */,
 				421AD5A8186ED60A00A88A57 /* RBlackTag-3@2x.png in Resources */,
 				421AD59A186ED60A00A88A57 /* OrangeTag-3@2x.png in Resources */,
 				421AD588186ED60A00A88A57 /* DOrangeTag-2@2x.png in Resources */,
 				42F6E82E186A0A8800005AFB /* actions-sort@2x.png in Resources */,
+				42BBBB6218721001009813A0 /* BlueMapIcon2-2.png in Resources */,
 				421AD58F186ED60A00A88A57 /* GreenTag-2.png in Resources */,
 				421AD581186ED60A00A88A57 /* DGreenTag-2.png in Resources */,
 				421AD58E186ED60A00A88A57 /* GreenTag-1@2x.png in Resources */,
 				42CADFCA18687E880057AE84 /* reload@2x.png in Resources */,
 				421AD572186ED60A00A88A57 /* BlackTag-1@2x.png in Resources */,
 				421AD596186ED60A00A88A57 /* OrangeTag-1@2x.png in Resources */,
+				42BBBB5D18721001009813A0 /* BlueMapIcon1-1@2x.png in Resources */,
+				42BBBB4B1871B1F3009813A0 /* BlackMapMarker@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1060,6 +1169,7 @@
 				42F6E81D1869FDFC00005AFB /* SimpleXMLReader.m in Sources */,
 				42BE7ACE18672EAC00AECD57 /* NSManagedObjectContext+Utils.m in Sources */,
 				42BE7AE918672EB200AECD57 /* ContextFilterLogFormatter.m in Sources */,
+				42E9D7701871A2580039FC2F /* POIEditorViewController.m in Sources */,
 				42F6E81E1869FDFC00005AFB /* UIView+FirstResponder.m in Sources */,
 				42CADFA01868268A0057AE84 /* _MMap.m in Sources */,
 				42BE7AEA18672EB200AECD57 /* DispatchQueueLogFormatter.m in Sources */,

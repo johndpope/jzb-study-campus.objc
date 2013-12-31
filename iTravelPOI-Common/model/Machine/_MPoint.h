@@ -70,9 +70,9 @@ extern const struct MPointFetchedProperties {
 			
 				
 					#ifndef __MPoint__PROTECTED__
-					@property (nonatomic, strong, readonly) NSNumber* latitude;
+					  @property (nonatomic, strong, readonly) NSNumber* latitude;
 					#else
-					@property (nonatomic, strong) NSNumber* latitude;
+					  @property (nonatomic, strong) NSNumber* latitude;
 					#endif
 				
 			
@@ -82,12 +82,12 @@ extern const struct MPointFetchedProperties {
 			
 				
 					#ifndef __MPoint__PROTECTED__
-					@property (readonly) double latitudeValue;
-					- (double)latitudeValue;
+					  @property (readonly) double latitudeValue;
+					  - (double) latitudeValue;
 					#else
 					@property double latitudeValue;
-					- (double)latitudeValue;
-					- (void)setLatitudeValue:(double)value_;
+					  - (double) latitudeValue;
+					  - (void) setLatitudeValue:(double)value_;
 					#endif
 				
 			
@@ -105,9 +105,9 @@ extern const struct MPointFetchedProperties {
 			
 				
 					#ifndef __MPoint__PROTECTED__
-					@property (nonatomic, strong, readonly) NSNumber* longitude;
+					  @property (nonatomic, strong, readonly) NSNumber* longitude;
 					#else
-					@property (nonatomic, strong) NSNumber* longitude;
+					  @property (nonatomic, strong) NSNumber* longitude;
 					#endif
 				
 			
@@ -117,12 +117,12 @@ extern const struct MPointFetchedProperties {
 			
 				
 					#ifndef __MPoint__PROTECTED__
-					@property (readonly) double longitudeValue;
-					- (double)longitudeValue;
+					  @property (readonly) double longitudeValue;
+					  - (double) longitudeValue;
 					#else
 					@property double longitudeValue;
-					- (double)longitudeValue;
-					- (void)setLongitudeValue:(double)value_;
+					  - (double) longitudeValue;
+					  - (void) setLongitudeValue:(double)value_;
 					#endif
 				
 			

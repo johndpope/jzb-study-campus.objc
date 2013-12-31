@@ -67,9 +67,9 @@ extern const struct MMapThumbnailFetchedProperties {
 			
 				
 					#ifndef __MMapThumbnail__PROTECTED__
-					@property (nonatomic, strong, readonly) NSNumber* internalID;
+					  @property (nonatomic, strong, readonly) NSNumber* internalID;
 					#else
-					@property (nonatomic, strong) NSNumber* internalID;
+					  @property (nonatomic, strong) NSNumber* internalID;
 					#endif
 				
 			
@@ -79,12 +79,12 @@ extern const struct MMapThumbnailFetchedProperties {
 			
 				
 					#ifndef __MMapThumbnail__PROTECTED__
-					@property (readonly) int64_t internalIDValue;
-					- (int64_t)internalIDValue;
+					  @property (readonly) int64_t internalIDValue;
+					  - (int64_t) internalIDValue;
 					#else
 					@property int64_t internalIDValue;
-					- (int64_t)internalIDValue;
-					- (void)setInternalIDValue:(int64_t)value_;
+					  - (int64_t) internalIDValue;
+					  - (void) setInternalIDValue:(int64_t)value_;
 					#endif
 				
 			

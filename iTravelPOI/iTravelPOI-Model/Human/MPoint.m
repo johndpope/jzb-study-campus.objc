@@ -180,18 +180,17 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL) setLatitude:(double)lat longitude:(double)lng {
     
+    // Ajusta los margenes
+    lat = MAX(lat, -90.0);
+    lat = MIN(lat, 90.0);
+    lng = MAX(lng, -180.0);
+    lng = MIN(lng, 180.0);
+    
     // Si hay un cambio de coordenadas las establece
     if(self.latitudeValue!=lat || self.longitudeValue!=lng) {
-        
-        if(lat<-90.0 || lat>90.0 || lng<-180 || lng>180) {
-            NSException *ex=[NSException exceptionWithName:@"Error in coordinates" reason:[NSString stringWithFormat:@"lat = %f, lng = %f",lat,lng] userInfo:nil];
-            [ex raise];
-            return FALSE;
-        } else {
-            self.latitudeValue = lat;
-            self.longitudeValue = lng;
-            return TRUE;
-        }
+        self.latitudeValue = lat;
+        self.longitudeValue = lng;
+        return TRUE;
     } else {
         return FALSE;
     }
@@ -208,8 +207,7 @@
     
     [super _resetEntityWithName:name icon:[MIcon iconForHref:DEFAULT_POINT_ICON_HREF inContext:moContext]];
     self.descr = @"";
-    self.latitudeValue = 0.0;
-    self.longitudeValue = 0.0;
+    [self setLatitude:0.0 longitude:0.0];
 }
 
 

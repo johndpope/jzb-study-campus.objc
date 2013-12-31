@@ -241,8 +241,200 @@ BOOL _init_model_ = TRUE;
     }
 }
 
+
+// ---------------------------------------------------------------------------------------------------------------------
++ (NSArray *) _testTags1:(NSSet *)tags moContext:(NSManagedObjectContext *)moContext {
+    
+    NSLog(@"----- MockUp - _testTags1 - in ---------------------------------------------------------------");
+    NSDate *start = [NSDate date];
+    
+    
+    NSArray *array = [MTag tagsForPointsTaggedWith:tags InContext:moContext];
+
+    NSLog(@"MockUp - _testTags1 - out = %f",[start timeIntervalSinceNow]);
+    
+    for(MTag *tag in array) {
+        //NSLog(@"tag - %@",tag.name);
+    }
+    
+    NSLog(@"--");
+    
+    return array;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
++ (NSArray *) _testTags2:(NSSet *)tags moContext:(NSManagedObjectContext *)moContext {
+    
+    NSLog(@"----- MockUp - _testTags2 - in ---------------------------------------------------------------");
+    NSDate *start = [NSDate date];
+    
+    
+    // Crea la peticion de busqueda
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"RPointTag"];
+
+    
+    NSExpressionDescription* expDesc = [[NSExpressionDescription alloc] init];
+    [expDesc setName: @"count2"];
+    [expDesc setExpressionResultType: NSInteger32AttributeType];
+    [expDesc setExpression: [NSExpression expressionWithFormat:@"isDirect.@count"]];
+    
+    [request setPropertiesToFetch:[NSArray arrayWithObjects:@"point", expDesc, nil]];
+    [request setResultType:NSDictionaryResultType];
+    
+
+    [request setPropertiesToGroupBy:[NSArray arrayWithObject:@"point"]];
+    
+    
+
+    
+    // Se asigna una condicion de filtro
+    NSString *queryStr = @"point.markedAsDeleted=NO AND tag IN %@";
+    NSPredicate *query = [NSPredicate predicateWithFormat:queryStr, tags];
+    [request setPredicate:query];
+    
+    // Se asigna el criterio de ordenacion
+    NSSortDescriptor *sortNameDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"point.name" ascending:TRUE];
+    NSArray *sortDescriptors = [NSArray arrayWithObjects:sortNameDescriptor,nil];
+    [request setSortDescriptors:sortDescriptors];
+    
+    // Se ejecuta y retorna el resultado
+    NSError *localError = nil;
+    NSArray *array = [moContext executeFetchRequest:request error:&localError];
+    if(array==nil) {
+        [ErrorManagerService manageError:localError compID:@"Model" messageWithFormat:@"MTag:tagsForPointsTaggedWith - Error fetching tags for points tagged in context [tags=%@]",tags];
+    }
+    
+    NSMutableSet *allTags = [NSMutableSet set];
+    for(NSDictionary *dict in array) {
+        if([[dict objectForKey:@"count2"] intValue]>=tags.count) {
+            NSManagedObjectID *objID = [dict objectForKey:@"point"];
+            MPoint *obj = (MPoint *)[moContext objectWithID:objID];
+            [allTags unionSet:[obj.rTags valueForKey:@"tag"]];
+        }
+    }
+    
+    
+    NSLog(@"MockUp - _testTags2 - out = %f",[start timeIntervalSinceNow]);
+    
+    for(MTag *tag in allTags) {
+        //NSLog(@"tag - %@",tag.name);
+    }
+    
+    NSLog(@"--");
+    return  [allTags allObjects];
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
++ (NSArray *) _testPoint1:(NSSet *)tags moContext:(NSManagedObjectContext *)moContext {
+    
+    NSLog(@"----- MockUp - _testPoint1 - in ---------------------------------------------------------------");
+    NSDate *start = [NSDate date];
+    
+    
+    NSArray *array = [MPoint pointsTaggedWith:tags inMap:nil InContext:moContext];
+    
+    
+    NSLog(@"MockUp - _testPoint1 - out = %f",[start timeIntervalSinceNow]);
+    
+    for(MPoint *obj in array) {
+        //NSLog(@"%@",obj.name);
+    }
+    
+    NSLog(@"--");
+    return array;
+}
+
+
+// ---------------------------------------------------------------------------------------------------------------------
++ (NSArray *) _testPoint2:(NSSet *)tags moContext:(NSManagedObjectContext *)moContext {
+    
+    NSLog(@"----- MockUp - _testPoint2 - in ---------------------------------------------------------------");
+    NSDate *start = [NSDate date];
+    
+    
+    // Crea la peticion de busqueda
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"RPointTag"];
+    
+    
+    NSExpressionDescription* expDesc = [[NSExpressionDescription alloc] init];
+    [expDesc setName: @"count2"];
+    [expDesc setExpressionResultType: NSInteger32AttributeType];
+    [expDesc setExpression: [NSExpression expressionWithFormat:@"isDirect.@count"]];
+    
+    [request setPropertiesToFetch:[NSArray arrayWithObjects:@"point", expDesc, nil]];
+    [request setResultType:NSDictionaryResultType];
+    
+    
+    [request setPropertiesToGroupBy:[NSArray arrayWithObject:@"point"]];
+    
+    
+    
+    
+    // Se asigna una condicion de filtro
+    NSString *queryStr = @"point.markedAsDeleted=NO AND tag IN %@";
+    NSPredicate *query = [NSPredicate predicateWithFormat:queryStr, tags];
+    [request setPredicate:query];
+    
+    // Se asigna el criterio de ordenacion
+    NSSortDescriptor *sortNameDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"point.name" ascending:TRUE];
+    NSArray *sortDescriptors = [NSArray arrayWithObjects:sortNameDescriptor,nil];
+    [request setSortDescriptors:sortDescriptors];
+    
+    // Se ejecuta y retorna el resultado
+    NSError *localError = nil;
+    NSArray *array = [moContext executeFetchRequest:request error:&localError];
+    if(array==nil) {
+        [ErrorManagerService manageError:localError compID:@"Model" messageWithFormat:@"MTag:tagsForPointsTaggedWith - Error fetching tags for points tagged in context [tags=%@]",tags];
+    }
+    
+    //NSArray *array2 = [array filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"count2 >= %ld",tags.count]];
+    
+    NSMutableArray *array3 = [NSMutableArray arrayWithCapacity:array.count];
+    for(NSDictionary *dict in array) {
+        NSNumber *count2=[dict objectForKey:@"count2"];
+        if(count2.intValue>=tags.count) {
+            NSManagedObjectID *objID = [dict objectForKey:@"point"];
+            MPoint *obj = (MPoint *)[moContext objectWithID:objID];
+            [array3 addObject:obj];
+        }
+    }
+    
+    NSLog(@"MockUp - _testPoint2 - out = %f",[start timeIntervalSinceNow]);
+    
+    for(MPoint *obj in array3) {
+        //NSLog(@"%@",obj.name);
+    }
+    
+    NSLog(@"--");
+    
+    return array3;
+}
+
 // ---------------------------------------------------------------------------------------------------------------------
 + (void) listModel {
+    
+    NSManagedObjectContext *moContext1 = [BaseCoreDataService moContext];
+    //NSSet *tagSet= [NSSet setWithObjects:[MTag tagByName:@"GMI_green" inContext:moContext1], [MTag tagByName:@"Oporto" inContext:moContext1], nil];
+    //NSSet *tagSet = [NSSet setWithObjects:[MTag tagByName:@"Zona Norte" inContext:moContext1], nil];
+    NSSet *tagSet = [NSSet setWithObjects:[MTag tagByName:@"GMI_blue-dot" inContext:moContext1], nil];
+    //NSSet *tagSet= [NSSet setWithObjects:[MTag tagByName:@"Oporto" inContext:moContext1], [MTag tagByName:@"GMI_blue-dot" inContext:moContext1], nil];
+
+    NSArray *a1,*a2;
+    a2=[MockUp _testTags2:tagSet moContext:moContext1];
+    a2=[MockUp _testTags2:tagSet moContext:moContext1];
+    a1=[MockUp _testTags1:tagSet moContext:moContext1];
+    a1=[MockUp _testTags1:tagSet moContext:moContext1];
+    
+    for(MTag *obj1 in a1) {
+        if(![a2 containsObject:obj1]) {
+            NSLog(@"Error - %@",obj1.name);
+        }
+    }
+    for(MTag *obj2 in a2) {
+        if(![a1 containsObject:obj2]) {
+            NSLog(@"Error - %@",obj2.name);
+        }
+    }
     
     if(!_init_model_) return;
     

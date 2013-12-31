@@ -57,9 +57,9 @@ extern const struct MBaseEntityFetchedProperties {
 			
 				
 					#ifndef __MBaseEntity__PROTECTED__
-					@property (nonatomic, strong, readonly) NSDate* creationTime;
+					  @property (nonatomic, strong, readonly) NSDate* creationTime;
 					#else
-					@property (nonatomic, strong) NSDate* creationTime;
+					  @property (nonatomic, strong) NSDate* creationTime;
 					#endif
 				
 			
@@ -79,9 +79,9 @@ extern const struct MBaseEntityFetchedProperties {
 			
 				
 					#ifndef __MBaseEntity__PROTECTED__
-					@property (nonatomic, strong, readonly) NSString* etag;
+					  @property (nonatomic, strong, readonly) NSString* etag;
 					#else
-					@property (nonatomic, strong) NSString* etag;
+					  @property (nonatomic, strong) NSString* etag;
 					#endif
 				
 			
@@ -101,9 +101,9 @@ extern const struct MBaseEntityFetchedProperties {
 			
 				
 					#ifndef __MBaseEntity__PROTECTED__
-					@property (nonatomic, strong, readonly) NSString* gID;
+					  @property (nonatomic, strong, readonly) NSString* gID;
 					#else
-					@property (nonatomic, strong) NSString* gID;
+					  @property (nonatomic, strong) NSString* gID;
 					#endif
 				
 			
@@ -141,9 +141,9 @@ extern const struct MBaseEntityFetchedProperties {
 			
 				
 					#ifndef __MBaseEntity__PROTECTED__
-					@property (nonatomic, strong, readonly) NSNumber* internalID;
+					  @property (nonatomic, strong, readonly) NSNumber* internalID;
 					#else
-					@property (nonatomic, strong) NSNumber* internalID;
+					  @property (nonatomic, strong) NSNumber* internalID;
 					#endif
 				
 			
@@ -153,12 +153,12 @@ extern const struct MBaseEntityFetchedProperties {
 			
 				
 					#ifndef __MBaseEntity__PROTECTED__
-					@property (readonly) int64_t internalIDValue;
-					- (int64_t)internalIDValue;
+					  @property (readonly) int64_t internalIDValue;
+					  - (int64_t) internalIDValue;
 					#else
 					@property int64_t internalIDValue;
-					- (int64_t)internalIDValue;
-					- (void)setInternalIDValue:(int64_t)value_;
+					  - (int64_t) internalIDValue;
+					  - (void) setInternalIDValue:(int64_t)value_;
 					#endif
 				
 			
@@ -176,9 +176,9 @@ extern const struct MBaseEntityFetchedProperties {
 			
 				
 					#ifndef __MBaseEntity__PROTECTED__
-					@property (nonatomic, strong, readonly) NSNumber* markedAsDeleted;
+					  @property (nonatomic, strong, readonly) NSNumber* markedAsDeleted;
 					#else
-					@property (nonatomic, strong) NSNumber* markedAsDeleted;
+					  @property (nonatomic, strong) NSNumber* markedAsDeleted;
 					#endif
 				
 			
@@ -188,12 +188,12 @@ extern const struct MBaseEntityFetchedProperties {
 			
 				
 					#ifndef __MBaseEntity__PROTECTED__
-					@property (readonly) BOOL markedAsDeletedValue;
-					- (BOOL)markedAsDeletedValue;
+					  @property (readonly) BOOL markedAsDeletedValue;
+					  - (BOOL) markedAsDeletedValue;
 					#else
 					@property BOOL markedAsDeletedValue;
-					- (BOOL)markedAsDeletedValue;
-					- (void)setMarkedAsDeletedValue:(BOOL)value_;
+					  - (BOOL) markedAsDeletedValue;
+					  - (void) setMarkedAsDeletedValue:(BOOL)value_;
 					#endif
 				
 			
@@ -211,9 +211,9 @@ extern const struct MBaseEntityFetchedProperties {
 			
 				
 					#ifndef __MBaseEntity__PROTECTED__
-					@property (nonatomic, strong, readonly) NSNumber* modifiedSinceLastSync;
+					  @property (nonatomic, strong, readonly) NSNumber* modifiedSinceLastSync;
 					#else
-					@property (nonatomic, strong) NSNumber* modifiedSinceLastSync;
+					  @property (nonatomic, strong) NSNumber* modifiedSinceLastSync;
 					#endif
 				
 			
@@ -223,12 +223,12 @@ extern const struct MBaseEntityFetchedProperties {
 			
 				
 					#ifndef __MBaseEntity__PROTECTED__
-					@property (readonly) BOOL modifiedSinceLastSyncValue;
-					- (BOOL)modifiedSinceLastSyncValue;
+					  @property (readonly) BOOL modifiedSinceLastSyncValue;
+					  - (BOOL) modifiedSinceLastSyncValue;
 					#else
 					@property BOOL modifiedSinceLastSyncValue;
-					- (BOOL)modifiedSinceLastSyncValue;
-					- (void)setModifiedSinceLastSyncValue:(BOOL)value_;
+					  - (BOOL) modifiedSinceLastSyncValue;
+					  - (void) setModifiedSinceLastSyncValue:(BOOL)value_;
 					#endif
 				
 			
@@ -264,9 +264,9 @@ extern const struct MBaseEntityFetchedProperties {
 			
 				
 					#ifndef __MBaseEntity__PROTECTED__
-					@property (nonatomic, strong, readonly) NSDate* updateTime;
+					  @property (nonatomic, strong, readonly) NSDate* updateTime;
 					#else
-					@property (nonatomic, strong) NSDate* updateTime;
+					  @property (nonatomic, strong) NSDate* updateTime;
 					#endif
 				
 			

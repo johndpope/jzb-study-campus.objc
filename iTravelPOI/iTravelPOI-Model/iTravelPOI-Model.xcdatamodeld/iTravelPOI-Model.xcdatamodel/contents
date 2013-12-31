@@ -29,7 +29,7 @@
                 <entry key="readonly" value="YES"/>
             </userInfo>
         </attribute>
-        <attribute name="markedAsDeleted" attributeType="Boolean" defaultValueString="NO" syncable="YES">
+        <attribute name="markedAsDeleted" attributeType="Boolean" defaultValueString="NO" indexed="YES" syncable="YES">
             <userInfo>
                 <entry key="readonly" value="YES"/>
             </userInfo>

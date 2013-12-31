@@ -47,9 +47,9 @@ extern const struct RMCViewCountFetchedProperties {
 			
 				
 					#ifndef __RMCViewCount__PROTECTED__
-					@property (nonatomic, strong, readonly) NSNumber* internalID;
+					  @property (nonatomic, strong, readonly) NSNumber* internalID;
 					#else
-					@property (nonatomic, strong) NSNumber* internalID;
+					  @property (nonatomic, strong) NSNumber* internalID;
 					#endif
 				
 			
@@ -59,12 +59,12 @@ extern const struct RMCViewCountFetchedProperties {
 			
 				
 					#ifndef __RMCViewCount__PROTECTED__
-					@property (readonly) int64_t internalIDValue;
-					- (int64_t)internalIDValue;
+					  @property (readonly) int64_t internalIDValue;
+					  - (int64_t) internalIDValue;
 					#else
 					@property int64_t internalIDValue;
-					- (int64_t)internalIDValue;
-					- (void)setInternalIDValue:(int64_t)value_;
+					  - (int64_t) internalIDValue;
+					  - (void) setInternalIDValue:(int64_t)value_;
 					#endif
 				
 			
@@ -82,9 +82,9 @@ extern const struct RMCViewCountFetchedProperties {
 			
 				
 					#ifndef __RMCViewCount__PROTECTED__
-					@property (nonatomic, strong, readonly) NSNumber* viewCount;
+					  @property (nonatomic, strong, readonly) NSNumber* viewCount;
 					#else
-					@property (nonatomic, strong) NSNumber* viewCount;
+					  @property (nonatomic, strong) NSNumber* viewCount;
 					#endif
 				
 			
@@ -94,12 +94,12 @@ extern const struct RMCViewCountFetchedProperties {
 			
 				
 					#ifndef __RMCViewCount__PROTECTED__
-					@property (readonly) int16_t viewCountValue;
-					- (int16_t)viewCountValue;
+					  @property (readonly) int16_t viewCountValue;
+					  - (int16_t) viewCountValue;
 					#else
 					@property int16_t viewCountValue;
-					- (int16_t)viewCountValue;
-					- (void)setViewCountValue:(int16_t)value_;
+					  - (int16_t) viewCountValue;
+					  - (void) setViewCountValue:(int16_t)value_;
 					#endif
 				
 			
