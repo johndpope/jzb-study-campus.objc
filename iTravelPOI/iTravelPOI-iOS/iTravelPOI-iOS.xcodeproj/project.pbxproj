@@ -7,10 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		421AD443186C6E9900A88A57 /* RPointTag.m in Sources */ = {isa = PBXBuildFile; fileRef = 421AD440186C6E9900A88A57 /* RPointTag.m */; };
-		421AD444186C6E9900A88A57 /* RTagSubtag.m in Sources */ = {isa = PBXBuildFile; fileRef = 421AD442186C6E9900A88A57 /* RTagSubtag.m */; };
-		421AD449186C6EB200A88A57 /* _RPointTag.m in Sources */ = {isa = PBXBuildFile; fileRef = 421AD446186C6EB200A88A57 /* _RPointTag.m */; };
-		421AD44A186C6EB200A88A57 /* _RTagSubtag.m in Sources */ = {isa = PBXBuildFile; fileRef = 421AD448186C6EB200A88A57 /* _RTagSubtag.m */; };
 		421AD455186E126C00A88A57 /* MyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 421AD454186E126C00A88A57 /* MyTableViewCell.m */; };
 		421AD571186ED60A00A88A57 /* BlackTag-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 421AD537186ED60A00A88A57 /* BlackTag-1.png */; };
 		421AD572186ED60A00A88A57 /* BlackTag-1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 421AD538186ED60A00A88A57 /* BlackTag-1@2x.png */; };
@@ -70,6 +66,67 @@
 		421AD5A8186ED60A00A88A57 /* RBlackTag-3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 421AD56E186ED60A00A88A57 /* RBlackTag-3@2x.png */; };
 		421AD5A9186ED60A00A88A57 /* unfolded.png in Resources */ = {isa = PBXBuildFile; fileRef = 421AD56F186ED60A00A88A57 /* unfolded.png */; };
 		421AD5AA186ED60A00A88A57 /* unfolded@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 421AD570186ED60A00A88A57 /* unfolded@2x.png */; };
+		42214D2B1873069B006A72B9 /* TagListEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42214D2A1873069B006A72B9 /* TagListEditorViewController.m */; };
+		42214E6718741EEF006A72B9 /* MyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 42214E2818741EEF006A72B9 /* MyTableViewCell.m */; };
+		42214E6818741EEF006A72B9 /* BlackTag-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E2B18741EEF006A72B9 /* BlackTag-1.png */; };
+		42214E6918741EEF006A72B9 /* BlackTag-1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E2C18741EEF006A72B9 /* BlackTag-1@2x.png */; };
+		42214E6A18741EEF006A72B9 /* BlueTag-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E2D18741EEF006A72B9 /* BlueTag-1.png */; };
+		42214E6B18741EEF006A72B9 /* BlueTag-1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E2E18741EEF006A72B9 /* BlueTag-1@2x.png */; };
+		42214E6C18741EEF006A72B9 /* BlueTag-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E2F18741EEF006A72B9 /* BlueTag-2.png */; };
+		42214E6D18741EEF006A72B9 /* BlueTag-2@x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E3018741EEF006A72B9 /* BlueTag-2@x.png */; };
+		42214E6E18741EEF006A72B9 /* BlueTag-3.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E3118741EEF006A72B9 /* BlueTag-3.png */; };
+		42214E6F18741EEF006A72B9 /* BlueTag-3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E3218741EEF006A72B9 /* BlueTag-3@2x.png */; };
+		42214E7018741EEF006A72B9 /* DBlueTag-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E3318741EEF006A72B9 /* DBlueTag-1.png */; };
+		42214E7118741EEF006A72B9 /* DBlueTag-1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E3418741EEF006A72B9 /* DBlueTag-1@2x.png */; };
+		42214E7218741EEF006A72B9 /* DBlueTag-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E3518741EEF006A72B9 /* DBlueTag-2.png */; };
+		42214E7318741EEF006A72B9 /* DBlueTag-2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E3618741EEF006A72B9 /* DBlueTag-2@2x.png */; };
+		42214E7418741EEF006A72B9 /* DBlueTag-3.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E3718741EEF006A72B9 /* DBlueTag-3.png */; };
+		42214E7518741EEF006A72B9 /* DBlueTag-3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E3818741EEF006A72B9 /* DBlueTag-3@2x.png */; };
+		42214E7618741EEF006A72B9 /* DGreenTag-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E3918741EEF006A72B9 /* DGreenTag-1.png */; };
+		42214E7718741EEF006A72B9 /* DGreenTag-1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E3A18741EEF006A72B9 /* DGreenTag-1@2x.png */; };
+		42214E7818741EEF006A72B9 /* DGreenTag-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E3B18741EEF006A72B9 /* DGreenTag-2.png */; };
+		42214E7918741EEF006A72B9 /* DGreenTag-2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E3C18741EEF006A72B9 /* DGreenTag-2@2x.png */; };
+		42214E7A18741EEF006A72B9 /* DGreenTag-3.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E3D18741EEF006A72B9 /* DGreenTag-3.png */; };
+		42214E7B18741EEF006A72B9 /* DGreenTag-3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E3E18741EEF006A72B9 /* DGreenTag-3@2x.png */; };
+		42214E7C18741EEF006A72B9 /* DOrangeTag-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E3F18741EEF006A72B9 /* DOrangeTag-1.png */; };
+		42214E7D18741EEF006A72B9 /* DOrangeTag-1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E4018741EEF006A72B9 /* DOrangeTag-1@2x.png */; };
+		42214E7E18741EEF006A72B9 /* DOrangeTag-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E4118741EEF006A72B9 /* DOrangeTag-2.png */; };
+		42214E7F18741EEF006A72B9 /* DOrangeTag-2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E4218741EEF006A72B9 /* DOrangeTag-2@2x.png */; };
+		42214E8018741EEF006A72B9 /* DOrangeTag-3.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E4318741EEF006A72B9 /* DOrangeTag-3.png */; };
+		42214E8118741EEF006A72B9 /* DOrangeTag-3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E4418741EEF006A72B9 /* DOrangeTag-3@2x.png */; };
+		42214E8218741EEF006A72B9 /* GreenTag-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E4518741EEF006A72B9 /* GreenTag-1.png */; };
+		42214E8318741EEF006A72B9 /* GreenTag-11.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E4618741EEF006A72B9 /* GreenTag-11.png */; };
+		42214E8418741EEF006A72B9 /* GreenTag-11@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E4718741EEF006A72B9 /* GreenTag-11@2x.png */; };
+		42214E8518741EEF006A72B9 /* GreenTag-1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E4818741EEF006A72B9 /* GreenTag-1@2x.png */; };
+		42214E8618741EEF006A72B9 /* GreenTag-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E4918741EEF006A72B9 /* GreenTag-2.png */; };
+		42214E8718741EEF006A72B9 /* GreenTag-2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E4A18741EEF006A72B9 /* GreenTag-2@2x.png */; };
+		42214E8818741EEF006A72B9 /* GreenTag-3.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E4B18741EEF006A72B9 /* GreenTag-3.png */; };
+		42214E8918741EEF006A72B9 /* GreenTag-3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E4C18741EEF006A72B9 /* GreenTag-3@2x.png */; };
+		42214E8A18741EEF006A72B9 /* OrangeTag-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E4D18741EEF006A72B9 /* OrangeTag-1.png */; };
+		42214E8B18741EEF006A72B9 /* OrangeTag-11.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E4E18741EEF006A72B9 /* OrangeTag-11.png */; };
+		42214E8C18741EEF006A72B9 /* OrangeTag-11@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E4F18741EEF006A72B9 /* OrangeTag-11@2x.png */; };
+		42214E8D18741EEF006A72B9 /* OrangeTag-1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E5018741EEF006A72B9 /* OrangeTag-1@2x.png */; };
+		42214E8E18741EEF006A72B9 /* OrangeTag-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E5118741EEF006A72B9 /* OrangeTag-2.png */; };
+		42214E8F18741EEF006A72B9 /* OrangeTag-2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E5218741EEF006A72B9 /* OrangeTag-2@2x.png */; };
+		42214E9018741EEF006A72B9 /* OrangeTag-3.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E5318741EEF006A72B9 /* OrangeTag-3.png */; };
+		42214E9118741EEF006A72B9 /* OrangeTag-3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E5418741EEF006A72B9 /* OrangeTag-3@2x.png */; };
+		42214E9218741EEF006A72B9 /* folded.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E5518741EEF006A72B9 /* folded.png */; };
+		42214E9318741EEF006A72B9 /* folded@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E5618741EEF006A72B9 /* folded@2x.png */; };
+		42214E9418741EEF006A72B9 /* LBlackTag-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E5718741EEF006A72B9 /* LBlackTag-1.png */; };
+		42214E9518741EEF006A72B9 /* LBlackTag-1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E5818741EEF006A72B9 /* LBlackTag-1@2x.png */; };
+		42214E9618741EEF006A72B9 /* LBlackTag-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E5918741EEF006A72B9 /* LBlackTag-2.png */; };
+		42214E9718741EEF006A72B9 /* LBlackTag-2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E5A18741EEF006A72B9 /* LBlackTag-2@2x.png */; };
+		42214E9818741EEF006A72B9 /* LBlackTag-3.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E5B18741EEF006A72B9 /* LBlackTag-3.png */; };
+		42214E9918741EEF006A72B9 /* LBlackTag-3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E5C18741EEF006A72B9 /* LBlackTag-3@2x.png */; };
+		42214E9A18741EEF006A72B9 /* RBlackTag-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E5D18741EEF006A72B9 /* RBlackTag-1.png */; };
+		42214E9B18741EEF006A72B9 /* RBlackTag-1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E5E18741EEF006A72B9 /* RBlackTag-1@2x.png */; };
+		42214E9C18741EEF006A72B9 /* RBlackTag-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E5F18741EEF006A72B9 /* RBlackTag-2.png */; };
+		42214E9D18741EEF006A72B9 /* RBlackTag-2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E6018741EEF006A72B9 /* RBlackTag-2@2x.png */; };
+		42214E9E18741EEF006A72B9 /* RBlackTag-3.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E6118741EEF006A72B9 /* RBlackTag-3.png */; };
+		42214E9F18741EEF006A72B9 /* RBlackTag-3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E6218741EEF006A72B9 /* RBlackTag-3@2x.png */; };
+		42214EA018741EEF006A72B9 /* unfolded.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E6318741EEF006A72B9 /* unfolded.png */; };
+		42214EA118741EEF006A72B9 /* unfolded@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42214E6418741EEF006A72B9 /* unfolded@2x.png */; };
+		42214EA218741EEF006A72B9 /* TagTreeTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42214E6618741EEF006A72B9 /* TagTreeTableViewController.m */; };
 		426E9F891871B14600426F72 /* BlueMapMarker.png in Resources */ = {isa = PBXBuildFile; fileRef = 426E9F871871B14600426F72 /* BlueMapMarker.png */; };
 		426E9F8A1871B14600426F72 /* BlueMapMarker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 426E9F881871B14600426F72 /* BlueMapMarker@2x.png */; };
 		4272013C186AFA3E0062DF76 /* _PLISTs_.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4272013B186AFA3E0062DF76 /* _PLISTs_.bundle */; };
@@ -90,6 +147,20 @@
 		42BBBB6318721001009813A0 /* BlueMapIcon2-2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42BBBB5B18721001009813A0 /* BlueMapIcon2-2@2x.png */; };
 		42BBBB6618722C1F009813A0 /* BlueMapMarkerGlow.png in Resources */ = {isa = PBXBuildFile; fileRef = 42BBBB6418722C1F009813A0 /* BlueMapMarkerGlow.png */; };
 		42BBBB6718722C1F009813A0 /* BlueMapMarkerGlow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42BBBB6518722C1F009813A0 /* BlueMapMarkerGlow@2x.png */; };
+		42BBBB8B1872A83F009813A0 /* _MBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BBBB7E1872A83F009813A0 /* _MBase.m */; };
+		42BBBB8C1872A83F009813A0 /* _MBaseSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BBBB801872A83F009813A0 /* _MBaseSync.m */; };
+		42BBBB8D1872A83F009813A0 /* _MIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BBBB821872A83F009813A0 /* _MIcon.m */; };
+		42BBBB8E1872A83F009813A0 /* _MMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BBBB841872A83F009813A0 /* _MMap.m */; };
+		42BBBB8F1872A83F009813A0 /* _MPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BBBB861872A83F009813A0 /* _MPoint.m */; };
+		42BBBB901872A83F009813A0 /* _MTag.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BBBB881872A83F009813A0 /* _MTag.m */; };
+		42BBBB911872A83F009813A0 /* _RPointTag.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BBBB8A1872A83F009813A0 /* _RPointTag.m */; };
+		42BBBBA01872A8D5009813A0 /* MBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BBBB931872A8D5009813A0 /* MBase.m */; };
+		42BBBBA11872A8D5009813A0 /* MBaseSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BBBB951872A8D5009813A0 /* MBaseSync.m */; };
+		42BBBBA21872A8D5009813A0 /* MIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BBBB971872A8D5009813A0 /* MIcon.m */; };
+		42BBBBA31872A8D5009813A0 /* MMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BBBB991872A8D5009813A0 /* MMap.m */; };
+		42BBBBA41872A8D5009813A0 /* MPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BBBB9B1872A8D5009813A0 /* MPoint.m */; };
+		42BBBBA51872A8D5009813A0 /* MTag.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BBBB9D1872A8D5009813A0 /* MTag.m */; };
+		42BBBBA61872A8D5009813A0 /* RPointTag.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BBBB9F1872A8D5009813A0 /* RPointTag.m */; };
 		42BE7A7518672C6F00AECD57 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BE7A7418672C6F00AECD57 /* Foundation.framework */; };
 		42BE7A7718672C6F00AECD57 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BE7A7618672C6F00AECD57 /* CoreGraphics.framework */; };
 		42BE7A7918672C6F00AECD57 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BE7A7818672C6F00AECD57 /* UIKit.framework */; };
@@ -122,14 +193,6 @@
 		42BE7AF018672ED200AECD57 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BE7AEF18672ED200AECD57 /* CoreData.framework */; };
 		42BE7AF218672EE100AECD57 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BE7AF118672EE100AECD57 /* CoreLocation.framework */; };
 		42CADF8918674DDE0057AE84 /* MapListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CADF8818674DDE0057AE84 /* MapListViewController.m */; };
-		42CADF9C1868268A0057AE84 /* MBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CADF901868268A0057AE84 /* MBase.m */; };
-		42CADF9D1868268A0057AE84 /* MMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CADF921868268A0057AE84 /* MMap.m */; };
-		42CADF9E1868268A0057AE84 /* MPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CADF941868268A0057AE84 /* MPoint.m */; };
-		42CADF9F1868268A0057AE84 /* _MBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CADF971868268A0057AE84 /* _MBase.m */; };
-		42CADFA01868268A0057AE84 /* _MMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CADF991868268A0057AE84 /* _MMap.m */; };
-		42CADFA11868268A0057AE84 /* _MPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CADF9B1868268A0057AE84 /* _MPoint.m */; };
-		42CADFA41868270E0057AE84 /* MTag.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CADFA31868270E0057AE84 /* MTag.m */; };
-		42CADFA7186827230057AE84 /* _MTag.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CADFA6186827230057AE84 /* _MTag.m */; };
 		42CADFAD186837410057AE84 /* reveal-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 42CADFA9186837410057AE84 /* reveal-icon.png */; };
 		42CADFAE186837410057AE84 /* reveal-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42CADFAA186837410057AE84 /* reveal-icon@2x.png */; };
 		42CADFAF186837410057AE84 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CADFAC186837410057AE84 /* SWRevealViewController.m */; };
@@ -153,10 +216,6 @@
 		42E9D76A18718D260039FC2F /* ScreenShot-Location.png in Resources */ = {isa = PBXBuildFile; fileRef = 42E9D76918718D260039FC2F /* ScreenShot-Location.png */; };
 		42E9D76C18718F740039FC2F /* ScreenShot-Tags.png in Resources */ = {isa = PBXBuildFile; fileRef = 42E9D76B18718F740039FC2F /* ScreenShot-Tags.png */; };
 		42E9D7701871A2580039FC2F /* POIEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42E9D76F1871A2570039FC2F /* POIEditorViewController.m */; };
-		42F6E80A1869D61500005AFB /* MBaseSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F6E8091869D61500005AFB /* MBaseSync.m */; };
-		42F6E80D1869D65A00005AFB /* _MBaseSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F6E80C1869D65A00005AFB /* _MBaseSync.m */; };
-		42F6E8101869DF8B00005AFB /* MIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F6E80F1869DF8B00005AFB /* MIcon.m */; };
-		42F6E8131869DF9500005AFB /* _MIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F6E8121869DF9500005AFB /* _MIcon.m */; };
 		42F6E81C1869FDFC00005AFB /* NSString+JavaStr.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F6E8161869FDFC00005AFB /* NSString+JavaStr.m */; };
 		42F6E81D1869FDFC00005AFB /* SimpleXMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F6E8181869FDFC00005AFB /* SimpleXMLReader.m */; };
 		42F6E81E1869FDFC00005AFB /* UIView+FirstResponder.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F6E81A1869FDFC00005AFB /* UIView+FirstResponder.m */; };
@@ -197,14 +256,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		421AD43F186C6E9900A88A57 /* RPointTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RPointTag.h; sourceTree = "<group>"; };
-		421AD440186C6E9900A88A57 /* RPointTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RPointTag.m; sourceTree = "<group>"; };
-		421AD441186C6E9900A88A57 /* RTagSubtag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTagSubtag.h; sourceTree = "<group>"; };
-		421AD442186C6E9900A88A57 /* RTagSubtag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RTagSubtag.m; sourceTree = "<group>"; };
-		421AD445186C6EB200A88A57 /* _RPointTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _RPointTag.h; sourceTree = "<group>"; };
-		421AD446186C6EB200A88A57 /* _RPointTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _RPointTag.m; sourceTree = "<group>"; };
-		421AD447186C6EB200A88A57 /* _RTagSubtag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _RTagSubtag.h; sourceTree = "<group>"; };
-		421AD448186C6EB200A88A57 /* _RTagSubtag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _RTagSubtag.m; sourceTree = "<group>"; };
 		421AD453186E126C00A88A57 /* MyTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyTableViewCell.h; sourceTree = "<group>"; };
 		421AD454186E126C00A88A57 /* MyTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyTableViewCell.m; sourceTree = "<group>"; };
 		421AD537186ED60A00A88A57 /* BlackTag-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlackTag-1.png"; sourceTree = "<group>"; };
@@ -265,6 +316,70 @@
 		421AD56E186ED60A00A88A57 /* RBlackTag-3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RBlackTag-3@2x.png"; sourceTree = "<group>"; };
 		421AD56F186ED60A00A88A57 /* unfolded.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = unfolded.png; sourceTree = "<group>"; };
 		421AD570186ED60A00A88A57 /* unfolded@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "unfolded@2x.png"; sourceTree = "<group>"; };
+		42214D291873069B006A72B9 /* TagListEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagListEditorViewController.h; sourceTree = "<group>"; };
+		42214D2A1873069B006A72B9 /* TagListEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagListEditorViewController.m; sourceTree = "<group>"; };
+		42214E2718741EEF006A72B9 /* MyTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyTableViewCell.h; sourceTree = "<group>"; };
+		42214E2818741EEF006A72B9 /* MyTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyTableViewCell.m; sourceTree = "<group>"; };
+		42214E2B18741EEF006A72B9 /* BlackTag-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlackTag-1.png"; sourceTree = "<group>"; };
+		42214E2C18741EEF006A72B9 /* BlackTag-1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlackTag-1@2x.png"; sourceTree = "<group>"; };
+		42214E2D18741EEF006A72B9 /* BlueTag-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlueTag-1.png"; sourceTree = "<group>"; };
+		42214E2E18741EEF006A72B9 /* BlueTag-1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlueTag-1@2x.png"; sourceTree = "<group>"; };
+		42214E2F18741EEF006A72B9 /* BlueTag-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlueTag-2.png"; sourceTree = "<group>"; };
+		42214E3018741EEF006A72B9 /* BlueTag-2@x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlueTag-2@x.png"; sourceTree = "<group>"; };
+		42214E3118741EEF006A72B9 /* BlueTag-3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlueTag-3.png"; sourceTree = "<group>"; };
+		42214E3218741EEF006A72B9 /* BlueTag-3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlueTag-3@2x.png"; sourceTree = "<group>"; };
+		42214E3318741EEF006A72B9 /* DBlueTag-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DBlueTag-1.png"; sourceTree = "<group>"; };
+		42214E3418741EEF006A72B9 /* DBlueTag-1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DBlueTag-1@2x.png"; sourceTree = "<group>"; };
+		42214E3518741EEF006A72B9 /* DBlueTag-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DBlueTag-2.png"; sourceTree = "<group>"; };
+		42214E3618741EEF006A72B9 /* DBlueTag-2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DBlueTag-2@2x.png"; sourceTree = "<group>"; };
+		42214E3718741EEF006A72B9 /* DBlueTag-3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DBlueTag-3.png"; sourceTree = "<group>"; };
+		42214E3818741EEF006A72B9 /* DBlueTag-3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DBlueTag-3@2x.png"; sourceTree = "<group>"; };
+		42214E3918741EEF006A72B9 /* DGreenTag-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DGreenTag-1.png"; sourceTree = "<group>"; };
+		42214E3A18741EEF006A72B9 /* DGreenTag-1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DGreenTag-1@2x.png"; sourceTree = "<group>"; };
+		42214E3B18741EEF006A72B9 /* DGreenTag-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DGreenTag-2.png"; sourceTree = "<group>"; };
+		42214E3C18741EEF006A72B9 /* DGreenTag-2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DGreenTag-2@2x.png"; sourceTree = "<group>"; };
+		42214E3D18741EEF006A72B9 /* DGreenTag-3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DGreenTag-3.png"; sourceTree = "<group>"; };
+		42214E3E18741EEF006A72B9 /* DGreenTag-3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DGreenTag-3@2x.png"; sourceTree = "<group>"; };
+		42214E3F18741EEF006A72B9 /* DOrangeTag-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DOrangeTag-1.png"; sourceTree = "<group>"; };
+		42214E4018741EEF006A72B9 /* DOrangeTag-1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DOrangeTag-1@2x.png"; sourceTree = "<group>"; };
+		42214E4118741EEF006A72B9 /* DOrangeTag-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DOrangeTag-2.png"; sourceTree = "<group>"; };
+		42214E4218741EEF006A72B9 /* DOrangeTag-2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DOrangeTag-2@2x.png"; sourceTree = "<group>"; };
+		42214E4318741EEF006A72B9 /* DOrangeTag-3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DOrangeTag-3.png"; sourceTree = "<group>"; };
+		42214E4418741EEF006A72B9 /* DOrangeTag-3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DOrangeTag-3@2x.png"; sourceTree = "<group>"; };
+		42214E4518741EEF006A72B9 /* GreenTag-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreenTag-1.png"; sourceTree = "<group>"; };
+		42214E4618741EEF006A72B9 /* GreenTag-11.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreenTag-11.png"; sourceTree = "<group>"; };
+		42214E4718741EEF006A72B9 /* GreenTag-11@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreenTag-11@2x.png"; sourceTree = "<group>"; };
+		42214E4818741EEF006A72B9 /* GreenTag-1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreenTag-1@2x.png"; sourceTree = "<group>"; };
+		42214E4918741EEF006A72B9 /* GreenTag-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreenTag-2.png"; sourceTree = "<group>"; };
+		42214E4A18741EEF006A72B9 /* GreenTag-2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreenTag-2@2x.png"; sourceTree = "<group>"; };
+		42214E4B18741EEF006A72B9 /* GreenTag-3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreenTag-3.png"; sourceTree = "<group>"; };
+		42214E4C18741EEF006A72B9 /* GreenTag-3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GreenTag-3@2x.png"; sourceTree = "<group>"; };
+		42214E4D18741EEF006A72B9 /* OrangeTag-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "OrangeTag-1.png"; sourceTree = "<group>"; };
+		42214E4E18741EEF006A72B9 /* OrangeTag-11.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "OrangeTag-11.png"; sourceTree = "<group>"; };
+		42214E4F18741EEF006A72B9 /* OrangeTag-11@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "OrangeTag-11@2x.png"; sourceTree = "<group>"; };
+		42214E5018741EEF006A72B9 /* OrangeTag-1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "OrangeTag-1@2x.png"; sourceTree = "<group>"; };
+		42214E5118741EEF006A72B9 /* OrangeTag-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "OrangeTag-2.png"; sourceTree = "<group>"; };
+		42214E5218741EEF006A72B9 /* OrangeTag-2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "OrangeTag-2@2x.png"; sourceTree = "<group>"; };
+		42214E5318741EEF006A72B9 /* OrangeTag-3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "OrangeTag-3.png"; sourceTree = "<group>"; };
+		42214E5418741EEF006A72B9 /* OrangeTag-3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "OrangeTag-3@2x.png"; sourceTree = "<group>"; };
+		42214E5518741EEF006A72B9 /* folded.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = folded.png; sourceTree = "<group>"; };
+		42214E5618741EEF006A72B9 /* folded@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "folded@2x.png"; sourceTree = "<group>"; };
+		42214E5718741EEF006A72B9 /* LBlackTag-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LBlackTag-1.png"; sourceTree = "<group>"; };
+		42214E5818741EEF006A72B9 /* LBlackTag-1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LBlackTag-1@2x.png"; sourceTree = "<group>"; };
+		42214E5918741EEF006A72B9 /* LBlackTag-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LBlackTag-2.png"; sourceTree = "<group>"; };
+		42214E5A18741EEF006A72B9 /* LBlackTag-2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LBlackTag-2@2x.png"; sourceTree = "<group>"; };
+		42214E5B18741EEF006A72B9 /* LBlackTag-3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LBlackTag-3.png"; sourceTree = "<group>"; };
+		42214E5C18741EEF006A72B9 /* LBlackTag-3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LBlackTag-3@2x.png"; sourceTree = "<group>"; };
+		42214E5D18741EEF006A72B9 /* RBlackTag-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RBlackTag-1.png"; sourceTree = "<group>"; };
+		42214E5E18741EEF006A72B9 /* RBlackTag-1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RBlackTag-1@2x.png"; sourceTree = "<group>"; };
+		42214E5F18741EEF006A72B9 /* RBlackTag-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RBlackTag-2.png"; sourceTree = "<group>"; };
+		42214E6018741EEF006A72B9 /* RBlackTag-2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RBlackTag-2@2x.png"; sourceTree = "<group>"; };
+		42214E6118741EEF006A72B9 /* RBlackTag-3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RBlackTag-3.png"; sourceTree = "<group>"; };
+		42214E6218741EEF006A72B9 /* RBlackTag-3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RBlackTag-3@2x.png"; sourceTree = "<group>"; };
+		42214E6318741EEF006A72B9 /* unfolded.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = unfolded.png; sourceTree = "<group>"; };
+		42214E6418741EEF006A72B9 /* unfolded@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "unfolded@2x.png"; sourceTree = "<group>"; };
+		42214E6518741EEF006A72B9 /* TagTreeTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagTreeTableViewController.h; sourceTree = "<group>"; };
+		42214E6618741EEF006A72B9 /* TagTreeTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagTreeTableViewController.m; sourceTree = "<group>"; };
 		426E9F871871B14600426F72 /* BlueMapMarker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BlueMapMarker.png; sourceTree = "<group>"; };
 		426E9F881871B14600426F72 /* BlueMapMarker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlueMapMarker@2x.png"; sourceTree = "<group>"; };
 		4272013B186AFA3E0062DF76 /* _PLISTs_.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = _PLISTs_.bundle; sourceTree = "<group>"; };
@@ -285,6 +400,34 @@
 		42BBBB5B18721001009813A0 /* BlueMapIcon2-2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlueMapIcon2-2@2x.png"; sourceTree = "<group>"; };
 		42BBBB6418722C1F009813A0 /* BlueMapMarkerGlow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BlueMapMarkerGlow.png; sourceTree = "<group>"; };
 		42BBBB6518722C1F009813A0 /* BlueMapMarkerGlow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlueMapMarkerGlow@2x.png"; sourceTree = "<group>"; };
+		42BBBB7D1872A83F009813A0 /* _MBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MBase.h; sourceTree = "<group>"; };
+		42BBBB7E1872A83F009813A0 /* _MBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MBase.m; sourceTree = "<group>"; };
+		42BBBB7F1872A83F009813A0 /* _MBaseSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MBaseSync.h; sourceTree = "<group>"; };
+		42BBBB801872A83F009813A0 /* _MBaseSync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MBaseSync.m; sourceTree = "<group>"; };
+		42BBBB811872A83F009813A0 /* _MIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MIcon.h; sourceTree = "<group>"; };
+		42BBBB821872A83F009813A0 /* _MIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MIcon.m; sourceTree = "<group>"; };
+		42BBBB831872A83F009813A0 /* _MMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MMap.h; sourceTree = "<group>"; };
+		42BBBB841872A83F009813A0 /* _MMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MMap.m; sourceTree = "<group>"; };
+		42BBBB851872A83F009813A0 /* _MPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MPoint.h; sourceTree = "<group>"; };
+		42BBBB861872A83F009813A0 /* _MPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MPoint.m; sourceTree = "<group>"; };
+		42BBBB871872A83F009813A0 /* _MTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MTag.h; sourceTree = "<group>"; };
+		42BBBB881872A83F009813A0 /* _MTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MTag.m; sourceTree = "<group>"; };
+		42BBBB891872A83F009813A0 /* _RPointTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _RPointTag.h; sourceTree = "<group>"; };
+		42BBBB8A1872A83F009813A0 /* _RPointTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _RPointTag.m; sourceTree = "<group>"; };
+		42BBBB921872A8D5009813A0 /* MBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBase.h; sourceTree = "<group>"; };
+		42BBBB931872A8D5009813A0 /* MBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBase.m; sourceTree = "<group>"; };
+		42BBBB941872A8D5009813A0 /* MBaseSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBaseSync.h; sourceTree = "<group>"; };
+		42BBBB951872A8D5009813A0 /* MBaseSync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBaseSync.m; sourceTree = "<group>"; };
+		42BBBB961872A8D5009813A0 /* MIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MIcon.h; sourceTree = "<group>"; };
+		42BBBB971872A8D5009813A0 /* MIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MIcon.m; sourceTree = "<group>"; };
+		42BBBB981872A8D5009813A0 /* MMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMap.h; sourceTree = "<group>"; };
+		42BBBB991872A8D5009813A0 /* MMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMap.m; sourceTree = "<group>"; };
+		42BBBB9A1872A8D5009813A0 /* MPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPoint.h; sourceTree = "<group>"; };
+		42BBBB9B1872A8D5009813A0 /* MPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPoint.m; sourceTree = "<group>"; };
+		42BBBB9C1872A8D5009813A0 /* MTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTag.h; sourceTree = "<group>"; };
+		42BBBB9D1872A8D5009813A0 /* MTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTag.m; sourceTree = "<group>"; };
+		42BBBB9E1872A8D5009813A0 /* RPointTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RPointTag.h; sourceTree = "<group>"; };
+		42BBBB9F1872A8D5009813A0 /* RPointTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RPointTag.m; sourceTree = "<group>"; };
 		42BE7A7118672C6F00AECD57 /* iTravelPOI-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iTravelPOI-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		42BE7A7418672C6F00AECD57 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		42BE7A7618672C6F00AECD57 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -333,22 +476,6 @@
 		42BE7AF118672EE100AECD57 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		42CADF8718674DDE0057AE84 /* MapListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapListViewController.h; sourceTree = "<group>"; };
 		42CADF8818674DDE0057AE84 /* MapListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapListViewController.m; sourceTree = "<group>"; };
-		42CADF8F1868268A0057AE84 /* MBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBase.h; sourceTree = "<group>"; };
-		42CADF901868268A0057AE84 /* MBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBase.m; sourceTree = "<group>"; };
-		42CADF911868268A0057AE84 /* MMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMap.h; sourceTree = "<group>"; };
-		42CADF921868268A0057AE84 /* MMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMap.m; sourceTree = "<group>"; };
-		42CADF931868268A0057AE84 /* MPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPoint.h; sourceTree = "<group>"; };
-		42CADF941868268A0057AE84 /* MPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPoint.m; sourceTree = "<group>"; };
-		42CADF961868268A0057AE84 /* _MBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MBase.h; sourceTree = "<group>"; };
-		42CADF971868268A0057AE84 /* _MBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MBase.m; sourceTree = "<group>"; };
-		42CADF981868268A0057AE84 /* _MMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MMap.h; sourceTree = "<group>"; };
-		42CADF991868268A0057AE84 /* _MMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MMap.m; sourceTree = "<group>"; };
-		42CADF9A1868268A0057AE84 /* _MPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MPoint.h; sourceTree = "<group>"; };
-		42CADF9B1868268A0057AE84 /* _MPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MPoint.m; sourceTree = "<group>"; };
-		42CADFA21868270E0057AE84 /* MTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTag.h; sourceTree = "<group>"; };
-		42CADFA31868270E0057AE84 /* MTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTag.m; sourceTree = "<group>"; };
-		42CADFA5186827230057AE84 /* _MTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MTag.h; sourceTree = "<group>"; };
-		42CADFA6186827230057AE84 /* _MTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MTag.m; sourceTree = "<group>"; };
 		42CADFA9186837410057AE84 /* reveal-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "reveal-icon.png"; sourceTree = "<group>"; };
 		42CADFAA186837410057AE84 /* reveal-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "reveal-icon@2x.png"; sourceTree = "<group>"; };
 		42CADFAB186837410057AE84 /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
@@ -377,14 +504,6 @@
 		42E9D76B18718F740039FC2F /* ScreenShot-Tags.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ScreenShot-Tags.png"; sourceTree = "<group>"; };
 		42E9D76E1871A2570039FC2F /* POIEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POIEditorViewController.h; sourceTree = "<group>"; };
 		42E9D76F1871A2570039FC2F /* POIEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = POIEditorViewController.m; sourceTree = "<group>"; };
-		42F6E8081869D61500005AFB /* MBaseSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBaseSync.h; sourceTree = "<group>"; };
-		42F6E8091869D61500005AFB /* MBaseSync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBaseSync.m; sourceTree = "<group>"; };
-		42F6E80B1869D65A00005AFB /* _MBaseSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MBaseSync.h; sourceTree = "<group>"; };
-		42F6E80C1869D65A00005AFB /* _MBaseSync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MBaseSync.m; sourceTree = "<group>"; };
-		42F6E80E1869DF8B00005AFB /* MIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MIcon.h; sourceTree = "<group>"; };
-		42F6E80F1869DF8B00005AFB /* MIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MIcon.m; sourceTree = "<group>"; };
-		42F6E8111869DF9500005AFB /* _MIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MIcon.h; sourceTree = "<group>"; };
-		42F6E8121869DF9500005AFB /* _MIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MIcon.m; sourceTree = "<group>"; };
 		42F6E8151869FDFC00005AFB /* NSString+JavaStr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+JavaStr.h"; sourceTree = "<group>"; };
 		42F6E8161869FDFC00005AFB /* NSString+JavaStr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+JavaStr.m"; sourceTree = "<group>"; };
 		42F6E8171869FDFC00005AFB /* SimpleXMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleXMLReader.h; sourceTree = "<group>"; };
@@ -514,6 +633,100 @@
 				421AD55E186ED60A00A88A57 /* OrangeTag-2@2x.png */,
 				421AD55F186ED60A00A88A57 /* OrangeTag-3.png */,
 				421AD560186ED60A00A88A57 /* OrangeTag-3@2x.png */,
+			);
+			path = _more_tags;
+			sourceTree = "<group>";
+		};
+		42214D281873069B006A72B9 /* TagListEditorViewController */ = {
+			isa = PBXGroup;
+			children = (
+				42214D291873069B006A72B9 /* TagListEditorViewController.h */,
+				42214D2A1873069B006A72B9 /* TagListEditorViewController.m */,
+			);
+			path = TagListEditorViewController;
+			sourceTree = "<group>";
+		};
+		42214E2618741EEF006A72B9 /* TagTreeTableViewController */ = {
+			isa = PBXGroup;
+			children = (
+				42214E2918741EEF006A72B9 /* resources */,
+				42214E2718741EEF006A72B9 /* MyTableViewCell.h */,
+				42214E2818741EEF006A72B9 /* MyTableViewCell.m */,
+				42214E6518741EEF006A72B9 /* TagTreeTableViewController.h */,
+				42214E6618741EEF006A72B9 /* TagTreeTableViewController.m */,
+			);
+			path = TagTreeTableViewController;
+			sourceTree = "<group>";
+		};
+		42214E2918741EEF006A72B9 /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				42214E2A18741EEF006A72B9 /* _more_tags */,
+				42214E5518741EEF006A72B9 /* folded.png */,
+				42214E5618741EEF006A72B9 /* folded@2x.png */,
+				42214E5718741EEF006A72B9 /* LBlackTag-1.png */,
+				42214E5818741EEF006A72B9 /* LBlackTag-1@2x.png */,
+				42214E5918741EEF006A72B9 /* LBlackTag-2.png */,
+				42214E5A18741EEF006A72B9 /* LBlackTag-2@2x.png */,
+				42214E5B18741EEF006A72B9 /* LBlackTag-3.png */,
+				42214E5C18741EEF006A72B9 /* LBlackTag-3@2x.png */,
+				42214E5D18741EEF006A72B9 /* RBlackTag-1.png */,
+				42214E5E18741EEF006A72B9 /* RBlackTag-1@2x.png */,
+				42214E5F18741EEF006A72B9 /* RBlackTag-2.png */,
+				42214E6018741EEF006A72B9 /* RBlackTag-2@2x.png */,
+				42214E6118741EEF006A72B9 /* RBlackTag-3.png */,
+				42214E6218741EEF006A72B9 /* RBlackTag-3@2x.png */,
+				42214E6318741EEF006A72B9 /* unfolded.png */,
+				42214E6418741EEF006A72B9 /* unfolded@2x.png */,
+			);
+			path = resources;
+			sourceTree = "<group>";
+		};
+		42214E2A18741EEF006A72B9 /* _more_tags */ = {
+			isa = PBXGroup;
+			children = (
+				42214E2B18741EEF006A72B9 /* BlackTag-1.png */,
+				42214E2C18741EEF006A72B9 /* BlackTag-1@2x.png */,
+				42214E2D18741EEF006A72B9 /* BlueTag-1.png */,
+				42214E2E18741EEF006A72B9 /* BlueTag-1@2x.png */,
+				42214E2F18741EEF006A72B9 /* BlueTag-2.png */,
+				42214E3018741EEF006A72B9 /* BlueTag-2@x.png */,
+				42214E3118741EEF006A72B9 /* BlueTag-3.png */,
+				42214E3218741EEF006A72B9 /* BlueTag-3@2x.png */,
+				42214E3318741EEF006A72B9 /* DBlueTag-1.png */,
+				42214E3418741EEF006A72B9 /* DBlueTag-1@2x.png */,
+				42214E3518741EEF006A72B9 /* DBlueTag-2.png */,
+				42214E3618741EEF006A72B9 /* DBlueTag-2@2x.png */,
+				42214E3718741EEF006A72B9 /* DBlueTag-3.png */,
+				42214E3818741EEF006A72B9 /* DBlueTag-3@2x.png */,
+				42214E3918741EEF006A72B9 /* DGreenTag-1.png */,
+				42214E3A18741EEF006A72B9 /* DGreenTag-1@2x.png */,
+				42214E3B18741EEF006A72B9 /* DGreenTag-2.png */,
+				42214E3C18741EEF006A72B9 /* DGreenTag-2@2x.png */,
+				42214E3D18741EEF006A72B9 /* DGreenTag-3.png */,
+				42214E3E18741EEF006A72B9 /* DGreenTag-3@2x.png */,
+				42214E3F18741EEF006A72B9 /* DOrangeTag-1.png */,
+				42214E4018741EEF006A72B9 /* DOrangeTag-1@2x.png */,
+				42214E4118741EEF006A72B9 /* DOrangeTag-2.png */,
+				42214E4218741EEF006A72B9 /* DOrangeTag-2@2x.png */,
+				42214E4318741EEF006A72B9 /* DOrangeTag-3.png */,
+				42214E4418741EEF006A72B9 /* DOrangeTag-3@2x.png */,
+				42214E4518741EEF006A72B9 /* GreenTag-1.png */,
+				42214E4618741EEF006A72B9 /* GreenTag-11.png */,
+				42214E4718741EEF006A72B9 /* GreenTag-11@2x.png */,
+				42214E4818741EEF006A72B9 /* GreenTag-1@2x.png */,
+				42214E4918741EEF006A72B9 /* GreenTag-2.png */,
+				42214E4A18741EEF006A72B9 /* GreenTag-2@2x.png */,
+				42214E4B18741EEF006A72B9 /* GreenTag-3.png */,
+				42214E4C18741EEF006A72B9 /* GreenTag-3@2x.png */,
+				42214E4D18741EEF006A72B9 /* OrangeTag-1.png */,
+				42214E4E18741EEF006A72B9 /* OrangeTag-11.png */,
+				42214E4F18741EEF006A72B9 /* OrangeTag-11@2x.png */,
+				42214E5018741EEF006A72B9 /* OrangeTag-1@2x.png */,
+				42214E5118741EEF006A72B9 /* OrangeTag-2.png */,
+				42214E5218741EEF006A72B9 /* OrangeTag-2@2x.png */,
+				42214E5318741EEF006A72B9 /* OrangeTag-3.png */,
+				42214E5418741EEF006A72B9 /* OrangeTag-3@2x.png */,
 			);
 			path = _more_tags;
 			sourceTree = "<group>";
@@ -692,6 +905,7 @@
 		42CADF8518674DDE0057AE84 /* Windows */ = {
 			isa = PBXGroup;
 			children = (
+				42214D281873069B006A72B9 /* TagListEditorViewController */,
 				42E9D76D1871A2570039FC2F /* POIEditorViewController */,
 				42CADFD01868B5E80057AE84 /* TagFilterViewController */,
 				42CADFB018683A760057AE84 /* POIListViewController */,
@@ -712,22 +926,20 @@
 		42CADF8E1868268A0057AE84 /* Human */ = {
 			isa = PBXGroup;
 			children = (
-				421AD43F186C6E9900A88A57 /* RPointTag.h */,
-				421AD440186C6E9900A88A57 /* RPointTag.m */,
-				421AD441186C6E9900A88A57 /* RTagSubtag.h */,
-				421AD442186C6E9900A88A57 /* RTagSubtag.m */,
-				42F6E80E1869DF8B00005AFB /* MIcon.h */,
-				42F6E80F1869DF8B00005AFB /* MIcon.m */,
-				42F6E8081869D61500005AFB /* MBaseSync.h */,
-				42F6E8091869D61500005AFB /* MBaseSync.m */,
-				42CADFA21868270E0057AE84 /* MTag.h */,
-				42CADFA31868270E0057AE84 /* MTag.m */,
-				42CADF8F1868268A0057AE84 /* MBase.h */,
-				42CADF901868268A0057AE84 /* MBase.m */,
-				42CADF911868268A0057AE84 /* MMap.h */,
-				42CADF921868268A0057AE84 /* MMap.m */,
-				42CADF931868268A0057AE84 /* MPoint.h */,
-				42CADF941868268A0057AE84 /* MPoint.m */,
+				42BBBB921872A8D5009813A0 /* MBase.h */,
+				42BBBB931872A8D5009813A0 /* MBase.m */,
+				42BBBB941872A8D5009813A0 /* MBaseSync.h */,
+				42BBBB951872A8D5009813A0 /* MBaseSync.m */,
+				42BBBB961872A8D5009813A0 /* MIcon.h */,
+				42BBBB971872A8D5009813A0 /* MIcon.m */,
+				42BBBB981872A8D5009813A0 /* MMap.h */,
+				42BBBB991872A8D5009813A0 /* MMap.m */,
+				42BBBB9A1872A8D5009813A0 /* MPoint.h */,
+				42BBBB9B1872A8D5009813A0 /* MPoint.m */,
+				42BBBB9C1872A8D5009813A0 /* MTag.h */,
+				42BBBB9D1872A8D5009813A0 /* MTag.m */,
+				42BBBB9E1872A8D5009813A0 /* RPointTag.h */,
+				42BBBB9F1872A8D5009813A0 /* RPointTag.m */,
 			);
 			path = Human;
 			sourceTree = "<group>";
@@ -735,22 +947,20 @@
 		42CADF951868268A0057AE84 /* Machine */ = {
 			isa = PBXGroup;
 			children = (
-				421AD445186C6EB200A88A57 /* _RPointTag.h */,
-				421AD446186C6EB200A88A57 /* _RPointTag.m */,
-				421AD447186C6EB200A88A57 /* _RTagSubtag.h */,
-				421AD448186C6EB200A88A57 /* _RTagSubtag.m */,
-				42F6E8111869DF9500005AFB /* _MIcon.h */,
-				42F6E8121869DF9500005AFB /* _MIcon.m */,
-				42F6E80B1869D65A00005AFB /* _MBaseSync.h */,
-				42F6E80C1869D65A00005AFB /* _MBaseSync.m */,
-				42CADFA5186827230057AE84 /* _MTag.h */,
-				42CADFA6186827230057AE84 /* _MTag.m */,
-				42CADF961868268A0057AE84 /* _MBase.h */,
-				42CADF971868268A0057AE84 /* _MBase.m */,
-				42CADF981868268A0057AE84 /* _MMap.h */,
-				42CADF991868268A0057AE84 /* _MMap.m */,
-				42CADF9A1868268A0057AE84 /* _MPoint.h */,
-				42CADF9B1868268A0057AE84 /* _MPoint.m */,
+				42BBBB7D1872A83F009813A0 /* _MBase.h */,
+				42BBBB7E1872A83F009813A0 /* _MBase.m */,
+				42BBBB7F1872A83F009813A0 /* _MBaseSync.h */,
+				42BBBB801872A83F009813A0 /* _MBaseSync.m */,
+				42BBBB811872A83F009813A0 /* _MIcon.h */,
+				42BBBB821872A83F009813A0 /* _MIcon.m */,
+				42BBBB831872A83F009813A0 /* _MMap.h */,
+				42BBBB841872A83F009813A0 /* _MMap.m */,
+				42BBBB851872A83F009813A0 /* _MPoint.h */,
+				42BBBB861872A83F009813A0 /* _MPoint.m */,
+				42BBBB871872A83F009813A0 /* _MTag.h */,
+				42BBBB881872A83F009813A0 /* _MTag.m */,
+				42BBBB891872A83F009813A0 /* _RPointTag.h */,
+				42BBBB8A1872A83F009813A0 /* _RPointTag.m */,
 			);
 			path = Machine;
 			sourceTree = "<group>";
@@ -889,6 +1099,7 @@
 		42F6E842186A0E7A00005AFB /* Others */ = {
 			isa = PBXGroup;
 			children = (
+				42214E2618741EEF006A72B9 /* TagTreeTableViewController */,
 				42F6E843186A0E7A00005AFB /* OpenInActionSheetViewController */,
 			);
 			path = Others;
@@ -1002,8 +1213,15 @@
 			files = (
 				42F6E85B186A108F00005AFB /* openInASheetCancelBtn@2x.png in Resources */,
 				42F6E82D186A0A8800005AFB /* actions-sort.png in Resources */,
+				42214E8F18741EEF006A72B9 /* OrangeTag-2@2x.png in Resources */,
+				42214E7B18741EEF006A72B9 /* DGreenTag-3@2x.png in Resources */,
+				42214E9218741EEF006A72B9 /* folded.png in Resources */,
+				42214E7C18741EEF006A72B9 /* DOrangeTag-1.png in Resources */,
+				42214E9818741EEF006A72B9 /* LBlackTag-3.png in Resources */,
 				42BBBB5318720324009813A0 /* BlueGPSIcon@2x.png in Resources */,
+				42214E8518741EEF006A72B9 /* GreenTag-1@2x.png in Resources */,
 				421AD59F186ED60A00A88A57 /* LBlackTag-2.png in Resources */,
+				42214E6818741EEF006A72B9 /* BlackTag-1.png in Resources */,
 				421AD57E186ED60A00A88A57 /* DBlueTag-3@2x.png in Resources */,
 				42CADFCB18687E880057AE84 /* search_icon.png in Resources */,
 				42BBBB5218720324009813A0 /* BlueGPSIcon.png in Resources */,
@@ -1011,11 +1229,15 @@
 				42F6E859186A108F00005AFB /* openInASheetBg@2x.png in Resources */,
 				421AD57C186ED60A00A88A57 /* DBlueTag-2@2x.png in Resources */,
 				421AD576186ED60A00A88A57 /* BlueTag-2@x.png in Resources */,
+				42214E9618741EEF006A72B9 /* LBlackTag-2.png in Resources */,
 				421AD5A3186ED60A00A88A57 /* RBlackTag-1.png in Resources */,
+				42214E9718741EEF006A72B9 /* LBlackTag-2@2x.png in Resources */,
 				42BE7A8D18672C6F00AECD57 /* Images.xcassets in Resources */,
 				42F6E84A186A0E7A00005AFB /* openInAppInfo.plist in Resources */,
+				42214E8B18741EEF006A72B9 /* OrangeTag-11.png in Resources */,
 				42BBBB6018721001009813A0 /* BlueMapIcon2-1.png in Resources */,
 				421AD587186ED60A00A88A57 /* DOrangeTag-2.png in Resources */,
+				42214E8E18741EEF006A72B9 /* OrangeTag-2.png in Resources */,
 				421AD5A9186ED60A00A88A57 /* unfolded.png in Resources */,
 				42CADFC718687E880057AE84 /* home_icon.png in Resources */,
 				42BBBB5F18721001009813A0 /* BlueMapIcon1-2@2x.png in Resources */,
@@ -1023,31 +1245,50 @@
 				42F6E837186A0BEE00005AFB /* actions-delete.png in Resources */,
 				42F6E833186A0B8E00005AFB /* actions-ellipse.png in Resources */,
 				42CADFC618687E880057AE84 /* check_icon@2x.png in Resources */,
+				42214E8918741EEF006A72B9 /* GreenTag-3@2x.png in Resources */,
+				42214E6A18741EEF006A72B9 /* BlueTag-1.png in Resources */,
+				42214E6D18741EEF006A72B9 /* BlueTag-2@x.png in Resources */,
 				421AD57F186ED60A00A88A57 /* DGreenTag-1.png in Resources */,
 				421AD593186ED60A00A88A57 /* OrangeTag-1.png in Resources */,
 				421AD597186ED60A00A88A57 /* OrangeTag-2.png in Resources */,
+				42214E7F18741EEF006A72B9 /* DOrangeTag-2@2x.png in Resources */,
+				42214E9518741EEF006A72B9 /* LBlackTag-1@2x.png in Resources */,
 				42BBBB5118720324009813A0 /* BlackGPSIcon@2x.png in Resources */,
+				42214E7A18741EEF006A72B9 /* DGreenTag-3.png in Resources */,
 				421AD585186ED60A00A88A57 /* DOrangeTag-1.png in Resources */,
+				42214EA118741EEF006A72B9 /* unfolded@2x.png in Resources */,
+				42214E7318741EEF006A72B9 /* DBlueTag-2@2x.png in Resources */,
 				421AD5AA186ED60A00A88A57 /* unfolded@2x.png in Resources */,
 				42CADFC918687E880057AE84 /* reload.png in Resources */,
+				42214E7518741EEF006A72B9 /* DBlueTag-3@2x.png in Resources */,
 				42F6E828186A09A800005AFB /* actions-share-bar@2x.png in Resources */,
+				42214E7618741EEF006A72B9 /* DGreenTag-1.png in Resources */,
 				42BBBB6618722C1F009813A0 /* BlueMapMarkerGlow.png in Resources */,
+				42214E9918741EEF006A72B9 /* LBlackTag-3@2x.png in Resources */,
 				42E9D76518717C090039FC2F /* myTableBgSepLine.png in Resources */,
 				426E9F8A1871B14600426F72 /* BlueMapMarker@2x.png in Resources */,
+				42214E8318741EEF006A72B9 /* GreenTag-11.png in Resources */,
 				42E9D76718717C090039FC2F /* myTableBgSepLineV.png in Resources */,
+				42214E8018741EEF006A72B9 /* DOrangeTag-3.png in Resources */,
+				42214E9A18741EEF006A72B9 /* RBlackTag-1.png in Resources */,
 				4272013E186B53960062DF76 /* reverseGeocode.txt in Resources */,
 				42BBBB5018720324009813A0 /* BlackGPSIcon.png in Resources */,
 				426E9F891871B14600426F72 /* BlueMapMarker.png in Resources */,
 				421AD574186ED60A00A88A57 /* BlueTag-1@2x.png in Resources */,
+				42214E8718741EEF006A72B9 /* GreenTag-2@2x.png in Resources */,
 				421AD591186ED60A00A88A57 /* GreenTag-3.png in Resources */,
 				421AD58D186ED60A00A88A57 /* GreenTag-11@2x.png in Resources */,
+				42214E7118741EEF006A72B9 /* DBlueTag-1@2x.png in Resources */,
 				421AD573186ED60A00A88A57 /* BlueTag-1.png in Resources */,
 				421AD57A186ED60A00A88A57 /* DBlueTag-1@2x.png in Resources */,
+				42214E8618741EEF006A72B9 /* GreenTag-2.png in Resources */,
 				42F6E85C186A108F00005AFB /* openInGoogleMaps.png in Resources */,
 				421AD5A1186ED60A00A88A57 /* LBlackTag-3.png in Resources */,
+				42214E9C18741EEF006A72B9 /* RBlackTag-2.png in Resources */,
 				42CADFC818687E880057AE84 /* home_icon@2x.png in Resources */,
 				421AD5A0186ED60A00A88A57 /* LBlackTag-2@2x.png in Resources */,
 				42BE7AEE18672EB200AECD57 /* tpl_protected_int.txt in Resources */,
+				42214E8118741EEF006A72B9 /* DOrangeTag-3@2x.png in Resources */,
 				421AD582186ED60A00A88A57 /* DGreenTag-2@2x.png in Resources */,
 				42F6E861186A176100005AFB /* OpenInActionSheetViewController.xib in Resources */,
 				421AD586186ED60A00A88A57 /* DOrangeTag-1@2x.png in Resources */,
@@ -1061,15 +1302,21 @@
 				421AD584186ED60A00A88A57 /* DGreenTag-3@2x.png in Resources */,
 				421AD59B186ED60A00A88A57 /* folded.png in Resources */,
 				42F6E857186A108F00005AFB /* openInAppleMaps@2x.png in Resources */,
+				42214E9F18741EEF006A72B9 /* RBlackTag-3@2x.png in Resources */,
 				42E9D76A18718D260039FC2F /* ScreenShot-Location.png in Resources */,
+				42214E8D18741EEF006A72B9 /* OrangeTag-1@2x.png in Resources */,
 				42BE7AEB18672EB200AECD57 /* README.txt in Resources */,
 				421AD58C186ED60A00A88A57 /* GreenTag-11.png in Resources */,
 				421AD594186ED60A00A88A57 /* OrangeTag-11.png in Resources */,
 				42CADFC318687E880057AE84 /* action_icon.png in Resources */,
 				42BBBB6718722C1F009813A0 /* BlueMapMarkerGlow@2x.png in Resources */,
 				421AD578186ED60A00A88A57 /* BlueTag-3@2x.png in Resources */,
+				42214E6918741EEF006A72B9 /* BlackTag-1@2x.png in Resources */,
+				42214E7018741EEF006A72B9 /* DBlueTag-1.png in Resources */,
 				421AD590186ED60A00A88A57 /* GreenTag-2@2x.png in Resources */,
 				421AD57B186ED60A00A88A57 /* DBlueTag-2.png in Resources */,
+				42214E6B18741EEF006A72B9 /* BlueTag-1@2x.png in Resources */,
+				42214E8418741EEF006A72B9 /* GreenTag-11@2x.png in Resources */,
 				42F6E85E186A108F00005AFB /* openInTomtom.png in Resources */,
 				421AD59E186ED60A00A88A57 /* LBlackTag-1@2x.png in Resources */,
 				42E9D76618717C090039FC2F /* myTableBgSepLine@2x.png in Resources */,
@@ -1081,9 +1328,12 @@
 				421AD580186ED60A00A88A57 /* DGreenTag-1@2x.png in Resources */,
 				42E9D76C18718F740039FC2F /* ScreenShot-Tags.png in Resources */,
 				42BBBB6318721001009813A0 /* BlueMapIcon2-2@2x.png in Resources */,
+				42214E9B18741EEF006A72B9 /* RBlackTag-1@2x.png in Resources */,
 				42BE7AED18672EB200AECD57 /* tpl_interface.txt in Resources */,
 				421AD595186ED60A00A88A57 /* OrangeTag-11@2x.png in Resources */,
+				42214E6C18741EEF006A72B9 /* BlueTag-2.png in Resources */,
 				42CADFAE186837410057AE84 /* reveal-icon@2x.png in Resources */,
+				42214EA018741EEF006A72B9 /* unfolded.png in Resources */,
 				421AD599186ED60A00A88A57 /* OrangeTag-3.png in Resources */,
 				421AD592186ED60A00A88A57 /* GreenTag-3@2x.png in Resources */,
 				421AD583186ED60A00A88A57 /* DGreenTag-3.png in Resources */,
@@ -1093,14 +1343,22 @@
 				421AD5A2186ED60A00A88A57 /* LBlackTag-3@2x.png in Resources */,
 				421AD577186ED60A00A88A57 /* BlueTag-3.png in Resources */,
 				42BBBB5E18721001009813A0 /* BlueMapIcon1-2.png in Resources */,
+				42214E8218741EEF006A72B9 /* GreenTag-1.png in Resources */,
 				42BE7A8818672C6F00AECD57 /* Main.storyboard in Resources */,
 				421AD57D186ED60A00A88A57 /* DBlueTag-3.png in Resources */,
 				42F6E856186A108F00005AFB /* openInAppleMaps.png in Resources */,
 				421AD575186ED60A00A88A57 /* BlueTag-2.png in Resources */,
+				42214E7718741EEF006A72B9 /* DGreenTag-1@2x.png in Resources */,
 				421AD59D186ED60A00A88A57 /* LBlackTag-1.png in Resources */,
 				4272013C186AFA3E0062DF76 /* _PLISTs_.bundle in Resources */,
+				42214E9418741EEF006A72B9 /* LBlackTag-1.png in Resources */,
+				42214E7D18741EEF006A72B9 /* DOrangeTag-1@2x.png in Resources */,
+				42214E7918741EEF006A72B9 /* DGreenTag-2@2x.png in Resources */,
 				42CADFAD186837410057AE84 /* reveal-icon.png in Resources */,
+				42214E6E18741EEF006A72B9 /* BlueTag-3.png in Resources */,
 				42CADFC518687E880057AE84 /* check_icon.png in Resources */,
+				42214E7818741EEF006A72B9 /* DGreenTag-2.png in Resources */,
+				42214E8C18741EEF006A72B9 /* OrangeTag-11@2x.png in Resources */,
 				42F6E834186A0B8E00005AFB /* actions-ellipse@2x.png in Resources */,
 				42F6E827186A09A800005AFB /* actions-share-bar.png in Resources */,
 				421AD5A7186ED60A00A88A57 /* RBlackTag-3.png in Resources */,
@@ -1109,20 +1367,31 @@
 				421AD571186ED60A00A88A57 /* BlackTag-1.png in Resources */,
 				42F6E82F186A0A8800005AFB /* mobile-icon-toolbar-kindle.png in Resources */,
 				42F6E838186A0BEE00005AFB /* actions-delete@2x.png in Resources */,
+				42214E8A18741EEF006A72B9 /* OrangeTag-1.png in Resources */,
 				421AD58B186ED60A00A88A57 /* GreenTag-1.png in Resources */,
 				421AD598186ED60A00A88A57 /* OrangeTag-2@2x.png in Resources */,
 				421AD58A186ED60A00A88A57 /* DOrangeTag-3@2x.png in Resources */,
+				42214E9D18741EEF006A72B9 /* RBlackTag-2@2x.png in Resources */,
 				42BBBB6118721001009813A0 /* BlueMapIcon2-1@2x.png in Resources */,
 				421AD5A8186ED60A00A88A57 /* RBlackTag-3@2x.png in Resources */,
+				42214E7418741EEF006A72B9 /* DBlueTag-3.png in Resources */,
 				421AD59A186ED60A00A88A57 /* OrangeTag-3@2x.png in Resources */,
+				42214E9118741EEF006A72B9 /* OrangeTag-3@2x.png in Resources */,
 				421AD588186ED60A00A88A57 /* DOrangeTag-2@2x.png in Resources */,
+				42214E9E18741EEF006A72B9 /* RBlackTag-3.png in Resources */,
+				42214E9318741EEF006A72B9 /* folded@2x.png in Resources */,
+				42214E9018741EEF006A72B9 /* OrangeTag-3.png in Resources */,
 				42F6E82E186A0A8800005AFB /* actions-sort@2x.png in Resources */,
 				42BBBB6218721001009813A0 /* BlueMapIcon2-2.png in Resources */,
 				421AD58F186ED60A00A88A57 /* GreenTag-2.png in Resources */,
 				421AD581186ED60A00A88A57 /* DGreenTag-2.png in Resources */,
+				42214E6F18741EEF006A72B9 /* BlueTag-3@2x.png in Resources */,
 				421AD58E186ED60A00A88A57 /* GreenTag-1@2x.png in Resources */,
 				42CADFCA18687E880057AE84 /* reload@2x.png in Resources */,
 				421AD572186ED60A00A88A57 /* BlackTag-1@2x.png in Resources */,
+				42214E8818741EEF006A72B9 /* GreenTag-3.png in Resources */,
+				42214E7E18741EEF006A72B9 /* DOrangeTag-2.png in Resources */,
+				42214E7218741EEF006A72B9 /* DBlueTag-2.png in Resources */,
 				421AD596186ED60A00A88A57 /* OrangeTag-1@2x.png in Resources */,
 				42BBBB5D18721001009813A0 /* BlueMapIcon1-1@2x.png in Resources */,
 				42BBBB4B1871B1F3009813A0 /* BlackMapMarker@2x.png in Resources */,
@@ -1160,47 +1429,48 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				42BBBBA51872A8D5009813A0 /* MTag.m in Sources */,
+				42BBBBA61872A8D5009813A0 /* RPointTag.m in Sources */,
+				42BBBB901872A83F009813A0 /* _MTag.m in Sources */,
 				42CADFB318683A760057AE84 /* POIListViewController.m in Sources */,
-				42F6E8131869DF9500005AFB /* _MIcon.m in Sources */,
-				42CADFA41868270E0057AE84 /* MTag.m in Sources */,
 				42BE7AE518672EB200AECD57 /* DDASLLogger.m in Sources */,
+				42BBBBA11872A8D5009813A0 /* MBaseSync.m in Sources */,
+				42214D2B1873069B006A72B9 /* TagListEditorViewController.m in Sources */,
 				42BE7AC018672EA500AECD57 /* iTravelPOI-Model.xcdatamodeld in Sources */,
-				421AD444186C6E9900A88A57 /* RTagSubtag.m in Sources */,
+				42BBBBA41872A8D5009813A0 /* MPoint.m in Sources */,
 				42F6E81D1869FDFC00005AFB /* SimpleXMLReader.m in Sources */,
 				42BE7ACE18672EAC00AECD57 /* NSManagedObjectContext+Utils.m in Sources */,
 				42BE7AE918672EB200AECD57 /* ContextFilterLogFormatter.m in Sources */,
 				42E9D7701871A2580039FC2F /* POIEditorViewController.m in Sources */,
+				42BBBB8F1872A83F009813A0 /* _MPoint.m in Sources */,
 				42F6E81E1869FDFC00005AFB /* UIView+FirstResponder.m in Sources */,
-				42CADFA01868268A0057AE84 /* _MMap.m in Sources */,
 				42BE7AEA18672EB200AECD57 /* DispatchQueueLogFormatter.m in Sources */,
 				42CADFD31868B5E80057AE84 /* TagFilterViewController.m in Sources */,
 				42BE7AC418672EA500AECD57 /* MockUp.m in Sources */,
+				42BBBB8B1872A83F009813A0 /* _MBase.m in Sources */,
+				42BBBB8D1872A83F009813A0 /* _MIcon.m in Sources */,
 				42F6E848186A0E7A00005AFB /* OpenInActionSheetViewController.m in Sources */,
 				42F6E81C1869FDFC00005AFB /* NSString+JavaStr.m in Sources */,
 				42BE7AE718672EB200AECD57 /* DDLog.m in Sources */,
 				42CADF8918674DDE0057AE84 /* MapListViewController.m in Sources */,
 				42BE7ACD18672EAC00AECD57 /* ErrorManagerService.m in Sources */,
 				42CADFAF186837410057AE84 /* SWRevealViewController.m in Sources */,
-				42CADFA7186827230057AE84 /* _MTag.m in Sources */,
+				42214EA218741EEF006A72B9 /* TagTreeTableViewController.m in Sources */,
+				42BBBBA01872A8D5009813A0 /* MBase.m in Sources */,
+				42BBBB911872A83F009813A0 /* _RPointTag.m in Sources */,
+				42BBBBA31872A8D5009813A0 /* MMap.m in Sources */,
+				42BBBB8E1872A83F009813A0 /* _MMap.m in Sources */,
 				42BE7ACC18672EAC00AECD57 /* BaseCoreDataService.m in Sources */,
-				42CADF9C1868268A0057AE84 /* MBase.m in Sources */,
-				42F6E80D1869D65A00005AFB /* _MBaseSync.m in Sources */,
-				42F6E8101869DF8B00005AFB /* MIcon.m in Sources */,
 				42BE7AE618672EB200AECD57 /* DDFileLogger.m in Sources */,
 				42BE7A8518672C6F00AECD57 /* AppDelegate.m in Sources */,
-				42CADF9D1868268A0057AE84 /* MMap.m in Sources */,
-				42CADF9E1868268A0057AE84 /* MPoint.m in Sources */,
+				42BBBBA21872A8D5009813A0 /* MIcon.m in Sources */,
 				421AD455186E126C00A88A57 /* MyTableViewCell.m in Sources */,
-				42CADFA11868268A0057AE84 /* _MPoint.m in Sources */,
-				42CADF9F1868268A0057AE84 /* _MBase.m in Sources */,
 				42BE7AE818672EB200AECD57 /* DDTTYLogger.m in Sources */,
 				42BE7A8118672C6F00AECD57 /* main.m in Sources */,
 				42BE7AE418672EB200AECD57 /* DDAbstractDatabaseLogger.m in Sources */,
-				421AD44A186C6EB200A88A57 /* _RTagSubtag.m in Sources */,
 				42CADFB718687BB20057AE84 /* KxMenu.m in Sources */,
-				421AD443186C6E9900A88A57 /* RPointTag.m in Sources */,
-				421AD449186C6EB200A88A57 /* _RPointTag.m in Sources */,
-				42F6E80A1869D61500005AFB /* MBaseSync.m in Sources */,
+				42BBBB8C1872A83F009813A0 /* _MBaseSync.m in Sources */,
+				42214E6718741EEF006A72B9 /* MyTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

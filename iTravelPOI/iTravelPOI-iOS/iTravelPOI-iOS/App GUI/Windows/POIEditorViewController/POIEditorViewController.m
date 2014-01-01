@@ -122,7 +122,7 @@ typedef enum LocationEditingStateTypes {
 - (void) _crateTagLabels {
     
     //    NSArray *texts = @[@"Zona Norte / Z.N Oporto / Oporto",@"Tutorial",@"Tutorial 3",@"Tutor 4",@"Tutorial 5"];
-    NSArray *texts = @[@"Oporto",@"Tutorial",@"Tutorial 3",@"Tutor 4",@"Tutorial 5"];
+    NSArray *texts = @[@"Oporto",@"Tutorial",@"Tutorial 3",@"Tutor 4",@"Tutorial 5",@"otro mas",@"kaka",@"adios"];
     
     CGPoint origin = (CGPoint){10.0, 329.0};
     CGPoint offset = (CGPoint){0.0, 0.0};

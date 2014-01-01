@@ -1,13 +1,13 @@
 //
-//  TagFilterViewController.m
+//  TagTreeTableViewController.m
 //  iTravelPOI-iOS
 //
 //  Created by Jose Zarzuela on 22/12/13.
 //  Copyright (c) 2013 Jose Zarzuela. All rights reserved.
 //
 
-#define __TagFilterViewController__IMPL__
-#import "TagFilterViewController.h"
+#define __TagTreeTableViewController__IMPL__
+#import "TagTreeTableViewController.h"
 #import "BaseCoreDataService.h"
 #import "MTag.h"
 #import "MIcon.h"
@@ -226,7 +226,7 @@ typedef enum NodeExpandedStateTypes
 #pragma mark -
 #pragma mark PRIVATE interface definition
 //*********************************************************************************************************************
-@interface TagFilterViewController () <UITableViewDelegate, UITableViewDataSource>
+@interface TagTreeTableViewController () <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, assign) IBOutlet UITableView *tagsTable;
 
@@ -241,7 +241,7 @@ typedef enum NodeExpandedStateTypes
 #pragma mark -
 #pragma mark Implementation
 //*********************************************************************************************************************
-@implementation TagFilterViewController
+@implementation TagTreeTableViewController
 
 
 //=====================================================================================================================
@@ -291,17 +291,17 @@ typedef enum NodeExpandedStateTypes
     
     
     NSDate *start = [NSDate date];
-    NSLog(@"TagFilterViewController - loadTags - in");
+    NSLog(@"TagTreeTableViewController - loadTags - in");
     
     NSMutableArray *allTags = [NSMutableArray arrayWithArray:[MTag tagsForPointsTaggedWith:[NSSet setWithArray:self.filter] InContext:self.moContext]];
-    NSLog(@"TagFilterViewController - loadTags - 1 = %f",[start timeIntervalSinceNow]);
+    NSLog(@"TagTreeTableViewController - loadTags - 1 = %f",[start timeIntervalSinceNow]);
     self.rootNode = [TreeNode treeNodesFromTags:allTags expandedTags:self.filter];
-    NSLog(@"TagFilterViewController - loadTags - 2 = %f",[start timeIntervalSinceNow]);
+    NSLog(@"TagTreeTableViewController - loadTags - 2 = %f",[start timeIntervalSinceNow]);
     self.flatNodes = [self.rootNode toFlatArray:JUST_EXPANDED];
-    NSLog(@"TagFilterViewController - loadTags - 3 = %f",[start timeIntervalSinceNow]);
+    NSLog(@"TagTreeTableViewController - loadTags - 3 = %f",[start timeIntervalSinceNow]);
     [self.tagsTable reloadData];
     
-    NSLog(@"TagFilterViewController - loadTags - out = %f",[start timeIntervalSinceNow]);
+    NSLog(@"TagTreeTableViewController - loadTags - out = %f",[start timeIntervalSinceNow]);
 }
 
 //---------------------------------------------------------------------------------------------------------------------

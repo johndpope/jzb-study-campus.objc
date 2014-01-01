@@ -10,15 +10,14 @@
 
 extern const struct MTagAttributes {
 	__unsafe_unretained NSString *isAutoTag;
-	__unsafe_unretained NSString *level;
-	__unsafe_unretained NSString *rootID;
 	__unsafe_unretained NSString *shortName;
 } MTagAttributes;
 
 extern const struct MTagRelationships {
-	__unsafe_unretained NSString *otherPointsTag;
-	__unsafe_unretained NSString *rChildrenTags;
-	__unsafe_unretained NSString *rParentTags;
+	__unsafe_unretained NSString *ancestors;
+	__unsafe_unretained NSString *children;
+	__unsafe_unretained NSString *descendants;
+	__unsafe_unretained NSString *parent;
 	__unsafe_unretained NSString *rPoints;
 } MTagRelationships;
 
@@ -26,11 +25,10 @@ extern const struct MTagFetchedProperties {
 } MTagFetchedProperties;
 
 @class MTag;
-@class RTagSubtag;
-@class RTagSubtag;
+@class MTag;
+@class MTag;
+@class MTag;
 @class RPointTag;
-
-
 
 
 
@@ -90,58 +88,6 @@ extern const struct MTagFetchedProperties {
 		
 			
 				
-					@property (nonatomic, strong) NSNumber* level;
-				
-			
-		
-
-		
-			
-				
-					@property int16_t levelValue;
-					- (int16_t)levelValue;
-					- (void)setLevelValue:(int16_t)value_;
-				
-			
-		
-
-	//- (BOOL)validateLevel:(id*)value_ error:(NSError**)error_;
-	
-	
-
-
-
-	
-
-		
-			
-				
-					@property (nonatomic, strong) NSNumber* rootID;
-				
-			
-		
-
-		
-			
-				
-					@property int16_t rootIDValue;
-					- (int16_t)rootIDValue;
-					- (void)setRootIDValue:(int16_t)value_;
-				
-			
-		
-
-	//- (BOOL)validateRootID:(id*)value_ error:(NSError**)error_;
-	
-	
-
-
-
-	
-
-		
-			
-				
 					@property (nonatomic, strong) NSString* shortName;
 				
 			
@@ -162,27 +108,14 @@ extern const struct MTagFetchedProperties {
 
 
 	
-		
-			
-				@property (nonatomic, strong) MTag *otherPointsTag;
-			
-		
-
-		//- (BOOL)validateOtherPointsTag:(id*)value_ error:(NSError**)error_;
-
-	
-
-
-
-	
 
 		
 
 			
 				#ifndef __MTag__PROTECTED__
-				@property (nonatomic, strong, readonly) NSSet *rChildrenTags;
+				@property (nonatomic, strong, readonly) NSSet *ancestors;
 				#else
-				@property (nonatomic, strong) NSSet *rChildrenTags;
+				@property (nonatomic, strong) NSSet *ancestors;
 				#endif
 			
 
@@ -192,7 +125,7 @@ extern const struct MTagFetchedProperties {
 
 		
 			#ifndef __MTag__PROTECTED__
-			- (NSMutableSet*)rChildrenTagsSet;
+			- (NSMutableSet*)ancestorsSet;
 			#endif
 		
 
@@ -207,9 +140,9 @@ extern const struct MTagFetchedProperties {
 
 			
 				#ifndef __MTag__PROTECTED__
-				@property (nonatomic, strong, readonly) NSSet *rParentTags;
+				@property (nonatomic, strong, readonly) NSSet *children;
 				#else
-				@property (nonatomic, strong) NSSet *rParentTags;
+				@property (nonatomic, strong) NSSet *children;
 				#endif
 			
 
@@ -219,10 +152,54 @@ extern const struct MTagFetchedProperties {
 
 		
 			#ifndef __MTag__PROTECTED__
-			- (NSMutableSet*)rParentTagsSet;
+			- (NSMutableSet*)childrenSet;
 			#endif
 		
 
+
+	
+
+
+
+	
+
+		
+
+			
+				#ifndef __MTag__PROTECTED__
+				@property (nonatomic, strong, readonly) NSSet *descendants;
+				#else
+				@property (nonatomic, strong) NSSet *descendants;
+				#endif
+			
+
+
+		
+
+
+		
+			#ifndef __MTag__PROTECTED__
+			- (NSMutableSet*)descendantsSet;
+			#endif
+		
+
+
+	
+
+
+
+	
+		
+			
+				#ifndef __MTag__PROTECTED__
+				@property (nonatomic, strong, readonly) MTag *parent;
+				#else
+				@property (nonatomic, strong) MTag *parent;
+				#endif
+			
+		
+
+		//- (BOOL)validateParent:(id*)value_ error:(NSError**)error_;
 
 	
 
@@ -271,18 +248,25 @@ extern const struct MTagFetchedProperties {
 @end
 
 
-@interface _MTag (RChildrenTagsCoreDataGeneratedAccessors)
-- (void)addRChildrenTags:(NSSet*)value_;
-- (void)removeRChildrenTags:(NSSet*)value_;
-- (void)addRChildrenTagsObject:(RTagSubtag*)value_;
-- (void)removeRChildrenTagsObject:(RTagSubtag*)value_;
+@interface _MTag (AncestorsCoreDataGeneratedAccessors)
+- (void)addAncestors:(NSSet*)value_;
+- (void)removeAncestors:(NSSet*)value_;
+- (void)addAncestorsObject:(MTag*)value_;
+- (void)removeAncestorsObject:(MTag*)value_;
 @end
 
-@interface _MTag (RParentTagsCoreDataGeneratedAccessors)
-- (void)addRParentTags:(NSSet*)value_;
-- (void)removeRParentTags:(NSSet*)value_;
-- (void)addRParentTagsObject:(RTagSubtag*)value_;
-- (void)removeRParentTagsObject:(RTagSubtag*)value_;
+@interface _MTag (ChildrenCoreDataGeneratedAccessors)
+- (void)addChildren:(NSSet*)value_;
+- (void)removeChildren:(NSSet*)value_;
+- (void)addChildrenObject:(MTag*)value_;
+- (void)removeChildrenObject:(MTag*)value_;
+@end
+
+@interface _MTag (DescendantsCoreDataGeneratedAccessors)
+- (void)addDescendants:(NSSet*)value_;
+- (void)removeDescendants:(NSSet*)value_;
+- (void)addDescendantsObject:(MTag*)value_;
+- (void)removeDescendantsObject:(MTag*)value_;
 @end
 
 @interface _MTag (RPointsCoreDataGeneratedAccessors)
@@ -305,24 +289,6 @@ extern const struct MTagFetchedProperties {
 
 
 
-- (NSNumber*)primitiveLevel;
-- (void)setPrimitiveLevel:(NSNumber*)value;
-
-- (int16_t)primitiveLevelValue;
-- (void)setPrimitiveLevelValue:(int16_t)value_;
-
-
-
-
-- (NSNumber*)primitiveRootID;
-- (void)setPrimitiveRootID:(NSNumber*)value;
-
-- (int16_t)primitiveRootIDValue;
-- (void)setPrimitiveRootIDValue:(int16_t)value_;
-
-
-
-
 - (NSString*)primitiveShortName;
 - (void)setPrimitiveShortName:(NSString*)value;
 
@@ -330,18 +296,23 @@ extern const struct MTagFetchedProperties {
 
 
 
-- (MTag*)primitiveOtherPointsTag;
-- (void)setPrimitiveOtherPointsTag:(MTag*)value;
+- (NSMutableSet*)primitiveAncestors;
+- (void)setPrimitiveAncestors:(NSMutableSet*)value;
 
 
 
-- (NSMutableSet*)primitiveRChildrenTags;
-- (void)setPrimitiveRChildrenTags:(NSMutableSet*)value;
+- (NSMutableSet*)primitiveChildren;
+- (void)setPrimitiveChildren:(NSMutableSet*)value;
 
 
 
-- (NSMutableSet*)primitiveRParentTags;
-- (void)setPrimitiveRParentTags:(NSMutableSet*)value;
+- (NSMutableSet*)primitiveDescendants;
+- (void)setPrimitiveDescendants:(NSMutableSet*)value;
+
+
+
+- (MTag*)primitiveParent;
+- (void)setPrimitiveParent:(MTag*)value;
 
 
 

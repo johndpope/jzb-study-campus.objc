@@ -12,7 +12,7 @@
 #pragma mark -
 #pragma mark Public Enumerations & definitions
 //*********************************************************************************************************************
-
+#define TAG_NAME_SEPARATOR @"|"
 
 
 
@@ -27,7 +27,8 @@
 #pragma mark -
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (MTag *) tagByName:(NSString *)name inContext:(NSManagedObjectContext *)moContext;
++ (MTag *) tagWithFullName:(NSString *)name parentTag:(MTag *)parentTag inContext:(NSManagedObjectContext *)moContext;
++ (MTag *) tagWithFullName:(NSString *)fullName inContext:(NSManagedObjectContext *)moContext;
 + (MTag *) tagFromIcon:(MIcon *)icon;
 + (NSArray *) allTagsInContext:(NSManagedObjectContext *)moContext includeEmptyTags:(BOOL)emptyTags;
 
@@ -41,12 +42,6 @@
 - (void) tagPoint:(MPoint *)point;
 - (void) untagPoint:(MPoint *)point;
 
-- (void) tagChildTag:(MTag *)childTag;
-- (void) untagChildTag:(MTag *)childTag;
-
-- (BOOL) hasParentTags;
-- (BOOL) anyIsParentTag:(NSSet *)tags;
-- (BOOL) isDirectParentOfTag:(MTag *)childTag;
 - (BOOL) isAncestorOfTag:(MTag *)childTag;
 
 @end

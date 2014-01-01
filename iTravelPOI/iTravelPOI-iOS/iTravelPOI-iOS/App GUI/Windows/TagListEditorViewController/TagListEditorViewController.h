@@ -1,17 +1,19 @@
 //
-//  RTagSubtag.m
+//  TagListEditorViewController.h
+//  iTravelPOI-iOS
+//
+//  Created by Jose Zarzuela on 22/12/13.
+//  Copyright (c) 2013 Jose Zarzuela. All rights reserved.
 //
 
-#define __RTagSubtag__IMPL__
-#define __RTagSubtag__PROTECTED__
+#import <UIKit/UIKit.h>
 
-#import "RTagSubtag.h"
 
 
 
 //*********************************************************************************************************************
 #pragma mark -
-#pragma mark Private Enumerations & definitions
+#pragma mark Public Enumerations & definitions
 //*********************************************************************************************************************
 
 
@@ -19,43 +21,26 @@
 
 //*********************************************************************************************************************
 #pragma mark -
-#pragma mark PRIVATE interface definition
+#pragma mark Public Interface definition
 //*********************************************************************************************************************
-@interface RTagSubtag ()
-
-@end
+@interface TagListEditorViewController : UIViewController
 
 
-
-//*********************************************************************************************************************
-#pragma mark -
-#pragma mark Implementation
-//*********************************************************************************************************************
-@implementation RTagSubtag
+@property (nonatomic, strong) NSManagedObjectContext *moContext;
 
 
 
 //=====================================================================================================================
 #pragma mark -
-#pragma mark CLASS methods
+#pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-
 
 
 
 //=====================================================================================================================
 #pragma mark -
-#pragma mark Public methods
+#pragma mark INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
-
-
-
-
-//=====================================================================================================================
-#pragma mark -
-#pragma mark Private methods
-//---------------------------------------------------------------------------------------------------------------------
-
 
 
 

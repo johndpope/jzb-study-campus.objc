@@ -1,9 +1,14 @@
 //
-//  RTagSubtag.h
+//  TagTreeTableViewController.h
+//  iTravelPOI-iOS
+//
+//  Created by Jose Zarzuela on 22/12/13.
+//  Copyright (c) 2013 Jose Zarzuela. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
 
-#import "_RTagSubtag.h"
+
 
 
 //*********************************************************************************************************************
@@ -18,7 +23,12 @@
 #pragma mark -
 #pragma mark Public Interface definition
 //*********************************************************************************************************************
-@interface RTagSubtag : _RTagSubtag {}
+@interface TagTreeTableViewController : UIViewController
+
+@property (nonatomic, strong) NSManagedObjectContext *moContext;
+@property (nonatomic, strong) NSMutableArray *filter;
+
+
 
 
 //=====================================================================================================================
@@ -27,10 +37,12 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 
+
 //=====================================================================================================================
 #pragma mark -
 #pragma mark INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
+
 
 
 @end

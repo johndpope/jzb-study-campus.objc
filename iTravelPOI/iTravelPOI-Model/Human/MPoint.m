@@ -65,6 +65,9 @@
 //---------------------------------------------------------------------------------------------------------------------
 + (NSArray *) allPointsInContext:(NSManagedObjectContext *)moContext includeMarkedAsDeleted:(BOOL)withDeleted {
     
+    NSDate *start = [NSDate date];
+    NSLog(@"MPoint - allPointsInContext - in");
+
     // Crea la peticion de busqueda
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"MPoint"];
     
@@ -85,11 +88,18 @@
     if(array==nil) {
         [ErrorManagerService manageError:localError compID:@"Model" messageWithFormat:@"MPoint:allPointsInContext - Error fetching all points in context [deleted=%d]",withDeleted];
     }
+
+    NSLog(@"MPoint - allPointsInContext - out = %f",[start timeIntervalSinceNow]);
+    
     return array;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 + (NSArray *) pointsTaggedWith:(NSSet *)tags inMap:(MMap *)map InContext:(NSManagedObjectContext *)moContext {
+    
+    NSDate *start = [NSDate date];
+    NSLog(@"MPoint - pointsTaggedWith - in");
+
     
     // Se protege contra un filtro vacio
     if(tags.count==0) {
@@ -100,34 +110,53 @@
         }
     }
     
+    
     // Crea la peticion de busqueda
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"MPoint"];
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"RPointTag"];
+    
+    // Crea los atributos de agrupacion y de cuenta
+    NSExpressionDescription* expDesc = [[NSExpressionDescription alloc] init];
+    [expDesc setName: @"tagCount"];
+    [expDesc setExpressionResultType: NSInteger32AttributeType];
+    [expDesc setExpression: [NSExpression expressionWithFormat:@"isDirect.@count"]];
+
+    [request setPropertiesToGroupBy:[NSArray arrayWithObject:@"point"]];
+    
+    // Indica que se recojan ambos atributos como un diccionario
+    [request setPropertiesToFetch:[NSArray arrayWithObjects:@"point", expDesc, nil]];
+    [request setResultType:NSDictionaryResultType];
     
     // Se asigna una condicion de filtro
-    NSPredicate *query;
-    if(map) {
-        NSString *queryStr = @"markedAsDeleted=NO AND map=%@ AND SUBQUERY(self.rTags.tag, $X, $X IN %@).@count>=%d";
-        query = [NSPredicate predicateWithFormat:queryStr, map, tags, tags.count];
-    } else {
-        //    NSString *queryStr = @"markedAsDeleted=NO AND SUBQUERY(self.tags, $X, $X IN %@).@count>0";
-        //    NSPredicate *query = [NSPredicate predicateWithFormat:queryStr, tags];
-        NSString *queryStr = @"markedAsDeleted=NO AND SUBQUERY(self.rTags.tag, $X, $X IN %@).@count>=%d";
-        query = [NSPredicate predicateWithFormat:queryStr, tags, tags.count];
-    }
+    NSString *queryStr = @"point.markedAsDeleted=NO AND tag IN %@";
+    NSPredicate *query = [NSPredicate predicateWithFormat:queryStr, tags];
     [request setPredicate:query];
     
     // Se asigna el criterio de ordenacion
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:TRUE];
-    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+    NSSortDescriptor *sortNameDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"point.name" ascending:TRUE];
+    NSArray *sortDescriptors = [NSArray arrayWithObjects:sortNameDescriptor,nil];
     [request setSortDescriptors:sortDescriptors];
     
     // Se ejecuta y retorna el resultado
     NSError *localError = nil;
     NSArray *array = [moContext executeFetchRequest:request error:&localError];
     if(array==nil) {
-        [ErrorManagerService manageError:localError compID:@"Model" messageWithFormat:@"MPoint:pointsTaggedWith - Error fetching points in context [tags=%@]",tags];
+        [ErrorManagerService manageError:localError compID:@"Model" messageWithFormat:@"MPoint:pointsTaggedWith - Error fetching tagged points in context [tags=%@]",tags];
     }
-    return array;
+    
+    // Del array debe filtrar aquellos cuya cuenta sea la del filtro
+    NSMutableArray *array2 = [NSMutableArray array];
+    for(NSDictionary *dict in array) {
+        NSNumber *count2=[dict objectForKey:@"tagCount"];
+        if(count2.intValue>=tags.count) {
+            NSManagedObjectID *objID = [dict objectForKey:@"point"];
+            MPoint *obj = (MPoint *)[moContext objectWithID:objID];
+            [array2 addObject:obj];
+        }
+    }
+    
+    NSLog(@"MPoint - pointsTaggedWith - out = %f",[start timeIntervalSinceNow]);
+    
+    return array2;
 }
 
 //---------------------------------------------------------------------------------------------------------------------

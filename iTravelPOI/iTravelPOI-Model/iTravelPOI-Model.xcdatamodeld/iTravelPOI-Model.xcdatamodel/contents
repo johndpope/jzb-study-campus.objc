@@ -86,16 +86,23 @@
                 <entry key="readonly" value="YES"/>
             </userInfo>
         </attribute>
-        <attribute name="level" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="rootID" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="shortName" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="otherPointsTag" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MTag" syncable="YES"/>
-        <relationship name="rChildrenTags" toMany="YES" deletionRule="Cascade" destinationEntity="RTagSubtag" inverseName="parentTag" inverseEntity="RTagSubtag" syncable="YES">
+        <attribute name="shortName" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="ancestors" toMany="YES" deletionRule="Nullify" destinationEntity="MTag" inverseName="descendants" inverseEntity="MTag" syncable="YES">
             <userInfo>
                 <entry key="readonly" value="YES"/>
             </userInfo>
         </relationship>
-        <relationship name="rParentTags" toMany="YES" deletionRule="Cascade" destinationEntity="RTagSubtag" inverseName="childTag" inverseEntity="RTagSubtag" syncable="YES">
+        <relationship name="children" toMany="YES" deletionRule="Cascade" destinationEntity="MTag" inverseName="parent" inverseEntity="MTag" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </relationship>
+        <relationship name="descendants" toMany="YES" deletionRule="Nullify" destinationEntity="MTag" inverseName="ancestors" inverseEntity="MTag" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </relationship>
+        <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MTag" inverseName="children" inverseEntity="MTag" syncable="YES">
             <userInfo>
                 <entry key="readonly" value="YES"/>
             </userInfo>
@@ -111,19 +118,13 @@
         <relationship name="point" maxCount="1" deletionRule="Nullify" destinationEntity="MPoint" inverseName="rTags" inverseEntity="MPoint" syncable="YES"/>
         <relationship name="tag" maxCount="1" deletionRule="Nullify" destinationEntity="MTag" inverseName="rPoints" inverseEntity="MTag" syncable="YES"/>
     </entity>
-    <entity name="RTagSubtag" representedClassName="RTagSubtag" syncable="YES">
-        <attribute name="isDirect" attributeType="Boolean" syncable="YES"/>
-        <relationship name="childTag" maxCount="1" deletionRule="Nullify" destinationEntity="MTag" inverseName="rParentTags" inverseEntity="MTag" syncable="YES"/>
-        <relationship name="parentTag" maxCount="1" deletionRule="Nullify" destinationEntity="MTag" inverseName="rChildrenTags" inverseEntity="MTag" syncable="YES"/>
-    </entity>
     <elements>
-        <element name="MBase" positionX="-3125" positionY="-414" width="128" height="103"/>
+        <element name="MBase" positionX="-3456" positionY="-486" width="128" height="103"/>
         <element name="MBaseSync" positionX="-3458" positionY="-292" width="128" height="103"/>
-        <element name="MIcon" positionX="-3195" positionY="-241" width="128" height="88"/>
+        <element name="MIcon" positionX="-3213" positionY="-430" width="128" height="88"/>
         <element name="MMap" positionX="-3566" positionY="-73" width="128" height="73"/>
         <element name="MPoint" positionX="-3332" positionY="-108" width="128" height="118"/>
-        <element name="MTag" positionX="-2954" positionY="-130" width="128" height="163"/>
-        <element name="RPointTag" positionX="-3141" positionY="-70" width="128" height="88"/>
-        <element name="RTagSubtag" positionX="-2961" positionY="74" width="128" height="88"/>
+        <element name="MTag" positionX="-2954" positionY="-130" width="128" height="148"/>
+        <element name="RPointTag" positionX="-3152" positionY="-133" width="128" height="88"/>
     </elements>
 </model>
