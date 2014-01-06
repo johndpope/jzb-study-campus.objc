@@ -14,7 +14,6 @@
 #pragma mark -
 #pragma mark Private Enumerations & definitions
 //*********************************************************************************************************************
-#define DATE_FORMATTER  @"yyyy-MM-dd'T'HH:mm:ss'.'SSSS'Z'"
 #define LOCAL_MAP_ID    @"Local-Map-ID"
 #define NO_SYNC_ETAG    @"No-Sycn-ETag"
 
@@ -55,11 +54,37 @@
     @throw [NSException exceptionWithName:@"AbstractMethodException" reason:@"Abstract method 'markAsDeleted' must be implemented by subclass" userInfo:nil];
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL) updateName:(NSString *)value {
+    
+    BOOL result = [super updateName:value];
+    if(result) [self markAsModified];
+    return result;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL) updateIcon:(MIcon *)icon {
+    
+    BOOL result = [super updateIcon:icon];
+    if(result) [self markAsModified];
+    return result;
+}
 
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark Protected methods
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _deleteEntity {
+    
+    self.etag = nil;
+    self.gID = nil;
+    self.markedAsDeletedValue = TRUE;
+    self.modifiedSinceLastSyncValue = FALSE;
+
+    [super _deleteEntity];
+}
+
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) _updateBasicInfoWithGID:(NSString *)gID etag:(NSString *)etag creationTime:(NSDate *)creationTime updateTime:(NSDate *)updateTime {
     

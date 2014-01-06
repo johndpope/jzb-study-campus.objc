@@ -36,7 +36,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
-    
+
+
     // Establece un gestor especial de excepciones
     NSSetUncaughtExceptionHandler(&_uncaughtExceptionHandler);
     
@@ -48,25 +49,8 @@
     
     // Se crea la ventana y controller inicial de la aplicación
     UIViewController *viewController = self.window.rootViewController;
-    if ([viewController isKindOfClass:[UINavigationController class]]) {
-        viewController = ((UINavigationController *)self.window.rootViewController).topViewController;
-    }
-    
-    if([viewController respondsToSelector:@selector(setMoContext:)]) {
-        [viewController performSelector:@selector(setMoContext:) withObject:BaseCoreDataService.moContext];
-    }
-    
-    
+    viewController.view.tintColor = [UIColor orangeColor];
 
-    /////self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    
-    /////UIViewController *controller = [ItemListViewController itemListViewControllerWithContext:BaseCoreDataService.moContext];
-    //UIViewController *controller = [TestViewController startTestController];
-    //UIViewController *controller = [GMapSyncViewController gmapSyncViewController];
-    
-    /////self.window.rootViewController = controller;
-    /////[self.window makeKeyAndVisible];
-    
     return YES;
 }
 							
@@ -131,7 +115,6 @@ void _uncaughtExceptionHandler(NSException *exception) {
     
     // ---------------------------------------
     // ---------------------------------------
-    //[MockUp populateModel];
 ////////    [MockUp populateModelFromPListFiles];
     // ---------------------------------------
     // ---------------------------------------

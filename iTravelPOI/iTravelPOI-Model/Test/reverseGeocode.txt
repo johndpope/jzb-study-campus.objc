@@ -103,8 +103,8 @@ BOOL _init_model_ = TRUE;
 
 // ---------------------------------------------------------------------------------------------------------------------
 + (void) _setRandomLocationForPoint:(MPoint *)point {
-    //[point setLatitude:((int)(arc4random() % 180) - 90) longitude:((int)(arc4random() % 360) - 180)];
-    [point setLatitude:(41+(int)(arc4random() % 10) - 5) longitude:(-3+(int)(arc4random() % 10) - 5)];
+    //[point updateLatitude:((int)(arc4random() % 180) - 90) longitude:((int)(arc4random() % 360) - 180)];
+    [point updateLatitude:(41+(int)(arc4random() % 10) - 5) longitude:(-3+(int)(arc4random() % 10) - 5)];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -185,7 +185,7 @@ BOOL _init_model_ = TRUE;
     [MockUp _setRandomLocationForPoint:point];
     [point updateIcon: [MIcon iconForHref:iconHref_2 inContext:moContext]];
     [point addTags:[NSSet setWithObjects:tag4, nil]];
-    [point setLatitude:41.464003 longitude:-2.862453];
+    [point updateLatitude:41.464003 longitude:-2.862453];
     
     
     // -----------------------------
@@ -235,12 +235,12 @@ BOOL _init_model_ = TRUE;
 
     NSManagedObjectContext *moContext = [BaseCoreDataService moContext];
     
-    //NSArray *maps = [MMap allMapsInContext:moContext includeMarkedAsDeleted:TRUE];
+    //NSArray *maps = [MMap allMapsinContext:moContext includeMarkedAsDeleted:TRUE];
     //for(MMap *map in maps) {
     //    DDLogVerbose(@"%@", map);
     //}
 
-    // NSArray *tags = [MTag allTagsInContext:moContext];
+    // NSArray *tags = [MTag allTagsinContext:moContext];
     // for(MTag *tag in tags) {
     //    DDLogVerbose(@"%@", tag);
     //}
@@ -253,7 +253,7 @@ BOOL _init_model_ = TRUE;
     NSSet *tags = [NSSet setWithObjects:tag1, tag5, nil];
     tags = [NSSet set];
     
-    NSArray *points = [MPoint pointsTaggedWith:tags inMap:nil InContext:moContext];
+    NSArray *points = [MPoint pointsTaggedWith:tags inMap:nil inContext:moContext];
     for(MPoint *point in points) {
         BOOL first = TRUE;
         NSMutableString *tags = [NSMutableString stringWithString:@"["];
@@ -267,7 +267,7 @@ BOOL _init_model_ = TRUE;
         DDLogVerbose(@"%@ - %@", point.name, tags);
     }
     
-    NSArray *tags2 = [MTag tagsForPointsTaggedWith:tags InContext:moContext];
+    NSArray *tags2 = [MTag tagsForPointsTaggedWith:tags inContext:moContext];
     for(MTag *tag in tags2) {
         DDLogVerbose(@"%@", tag.name);
     }
@@ -347,7 +347,7 @@ BOOL _init_model_ = TRUE;
         DDLogVerbose(@"      desc: '%@'", poiDesc);
         
         MPoint *point = [MPoint emptyPointWithName:poiName inMap:map];
-        [point setLatitude:[poiLat doubleValue] longitude:[poiLng doubleValue]];
+        [point updateLatitude:[poiLat doubleValue] longitude:[poiLng doubleValue]];
         [point updateIcon:[MIcon iconForHref:poiIcon inContext:moContext]];
         [readPois setObject:point forKey:poiIndex];
         

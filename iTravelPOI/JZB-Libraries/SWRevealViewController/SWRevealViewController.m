@@ -125,7 +125,7 @@ static CGFloat statusBarAdjustment( UIView* view )
 @property (nonatomic, readonly) UIView *rearView;
 @property (nonatomic, readonly) UIView *rightView;
 @property (nonatomic, readonly) UIView *frontView;
-@property (nonatomic, assign) BOOL disableLayout;
+@property (nonatomic, assign)   BOOL disableLayout;
 
 @end
 

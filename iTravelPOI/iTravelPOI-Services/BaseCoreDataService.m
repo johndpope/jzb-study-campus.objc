@@ -76,6 +76,38 @@
     return self.moContext != nil;
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
++ (NSManagedObjectContext *) childContextFor:(NSManagedObjectContext *)moContext {
+    
+    NSManagedObjectContext *childContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+    childContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
+    childContext.parentContext = moContext;
+    return childContext;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
++ (NSManagedObjectContext *) childContextASyncFor:(NSManagedObjectContext *)moContext {
+    
+    NSManagedObjectContext *childContextASync = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    childContextASync.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
+    childContextASync.parentContext = moContext;
+    return childContextASync;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Solo salva los cambios de ese contexto "un nivel hacia abajo"
++ (BOOL) saveChangesinContext:(NSManagedObjectContext *)moContext {
+    
+    NSError *error = nil;
+    if([moContext hasChanges] && ![moContext save:&error]) {
+        [ErrorManagerService manageError:error compID:@"BaseCoreDataService" messageWithFormat:@"Error saving NSManagedContext"];
+        return NO;
+    }
+    
+    return YES;
+}
+
+
 
 
 

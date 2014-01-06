@@ -46,7 +46,11 @@ extern const struct MBaseFetchedProperties {
 		
 			
 				
-					@property (nonatomic, strong) NSString* name;
+					#ifndef __MBase__PROTECTED__
+					  @property (nonatomic, strong, readonly) NSString* name;
+					#else
+					  @property (nonatomic, strong) NSString* name;
+					#endif
 				
 			
 		

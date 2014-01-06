@@ -124,7 +124,7 @@
 
 /* Inherited from DDLogFileManager protocol:
 
-@property (readwrite, assign) NSUInteger maximumNumberOfLogFiles;
+@property (readwrite, weak) NSUInteger maximumNumberOfLogFiles;
 
 - (NSString *)logsDirectory;
 

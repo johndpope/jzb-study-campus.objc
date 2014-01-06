@@ -11,6 +11,7 @@
 extern const struct MTagAttributes {
 	__unsafe_unretained NSString *isAutoTag;
 	__unsafe_unretained NSString *shortName;
+	__unsafe_unretained NSString *tagTreeID;
 } MTagAttributes;
 
 extern const struct MTagRelationships {
@@ -29,6 +30,7 @@ extern const struct MTagFetchedProperties {
 @class MTag;
 @class MTag;
 @class RPointTag;
+
 
 
 
@@ -88,7 +90,11 @@ extern const struct MTagFetchedProperties {
 		
 			
 				
-					@property (nonatomic, strong) NSString* shortName;
+					#ifndef __MTag__PROTECTED__
+					  @property (nonatomic, strong, readonly) NSString* shortName;
+					#else
+					  @property (nonatomic, strong) NSString* shortName;
+					#endif
 				
 			
 		
@@ -96,6 +102,41 @@ extern const struct MTagFetchedProperties {
 		
 
 	//- (BOOL)validateShortName:(id*)value_ error:(NSError**)error_;
+	
+	
+
+
+
+	
+
+		
+			
+				
+					#ifndef __MTag__PROTECTED__
+					  @property (nonatomic, strong, readonly) NSNumber* tagTreeID;
+					#else
+					  @property (nonatomic, strong) NSNumber* tagTreeID;
+					#endif
+				
+			
+		
+
+		
+			
+				
+					#ifndef __MTag__PROTECTED__
+					  @property (readonly) int64_t tagTreeIDValue;
+					  - (int64_t) tagTreeIDValue;
+					#else
+					@property int64_t tagTreeIDValue;
+					  - (int64_t) tagTreeIDValue;
+					  - (void) setTagTreeIDValue:(int64_t)value_;
+					#endif
+				
+			
+		
+
+	//- (BOOL)validateTagTreeID:(id*)value_ error:(NSError**)error_;
 	
 	
 
@@ -291,6 +332,15 @@ extern const struct MTagFetchedProperties {
 
 - (NSString*)primitiveShortName;
 - (void)setPrimitiveShortName:(NSString*)value;
+
+
+
+
+- (NSNumber*)primitiveTagTreeID;
+- (void)setPrimitiveTagTreeID:(NSNumber*)value;
+
+- (int64_t)primitiveTagTreeIDValue;
+- (void)setPrimitiveTagTreeIDValue:(int64_t)value_;
 
 
 

@@ -19,7 +19,6 @@
 #pragma mark MockUp CLASS public methods
 // ---------------------------------------------------------------------------------------------------------------------
 + (void) resetModel:(NSString *)modelName;
-+ (void) populateModel;
 + (void) populateModelFromPListFiles;
 + (void) listModel;
 

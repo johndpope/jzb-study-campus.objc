@@ -44,7 +44,11 @@ extern const struct RPointTagFetchedProperties {
 		
 			
 				
-					@property (nonatomic, strong) NSNumber* isDirect;
+					#ifndef __RPointTag__PROTECTED__
+					  @property (nonatomic, strong, readonly) NSNumber* isDirect;
+					#else
+					  @property (nonatomic, strong) NSNumber* isDirect;
+					#endif
 				
 			
 		
@@ -52,9 +56,14 @@ extern const struct RPointTagFetchedProperties {
 		
 			
 				
+					#ifndef __RPointTag__PROTECTED__
+					  @property (readonly) BOOL isDirectValue;
+					  - (BOOL) isDirectValue;
+					#else
 					@property BOOL isDirectValue;
-					- (BOOL)isDirectValue;
-					- (void)setIsDirectValue:(BOOL)value_;
+					  - (BOOL) isDirectValue;
+					  - (void) setIsDirectValue:(BOOL)value_;
+					#endif
 				
 			
 		
@@ -74,7 +83,11 @@ extern const struct RPointTagFetchedProperties {
 	
 		
 			
+				#ifndef __RPointTag__PROTECTED__
+				@property (nonatomic, strong, readonly) MPoint *point;
+				#else
 				@property (nonatomic, strong) MPoint *point;
+				#endif
 			
 		
 
@@ -87,7 +100,11 @@ extern const struct RPointTagFetchedProperties {
 	
 		
 			
+				#ifndef __RPointTag__PROTECTED__
+				@property (nonatomic, strong, readonly) MTag *tag;
+				#else
 				@property (nonatomic, strong) MTag *tag;
+				#endif
 			
 		
 

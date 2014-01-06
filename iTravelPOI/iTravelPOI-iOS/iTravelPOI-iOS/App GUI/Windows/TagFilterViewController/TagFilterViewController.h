@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "MComplexFilter.h"
 
 
 
@@ -18,6 +18,18 @@
 
 
 
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark TagFilterViewControllerDelegate Public protocol definition
+//*********************************************************************************************************************
+@class TagFilterViewController;
+@protocol TagFilterViewControllerDelegate <NSObject>
+
+@optional
+- (void)filterHasChanged:(TagFilterViewController *)sender filter:(MComplexFilter *)filter;
+
+@end
+
 
 //*********************************************************************************************************************
 #pragma mark -
@@ -25,10 +37,10 @@
 //*********************************************************************************************************************
 @interface TagFilterViewController : UIViewController
 
-@property (nonatomic, strong) NSManagedObjectContext *moContext;
-@property (nonatomic, strong) NSMutableArray *filter;
+@property (nonatomic, weak)             id<TagFilterViewControllerDelegate> delegate;
 
-
+@property (nonatomic, strong)           NSManagedObjectContext              *moContext;
+@property (nonatomic, strong, readonly) MComplexFilter                      *filter;
 
 
 //=====================================================================================================================
@@ -42,7 +54,6 @@
 #pragma mark -
 #pragma mark INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
-
 
 
 @end

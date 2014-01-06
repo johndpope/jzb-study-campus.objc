@@ -49,7 +49,11 @@ extern const struct MPointFetchedProperties {
 		
 			
 				
-					@property (nonatomic, strong) NSString* descr;
+					#ifndef __MPoint__PROTECTED__
+					  @property (nonatomic, strong, readonly) NSString* descr;
+					#else
+					  @property (nonatomic, strong) NSString* descr;
+					#endif
 				
 			
 		
@@ -141,7 +145,11 @@ extern const struct MPointFetchedProperties {
 	
 		
 			
+				#ifndef __MPoint__PROTECTED__
+				@property (nonatomic, strong, readonly) MMap *map;
+				#else
 				@property (nonatomic, strong) MMap *map;
+				#endif
 			
 		
 

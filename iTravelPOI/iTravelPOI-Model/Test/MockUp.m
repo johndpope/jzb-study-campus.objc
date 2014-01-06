@@ -16,6 +16,7 @@
 #import "MPoint.h"
 #import "MTag.h"
 #import "MIcon.h"
+#import "MComplexFilter.h"
 
 
 
@@ -104,8 +105,8 @@ BOOL _init_model_ = TRUE;
 
 // ---------------------------------------------------------------------------------------------------------------------
 + (void) _setRandomLocationForPoint:(MPoint *)point {
-    //[point setLatitude:((int)(arc4random() % 180) - 90) longitude:((int)(arc4random() % 360) - 180)];
-    [point setLatitude:(41+(int)(arc4random() % 10) - 5) longitude:(-3+(int)(arc4random() % 10) - 5)];
+    //[point updateLatitude:((int)(arc4random() % 180) - 90) longitude:((int)(arc4random() % 360) - 180)];
+    [point updateLatitude:(41+(int)(arc4random() % 10) - 5) longitude:(-3+(int)(arc4random() % 10) - 5)];
 }
 
 
@@ -130,9 +131,26 @@ BOOL _init_model_ = TRUE;
     NSLog(@"----- MockUp - _testTags1 - in ---------------------------------------------------------------");
     NSDate *start = [NSDate date];
     
-    
-    NSArray *array = [MTag tagsForPointsTaggedWith:tags InContext:moContext];
+    MComplexFilter *filter = [MComplexFilter filterWithContext:moContext];
+    filter.filterTags = tags;
+    filter.filterMap = nil;
+    //NSArray *allPoints = filter.pointList;
+    NSSet *filteredTags = filter.tagList;
 
+    // Ordena el set
+    NSMutableArray *array = [NSMutableArray arrayWithArray:[filteredTags allObjects]];
+    [array sortedArrayUsingComparator:^NSComparisonResult(MTag *tag1, MTag *tag2) {
+        
+        NSComparisonResult result;
+        
+        result = [tag1.isAutoTag compare:tag2.isAutoTag];
+        if(result!=NSOrderedSame) return result;
+        
+        result = [tag1.name compare:tag2.name];
+        return result;
+    }];
+
+    
     NSLog(@"MockUp - _testTags1 - out = %f",[start timeIntervalSinceNow]);
     
     for(MTag *tag in array) {
@@ -153,7 +171,10 @@ BOOL _init_model_ = TRUE;
     NSDate *start = [NSDate date];
     
     
-    NSArray *array = [MPoint pointsTaggedWith:tags inMap:nil InContext:moContext];
+    MComplexFilter *filter = [MComplexFilter filterWithContext:moContext];
+    filter.filterTags = tags;
+    filter.filterMap = nil;
+    NSArray *array = filter.pointList;
     
     
     NSLog(@"MockUp - _testPoint1 - out = %f",[start timeIntervalSinceNow]);
@@ -170,28 +191,46 @@ BOOL _init_model_ = TRUE;
 // ---------------------------------------------------------------------------------------------------------------------
 + (void) listModel {
     
-    NSManagedObjectContext *moContext1 = [BaseCoreDataService moContext];
-    //NSSet *tagSet = [NSSet setWithObjects:[MTag tagWithFullName:@"GMI_green" parentTag:nil inContext:moContext1], [MTag tagWithFullName:@"Zona Norte|Z.N. - Oporto|Oporto" parentTag:nil inContext:moContext1], nil];
-    //NSSet *tagSet = [NSSet setWithObjects:[MTag tagWithFullName:@"Zona Norte" parentTag:nil inContext:moContext1], nil];
-    NSSet *tagSet = [NSSet setWithObjects:[MTag tagWithFullName:@"GMI_blue-dot" parentTag:nil inContext:moContext1], nil];
-    //NSSet *tagSet = [NSSet setWithObjects:[MTag tagWithFullName:@"Zona Norte|Z.N. - Oporto|Oporto" parentTag:nil inContext:moContext1], [MTag tagWithFullName:@"GMI_blue-dot" parentTag:nil inContext:moContext1], nil];
-    //NSSet *tagSet = [NSSet setWithObjects:[MTag tagWithFullName:@"Zona Norte|Z.N. - Oporto|Oporto" parentTag:nil inContext:moContext1], nil];
-    
-    
-    NSArray *a1;
-    a1=[MockUp _testPoint1:tagSet moContext:moContext1];
-    //a1=[MockUp _testPoint1:tagSet moContext:moContext1];
-    // a1=[MockUp _testTags1:tagSet moContext:moContext1];
-    //a1=[MockUp _testTags1:tagSet moContext:moContext1];
-
-    
-    
     if(!_init_model_) return;
-    
-    NSLog(@"----- listModel ------------------------------------------------------------------------");
 
+    NSLog(@"----- listModel ------------------------------------------------------------------------");
+    
+    /*
     NSManagedObjectContext *moContext = [BaseCoreDataService moContext];
     
+    //NSSet *tagSet = [NSSet setWithObjects:[MTag tagWithFullName:@"GMI_green" parentTag:nil inContext:moContext], [MTag tagWithFullName:@"Zona Norte|Z.N. - Oporto|Oporto" parentTag:nil inContext:moContext1], nil];
+    //NSSet *tagSet = [NSSet setWithObjects:[MTag tagWithFullName:@"Zona Norte" parentTag:nil inContext:moContext], nil];
+    //NSSet *tagSet = [NSSet setWithObjects:[MTag tagWithFullName:@"GMI_blue-dot" parentTag:nil inContext:moContext], nil];
+    //NSSet *tagSet = [NSSet setWithObjects:[MTag tagWithFullName:@"Zona Norte|Z.N. - Oporto|Oporto" parentTag:nil inContext:moContext], [MTag tagWithFullName:@"GMI_blue-dot" parentTag:nil inContext:moContext1], nil];
+    //NSSet *tagSet = [NSSet setWithObjects:[MTag tagWithFullName:@"Zona Norte|Z.N. - Oporto|Oporto" parentTag:nil inContext:moContext], nil];
+    
+    
+    //NSArray *a1;
+    //a1=[MockUp _testPoint1:tagSet moContext:moContext];
+    //a1=[MockUp _testPoint1:tagSet moContext:moContext];
+    // a1=[MockUp _testTags1:tagSet moContext:moContext];
+    //a1=[MockUp _testTags1:tagSet moContext:moContext];
+    
+
+    MComplexFilter *complexFilter = [MComplexFilter filterWithContext:moContext];
+    
+    
+    //[complexFilter reset];
+    //NSLog(@"count = %ld", (unsigned long)complexFilter.pointList.count);
+    //NSLog(@"ya");
+    
+
+    NSSet *filterTagSet;
+    filterTagSet = [NSSet setWithObjects:
+                    [MTag tagWithFullName:@"GMI_blue-dot" parentTag:nil inContext:moContext], nil];
+    filterTagSet = [NSSet setWithObjects:
+                    [MTag tagWithFullName:@"Zona Norte|Z.N. - Oporto|Oporto" parentTag:nil inContext:moContext], nil];
+    
+    [complexFilter reset];
+    complexFilter.filterTags = filterTagSet;
+    NSLog(@"count = %ld", (unsigned long)complexFilter.pointList.count);
+    NSLog(@"ya");
+    */
 
     NSLog(@"----- listModel ------------------------------------------------------------------------");
 }
@@ -261,7 +300,7 @@ BOOL _init_model_ = TRUE;
         DDLogVerbose(@"      desc: '%@'", poiDesc);
         
         MPoint *point = [MPoint emptyPointWithName:poiName inMap:map];
-        [point setLatitude:[poiLat doubleValue] longitude:[poiLng doubleValue]];
+        [point updateLatitude:[poiLat doubleValue] longitude:[poiLng doubleValue]];
         [point updateIcon:[MIcon iconForHref:poiIcon inContext:moContext]];
         [readPois setObject:point forKey:poiIndex];
     }
@@ -359,7 +398,6 @@ BOOL _init_model_ = TRUE;
     if(array.count>0) {
         
         MPoint *point = array[0];
-        NSManagedObjectID __block *pointMOID = point.objectID;
         
         CLLocation *location = [[CLLocation alloc] initWithLatitude:point.latitudeValue  longitude:point.longitudeValue];
         CLGeocoder *geocoder = [[CLGeocoder alloc] init];
@@ -385,11 +423,6 @@ BOOL _init_model_ = TRUE;
                 DDLogVerbose(@"  ocean                 = %@",placemark.ocean);
                 DDLogVerbose(@"  areasOfInterest   = %@",placemark.areasOfInterest);
                 DDLogVerbose(@"  addressDictionary = %@",placemark.addressDictionary);
-                
-                
-                NSManagedObjectContext *moContext = [BaseCoreDataService moContext];
-                NSMutableSet *tags = [NSMutableSet set];
-                NSMutableString *fullTagName = [NSMutableString stringWithString:@""];
                 
             }
         }];

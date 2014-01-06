@@ -9,6 +9,7 @@
 
 
 #import "MMap.h"
+#import "MPoint.h"
 #import "MIcon.h"
 #import "ErrorManagerService.h"
 
@@ -45,6 +46,11 @@
 #pragma mark -
 #pragma mark CLASS methods
 //---------------------------------------------------------------------------------------------------------------------
++ (NSString *) _myEntityName {
+    return @"MMap";
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 + (MMap *) emptyMapWithName:(NSString *)name inContext:(NSManagedObjectContext *)moContext {
     
     MMap *map = [MMap insertInManagedObjectContext:moContext];
@@ -53,7 +59,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (NSArray *) allMapsInContext:(NSManagedObjectContext *)moContext includeMarkedAsDeleted:(BOOL)withDeleted {
++ (NSArray *) allMapsinContext:(NSManagedObjectContext *)moContext includeMarkedAsDeleted:(BOOL)withDeleted {
     
     // Crea la peticion de busqueda
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"MMap"];
@@ -84,6 +90,43 @@
 #pragma mark -
 #pragma mark Public methods
 //---------------------------------------------------------------------------------------------------------------------
+- (void) _deleteEntity {
+    
+    self.summary = nil;
+    
+    [super _deleteEntity];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL) updateSummary:(NSString *)value {
+    
+    if((value || self.summary) && ![self.summary isEqualToString:value]) {
+        [self markAsModified];
+        self.summary = value;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) markAsModified {
+    
+    [super _markAsModified];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) markAsDeleted:(BOOL) value {
+
+    if(self.markedAsDeletedValue != value) {
+
+        [super _markAsDeleted:value];
+        
+        // Marca todos sus puntos como borrados tambien
+        for(MPoint *point in self.points) {
+            [point markAsDeleted:value];
+        }
+    }
+}
 
 
 

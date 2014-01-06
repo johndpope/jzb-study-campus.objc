@@ -66,7 +66,7 @@
     if(!array || array.count==0) {
         MIcon *icon = [MIcon insertInManagedObjectContext:moContext];
         icon.iconHREF = href;
-        icon.name = [MIcon _nameFromIconHREF:href];
+        icon.name = [MIcon shortnameFromIconHREF:href];
         [icon setAutoTag: YES];
         return icon;
     } else {
@@ -95,15 +95,15 @@
     // Ahora debe hacer lo contrario a lo que tenga
     if(self.tag==nil) {
         // Antes no lo era y debe añadir los puntos al auto-tag
-        MTag *tag = [MTag tagFromIcon:self];
-        NSArray *points = [MPoint pointsWithIcon:self];
+        MTag *newTag = [MTag tagFromIcon:self];
+        NSArray *points = [MPoint allWithIcon:self sortOrder:@[MBaseOrderNone]];
         for(MPoint *point in points) {
-            [tag tagPoint:point];
+            [newTag tagPoint:point];
         }
-        self.tag = tag;
+        self.tag = newTag;
     } else {
         // Antes lo era y debe quitar el tag de los puntos
-        NSArray *points = [MPoint pointsWithIcon:self];
+        NSArray *points = [MPoint allWithIcon:self sortOrder:@[MBaseOrderNone]];
         for(MPoint *point in points) {
             [self.tag untagPoint:point];
         }
@@ -113,6 +113,7 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (UIImage *) image {
+    
     if(_image==nil) {
         _image = [MIcon _loadImageNamed:self.name];
     }
@@ -143,20 +144,37 @@
     return __errorImage;
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
++ (NSMutableDictionary *) _imgDict {
+    
+    static NSMutableDictionary *_globalDictInstance = nil;
+    static dispatch_once_t _predicate;
+    dispatch_once(&_predicate, ^{
+        _globalDictInstance = [NSMutableDictionary dictionaryWithCapacity:100];
+    });
+    return _globalDictInstance;
+}
+
 //---------------------------------------------------------------------------------------------------------------------
 + (UIImage *) _loadImageNamed:(NSString *)imgName {
     
-    UIImage *image = [[UIImage alloc] initWithContentsOfFile:[MIcon _imagePath:imgName]];
+    UIImage *image = [MIcon._imgDict objectForKey:imgName];
+    if(image) return image;
+    
+    image = [[UIImage alloc] initWithContentsOfFile:[MIcon _imagePath:imgName]];
     if(image==nil) {
         // AQUI SE PODRIA INTENTAR CARGAR UNA IMAGEN DE OTRO SITIO QUE NO SEA LAS DE POR DEFECTO DE GMAP
         image = [MIcon _errorImage];
     }
+    
+    [MIcon._imgDict setObject:image forKey:imgName];
+    
     return image;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 // Utility method that calculates a "simplified fileName" from the iconHREF
-+ (NSString *) _nameFromIconHREF:(NSString *)iconHREF {
++ (NSString *) shortnameFromIconHREF:(NSString *)iconHREF {
     
     NSString *fileName = nil;
     

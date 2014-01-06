@@ -12,6 +12,8 @@
 #import "RPointTag.h"
 #import "MIcon.h"
 #import "ErrorManagerService.h"
+#import "BenchMark.h"
+
 
 
 
@@ -45,6 +47,11 @@
 #pragma mark -
 #pragma mark CLASS methods
 //---------------------------------------------------------------------------------------------------------------------
++ (NSString *) _myEntityName {
+    return @"MTag";
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 + (MTag *) tagWithFullName:(NSString *)name parentTag:(MTag *)parentTag inContext:(NSManagedObjectContext *)moContext {
     
     // Comprueba el nombre
@@ -71,6 +78,12 @@
     
     MTag *tag;
     
+    // Comprueba el nombre
+    fullName = [fullName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if(!fullName || fullName.length==0) {
+        return nil;
+    }
+    
     // Busca el Tag requerido por si ya existe. En cuyo caso lo retorna
     tag = [MTag _searchTagWithFullName:fullName inContext:moContext];
     if(tag) {
@@ -83,25 +96,40 @@
     NSArray *allShortTagNames = [fullName componentsSeparatedByString:TAG_NAME_SEPARATOR];
     for(NSString *tagShortName in allShortTagNames) {
         
-        if(tagShortName==nil || tagShortName.length==0) continue;
+        NSString *trimmedShortName = [tagShortName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        if(trimmedShortName==nil || trimmedShortName.length==0) continue;
         
         // Crea el nombre completo del tag
         if(partialFullName.length>0) {
-            [partialFullName appendString:TAG_NAME_SEPARATOR];
+            [partialFullName appendFormat:@" %@ ",TAG_NAME_SEPARATOR];
         }
-        [partialFullName appendString:tagShortName];
+        [partialFullName appendString:trimmedShortName];
         
         // Si no existe ese nivel jerarquico de Tag lo crea
         tag = [MTag _searchTagWithFullName:partialFullName inContext:moContext];
         if(tag == nil) {
             tag = [MTag insertInManagedObjectContext:moContext];
-            [tag _resetEntityWithFullName:partialFullName shortName:tagShortName parentTag:parentTag inContext:moContext];
+            [tag _resetEntityWithFullName:partialFullName shortName:trimmedShortName parentTag:parentTag inContext:moContext];
         }
         
         // Establece la actual como padre de la siguiente
         parentTag = tag;
     }
     
+    return tag;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
++ (MTag *) tagFromIcon:(MIcon *)icon {
+    
+    // Se protege contra un filtro vacio
+    if(!icon) {
+        return nil;
+    }
+    
+    MTag *tag = [MTag tagWithFullName:icon.name parentTag:nil inContext:icon.managedObjectContext];
+    [tag updateIcon:icon];
+    tag.isAutoTagValue = YES;
     return tag;
 }
 
@@ -136,122 +164,41 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (MTag *) tagFromIcon:(MIcon *)icon {
++ (NSMutableArray *) sortDescriptorsByOrder:(NSArray *)ordering {
+
+    NSMutableArray *sortDescriptors = [super sortDescriptorsByOrder:ordering];
+
+    // Añade el criterio de poner los AutoTags los ultimos
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"isAutoTag" ascending:FALSE];
+    [sortDescriptors addObject:sortDescriptor];
     
-    // Se protege contra un filtro vacio
-    if(!icon) {
+    // Retorna el conjunto
+    return sortDescriptors;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
++ (NSPredicate *) _predicateAllInContextIncludeMarkedAsDeleted:(BOOL)withDeleted {
+    if(!withDeleted) {
+        return [NSPredicate predicateWithFormat:@"rPoints.@count>0"];
+    } else {
         return nil;
     }
-    
-    MTag *tag = [MTag tagWithFullName:icon.name parentTag:nil inContext:icon.managedObjectContext];
-    [tag updateIcon:icon];
-    tag.isAutoTagValue = YES;
-    return tag;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (NSArray *) allTagsInContext:(NSManagedObjectContext *)moContext includeEmptyTags:(BOOL)emptyTags {
-    
-    NSDate *start = [NSDate date];
-    NSLog(@"MTag - allTagsInContext - in");
-    
-    
-    // Crea la peticion de busqueda
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"MTag"];
-    
-    // Se asigna una condicion de filtro
-    if(!emptyTags) {
-        NSPredicate *query = [NSPredicate predicateWithFormat:@"rPoints.@count>0"];
-        [request setPredicate:query];
-    }
-    
-    // Se asigna el criterio de ordenacion
-    NSSortDescriptor *sortAutoTagDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"isAutoTag" ascending:TRUE];
-    NSSortDescriptor *sortNameDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:TRUE];
-    NSArray *sortDescriptors = [NSArray arrayWithObjects:sortAutoTagDescriptor,sortNameDescriptor,nil];
-    [request setSortDescriptors:sortDescriptors];
-
-    //[request setRelationshipKeyPathsForPrefetching:@[@"descendants"]];
-    
-    // Se ejecuta y retorna el resultado
-    NSError *localError = nil;
-    NSArray *array = [moContext executeFetchRequest:request error:&localError];
-    if(array==nil) {
-        [ErrorManagerService manageError:localError compID:@"Model" messageWithFormat:@"MTag:allTagsInContext - Error fetching all tags in context [emptyTags=%d]",emptyTags];
-    }
-    
-    NSLog(@"MTag - allTagsInContext - out = %f",[start timeIntervalSinceNow]);
-    
-    return array;
++ (NSPredicate *) _predicateAllWithName:(NSString *)name {
+    return [NSPredicate predicateWithFormat:@"name=%@ AND rPoints.@count>0", name];
 }
 
+//---------------------------------------------------------------------------------------------------------------------
++ (NSPredicate *) _predicateAllWithNameLike:(NSString *)name {
+    return [NSPredicate predicateWithFormat:@"name CONTAINS[cd] %@ AND rPoints.@count>0", name];
+    
+}
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (NSArray *) tagsForPointsTaggedWith:(NSSet *)tags InContext:(NSManagedObjectContext *)moContext {
-    
-    NSDate *start = [NSDate date];
-    NSLog(@"MTag - tagsForPointsTaggedWith - in");
-    
-    // Se protege contra un filtro vacio
-    if(tags.count==0) {
-        return [MTag allTagsInContext:moContext includeEmptyTags:NO];
-    }
-    
-    
-    // Crea la peticion de busqueda
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"RPointTag"];
-    
-    // Crea los atributos de agrupacion y de cuenta
-    NSExpressionDescription* expDesc = [[NSExpressionDescription alloc] init];
-    [expDesc setName: @"tagCount"];
-    [expDesc setExpressionResultType: NSInteger32AttributeType];
-    [expDesc setExpression: [NSExpression expressionWithFormat:@"isDirect.@count"]];
-    
-    [request setPropertiesToGroupBy:[NSArray arrayWithObject:@"point"]];
-    
-    // Indica que se recojan ambos atributos como un diccionario
-    [request setPropertiesToFetch:[NSArray arrayWithObjects:@"point", expDesc, nil]];
-    [request setResultType:NSDictionaryResultType];
-    
-    // Se asigna una condicion de filtro
-    NSString *queryStr = @"point.markedAsDeleted=NO AND tag IN %@";
-    NSPredicate *query = [NSPredicate predicateWithFormat:queryStr, tags];
-    [request setPredicate:query];
-    
-    // Se asigna el criterio de ordenacion ===> NO TIENE SENTIDO. SE PIERDE CON EL NSSET
-    NSSortDescriptor *sortNameDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"point.name" ascending:TRUE];
-    NSArray *sortDescriptors = [NSArray arrayWithObjects:sortNameDescriptor,nil];
-    [request setSortDescriptors:sortDescriptors];
-    
-    // Se ejecuta y retorna el resultado
-    NSError *localError = nil;
-    NSArray *array = [moContext executeFetchRequest:request error:&localError];
-    if(array==nil) {
-        [ErrorManagerService manageError:localError compID:@"Model" messageWithFormat:@"MPoint:pointsTaggedWith - Error fetching tagged points in context [tags=%@]",tags];
-    }
-    
-    NSLog(@"MTag - tagsForPointsTaggedWith - 1 = %f",[start timeIntervalSinceNow]);
-    
-    // Del array debe filtrar aquellos cuya cuenta sea la del filtro
-    NSMutableSet *allTags = [NSMutableSet set];
-    for(NSDictionary *dict in array) {
-        NSNumber *count2=[dict objectForKey:@"tagCount"];
-        if(count2.intValue>=tags.count) {
-            NSManagedObjectID *objID = [dict objectForKey:@"point"];
-            MPoint *obj = (MPoint *)[moContext objectWithID:objID];
-            [allTags unionSet:[obj.rTags valueForKey:@"tag"]];
-        }
-    }
-    
-    // Ordena el set
-    array = [allTags sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"isAutoTag" ascending:TRUE], [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:TRUE]]];
-    
-    // Pasa el set a Array de nuevo
-    //    array = [allTags allObjects];
-    
-    NSLog(@"MTag - tagsForPointsTaggedWith - out = %f",[start timeIntervalSinceNow]);
-    
-    return array;
++ (NSPredicate *) _predicateAllWithIcon:(MIcon *)icon {
+    return  [NSPredicate predicateWithFormat:@"icon=%@ AND rPoints.@count>0", icon];
 }
 
 
@@ -274,19 +221,19 @@
     }
 
     // Obtine/crea la relacion con el punto y la actualiza como directa
-    RPointTag *rpt = [self _relationWithPoint:point mustCreate:TRUE];
-    rpt.isDirectValue = TRUE;
+    RPointTag *rpt = [self _getRelationWithPoint:point mustCreate:TRUE];
+    [rpt updateIsDirect:TRUE];
     
     //Añade una relacion indirecta con ese punto a sus padres
     for(MTag *parentTag in self.ancestors) {
-        RPointTag *rpt2 = [parentTag _relationWithPoint:point mustCreate:TRUE];
-        rpt2.isDirectValue = FALSE;
+        RPointTag *rpt2 = [parentTag _getRelationWithPoint:point mustCreate:TRUE];
+        [rpt2 updateIsDirect:FALSE];
     }
     
     //***** GESTION DEL AUTO-TAG OTHERS ********************************************************
     /*
     if(self.otherPointsTag) {
-        RPointTag *rpt2 = [self.otherPointsTag _relationWithPoint:point mustCreate:TRUE];
+        RPointTag *rpt2 = [self.otherPointsTag _getRelationWithPoint:point mustCreate:TRUE];
         rpt2.isDirectValue = FALSE;
     }
      */
@@ -300,24 +247,20 @@
     NSLog(@"untagPoint tag: %@ - point: %@", self.name, point.name);
     
     // Obtine la relacion con el punto
-    RPointTag *rpt = [self _relationWithPoint:point mustCreate:FALSE];
+    RPointTag *rpt = [self _getRelationWithPoint:point mustCreate:FALSE];
     
     // Comprueba que realmenta habia una relacion, y era directa, con el punto
     if(!rpt || !rpt.isDirectValue) return;
     
     // Borra la relacion directa con ese punto
-    rpt.tag = nil;
-    rpt.point = nil;
-    [rpt.managedObjectContext deleteObject:rpt];
+    [rpt deleteEntity];
     
     // Borra la relacion indecta con ese punto en los padres
     for(MTag *parentTag in self.ancestors) {
         // @TODO: Debe haber una busqueda mas eficiente de la relacion para no activar todos los elementos
         //        algo como buscar las relaciones RPointTag donde aparezca el punto y que el tag tenga a SELF en su rChildrenTag
-        RPointTag *rpt2 = [self _relationWithPoint:point mustCreate:FALSE];
-        rpt2.tag = nil;
-        rpt2.point = nil;
-        [rpt2.managedObjectContext deleteObject:rpt];
+        RPointTag *rpt2 = [self _getRelationWithPoint:point mustCreate:FALSE];
+        [rpt2 deleteEntity];
     }
     
     
@@ -325,7 +268,7 @@
     //***** GESTION DEL AUTO-TAG OTHERS ********************************************************
     /*
     if(self.otherPointsTag) {
-        RPointTag *rpt2 = [self.otherPointsTag _relationWithPoint:point mustCreate:FALSE];
+        RPointTag *rpt2 = [self.otherPointsTag _getRelationWithPoint:point mustCreate:FALSE];
         rpt2.tag = nil;
         rpt2.point = nil;
         [rpt2.managedObjectContext deleteObject:rpt];
@@ -334,11 +277,30 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+- (BOOL) isDescendantOfTag:(MTag *)parentTag {
+
+    return [self.ancestors containsObject:parentTag];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 - (BOOL) isAncestorOfTag:(MTag *)childTag {
     
     return [self.descendants containsObject:childTag];
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL) isRelativeOfTag:(MTag *)tag {
+    return self.tagTreeIDValue==tag.tagTreeIDValue;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL) isRelativeOfAnyTag:(id<NSFastEnumeration>)tags {
+    
+    for(MTag *tag in tags){
+        if([self isRelativeOfTag:tag]) return TRUE;
+    }
+    return FALSE;
+}
 
 
 //=====================================================================================================================
@@ -356,6 +318,9 @@
         for(MTag *ancestor in parentTag.ancestors) {
             [self addAncestorsObject:ancestor];
         }
+        self.tagTreeIDValue = parentTag.tagTreeIDValue;
+    } else {
+        self.tagTreeIDValue = [MBase _generateInternalID];
     }
 }
 
@@ -364,7 +329,7 @@
 #pragma mark -
 #pragma mark Private methods
 //---------------------------------------------------------------------------------------------------------------------
-- (RPointTag *) _relationWithPoint:(MPoint *)point mustCreate:(BOOL)mustCreate {
+- (RPointTag *) _getRelationWithPoint:(MPoint *)point mustCreate:(BOOL)mustCreate {
     
     for(RPointTag *rpt in self.rPoints) {
         if([rpt.point.objectID isEqual:point.objectID]) {
@@ -373,9 +338,7 @@
     }
     
     if(mustCreate) {
-        RPointTag *rpt = [RPointTag insertInManagedObjectContext:point.managedObjectContext];
-        rpt.tag = self;
-        rpt.point = point;
+        RPointTag *rpt = [RPointTag relatePoint:point withTag:self isDirect:FALSE];
         return rpt;
     } else {
         return nil;

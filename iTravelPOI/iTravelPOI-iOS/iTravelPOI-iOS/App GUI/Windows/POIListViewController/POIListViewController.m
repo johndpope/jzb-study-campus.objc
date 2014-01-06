@@ -11,10 +11,10 @@
 #import "KxMenu.h"
 #import "SWRevealViewController.h"
 #import "TagFilterViewController.h"
-
 #import "BaseCoreDataService.h"
 #import "MPoint.h"
 #import "MIcon.h"
+#import "POIEditorViewController.h"
 
 #import "OpenInActionSheetViewController.h"
 
@@ -33,16 +33,19 @@
 #pragma mark -
 #pragma mark PRIVATE interface definition
 //*********************************************************************************************************************
-@interface POIListViewController () <UITableViewDelegate, UITableViewDataSource>
+@interface POIListViewController () <SWRevealViewControllerDelegate, TagFilterViewControllerDelegate,
+                                     POIEditorViewControllerDelegate, UITableViewDelegate, UITableViewDataSource>
 
 
-@property (nonatomic, assign) IBOutlet UIBarButtonItem* filterButtonItem;
-@property (nonatomic, assign) IBOutlet UIToolbar *toolBar;
-@property (nonatomic, assign) IBOutlet UITableView *poisTable;
+@property (nonatomic, weak) IBOutlet UIBarButtonItem    *filterButtonItem;
+@property (nonatomic, weak) IBOutlet UIToolbar          *toolBar;
+@property (nonatomic, weak) IBOutlet UITableView        *poisTable;
 
-@property (nonatomic, strong) NSArray *poiList;
-@property (nonatomic, strong) NSMutableArray *filter;
+@property (nonatomic, strong) NSManagedObjectContext    *moContext;
+@property (nonatomic, strong) MMap                      *map;
+@property (nonatomic, strong) NSArray                   *pointList;
 
+@property (nonatomic, strong) NSArray                   *pointOrder;
 
 @end
 
@@ -61,15 +64,33 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 
+
+//=====================================================================================================================
+#pragma mark -
+#pragma mark Public methods
+//---------------------------------------------------------------------------------------------------------------------
+- (void) setMap:(MMap *)map andContext:(NSManagedObjectContext *)moContext {
+    
+    // Comprueba que esta todo sincronizado
+    if(self.map && ![self.map.managedObjectContext isEqual:self.moContext]) {
+        [NSException raise:@"UnsynchronizedContextException" format:@"map.context and passed moContext aren't the same"];
+    }
+    self.moContext = moContext;
+    self.map = map;
+}
+
+
+
 //=====================================================================================================================
 #pragma mark -
 #pragma mark <UIViewController> superclass methods
 //---------------------------------------------------------------------------------------------------------------------
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+- (id) initWithCoder:(NSCoder *)aDecoder {
+    
+    self = [super initWithCoder:aDecoder];
     if (self) {
         // Custom initialization
+        self.pointOrder = @[MBaseOrderByIconAsc, MBaseOrderByNameAsc];
     }
     return self;
 }
@@ -80,13 +101,39 @@
     [super viewDidLoad];
     
     // Do any additional setup after loading the view from its nib
-    if(self.moContext==nil) {
-        self.moContext = BaseCoreDataService.moContext;
-    }
-    if(!self.filter) self.filter = [NSMutableArray array];
-    self.poiList = [MPoint pointsTaggedWith:[NSSet setWithArray:self.filter] inMap:nil InContext:self.moContext];
+    
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (void) viewDidAppear:(BOOL)animated {
+    
+    [super viewDidAppear:animated];
+    
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) viewWillAppear:(BOOL)animated {
+
+    
+    [super viewWillAppear:animated];
+    
+    // Cada vez que esta ventana se muestra se establece como el delegate del side-menu
+    self.revealViewController.delegate = self;
+    
+    // Y del filtro
+    TagFilterViewController *tagFilterController = (TagFilterViewController *)self.revealViewController.rightViewController;
+    tagFilterController.delegate = self;
+
+    // Establece el criterio de ordenacion
+    tagFilterController.filter.pointOrder = self.pointOrder;
+    
+    // La lista de puntos se carga desde el filtro activo
+    self.pointList = tagFilterController.filter.pointList;
+
+    // Pone el titulo de la ventana atendiendo al titulo
+    self.title = self.map ? self.map.name : @"Any Map";
+    
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -96,8 +143,33 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    NSLog(@"pepe");
+    
+    
+    // Make sure your segue name in storyboard is the same as this line
+    if ([[segue identifier] isEqualToString:@"PointList_to_PointEditor"]) {
+        
+        NSIndexPath *indexPath = [self.poisTable indexPathForCell:(UITableViewCell *)sender];
+        if(indexPath) {
+            
+            POIEditorViewController *editor = (POIEditorViewController *)segue.destinationViewController;
+
+            // Propaga el color del tinte
+            editor.view.tintColor = self.view.tintColor;
+
+            MPoint *point = self.pointList[[indexPath indexAtPosition:1]];
+
+            // Crea un contexto hijo en el que crea una copia de la entidad para editarla
+            NSManagedObjectContext *childContext = [BaseCoreDataService childContextFor:self.moContext];
+            MPoint *copiedPoint = (MPoint *)[childContext objectWithID:point.objectID];
+
+            editor.moContext = childContext;
+            editor.point = copiedPoint;
+            editor.map = copiedPoint.map;
+            editor.delegate = self;
+        }
+    }
 }
+
 
 
 //=====================================================================================================================
@@ -111,22 +183,12 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)tbarShowFilter:(UIBarButtonItem *)sender {
-    
-    TagFilterViewController *tagFilterVC = (TagFilterViewController *)self.revealViewController.rightViewController;
-    if(self.revealViewController.frontViewPosition==FrontViewPositionLeft) {
-        tagFilterVC.filter = self.filter;
-    } else {
-        self.filter = tagFilterVC.filter;
-        self.poiList = [MPoint pointsTaggedWith:[NSSet setWithArray:self.filter] inMap:nil InContext:self.moContext];
-        [self.poisTable reloadData];
-    }
     [self.revealViewController rightRevealToggle:self];
-    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)tbarItemOpenWith:(UIBarButtonItem *)sender {
-    [OpenInActionSheetViewController showOpenInActionSheetWithController:self point:self.poiList[0]];
+    [OpenInActionSheetViewController showOpenInActionSheetWithController:self point:self.pointList[0]];
 
 }
 
@@ -210,6 +272,115 @@
 
 //=====================================================================================================================
 #pragma mark -
+#pragma mark <SWRevealViewControllerDelegate> protocol methods
+//---------------------------------------------------------------------------------------------------------------------
+// The following delegate methods will be called before and after the front view moves to a position
+- (void)revealController:(SWRevealViewController *)revealController willMoveToPosition:(FrontViewPosition)position {
+    
+    switch (position) {
+            
+        // Vuelve al estado normal con ambos paneles ocultos
+        case FrontViewPositionLeft:
+            break;
+            
+        // Se va a mostrar el panel de la izquierda
+        case FrontViewPositionLeftSide:
+            break;
+            
+        // Se va a mostrar el panel de la derecha
+        case FrontViewPositionRight:
+            break;
+            
+        default:
+            break;
+    }
+    // NSLog(@"- (void)revealController:(SWRevealViewController *)revealController willMoveToPosition:(FrontViewPosition)position");
+}
+
+- (void)revealController:(SWRevealViewController *)revealController didMoveToPosition:(FrontViewPosition)position {
+    //NSLog(@"- (void)revealController:(SWRevealViewController *)revealController didMoveToPosition:(FrontViewPosition)position");
+}
+
+// This will be called inside the reveal animation, thus you can use it to place your own code that will be animated in sync
+- (void)revealController:(SWRevealViewController *)revealController animateToPosition:(FrontViewPosition)position {
+    //NSLog(@"- (void)revealController:(SWRevealViewController *)revealController animateToPosition:(FrontViewPosition)position");
+}
+
+// Implement this to return NO when you want the pan gesture recognizer to be ignored
+- (BOOL)revealControllerPanGestureShouldBegin:(SWRevealViewController *)revealController {
+    //NSLog(@"- (BOOL)revealControllerPanGestureShouldBegin:(SWRevealViewController *)revealController");
+    return YES;
+}
+
+// Implement this to return NO when you want the tap gesture recognizer to be ignored
+- (BOOL)revealControllerTapGestureShouldBegin:(SWRevealViewController *)revealController {
+    //NSLog(@"- (BOOL)revealControllerTapGestureShouldBegin:(SWRevealViewController *)revealController");
+    return YES;
+}
+
+// Called when the gestureRecognizer began and ended
+- (void)revealControllerPanGestureBegan:(SWRevealViewController *)revealController {
+    //NSLog(@"- (void)revealControllerPanGestureBegan:(SWRevealViewController *)revealController");
+}
+
+- (void)revealControllerPanGestureEnded:(SWRevealViewController *)revealController {
+    //NSLog(@"- (void)revealControllerPanGestureEnded:(SWRevealViewController *)revealController");
+}
+
+// The following methods provide a means to track the evolution of the gesture recognizer.
+// The 'location' parameter is the X origin coordinate of the front view as the user drags it
+// The 'progress' parameter is a positive value from 0 to 1 indicating the front view location relative to the
+// rearRevealWidth or rightRevealWidth. 1 is fully revealed, dragging ocurring in the overDraw region will result in values above 1.
+- (void)revealController:(SWRevealViewController *)revealController panGestureBeganFromLocation:(CGFloat)location progress:(CGFloat)progress {
+    //NSLog(@"- (void)revealController:(SWRevealViewController *)revealController panGestureBeganFromLocation:(CGFloat)location progress:(CGFloat)progress");
+}
+
+- (void)revealController:(SWRevealViewController *)revealController panGestureMovedToLocation:(CGFloat)location progress:(CGFloat)progress {
+    //NSLog(@"- (void)revealController:(SWRevealViewController *)revealController panGestureMovedToLocation:(CGFloat)location progress:(CGFloat)progress");
+}
+
+- (void)revealController:(SWRevealViewController *)revealController panGestureEndedToLocation:(CGFloat)location progress:(CGFloat)progress {
+    //NSLog(@"- (void)revealController:(SWRevealViewController *)revealController panGestureEndedToLocation:(CGFloat)location progress:(CGFloat)progress");
+}
+
+
+
+//=====================================================================================================================
+#pragma mark -
+#pragma mark <TagFilterViewControllerDelegate> protocol methods
+//---------------------------------------------------------------------------------------------------------------------
+- (void)filterHasChanged:(TagFilterViewController *)sender filter:(MComplexFilter *)filter {
+    
+    // Refresca los puntos de la tabla desde el filtro
+    self.pointList = filter.pointList;
+    [self.poisTable reloadData];
+}
+
+
+
+
+
+
+//=====================================================================================================================
+#pragma mark -
+#pragma mark <POIEditorViewControllerDelegate> protocol methods
+//---------------------------------------------------------------------------------------------------------------------
+- (void) pointEdiorSavePoint:(POIEditorViewController *)sender {
+
+    // Graba los cambios en ambos contextos
+    [BaseCoreDataService saveChangesinContext:sender.moContext];
+    [BaseCoreDataService saveChangesinContext:self.moContext];
+    
+    //@TODO:    Hay que revisar si, con los cambios, cumple el filtro activo.
+    //          Si no lo cumple se debe borrar. Si lo cumple hay que refrescarlo
+}
+
+
+
+
+
+//=====================================================================================================================
+#pragma mark -
 #pragma mark <UITableViewDelegate> protocol methods
 //---------------------------------------------------------------------------------------------------------------------
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -240,7 +411,7 @@
 #pragma mark <UITableViewDataSource> protocol methods
 //---------------------------------------------------------------------------------------------------------------------
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.poiList.count;
+    return self.pointList.count;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -252,57 +423,15 @@
     if (cell == nil) {
         cell = [[UITableViewCell  alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:myViewCellID];
         cell.selectionStyle = UITableViewCellSelectionStyleGray;
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
     }
 
-    
-    MPoint *itemToShow = (MPoint *)[self.poiList objectAtIndex:[indexPath indexAtPosition:1]];
-    cell.textLabel.text = [NSString stringWithFormat:@"%d - %@",[indexPath indexAtPosition:1], itemToShow.name];
+    MPoint *itemToShow = (MPoint *)[self.pointList objectAtIndex:[indexPath indexAtPosition:1]];
+    cell.textLabel.text = [NSString stringWithFormat:@"%lu - %@",(unsigned long)[indexPath indexAtPosition:1], itemToShow.name];
     cell.imageView.image = itemToShow.icon.image;
 
-    /*
-    TDBadgedCell *cell = (TDBadgedCell *)[tableView dequeueReusableCellWithIdentifier:myViewCellID];
-    if (cell == nil) {
-        cell = [[TDBadgedCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:myViewCellID];
-        cell.selectionStyle = UITableViewCellSelectionStyleGray;
-    }
-    
-    
-    MBaseEntity *itemToShow = (MBaseEntity *)[self.itemLists objectAtIndex:[indexPath indexAtPosition:1]];
-    
-    cell.textLabel.text=itemToShow.name;
-    cell.imageView.image = itemToShow.entityImage;
-    
-    if(itemToShow.entityType == MET_POINT) {
-        cell.textLabel.textColor = [UIColor blackColor];
-        cell.detailTextLabel.text=@" ";
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        //cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-        cell.badgeString=nil;
-    } else {
-        cell.textLabel.textColor = [UIColor blueColor];
-        cell.detailTextLabel.text=@"";
-        cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-        if (itemToShow.entityType == MET_MAP) {
-            cell.badgeString=[(MMap*)itemToShow strViewCount];
-        } else {
-            cell.badgeString=[(MCategory*)itemToShow strViewCountForMap:self.selectedMap];
-        }
-    }
-    
-    if(tableView.isEditing) {
-        [self _setLeftCheckStatusFor:itemToShow cell:cell];
-    }
-    */
     return cell;
 }
-
-
-
-//=====================================================================================================================
-#pragma mark -
-#pragma mark Public methods
-//---------------------------------------------------------------------------------------------------------------------
 
 
 

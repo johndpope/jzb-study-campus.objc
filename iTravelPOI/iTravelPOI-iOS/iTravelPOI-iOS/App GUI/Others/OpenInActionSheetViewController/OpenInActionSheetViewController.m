@@ -36,9 +36,9 @@
 @interface OpenInActionSheetViewController() <UIScrollViewDelegate>
 
 
-@property (nonatomic, assign) IBOutlet UIScrollView *scrollView;
-@property (nonatomic, assign) IBOutlet UIPageControl *pageControl;
-@property (nonatomic, assign) IBOutlet UIButton *cancelBtn;
+@property (nonatomic, weak) IBOutlet UIScrollView *scrollView;
+@property (nonatomic, weak) IBOutlet UIPageControl *pageControl;
+@property (nonatomic, weak) IBOutlet UIButton *cancelBtn;
 
 @property (nonatomic, assign) CLLocationCoordinate2D coord;
 @property (nonatomic, strong) NSString *poiName;
@@ -89,15 +89,25 @@
 
 //=====================================================================================================================
 #pragma mark -
+#pragma mark Public methods
+//---------------------------------------------------------------------------------------------------------------------
+
+
+
+
+//=====================================================================================================================
+#pragma mark -
 #pragma mark <UIViewController> superclass methods
 //---------------------------------------------------------------------------------------------------------------------
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+- (id) initWithCoder:(NSCoder *)aDecoder {
+    
+    self = [super initWithCoder:aDecoder];
     if (self) {
         // Custom initialization
     }
     return self;
 }
+
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)viewDidLoad {
@@ -145,18 +155,6 @@
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
 }
-
-
-
-
-
-
-
-
-//=====================================================================================================================
-#pragma mark -
-#pragma mark Public methods
-//---------------------------------------------------------------------------------------------------------------------
 
 
 

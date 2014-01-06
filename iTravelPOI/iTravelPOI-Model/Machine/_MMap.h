@@ -43,7 +43,11 @@ extern const struct MMapFetchedProperties {
 		
 			
 				
-					@property (nonatomic, strong) NSString* summary;
+					#ifndef __MMap__PROTECTED__
+					  @property (nonatomic, strong, readonly) NSString* summary;
+					#else
+					  @property (nonatomic, strong) NSString* summary;
+					#endif
 				
 			
 		
@@ -67,7 +71,11 @@ extern const struct MMapFetchedProperties {
 		
 
 			
+				#ifndef __MMap__PROTECTED__
+				@property (nonatomic, strong, readonly) NSSet *points;
+				#else
 				@property (nonatomic, strong) NSSet *points;
+				#endif
 			
 
 
@@ -75,7 +83,9 @@ extern const struct MMapFetchedProperties {
 
 
 		
+			#ifndef __MMap__PROTECTED__
 			- (NSMutableSet*)pointsSet;
+			#endif
 		
 
 

@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "TagTree.h"
 
 
 
@@ -18,6 +18,19 @@
 
 
 
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark TagTreeTableViewControllerDelegate Public protocol definition
+//*********************************************************************************************************************
+@class TagTreeTableViewController;
+@protocol TagTreeTableViewControllerDelegate <NSObject>
+
+@optional
+- (void)tagTreeTable:(TagTreeTableViewController *)sender tappedTagTreeNode:(TagTreeNode *)tappedNode;
+
+@end
+
+
 
 //*********************************************************************************************************************
 #pragma mark -
@@ -25,9 +38,7 @@
 //*********************************************************************************************************************
 @interface TagTreeTableViewController : UIViewController
 
-@property (nonatomic, strong) NSManagedObjectContext *moContext;
-@property (nonatomic, strong) NSMutableArray *filter;
-
+@property (nonatomic, weak) id<TagTreeTableViewControllerDelegate> delegate;
 
 
 
@@ -35,7 +46,9 @@
 #pragma mark -
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-
+- (void) setTagList:(NSSet *)tagList selectedTags:(NSSet *)selectedTags expandedTags:(NSSet *)expandedTags;
+- (void) clearTagList;
+- (void) deleteBranchForTag:(MTag *)tag;
 
 
 //=====================================================================================================================

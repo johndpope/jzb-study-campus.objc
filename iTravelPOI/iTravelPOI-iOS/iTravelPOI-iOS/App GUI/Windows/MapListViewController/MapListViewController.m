@@ -10,6 +10,8 @@
 #import "MapListViewController.h"
 #import "BaseCoreDataService.h"
 #import "SWRevealViewController.h"
+#import "POIListViewController.h"
+#import "TagFilterViewController.h"
 
 
 
@@ -19,17 +21,17 @@
 //*********************************************************************************************************************
 
 
-
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark PRIVATE interface definition
 //*********************************************************************************************************************
 @interface MapListViewController () <UITableViewDelegate, UITableViewDataSource>
 
-@property (nonatomic) IBOutlet UIBarButtonItem* revealButtonItem;
-@property (nonatomic, assign) IBOutlet UITableView *tableViewItemList;
 
-@property (nonatomic, strong) NSArray *itemList;
+@property (nonatomic) IBOutlet UIBarButtonItem* revealButtonItem;
+@property (nonatomic, weak) IBOutlet UITableView *tableViewItemList;
+
+@property (nonatomic, strong) NSArray *mapList;
 
 @end
 
@@ -40,6 +42,7 @@
 #pragma mark Implementation
 //*********************************************************************************************************************
 @implementation MapListViewController
+
 
 
 //=====================================================================================================================
@@ -56,11 +59,18 @@
 
 //=====================================================================================================================
 #pragma mark -
+#pragma mark Public methods
+//---------------------------------------------------------------------------------------------------------------------
+
+
+
+//=====================================================================================================================
+#pragma mark -
 #pragma mark <UIViewController> superclass methods
 //---------------------------------------------------------------------------------------------------------------------
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+- (id) initWithCoder:(NSCoder *)aDecoder {
+    
+    self = [super initWithCoder:aDecoder];
     if (self) {
         // Custom initialization
     }
@@ -68,15 +78,16 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void)viewDidLoad
+- (void) viewWillAppear:(BOOL)animated
 {
-    [super viewDidLoad];
+    [super viewWillAppear:animated];
     
     // Do any additional setup after loading the view from its nib.
     if(self.moContext==nil) {
         self.moContext = BaseCoreDataService.moContext;
     }
-    self.itemList = [MMap allMapsInContext:self.moContext includeMarkedAsDeleted:FALSE];
+    
+    self.mapList = [MMap allMapsinContext:self.moContext includeMarkedAsDeleted:FALSE];
     
     
     [self.revealButtonItem setTarget: self.revealViewController];
@@ -92,7 +103,15 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    NSLog(@"pepe");
+    
+    
+    // Make sure your segue name in storyboard is the same as this line
+    if ([[segue identifier] isEqualToString:@"MapList_to_PointList"]) {
+        MMap *map = (MMap *)sender;
+        POIListViewController *poiList = (POIListViewController *)segue.destinationViewController;
+        [poiList setMap:map andContext:self.moContext];
+    }
+    
 }
 
 
@@ -115,10 +134,17 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
-    return indexPath;
-    
+    // Un cambio del mapa implica resetear el filtro
+    MMap *map = [self _mapAtIndex:[indexPath indexAtPosition:1]];
+    TagFilterViewController *tagFilterController = (TagFilterViewController *)self.revealViewController.rightViewController;
+    tagFilterController.moContext = self.moContext;
+    tagFilterController.filter.filterMap = map;
+    tagFilterController.filter.filterTags = nil;
+
+    [self performSegueWithIdentifier: @"MapList_to_PointList" sender: map];
+
     // No dejamos nada seleccionado
-    ////return nil;
+    return nil;
 }
 
 
@@ -128,7 +154,7 @@
 #pragma mark <UITableViewDataSource> protocol methods
 //---------------------------------------------------------------------------------------------------------------------
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.itemList.count;
+    return 1 + self.mapList.count;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -144,8 +170,12 @@
     }
 
     
-    MMap *itemToShow = (MMap *)[self.itemList objectAtIndex:[indexPath indexAtPosition:1]];
-    cell.textLabel.text = itemToShow.name;
+    MMap *mapToShow = (MMap *)[self _mapAtIndex:[indexPath indexAtPosition:1]];
+    if(!mapToShow) {
+        cell.textLabel.text = @"[Any map]";
+    } else {
+        cell.textLabel.text = mapToShow.name;
+    }
 
     /*
     TDBadgedCell *cell = (TDBadgedCell *)[tableView dequeueReusableCellWithIdentifier:myViewCellID];
@@ -188,15 +218,11 @@
 
 //=====================================================================================================================
 #pragma mark -
-#pragma mark Public methods
-//---------------------------------------------------------------------------------------------------------------------
-
-
-
-//=====================================================================================================================
-#pragma mark -
 #pragma mark Private methods
 //---------------------------------------------------------------------------------------------------------------------
-
+- (MMap *) _mapAtIndex:(NSUInteger)index {
+    
+    return index==0?nil:self.mapList[index-1];
+}
 
 @end

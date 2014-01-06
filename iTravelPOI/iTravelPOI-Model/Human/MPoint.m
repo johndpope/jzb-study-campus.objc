@@ -12,7 +12,10 @@
 #import "MMap.h"
 #import "MIcon.h"
 #import "MTag.h"
+#import "RPointTag.h"
 #import "ErrorManagerService.h"
+#import "BenchMark.h"
+
 
 
 
@@ -41,11 +44,19 @@
 //*********************************************************************************************************************
 @implementation MPoint
 
+@synthesize directTags = _directTags;
+@synthesize directNoAutoTags = _directNoAutoTags;
+
 
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark CLASS methods
+//---------------------------------------------------------------------------------------------------------------------
++ (NSString *) _myEntityName {
+    return @"MPoint";
+}
+
 //---------------------------------------------------------------------------------------------------------------------
 + (MPoint *) emptyPointWithName:(NSString *)name inMap:(MMap *)map  {
     
@@ -54,139 +65,53 @@
     MPoint *point = [MPoint insertInManagedObjectContext:moContext];
     [point _resetEntityWithName:name inContext:moContext];
     point.map = map;
-    
-    
-    /////[point.map updateViewCount: UPD_POINT_ADDED];
-    
+    [map markAsModified];
     
     return point;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (NSArray *) allPointsInContext:(NSManagedObjectContext *)moContext includeMarkedAsDeleted:(BOOL)withDeleted {
-    
-    NSDate *start = [NSDate date];
-    NSLog(@"MPoint - allPointsInContext - in");
++ (NSArray *) allWithMap:(MMap *)map sortOrder:(NSArray *)sortOrder {
 
-    // Crea la peticion de busqueda
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"MPoint"];
-    
-    // Se asigna una condicion de filtro
-    if(withDeleted == NO) {
-        NSPredicate *query = [NSPredicate predicateWithFormat:@"markedAsDeleted=NO"];
-        [request setPredicate:query];
-    }
-    
-    // Se asigna el criterio de ordenacion
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:TRUE];
-    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-    [request setSortDescriptors:sortDescriptors];
-    
-    // Se ejecuta y retorna el resultado
-    NSError *localError = nil;
-    NSArray *array = [moContext executeFetchRequest:request error:&localError];
-    if(array==nil) {
-        [ErrorManagerService manageError:localError compID:@"Model" messageWithFormat:@"MPoint:allPointsInContext - Error fetching all points in context [deleted=%d]",withDeleted];
-    }
-
-    NSLog(@"MPoint - allPointsInContext - out = %f",[start timeIntervalSinceNow]);
-    
-    return array;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-+ (NSArray *) pointsTaggedWith:(NSSet *)tags inMap:(MMap *)map InContext:(NSManagedObjectContext *)moContext {
-    
-    NSDate *start = [NSDate date];
-    NSLog(@"MPoint - pointsTaggedWith - in");
-
+    BenchMark *benchMark = [BenchMark benchMarkLogging:@"MPoint:pointsWithMap"];
     
     // Se protege contra un filtro vacio
-    if(tags.count==0) {
-        if(map) {
-            return [map.points allObjects];
-        } else {
-            return [MPoint allPointsInContext:moContext includeMarkedAsDeleted:NO];
-        }
-    }
-    
-    
-    // Crea la peticion de busqueda
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"RPointTag"];
-    
-    // Crea los atributos de agrupacion y de cuenta
-    NSExpressionDescription* expDesc = [[NSExpressionDescription alloc] init];
-    [expDesc setName: @"tagCount"];
-    [expDesc setExpressionResultType: NSInteger32AttributeType];
-    [expDesc setExpression: [NSExpression expressionWithFormat:@"isDirect.@count"]];
-
-    [request setPropertiesToGroupBy:[NSArray arrayWithObject:@"point"]];
-    
-    // Indica que se recojan ambos atributos como un diccionario
-    [request setPropertiesToFetch:[NSArray arrayWithObjects:@"point", expDesc, nil]];
-    [request setResultType:NSDictionaryResultType];
-    
-    // Se asigna una condicion de filtro
-    NSString *queryStr = @"point.markedAsDeleted=NO AND tag IN %@";
-    NSPredicate *query = [NSPredicate predicateWithFormat:queryStr, tags];
-    [request setPredicate:query];
-    
-    // Se asigna el criterio de ordenacion
-    NSSortDescriptor *sortNameDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"point.name" ascending:TRUE];
-    NSArray *sortDescriptors = [NSArray arrayWithObjects:sortNameDescriptor,nil];
-    [request setSortDescriptors:sortDescriptors];
-    
-    // Se ejecuta y retorna el resultado
-    NSError *localError = nil;
-    NSArray *array = [moContext executeFetchRequest:request error:&localError];
-    if(array==nil) {
-        [ErrorManagerService manageError:localError compID:@"Model" messageWithFormat:@"MPoint:pointsTaggedWith - Error fetching tagged points in context [tags=%@]",tags];
-    }
-    
-    // Del array debe filtrar aquellos cuya cuenta sea la del filtro
-    NSMutableArray *array2 = [NSMutableArray array];
-    for(NSDictionary *dict in array) {
-        NSNumber *count2=[dict objectForKey:@"tagCount"];
-        if(count2.intValue>=tags.count) {
-            NSManagedObjectID *objID = [dict objectForKey:@"point"];
-            MPoint *obj = (MPoint *)[moContext objectWithID:objID];
-            [array2 addObject:obj];
-        }
-    }
-    
-    NSLog(@"MPoint - pointsTaggedWith - out = %f",[start timeIntervalSinceNow]);
-    
-    return array2;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-+ (NSArray *) pointsWithIcon:(MIcon *)icon {
-    
-    // Se protege contra un filtro vacio
-    if(!icon) {
+    if(!map) {
+        [benchMark logTotalTime:@"Returning nil because map was empty"];
         return nil;
     }
+    
+    // Crea la condicion de filtro
+    NSPredicate *query = [NSPredicate predicateWithFormat:@"markedAsDeleted=NO AND map=%@", map];
 
-    // Crea la peticion de busqueda
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"MPoint"];
-    
-    // Se asigna una condicion de filtro
-    NSPredicate *query = [NSPredicate predicateWithFormat:@"markedAsDeleted=NO AND icon=%@", icon];
-    [request setPredicate:query];
-    
-    // Se asigna el criterio de ordenacion
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:TRUE];
-    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-    [request setSortDescriptors:sortDescriptors];
-    
     // Se ejecuta y retorna el resultado
-    NSError *localError = nil;
-    NSArray *array = [icon.managedObjectContext executeFetchRequest:request error:&localError];
-    if(array==nil) {
-        [ErrorManagerService manageError:localError compID:@"Model" messageWithFormat:@"MPoint:pointsWithIcon - Error fetching points in context [icon=%@]",icon];
-    }
-    return array;
+    return [super _allWithPredicate:query sortOrder:sortOrder inContext:map.managedObjectContext];
 }
+
+//---------------------------------------------------------------------------------------------------------------------
++ (NSMutableSet *) allTagsFromPoints:(NSArray *)points {
+
+    NSMutableSet *allTags = [NSMutableSet set];
+    for(MPoint *point in points) {
+        for(RPointTag *rpt in point.rTags) {
+            [allTags addObject:rpt.tag];
+        }
+    }
+    return allTags;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
++ (NSMutableSet *) allNonAutoTagsFromPoints:(NSArray *)points {
+    
+    NSMutableSet *allTags = [NSMutableSet set];
+    for(MPoint *point in points) {
+        for(RPointTag *rpt in point.rTags) {
+            if(!rpt.tag.isAutoTagValue) [allTags addObject:rpt.tag];
+        }
+    }
+    return allTags;
+}
+
 
 
 
@@ -194,20 +119,97 @@
 #pragma mark -
 #pragma mark Public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) updateIcon:(MIcon *)icon {
+- (void) _deleteEntity {
     
-    // Si el icono previo era del tipo auto-tag desasigna del tag
-    [self.icon.tag untagPoint:self];
-    
-    // Llama a la clase base para que actualice la informacion
-    [super updateIcon:icon];
+    // Marca el mapa como modificado y se elimina
+    [self.map markAsModified];
+    self.map = nil;
 
-    // Si el nuevo icono es del tipo auto-tag se asigna al tag
-    [self.icon.tag tagPoint:self];
+    self.descr = nil;
+    self.latitudeValue = self.longitudeValue = 0.0;
+    
+    [super _deleteEntity];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (BOOL) setLatitude:(double)lat longitude:(double)lng {
+- (void) markAsDeleted:(BOOL) value {
+    
+    if(self.markedAsDeletedValue != value) {
+        
+        [super _markAsDeleted:value];
+        
+        // Marca el mapa como modificado
+        [self.map markAsModified];
+        
+        // Borra la relacion con todos sus tags
+        for(RPointTag *rpt in self.rTags) {
+            [rpt deleteEntity];
+        }
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) markAsModified {
+    
+    // Marca el mapa como modificado
+    [self.map markAsModified];
+    
+    [super _markAsModified];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSSet *)directTags {
+    
+    NSMutableSet *allTags = [NSMutableSet set];
+    for(RPointTag *rpt in self.rTags) {
+        if(rpt.isDirectValue) {
+            [allTags addObject:rpt.tag];
+        }
+    }
+    return  allTags;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSSet *) directNoAutoTags {
+    
+    NSMutableSet *allTags = [NSMutableSet set];
+    for(RPointTag *rpt in self.rTags) {
+        if(rpt.isDirectValue && !rpt.tag.isAutoTagValue) {
+            [allTags addObject:rpt.tag];
+        }
+    }
+    return  allTags;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL) updateDesc:(NSString *)value {
+    
+    if((value || self.descr) && ![self.descr isEqualToString:value]) {
+        [self markAsModified];
+        self.descr = value;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL) updateIcon:(MIcon *)icon {
+    
+    MTag *prevIconTag = self.icon.tag;
+
+    // Llama a la clase base para que actualice la informacion
+    BOOL result = [super updateIcon:icon];
+    if(result) {
+        
+        // Actualiza el auto-tag debido al icono asignado
+        [prevIconTag untagPoint:self];
+        [self.icon.tag tagPoint:self];
+    }
+    return result;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL) updateLatitude:(double)lat longitude:(double)lng {
     
     // Ajusta los margenes
     lat = MAX(lat, -90.0);
@@ -236,7 +238,8 @@
     
     [super _resetEntityWithName:name icon:[MIcon iconForHref:DEFAULT_POINT_ICON_HREF inContext:moContext]];
     self.descr = @"";
-    [self setLatitude:0.0 longitude:0.0];
+    self.latitudeValue = 0.0;
+    self.longitudeValue = 0.0;
 }
 
 

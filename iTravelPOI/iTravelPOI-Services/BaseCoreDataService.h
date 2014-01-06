@@ -33,6 +33,11 @@
 // ---------------------------------------------------------------------------------------------------------------------
 + (NSManagedObjectContext *) moContext;
 
++ (NSManagedObjectContext *) childContextFor:(NSManagedObjectContext *)moContext;
++ (NSManagedObjectContext *) childContextASyncFor:(NSManagedObjectContext *)moContext;
+
++ (BOOL) saveChangesinContext:(NSManagedObjectContext *)moContext;
+
 
 + (NSEntityDescription *) entityByName:(NSString *)name;
 + (BOOL) initCDStack:(NSString *)modelName;

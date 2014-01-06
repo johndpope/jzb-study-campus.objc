@@ -19,6 +19,7 @@
 
 - (UIView *) findFirstResponder;
 - (BOOL) findFirstResponderAndResign;
+- (BOOL) resignAnyResponder;
 
 
 @end

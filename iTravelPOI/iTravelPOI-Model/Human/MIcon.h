@@ -26,6 +26,7 @@
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
 + (MIcon *) iconForHref:(NSString *)href inContext:(NSManagedObjectContext *)moContext;
++ (NSString *) shortnameFromIconHREF:(NSString *)iconHREF;
 
 
 //=====================================================================================================================

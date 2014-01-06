@@ -6,11 +6,14 @@
 #import "_MPoint.h"
 
 
+@class MMap;
+
+
+
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark Public Enumerations & definitions
 //*********************************************************************************************************************
-
 
 
 
@@ -21,21 +24,28 @@
 @interface MPoint : _MPoint {}
 
 
+@property (nonatomic, readonly) NSSet *directTags; 
+@property (nonatomic, readonly) NSSet *directNoAutoTags;
+
+
+
 //=====================================================================================================================
 #pragma mark -
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (MPoint *) emptyPointWithName:(NSString *)name inMap:(MMap *)map;
-+ (NSArray *) allPointsInContext:(NSManagedObjectContext *)moContext includeMarkedAsDeleted:(BOOL)withDeleted;
++ (MPoint *)  emptyPointWithName:(NSString *)name inMap:(MMap *)map;
 
-+ (NSArray *) pointsTaggedWith:(NSSet *)tags inMap:(MMap *)map InContext:(NSManagedObjectContext *)moContext;
-+ (NSArray *) pointsWithIcon:(MIcon *)icon;
++ (NSArray *) allWithMap:(MMap *)map sortOrder:(NSArray *)sortOrder;
+
++ (NSMutableSet *) allTagsFromPoints:(NSArray *)points;
++ (NSMutableSet *) allNonAutoTagsFromPoints:(NSArray *)points;
 
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (BOOL) setLatitude:(double)lat longitude:(double)lng;
+- (BOOL) updateLatitude:(double)lat longitude:(double)lng;
+- (BOOL) updateDesc:(NSString *)value;
 
 @end

@@ -8,12 +8,13 @@
 
 #define __TagFilterViewController__IMPL__
 #import "TagFilterViewController.h"
-#import "BaseCoreDataService.h"
+#import "TagTreeTableViewController.h"
+#import "MComplexFilter.h"
 #import "MTag.h"
-#import "MIcon.h"
-#import "RPointTag.h"
 #import "MPoint.h"
-#import "MyTableViewCell.h"
+#import "MMap.h"
+#import "MIcon.h"
+#import "BenchMark.h"
 
 
 
@@ -21,217 +22,17 @@
 #pragma mark -
 #pragma mark Private Enumerations & definitions
 //*********************************************************************************************************************
-typedef enum NodeExpandedStateTypes
-{
-    ALL_NODES,
-    JUST_EXPANDED
-} NodeExpandedState;
 
-@interface TreeNode : NSObject
-
-@property (nonatomic, assign) TreeNode *parent;
-@property (nonatomic, strong) NSMutableArray *children;
-@property (nonatomic, strong) MTag *tag;
-@property (nonatomic, assign) BOOL isExpanded;
-@property (nonatomic, assign) int deepLevel;
-@property (nonatomic, assign) int childLevel;
-
-@end
-
-@implementation TreeNode
-
-@synthesize isExpanded = _isExpanded;
-
-+ (TreeNode *) treeNodeWithTag:(MTag *)tag {
-    TreeNode *me = [[TreeNode alloc] init];
-    me.parent = nil;
-    me.children = [NSMutableArray array];
-    me.tag = tag;
-    me.isExpanded = FALSE;
-    me.deepLevel = 0;
-    me.childLevel = 0;
-    return me;
-}
-
-- (void) _insertChildNode:(TreeNode *)newNode {
-    
-    BOOL inserted = FALSE;
-    for(TreeNode *node in [self.children copy]) {
-        if([newNode.tag isAncestorOfTag:node.tag]) {
-            [newNode _addChild:node];
-        } else if([node.tag isAncestorOfTag:newNode.tag]) {
-            [node _insertChildNode:newNode];
-            inserted = TRUE;
-        }
-    }
-    
-    if(!inserted) {
-        [self _addChild:newNode];
-    }
-}
-
-
-+ (TreeNode *) treeNodesFromTags:(NSArray *)tags expandedTags:(NSArray *)expandedTags {
-    
-    NSDate *start = [NSDate date];
-
-    NSMutableDictionary *tagToNode = [NSMutableDictionary dictionaryWithCapacity:tags.count];
-    
-    TreeNode *rootNode = [TreeNode treeNodeWithTag:nil];
-    rootNode.deepLevel = -1;
-    
-    for(MTag *tag in tags) {
-        TreeNode *node = [TreeNode treeNodeWithTag:tag];
-        [tagToNode setObject:node forKey:tag.objectID];
-    }
-
-    NSLog(@"- 1 -> %f",[start timeIntervalSinceNow]);
-
-    for(MTag *tag in tags) {
-        TreeNode *node = [tagToNode objectForKey:tag.objectID];
-        if(tag.parent) {
-            TreeNode *parentNode = [tagToNode objectForKey:tag.parent.objectID];
-            [parentNode _addChild:node];
-        } else {
-            [rootNode _addChild:node];
-        }
-    }
-
-    NSLog(@"- 2 -> %f",[start timeIntervalSinceNow]);
-
-    NSArray *allNodes = [rootNode toFlatArray:ALL_NODES];
-    for(TreeNode *node in allNodes) {
-        if([expandedTags containsObject:node.tag]) {
-            TreeNode *me = node;
-            while(me!=rootNode) {
-                me.isExpanded = TRUE;
-                me = me.parent;
-            }
-        }
-    }
-    
-    NSLog(@"- 3 -> %f",[start timeIntervalSinceNow]);
-
-    [rootNode _calcChildLevel:-1];
-    rootNode.isExpanded = TRUE;
-    
-    NSLog(@"- 4 -> %f",[start timeIntervalSinceNow]);
-
-
-    return rootNode;
-}
-
-+ (TreeNode *) __old__treeNodesFromTags:(NSArray *)tags expandedTags:(NSArray *)expandedTags {
-    
-    NSDate *start = [NSDate date];
-    
-    TreeNode *rootNode = [TreeNode treeNodeWithTag:nil];
-    rootNode.deepLevel = -1;
-    
-    for(MTag *tag in tags) {
-        TreeNode *node = [TreeNode treeNodeWithTag:tag];
-        [rootNode _insertChildNode:node];
-    }
-    
-    NSLog(@"- 1 -> %f",[start timeIntervalSinceNow]);
-    
-    NSArray *allNodes = [rootNode toFlatArray:ALL_NODES];
-    for(TreeNode *node in allNodes) {
-        if([expandedTags containsObject:node.tag]) {
-            TreeNode *me = node;
-            while(me!=rootNode) {
-                me.isExpanded = TRUE;
-                me = me.parent;
-            }
-        }
-    }
-    
-    NSLog(@"- 2 -> %f",[start timeIntervalSinceNow]);
-    
-    [rootNode _calcChildLevel:-1];
-    rootNode.isExpanded = TRUE;
-    
-    NSLog(@"- 3 -> %f",[start timeIntervalSinceNow]);
-    
-    
-    return rootNode;
-}
-
-
-- (void) _calcChildLevel:(int)startLevel {
-    self.childLevel = startLevel;
-    for(TreeNode *child in self.children) {
-        [child _calcChildLevel:++startLevel];
-    }
-}
-
-- (void) setIsExpanded:(BOOL)isExpanded {
-    _isExpanded = isExpanded;
-    if(isExpanded) self.parent.isExpanded = TRUE;
-}
-
-- (void) toggleExpanded {
-    self.isExpanded = !self.isExpanded;
-}
-
-- (void) _setDeepLevel:(int)level {
-    self.deepLevel = level;
-    for(TreeNode *child in self.children) {
-        [child _setDeepLevel:level+1];
-    }
-}
-
-- (void) _addChild:(TreeNode *)child {
-
-    if(child.parent) {
-        [child.parent.children removeObject:child];
-    }
-    
-    [self.children addObject:child];
-    child.parent = self;
-    [child _setDeepLevel:self.deepLevel + 1];
-    
-}
-
-- (NSString *) description {
-
-    
-    NSString *padding = self.deepLevel<0?@"":[[NSString string] stringByPaddingToLength:4*self.deepLevel withString:@" " startingAtIndex:0];
-    NSMutableString *str =  [NSMutableString stringWithFormat:@"%@%@%@ (%d)(%d)\n",(self.isExpanded?@"+":@" "), padding, self.tag.name, self.deepLevel, self.childLevel];
-    for(TreeNode *child in self.children) {
-        [str appendString:[child description]];
-    }
-    return str;
-}
-
-- (NSArray *) toFlatArray:(NodeExpandedState)expandedState {
-    
-    NSMutableArray *flatNodes = [NSMutableArray array];
-    
-    if(expandedState==ALL_NODES || (expandedState==JUST_EXPANDED && self.isExpanded)) {
-        for(TreeNode *childNode in self.children) {
-            [flatNodes addObject:childNode];
-            if(expandedState==ALL_NODES || (expandedState==JUST_EXPANDED && self.isExpanded)) {
-                [flatNodes addObjectsFromArray:[childNode toFlatArray:expandedState]];
-            }
-        }
-    }
-    return flatNodes;
-}
-
-@end
 
 
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark PRIVATE interface definition
 //*********************************************************************************************************************
-@interface TagFilterViewController () <UITableViewDelegate, UITableViewDataSource>
+@interface TagFilterViewController () <TagTreeTableViewControllerDelegate>
 
-@property (nonatomic, assign) IBOutlet UITableView *tagsTable;
-
-@property (nonatomic, strong) TreeNode *rootNode;
-@property (nonatomic, strong) NSArray *flatNodes;
+@property (nonatomic, strong)   TagTreeTableViewController  *tagTableView;
+@property (nonatomic, strong)   MComplexFilter              *filter;
 
 @end
 
@@ -244,19 +45,47 @@ typedef enum NodeExpandedStateTypes
 @implementation TagFilterViewController
 
 
+// Afecta al filtro aplicado
+@synthesize moContext = _moContext;
+
+
+
+
 //=====================================================================================================================
 #pragma mark -
 #pragma mark CLASS methods
 //---------------------------------------------------------------------------------------------------------------------
 
 
+
+//=====================================================================================================================
+#pragma mark -
+#pragma mark Public methods
+//---------------------------------------------------------------------------------------------------------------------
+- (NSManagedObjectContext *) moContext {
+    return self.filter.moContext;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) setMoContext:(NSManagedObjectContext *)moContext {
+
+    // Solo aplica si ha cambiado
+    if(![self.filter.moContext isEqual:moContext]) {
+        self.filter = [MComplexFilter filterWithContext:moContext];
+        _moContext = moContext;
+    }
+}
+
+
+
+
 //=====================================================================================================================
 #pragma mark -
 #pragma mark <UIViewController> superclass methods
 //---------------------------------------------------------------------------------------------------------------------
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+- (id) initWithCoder:(NSCoder *)aDecoder {
+    
+    self = [super initWithCoder:aDecoder];
     if (self) {
         // Custom initialization
     }
@@ -268,41 +97,14 @@ typedef enum NodeExpandedStateTypes
 {
     [super viewDidLoad];
     
-    // Do any additional setup after loading the view from its nib
-    if(self.moContext==nil) {
-        self.moContext = BaseCoreDataService.moContext;
-    }
-    self.filter = [NSMutableArray array];
-    /*
-    self.tagList = [MTag tagsForPointsTaggedWith:self.filter InContext:self.moContext];
-     */
-    
-
-    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) viewWillAppear:(BOOL)animated {
-    [self _loadTags];
+- (void) viewDidAppear:(BOOL)animated {
+    
+    [self.tagTableView setTagList:self.filter.tagList selectedTags:self.filter.filterTags expandedTags:nil];
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _loadTags {
-    
-    
-    NSDate *start = [NSDate date];
-    NSLog(@"TagFilterViewController - loadTags - in");
-    
-    NSMutableArray *allTags = [NSMutableArray arrayWithArray:[MTag tagsForPointsTaggedWith:[NSSet setWithArray:self.filter] InContext:self.moContext]];
-    NSLog(@"TagFilterViewController - loadTags - 1 = %f",[start timeIntervalSinceNow]);
-    self.rootNode = [TreeNode treeNodesFromTags:allTags expandedTags:self.filter];
-    NSLog(@"TagFilterViewController - loadTags - 2 = %f",[start timeIntervalSinceNow]);
-    self.flatNodes = [self.rootNode toFlatArray:JUST_EXPANDED];
-    NSLog(@"TagFilterViewController - loadTags - 3 = %f",[start timeIntervalSinceNow]);
-    [self.tagsTable reloadData];
-    
-    NSLog(@"TagFilterViewController - loadTags - out = %f",[start timeIntervalSinceNow]);
-}
 
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -312,8 +114,19 @@ typedef enum NodeExpandedStateTypes
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    NSLog(@"pepe");
+    
+    // Make sure your segue name in storyboard is the same as this line
+    if ([[segue identifier] isEqualToString:@"TagFilter_to_TagTreeTable"])
+    {
+        // Get reference to the destination view controller
+        self.tagTableView = [segue destinationViewController];
+        
+        // Pass any objects to the view controller here, like...
+        self.tagTableView.delegate = self;
+    }
+    
 }
+
 
 
 //=====================================================================================================================
@@ -325,343 +138,29 @@ typedef enum NodeExpandedStateTypes
 
 //=====================================================================================================================
 #pragma mark -
-#pragma mark <UITableViewDelegate> protocol methods
+#pragma mark <TagTreeTableViewControllerDelegate> protocol methods
 //---------------------------------------------------------------------------------------------------------------------
-- (UIImage *)image:(UIImage *)img withBurnTint:(UIColor *)color
-{
-    // lets tint the icon - assumes your icons are black
-    UIGraphicsBeginImageContextWithOptions(img.size, NO, 0.0);
-    CGContextRef context = UIGraphicsGetCurrentContext();
+- (void)tagTreeTable:(TagTreeTableViewController *)sender tappedTagTreeNode:(TagTreeNode *)tappedNode {
     
-    CGContextTranslateCTM(context, 0, img.size.height);
-    CGContextScaleCTM(context, 1.0, -1.0);
-    
-    CGRect rect = CGRectMake(0, 0, img.size.width, img.size.height);
-    
-    // draw alpha-mask
-    CGContextSetBlendMode(context, kCGBlendModeNormal);
-    CGContextDrawImage(context, rect, img.CGImage);
-    
-    // draw tint color, preserving alpha values of original image
-    CGContextSetBlendMode(context, kCGBlendModeSourceIn);
-    [color setFill];
-    CGContextFillRect(context, rect);
-    
-    UIImage *coloredImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return coloredImage;
-    
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (UIImage *) _tagImageForIndex:(NSUInteger)index deepLevel:(int)deepLevel {
-    switch (index%6) {
-        case 0:
-            if(deepLevel==0)
-                return [self image:[UIImage imageNamed:@"LBlackTag-1.png"] withBurnTint:[UIColor colorWithRed:0.000 green:0.000 blue:0.500 alpha:1.0]];
-            else if(deepLevel==1)
-                return [self image:[UIImage imageNamed:@"LBlackTag-2.png"] withBurnTint:[UIColor colorWithRed:0.000 green:0.500 blue:0.000 alpha:1.0]];
-            else
-                return [self image:[UIImage imageNamed:@"LBlackTag-3.png"] withBurnTint:[UIColor colorWithRed:0.500 green:0.000 blue:0.000 alpha:1.0]];
-        case 1:
-            if(deepLevel==0)
-                return [self image:[UIImage imageNamed:@"LBlackTag-1.png"] withBurnTint:[UIColor colorWithRed:0.000 green:0.000 blue:0.583 alpha:1.0]];
-            else if(deepLevel==1)
-                return [self image:[UIImage imageNamed:@"LBlackTag-2.png"] withBurnTint:[UIColor colorWithRed:0.000 green:0.583 blue:0.000 alpha:1.0]];
-            else
-                return [self image:[UIImage imageNamed:@"LBlackTag-3.png"] withBurnTint:[UIColor colorWithRed:0.583 green:0.000 blue:0.000 alpha:1.0]];
-        case 2:
-            if(deepLevel==0)
-                return [self image:[UIImage imageNamed:@"LBlackTag-1.png"] withBurnTint:[UIColor colorWithRed:0.000 green:0.000 blue:0.667 alpha:1.0]];
-            else if(deepLevel==1)
-                return [self image:[UIImage imageNamed:@"LBlackTag-2.png"] withBurnTint:[UIColor colorWithRed:0.000 green:0.667 blue:0.000 alpha:1.0]];
-            else
-                return [self image:[UIImage imageNamed:@"LBlackTag-3.png"] withBurnTint:[UIColor colorWithRed:0.667 green:0.000 blue:0.000 alpha:1.0]];
-        case 3:
-            if(deepLevel==0)
-                return [self image:[UIImage imageNamed:@"LBlackTag-1.png"] withBurnTint:[UIColor colorWithRed:0.000 green:0.000 blue:0.750 alpha:1.0]];
-            else if(deepLevel==1)
-                return [self image:[UIImage imageNamed:@"LBlackTag-2.png"] withBurnTint:[UIColor colorWithRed:0.000 green:0.750 blue:0.000 alpha:1.0]];
-            else
-                return [self image:[UIImage imageNamed:@"LBlackTag-3.png"] withBurnTint:[UIColor colorWithRed:0.750 green:0.000 blue:0.000 alpha:1.0]];
-        case 4:
-            if(deepLevel==0)
-                return [self image:[UIImage imageNamed:@"LBlackTag-1.png"] withBurnTint:[UIColor colorWithRed:0.000 green:0.000 blue:0.833 alpha:1.0]];
-            else if(deepLevel==1)
-                return [self image:[UIImage imageNamed:@"LBlackTag-2.png"] withBurnTint:[UIColor colorWithRed:0.000 green:0.833 blue:0.000 alpha:1.0]];
-            else
-                return [self image:[UIImage imageNamed:@"LBlackTag-3.png"] withBurnTint:[UIColor colorWithRed:0.833 green:0.000 blue:0.000 alpha:1.0]];
-        case 5:
-            if(deepLevel==0)
-                return [self image:[UIImage imageNamed:@"LBlackTag-1.png"] withBurnTint:[UIColor colorWithRed:0.000 green:0.000 blue:0.917 alpha:1.0]];
-            else if(deepLevel==1)
-                return [self image:[UIImage imageNamed:@"LBlackTag-2.png"] withBurnTint:[UIColor colorWithRed:0.000 green:0.917 blue:0.000 alpha:1.0]];
-            else
-                return [self image:[UIImage imageNamed:@"LBlackTag-3.png"] withBurnTint:[UIColor colorWithRed:0.917 green:0.000 blue:0.000 alpha:1.0]];
-    }
-    return nil;}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (UIImage *) _old_tagImageForIndex:(NSUInteger)index deepLevel:(int)deepLevel {
-    switch (index%6) {
-        case 0:
-            if(deepLevel==0)
-                return [self image:[UIImage imageNamed:@"BlackTag-1.png"] withBurnTint:[UIColor redColor]];
-            //return [UIImage imageNamed:@"OrangeTag-11.png"];
-            else if(deepLevel==1)
-                return [UIImage imageNamed:@"OrangeTag-2.png"];
-            else
-                return [UIImage imageNamed:@"OrangeTag-3.png"];
-        case 1:
-            if(deepLevel==0)
-                return [UIImage imageNamed:@"GreenTag-11.png"];
-            else if(deepLevel==1)
-                return [UIImage imageNamed:@"GreenTag-2.png"];
-            else
-                return [UIImage imageNamed:@"GreenTag-3.png"];
-        case 2:
-            if(deepLevel==0)
-                return [UIImage imageNamed:@"BlueTag-1.png"];
-            else if(deepLevel==1)
-                return [UIImage imageNamed:@"BlueTag-2.png"];
-            else
-                return [UIImage imageNamed:@"BlueTag-3.png"];
-        case 3:
-            if(deepLevel==0)
-                return [UIImage imageNamed:@"DOrangeTag-1.png"];
-            else if(deepLevel==1)
-                return [UIImage imageNamed:@"DOrangeTag-2.png"];
-            else
-                return [UIImage imageNamed:@"DOrangeTag-3.png"];
-        case 4:
-            if(deepLevel==0)
-                return [UIImage imageNamed:@"DGreenTag-1.png"];
-            else if(deepLevel==1)
-                return [UIImage imageNamed:@"DGreenTag-2.png"];
-            else
-                return [UIImage imageNamed:@"DGreenTag-3.png"];
-        case 5:
-            if(deepLevel==0)
-                return [UIImage imageNamed:@"DBlueTag-1.png"];
-            else if(deepLevel==1)
-                return [UIImage imageNamed:@"DBlueTag-2.png"];
-            else
-                return [UIImage imageNamed:@"DBlueTag-3.png"];
-    }
-    return nil;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    // Inhibe que las filas se puedan borrar pasando el dedo
-    return UITableViewCellEditingStyleNone;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    TreeNode *nodeSelected = (TreeNode *)[self.flatNodes objectAtIndex:[indexPath indexAtPosition:1]];
-    return 55-nodeSelected.deepLevel*11;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _rotateView:(UIView *)view {
-    
-    CABasicAnimation *rotate = [CABasicAnimation animationWithKeyPath:@"transform.rotation.x"];
-    rotate.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-    rotate.fromValue = [NSNumber numberWithFloat:0];
-    rotate.toValue = [NSNumber numberWithFloat:2*M_PI];
-    rotate.duration = 0.5f;
-    rotate.repeatCount = 1;
-    [view.layer setAnchorPoint:CGPointMake(0.5, 0.5)];
-    [view.layer addAnimation:rotate forKey:@"trans_rotation" ];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-    
-    TreeNode *nodeSelected = (TreeNode *)[self.flatNodes objectAtIndex:[indexPath indexAtPosition:1]];
-    [nodeSelected toggleExpanded];
-
-    
-    NSArray *newFlatNodes = [self.rootNode toFlatArray:JUST_EXPANDED];
-    int diff = newFlatNodes.count-self.flatNodes.count;
-    BOOL insertRows = diff>0;
-    diff = diff>=0?diff:-diff;
-    
-    NSMutableArray *indexes = [NSMutableArray array];
-    for(int n=1;n<=diff;n++) {
-        [indexes addObject:[NSIndexPath indexPathForItem:indexPath.row+n inSection:indexPath.section]];
-    }
-    
-    self.flatNodes = newFlatNodes;
-    
-    if(insertRows) {
-        [tableView insertRowsAtIndexPaths:indexes withRowAnimation:UITableViewRowAnimationAutomatic];
+    // Cambiar la seleccion depende de si es el nodo mas profundo seleccionado
+    TagTreeNode *selChild = tappedNode.selectedChild;
+    if(selChild) {
+        selChild.isSelected = FALSE;
     } else {
-        [tableView deleteRowsAtIndexPaths:indexes withRowAnimation:UITableViewRowAnimationAutomatic];
+        [tappedNode toggleSelected];
     }
     
+    // Establece el nuevo nivel de filtro
+    self.filter.filterTags = [tappedNode.tree allDeepestSelectedChildrenTags];
+    NSSet *expandedTags = tappedNode.tag?[NSSet setWithObject:tappedNode.tag]:[NSSet set];
+    [self.tagTableView setTagList:self.filter.tagList selectedTags:self.filter.filterTags expandedTags:expandedTags];
     
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    UIImage __block *image = (nodeSelected.isExpanded) ? [UIImage imageNamed:@"unfolded.png"] : [UIImage imageNamed:@"folded.png"];
-    UIButton __block *button = (UIButton *)cell.accessoryView;
-    
-    [UIView animateWithDuration:0.3 animations:^{
-        button.transform = CGAffineTransformMakeRotation((nodeSelected.isExpanded?1:-1)*M_PI/2);
-    } completion:^(BOOL finished) {
-        button.transform = CGAffineTransformIdentity;
-        [button setBackgroundImage:image forState:UIControlStateNormal];
-    }];
-    
+    // Avisa al delegate del cambio en el filtro
+    if(self.delegate && [self.delegate respondsToSelector:@selector(filterHasChanged:filter:)]) {
+        [self.delegate filterHasChanged:self filter:self.filter];
+    }
+
 }
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-
-    TreeNode *nodeSelected = (TreeNode *)[self.flatNodes objectAtIndex:[indexPath indexAtPosition:1]];
-    MTag *itemSelected = nodeSelected.tag;
-    if([self.filter containsObject:itemSelected]) {
-        [self.filter removeObject:itemSelected];
-    } else {
-        [self.filter addObject:itemSelected];
-    }
-    [self _loadTags];
-    
-    // No dejamos nada seleccionado
-    //    return indexPath;
-    return nil;
-}
-
-
-
-//=====================================================================================================================
-#pragma mark -
-#pragma mark <UITableViewDataSource> protocol methods
-//---------------------------------------------------------------------------------------------------------------------
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-
-    return self.flatNodes.count;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _setDetailDisclosureButtonForCell:(UITableViewCell *)cell expanded:(BOOL)expanded {
-
-    UIImage *image = (expanded) ? [UIImage imageNamed:@"unfolded.png"] : [UIImage imageNamed:@"folded.png"];
-    
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    CGRect frame = CGRectMake(0.0, 0.0, image.size.width, image.size.height);
-    button.frame = frame;
-    [button setBackgroundImage:image forState:UIControlStateNormal];
-    
-    [button addTarget:self action:@selector(_checkButtonTapped:event:)  forControlEvents:UIControlEventTouchUpInside];
-    button.backgroundColor = [UIColor clearColor];
-    cell.accessoryView = button;
-}
-
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _checkButtonTapped:(id)sender event:(id)event
-{
-    NSSet *touches = [event allTouches];
-    UITouch *touch = [touches anyObject];
-    CGPoint currentTouchPosition = [touch locationInView:self.tagsTable];
-    NSIndexPath *indexPath = [self.tagsTable indexPathForRowAtPoint: currentTouchPosition];
-    
-    if (indexPath != nil)
-    {
-        [self tableView: self.tagsTable accessoryButtonTappedForRowWithIndexPath: indexPath];
-    }
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    static NSString *myViewCellID = @"myTableCell2";
-
-    MyTableViewCell *cell = (MyTableViewCell *)[tableView dequeueReusableCellWithIdentifier:myViewCellID];
-    if (cell == nil) {
-        cell = [[MyTableViewCell  alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:myViewCellID];
-        cell.selectionStyle = UITableViewCellSelectionStyleGray;
-    }
-
-    
-    TreeNode *nodeToShow = (TreeNode *)[self.flatNodes objectAtIndex:[indexPath indexAtPosition:1]];
-    MTag *itemToShow = nodeToShow.tag;
-    
-    if(itemToShow.shortName) {
-        cell.textLabel.text = itemToShow.shortName;
-    } else {
-        cell.textLabel.text = itemToShow.name;
-    }
-    if([self.filter containsObject:itemToShow]) {
-        cell.textLabel.textColor = [UIColor blueColor];
-    } else {
-        cell.textLabel.textColor = [UIColor blackColor];
-    }
-    
-    if(nodeToShow.children.count==0) {
-        //cell.accessoryType = UITableViewCellAccessoryNone;
-        cell.accessoryView = nil;
-    } else {
-        //cell.accessoryType = UITableViewCellAccessoryDetailButton;
-        [self _setDetailDisclosureButtonForCell:cell expanded:nodeToShow.isExpanded];
-    }
-    
-    if(itemToShow.isAutoTagValue) {
-        cell.imageView.image = itemToShow.icon.image;
-    } else {
-        cell.imageView.image = [self _tagImageForIndex:nodeToShow.childLevel deepLevel:nodeToShow.deepLevel];
-    }
-    //cell.indentationLevel = nodeToShow.deepLevel;
-    cell.indentationWidth = 16.0;
-    cell.textLabel.font = [UIFont fontWithName:@".HelveticaNeueInterface-M3" size:21.0-5.0*nodeToShow.deepLevel];
-    
-    /*
-    TDBadgedCell *cell = (TDBadgedCell *)[tableView dequeueReusableCellWithIdentifier:myViewCellID];
-    if (cell == nil) {
-        cell = [[TDBadgedCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:myViewCellID];
-        cell.selectionStyle = UITableViewCellSelectionStyleGray;
-    }
-    
-    
-    MBaseEntity *itemToShow = (MBaseEntity *)[self.itemLists objectAtIndex:[indexPath indexAtPosition:1]];
-    
-    cell.textLabel.text=itemToShow.name;
-    cell.imageView.image = itemToShow.entityImage;
-    
-    if(itemToShow.entityType == MET_POINT) {
-        cell.textLabel.textColor = [UIColor blackColor];
-        cell.detailTextLabel.text=@" ";
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        //cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-        cell.badgeString=nil;
-    } else {
-        cell.textLabel.textColor = [UIColor blueColor];
-        cell.detailTextLabel.text=@"";
-        cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-        if (itemToShow.entityType == MET_MAP) {
-            cell.badgeString=[(MMap*)itemToShow strViewCount];
-        } else {
-            cell.badgeString=[(MCategory*)itemToShow strViewCountForMap:self.selectedMap];
-        }
-    }
-    
-    if(tableView.isEditing) {
-        [self _setLeftCheckStatusFor:itemToShow cell:cell];
-    }
-    */
-    return cell;
-}
-
-
-
-//=====================================================================================================================
-#pragma mark -
-#pragma mark Public methods
-//---------------------------------------------------------------------------------------------------------------------
 
 
 

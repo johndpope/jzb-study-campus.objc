@@ -12,6 +12,7 @@
 const struct MTagAttributes MTagAttributes = {
 	.isAutoTag = @"isAutoTag",
 	.shortName = @"shortName",
+	.tagTreeID = @"tagTreeID",
 };
 
 const struct MTagRelationships MTagRelationships = {
@@ -56,6 +57,11 @@ const struct MTagFetchedProperties MTagFetchedProperties = {
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
+	if ([key isEqualToString:@"tagTreeIDValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"tagTreeID"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
 
 	return keyPaths;
 }
@@ -93,6 +99,34 @@ const struct MTagFetchedProperties MTagFetchedProperties = {
 
 @dynamic shortName;
 
+
+
+
+
+
+@dynamic tagTreeID;
+
+
+
+- (int64_t)tagTreeIDValue {
+	NSNumber *result = [self tagTreeID];
+	return [result longLongValue];
+}
+
+
+- (void)setTagTreeIDValue:(int64_t)value_ {
+	[self setTagTreeID:[NSNumber numberWithLongLong:value_]];
+}
+
+
+- (int64_t)primitiveTagTreeIDValue {
+	NSNumber *result = [self primitiveTagTreeID];
+	return [result longLongValue];
+}
+
+- (void)setPrimitiveTagTreeIDValue:(int64_t)value_ {
+	[self setPrimitiveTagTreeID:[NSNumber numberWithLongLong:value_]];
+}
 
 
 

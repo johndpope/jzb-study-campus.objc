@@ -26,13 +26,14 @@
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
 + (MMap *) emptyMapWithName:(NSString *)name inContext:(NSManagedObjectContext *)moContext;
-+ (NSArray *) allMapsInContext:(NSManagedObjectContext *)moContext includeMarkedAsDeleted:(BOOL)withDeleted;
++ (NSArray *) allMapsinContext:(NSManagedObjectContext *)moContext includeMarkedAsDeleted:(BOOL)withDeleted;
 
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
+- (BOOL) updateSummary:(NSString *)value;
 
 
 @end

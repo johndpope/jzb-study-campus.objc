@@ -9,10 +9,10 @@
 //*********************************************************************************************************************
 #define MY_CONSTANT @"a constant"
 
-typedef enum {
+typedef NS_ENUM(NSUInteger, SORTING_ORDER) {
     SORT_ASCENDING = YES,
     SORT_DESCENDING = NO
-} SORTING_ORDER;
+};
 
 typedef NSString * (^TBlock_blockDefinition)(NSArray *p1, NSError *error);
 

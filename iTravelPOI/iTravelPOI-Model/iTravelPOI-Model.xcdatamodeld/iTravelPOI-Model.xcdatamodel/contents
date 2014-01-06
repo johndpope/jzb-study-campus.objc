@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3401" systemVersion="13A603" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3401" systemVersion="13A603" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="iOS 7.0">
     <entity name="MBase" representedClassName="MBase" isAbstract="YES" syncable="YES">
-        <attribute name="name" attributeType="String" indexed="YES" syncable="YES"/>
-        <attribute name="tCreation" attributeType="Date" syncable="YES">
+        <attribute name="name" attributeType="String" indexed="YES" syncable="YES">
             <userInfo>
                 <entry key="readonly" value="YES"/>
             </userInfo>
         </attribute>
-        <attribute name="tUpdate" attributeType="Date" syncable="YES">
+        <attribute name="tCreation" attributeType="Date" indexed="YES" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <attribute name="tUpdate" attributeType="Date" indexed="YES" syncable="YES">
             <userInfo>
                 <entry key="readonly" value="YES"/>
             </userInfo>
@@ -17,6 +21,20 @@
                 <entry key="readonly" value="YES"/>
             </userInfo>
         </relationship>
+        <compoundIndexes>
+            <compoundIndex>
+                <index value="name"/>
+                <index value="tCreation"/>
+            </compoundIndex>
+            <compoundIndex>
+                <index value="name"/>
+                <index value="tUpdate"/>
+            </compoundIndex>
+            <compoundIndex>
+                <index value="name"/>
+                <index value="icon"/>
+            </compoundIndex>
+        </compoundIndexes>
     </entity>
     <entity name="MBaseSync" representedClassName="MBaseSync" isAbstract="YES" parentEntity="MBase" syncable="YES">
         <attribute name="etag" attributeType="String" syncable="YES">
@@ -34,7 +52,7 @@
                 <entry key="readonly" value="YES"/>
             </userInfo>
         </attribute>
-        <attribute name="modifiedSinceLastSync" attributeType="Boolean" defaultValueString="YES" syncable="YES">
+        <attribute name="modifiedSinceLastSync" attributeType="Boolean" defaultValueString="YES" indexed="YES" syncable="YES">
             <userInfo>
                 <entry key="readonly" value="YES"/>
             </userInfo>
@@ -46,7 +64,7 @@
                 <entry key="readonly" value="YES"/>
             </userInfo>
         </attribute>
-        <attribute name="name" attributeType="String" syncable="YES">
+        <attribute name="name" attributeType="String" indexed="YES" syncable="YES">
             <userInfo>
                 <entry key="readonly" value="YES"/>
             </userInfo>
@@ -58,11 +76,23 @@
         </relationship>
     </entity>
     <entity name="MMap" representedClassName="MMap" parentEntity="MBaseSync" syncable="YES">
-        <attribute name="summary" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="points" toMany="YES" deletionRule="Cascade" destinationEntity="MPoint" inverseName="map" inverseEntity="MPoint" syncable="YES"/>
+        <attribute name="summary" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <relationship name="points" toMany="YES" deletionRule="Cascade" destinationEntity="MPoint" inverseName="map" inverseEntity="MPoint" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </relationship>
     </entity>
     <entity name="MPoint" representedClassName="MPoint" parentEntity="MBaseSync" syncable="YES">
-        <attribute name="descr" attributeType="String" syncable="YES"/>
+        <attribute name="descr" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </attribute>
         <attribute name="latitude" attributeType="Double" defaultValueString="0.0" syncable="YES">
             <userInfo>
                 <entry key="readonly" value="YES"/>
@@ -73,7 +103,11 @@
                 <entry key="readonly" value="YES"/>
             </userInfo>
         </attribute>
-        <relationship name="map" maxCount="1" deletionRule="Nullify" destinationEntity="MMap" inverseName="points" inverseEntity="MMap" syncable="YES"/>
+        <relationship name="map" maxCount="1" deletionRule="Nullify" destinationEntity="MMap" inverseName="points" inverseEntity="MMap" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </relationship>
         <relationship name="rTags" toMany="YES" deletionRule="Cascade" destinationEntity="RPointTag" inverseName="point" inverseEntity="RPointTag" syncable="YES">
             <userInfo>
                 <entry key="readonly" value="YES"/>
@@ -81,12 +115,21 @@
         </relationship>
     </entity>
     <entity name="MTag" representedClassName="MTag" parentEntity="MBase" syncable="YES">
-        <attribute name="isAutoTag" attributeType="Boolean" defaultValueString="NO" syncable="YES">
+        <attribute name="isAutoTag" attributeType="Boolean" defaultValueString="NO" indexed="YES" syncable="YES">
             <userInfo>
                 <entry key="readonly" value="YES"/>
             </userInfo>
         </attribute>
-        <attribute name="shortName" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="shortName" optional="YES" attributeType="String" indexed="YES" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <attribute name="tagTreeID" attributeType="Integer 64" indexed="YES" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </attribute>
         <relationship name="ancestors" toMany="YES" deletionRule="Nullify" destinationEntity="MTag" inverseName="descendants" inverseEntity="MTag" syncable="YES">
             <userInfo>
                 <entry key="readonly" value="YES"/>
@@ -114,9 +157,21 @@
         </relationship>
     </entity>
     <entity name="RPointTag" representedClassName="RPointTag" syncable="YES">
-        <attribute name="isDirect" attributeType="Boolean" syncable="YES"/>
-        <relationship name="point" maxCount="1" deletionRule="Nullify" destinationEntity="MPoint" inverseName="rTags" inverseEntity="MPoint" syncable="YES"/>
-        <relationship name="tag" maxCount="1" deletionRule="Nullify" destinationEntity="MTag" inverseName="rPoints" inverseEntity="MTag" syncable="YES"/>
+        <attribute name="isDirect" attributeType="Boolean" indexed="YES" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <relationship name="point" maxCount="1" deletionRule="Nullify" destinationEntity="MPoint" inverseName="rTags" inverseEntity="MPoint" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </relationship>
+        <relationship name="tag" maxCount="1" deletionRule="Nullify" destinationEntity="MTag" inverseName="rPoints" inverseEntity="MTag" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </relationship>
     </entity>
     <elements>
         <element name="MBase" positionX="-3456" positionY="-486" width="128" height="103"/>
@@ -124,7 +179,7 @@
         <element name="MIcon" positionX="-3213" positionY="-430" width="128" height="88"/>
         <element name="MMap" positionX="-3566" positionY="-73" width="128" height="73"/>
         <element name="MPoint" positionX="-3332" positionY="-108" width="128" height="118"/>
-        <element name="MTag" positionX="-2954" positionY="-130" width="128" height="148"/>
+        <element name="MTag" positionX="-2954" positionY="-130" width="128" height="163"/>
         <element name="RPointTag" positionX="-3152" positionY="-133" width="128" height="88"/>
     </elements>
 </model>

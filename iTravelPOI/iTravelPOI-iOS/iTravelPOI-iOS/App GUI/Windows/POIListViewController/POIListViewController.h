@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+@class MMap;
 
 
 
@@ -26,9 +27,6 @@
 @interface POIListViewController : UIViewController
 
 
-@property (nonatomic, strong) NSManagedObjectContext *moContext;
-
-
 
 //=====================================================================================================================
 #pragma mark -
@@ -41,6 +39,7 @@
 #pragma mark -
 #pragma mark INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
+- (void) setMap:(MMap *)map andContext:(NSManagedObjectContext *)moContext;
 
 
 
