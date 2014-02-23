@@ -209,7 +209,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void) tagPoint:(MPoint *)point {
 
-    NSLog(@"tagPoint tag: %@ - point: %@", self.name, point.name);
+    NSLog(@"tagPoint: tagName: '%@' - pointName: '%@'", self.name, point.name);
     
     // ESTE PUNTO DEBE SER EL PRIMERO porque afecta a la informacion de los padres (incluido este elemento)
     // Y la borra de sus hijos por si ese punto ya estaba taggeado mas abajo

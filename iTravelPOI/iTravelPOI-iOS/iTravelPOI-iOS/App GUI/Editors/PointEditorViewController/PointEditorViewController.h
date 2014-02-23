@@ -56,6 +56,7 @@
 #pragma mark -
 #pragma mark INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
+- (void) setTintColor:(UIColor *)tintColor;
 
 
 

@@ -46,6 +46,7 @@
 
 @synthesize directTags = _directTags;
 @synthesize directNoAutoTags = _directNoAutoTags;
+@synthesize coordinate = _coordinate;
 
 
 
@@ -110,6 +111,29 @@
         }
     }
     return allTags;
+}
+
+
+
+
+//=====================================================================================================================
+#pragma mark -
+#pragma mark <MKAnnotation> Protocol methods
+//---------------------------------------------------------------------------------------------------------------------
+- (CLLocationCoordinate2D) coordinate {
+
+    CLLocationCoordinate2D coord = {self.latitudeValue, self.longitudeValue};
+    return coord;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSString *) title {
+    return self.name;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSString *) subtitle {
+    return @"kkvaca";
 }
 
 

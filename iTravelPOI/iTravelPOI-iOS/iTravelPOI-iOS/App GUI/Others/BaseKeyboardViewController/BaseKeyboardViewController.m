@@ -222,6 +222,22 @@
     // Consigue el tamaño del teclado
     NSDictionary* info = [notification userInfo];
     CGRect keyboardRect = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    if (orientation==UIDeviceOrientationLandscapeLeft || orientation==UIDeviceOrientationLandscapeRight) {
+        keyboardRect.origin.y = 0;
+        CGFloat value = keyboardRect.size.width;
+        keyboardRect.size.width = keyboardRect.size.height;
+        keyboardRect.size.height = value;
+
+        keyboardRect.origin.x = 0;
+        keyboardRect.origin.y = [UIScreen mainScreen].bounds.size.width-keyboardRect.size.height;
+    } else {
+        keyboardRect.origin.x = 0;
+        keyboardRect.origin.y = [UIScreen mainScreen].bounds.size.height-keyboardRect.size.height;
+    }
+    
+
     return keyboardRect;
 }
 

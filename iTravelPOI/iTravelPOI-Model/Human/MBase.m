@@ -31,7 +31,6 @@ NSString *const MBaseOrderByIconDes         = @"MBaseOrderByIconDes";
 
 
 
-
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark PRIVATE interface definition

@@ -96,7 +96,7 @@
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Solo salva los cambios de ese contexto "un nivel hacia abajo"
-+ (BOOL) saveChangesinContext:(NSManagedObjectContext *)moContext {
++ (BOOL) saveChangesInContext:(NSManagedObjectContext *)moContext {
     
     NSError *error = nil;
     if([moContext hasChanges] && ![moContext save:&error]) {

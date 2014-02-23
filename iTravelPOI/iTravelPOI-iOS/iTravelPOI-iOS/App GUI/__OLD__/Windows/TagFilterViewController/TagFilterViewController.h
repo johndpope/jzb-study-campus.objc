@@ -39,7 +39,6 @@
 
 @property (weak, nonatomic)             id<TagFilterViewControllerDelegate> delegate;
 
-@property (strong, nonatomic)           NSManagedObjectContext              *moContext;
 @property (strong, nonatomic, readonly) MComplexFilter                      *filter;
 
 

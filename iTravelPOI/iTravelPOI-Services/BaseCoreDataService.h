@@ -36,7 +36,7 @@
 + (NSManagedObjectContext *) childContextFor:(NSManagedObjectContext *)moContext;
 + (NSManagedObjectContext *) childContextASyncFor:(NSManagedObjectContext *)moContext;
 
-+ (BOOL) saveChangesinContext:(NSManagedObjectContext *)moContext;
++ (BOOL) saveChangesInContext:(NSManagedObjectContext *)moContext;
 
 
 + (NSEntityDescription *) entityByName:(NSString *)name;

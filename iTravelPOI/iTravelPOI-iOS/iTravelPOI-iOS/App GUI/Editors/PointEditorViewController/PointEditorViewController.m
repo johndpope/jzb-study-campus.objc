@@ -21,6 +21,7 @@
 #import "MTag.h"
 #import "MIcon.h"
 #import "Util_Macros.h"
+#import "UIImage+Tint.h"
 
 
 
@@ -30,7 +31,9 @@
 #pragma mark -
 #pragma mark Private Enumerations & definitions
 //*********************************************************************************************************************
-#define MIN_PRECISION_TO_STOP_GPS -1
+#define MIN_PRECISION_TO_STOP_GPS   +5
+#define GPS_UNKNOWN                 -1.0
+#define GPS_ERROR                   -2.0
 
 typedef NS_ENUM(NSUInteger, LocationEditingState) {
     LocationEditingStateNone, LocationEditingStateLat, LocationEditingStateLng
@@ -56,20 +59,22 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 @property (weak, nonatomic) IBOutlet UIView                 *fvTagsView;
 @property (weak, nonatomic) IBOutlet UILabel                *flblExtraInfo;
 
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem        *navBarSaveButton;
 
-@property (weak, nonatomic)   UIView                        *fieldToScroll;
+@property (weak, nonatomic)   UIView                        *textFieldToScroll;
 
 @property (strong, nonatomic) IBOutlet UIView               *iavView;
 @property (weak, nonatomic)   IBOutlet UILabel              *iavLabel;
 @property (strong, nonatomic) IBOutlet UITextField          *iavTextField;
 
 @property (nonatomic, assign) LocationEditingState          locationEditingState;
-@property (nonatomic, assign) double                        gpsAccuracyValue;
+@property (nonatomic, assign) CLLocationAccuracy            gpsAccuracyValue;
 @property (strong, nonatomic) CLLocationManager             *locationManager;
 
 @property (strong, nonatomic) NSManagedObjectContext        *moContext;
 
+@property (assign, nonatomic) CGSize minCVSize;
 @end
 
 
@@ -105,55 +110,23 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) keyboardWillShow {
-
-    [super keyboardWillShow];
+- (void) setTintColor:(UIColor *)tintColor {
     
-    if(self.locationEditingState!=LocationEditingStateNone) {
-        [self _showInputAccesoryView];
+    // Lo establece en la ventana padre
+    self.view.tintColor = tintColor;
+    
+    // Propaga el tintColor a la barra del teclado
+    for(UIView *childView in self.iavView.subviews) {
+        childView.tintColor = tintColor;
+        if([childView isKindOfClass:[UILabel class]]){
+            ((UILabel *)childView).textColor = self.view.tintColor;
+        } else if([childView isKindOfClass:[UIButton class]]) {
+            UIImage *img = [((UIButton *)childView) imageForState:UIControlStateNormal];
+            [((UIButton *)childView) setImage:[img burnTint:self.view.tintColor] forState:UIControlStateNormal];
+        }
     }
-    
-    UIScrollView *sv = (UIScrollView *)self.kbContentView.superview;
-    [sv scrollRectToVisible:self.fieldToScroll.frame animated:TRUE];
 
 }
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) keyboardDidHide {
-    [self _hideInputAccesoryView];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _showInputAccesoryView {
-    
-    if(self.isKeyboardVisible) {
-        
-        CGPoint p = [self.view convertPoint:self.keyboardRect.origin fromView:nil];
-        frameSetY(self.iavView,p.y-self.iavView.frame.size.height);
-
-        // Le quita un poco mas al ScrollView
-        UIScrollView *sv = (UIScrollView *)self.kbContentView.superview;
-        sv.contentInset = (UIEdgeInsets){0, 0, self.keyboardRect.size.height+self.iavView.frame.size.height, 0};
-        sv.contentSize = self.kbContentView.frame.size;
-    }
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _hideInputAccesoryView {
-    
-    if(self.isKeyboardVisible) {
-        
-        frameSetY(self.iavView,1000);
-        
-        // Le pone un poco mas al ScrollView
-        UIScrollView *sv = (UIScrollView *)self.kbContentView.superview;
-        sv.contentInset = (UIEdgeInsets){0, 0, self.keyboardRect.size.height, 0};
-        sv.contentSize = self.kbContentView.frame.size;
-    }
-}
-
-
-
 
 
 //=====================================================================================================================
@@ -169,8 +142,8 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
         self.locationManager = [[CLLocationManager alloc] init];
         self.locationManager.delegate = self;
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation; // En metros
-        self.locationManager.distanceFilter = 5; // En metros
-        self.gpsAccuracyValue = -1;
+        self.locationManager.distanceFilter = MIN_PRECISION_TO_STOP_GPS; // En metros
+        self.gpsAccuracyValue = GPS_UNKNOWN;
 
     }
     return self;
@@ -182,15 +155,23 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     self.ftxtName.placeholder = @"Name goes here";
     self.ftxtDescription.placeholderText = @"Description goes here";
     self.navBarSaveButton.enabled = FALSE;
+    
+    // Necesita establecer el tamaño minimo con el que fue creada la vista que contiene el resto de elmentos
+    // para redimensionar todo adecuadamemte y gestionar las rotaciones y diferentes tamaños de pantalla
+    self.minCVSize = self.kbContentView.bounds.size;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) viewWillAppear:(BOOL)animated {
     
     [super viewWillAppear:animated];
+    
+    // Actualiza las dimensiones de la vista a las de la pantalla y rotacion actuales
+    [self _updateContentViewConstraints];
     
     // Resetea el valor del estado de edicion de la informacion de localizacion
     self.locationEditingState = LocationEditingStateNone;
@@ -217,6 +198,39 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    [self _updateContentViewConstraints];
+}
+
+- (void) viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _updateContentViewConstraints {
+    
+    CGFloat newHeight = self.view.bounds.size.height - self.kbContentView.superview.frame.origin.y;
+    if(newHeight>=self.minCVSize.height && newHeight!=self.kbContentView.bounds.size.height) {
+        for(NSLayoutConstraint *constraint in self.kbContentView.constraints) {
+            if(constraint.secondItem==nil && constraint.firstItem==self.kbContentView && constraint.firstAttribute==NSLayoutAttributeHeight) {
+                constraint.constant = newHeight;
+            }
+        }
+    }
+
+    CGFloat newWidth = self.view.bounds.size.width - self.kbContentView.superview.frame.origin.x;
+    if(newWidth>=self.minCVSize.width && newWidth!=self.kbContentView.bounds.size.width) {
+        for(NSLayoutConstraint *constraint in self.kbContentView.constraints) {
+            if(constraint.secondItem==nil && constraint.firstItem==self.kbContentView && constraint.firstAttribute==NSLayoutAttributeWidth) {
+                constraint.constant = newWidth;
+            }
+        }
+    }
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -292,6 +306,11 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 - (IBAction)iavGpsAction:(UIButton *)sender {
     [self.view endEditing:TRUE];
     [self _startLocationActivity];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (IBAction)locationIconTapped:(UITapGestureRecognizer *)sender {
+    [self locationLabelTapped:sender];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -371,7 +390,7 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 - (void) locationEditorSave:(LocationEditorViewController *)sender coord:(CLLocationCoordinate2D)coord {
     
     // Actualiza la información
-    self.gpsAccuracyValue = -1;
+    self.gpsAccuracyValue = GPS_UNKNOWN;
     self.navBarSaveButton.enabled |= [self.point updateLatitude:coord.latitude longitude:coord.longitude];
     [self _setLocationAndAccuracyField];
 }
@@ -406,7 +425,7 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 // Any errors are sent here
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
     [self _stopLocationActivity];
-    self.gpsAccuracyValue = -1.0;
+    self.gpsAccuracyValue = GPS_ERROR;
     [self _setLocationAndAccuracyField];
 }
 
@@ -417,7 +436,7 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
 
-    self.fieldToScroll = textView;
+    self.textFieldToScroll = textView;
     
     [self _stopLocationActivity];
     return  TRUE;
@@ -439,7 +458,7 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
 
-    self.fieldToScroll = textField;
+    self.textFieldToScroll = textField;
 
     [self _stopLocationActivity];
     
@@ -509,6 +528,62 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 //=====================================================================================================================
 #pragma mark -
 #pragma mark Private methods
+//---------------------------------------------------------------------------------------------------------------------
+- (void) keyboardDidShow {
+    
+    [super keyboardDidShow];
+    
+    UIScrollView *sv = (UIScrollView *)self.kbContentView.superview;
+    
+    // Comprueba si hace falta realizar un scroll para dejar el campo de texto a la vista
+    CGRect svBounds = sv.bounds;
+    svBounds.size.height -= sv.contentInset.bottom;
+    BOOL isFullyVisible = CGRectContainsRect(svBounds, self.textFieldToScroll.frame);
+    if(!isFullyVisible) {
+        [sv setContentOffset:CGPointMake(0, self.textFieldToScroll.frame.origin.y) animated:YES];
+    }
+
+    if(self.locationEditingState!=LocationEditingStateNone) {
+        [self _showInputAccesoryView];
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) keyboardDidHide {
+    [self _hideInputAccesoryView];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _showInputAccesoryView {
+    
+    if(self.isKeyboardVisible) {
+        
+        CGPoint p = [self.view convertPoint:self.keyboardRect.origin fromView:nil];
+        p.y = self.keyboardRect.origin.y;
+        self.iavView.frame = CGRectMake(0, 0, self.iavView.bounds.size.width, self.iavView.bounds.size.height);
+        //frameSetY(self.iavView,p.y-self.iavView.bounds.size.height);
+        
+        // Le quita un poco mas al ScrollView
+        UIScrollView *sv = (UIScrollView *)self.kbContentView.superview;
+        sv.contentInset = (UIEdgeInsets){0, 0, self.keyboardRect.size.height+self.iavView.bounds.size.height, 0};
+        sv.contentSize = self.kbContentView.bounds.size;
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _hideInputAccesoryView {
+    
+    if(self.isKeyboardVisible) {
+        
+        frameSetY(self.iavView,1000);
+        
+        // Le pone un poco mas al ScrollView
+        UIScrollView *sv = (UIScrollView *)self.kbContentView.superview;
+        sv.contentInset = (UIEdgeInsets){0, 0, self.keyboardRect.size.height, 0};
+        sv.contentSize = self.kbContentView.frame.size;
+    }
+}
+
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) _dismissEditor {
     
@@ -523,13 +598,13 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 //---------------------------------------------------------------------------------------------------------------------
 - (void) _stopImgLocationImageGlowing {
     [self.fimgLocationImage stopAnimating];
-    self.fimgLocationImage.image = [UIImage imageNamed:@"BlueMapMarker" burnTint:self.view.tintColor];
+    self.fimgLocationImage.image = [UIImage imageNamed:@"tbar-mapMarker" burnTint:self.view.tintColor];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) _startImgLocationImageGlowing {
     
-    UIImage *baseImg = [UIImage imageNamed:@"BlueMapMarker" burnTint:self.view.tintColor];
+    UIImage *baseImg = [UIImage imageNamed:@"tbar-mapMarker" burnTint:self.view.tintColor];
     NSMutableArray *imgs = [NSMutableArray array];
     
     double alphaInc = 1.0/20.0;
@@ -582,7 +657,10 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
     if(self.gpsAccuracyValue>=0) {
         self.flblGpsAccuracyLabel.text = [NSString stringWithFormat:@"GPS accuracy: %0.0f m", self.gpsAccuracyValue];
     } else {
-        self.flblGpsAccuracyLabel.text = @"GPS accuracy: UNKNOWN";
+        if(self.gpsAccuracyValue == GPS_UNKNOWN)
+            self.flblGpsAccuracyLabel.text = @"GPS accuracy: UNKNOWN";
+        else
+            self.flblGpsAccuracyLabel.text = @"GPS accuracy: ERROR";
     }
     
 }
@@ -718,9 +796,6 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
     [self _setLocationAndAccuracyField];
     [self _setTagsField];
 }
-
-
-
 
 
 

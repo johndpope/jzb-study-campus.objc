@@ -8,16 +8,20 @@
 
 #define __PointsViewController__IMPL__
 #import "PointsViewController.h"
+#import "PointsControllerDelegate.h"
+
 #import "PointListViewController.h"
 #import "PointMapViewController.h"
-#import "PointsControllerDelegate.h"
+#import "TagTreeTableViewController.h"
+
 #import "BaseCoreDataService.h"
+#import "MComplexFilter.h"
 #import "MMap.h"
+
 #import "PointEditorViewController.h"
 #import "OpenInActionSheetViewController.h"
+
 #import "BlockActionSheet.h"
-#import "TagFilterViewController.h"
-#import "SWRevealViewController.h"
 #import "KxMenu.h"
 #import "Util_Macros.h"
 
@@ -28,29 +32,30 @@
 #pragma mark -
 #pragma mark Private Enumerations & definitions
 //*********************************************************************************************************************
-
+#define TAGFILTER_X_POS 60.0
 
 
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark PRIVATE interface definition
 //*********************************************************************************************************************
-@interface PointsViewController () <SWRevealViewControllerDelegate, TagFilterViewControllerDelegate,
-                                    PointEditorViewControllerDelegate, PointsControllerDelegate>
+@interface PointsViewController () <TagTreeTableViewControllerDelegate,
+                                    PointEditorViewControllerDelegate, PointsControllerDataSource>
 
 @property (weak, nonatomic) IBOutlet UIToolbar                          *toolBar;
 @property (weak, nonatomic) IBOutlet UIToolbar                          *doneToolbar;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem                    *changeControllerTbItem;
 @property (weak, nonatomic) IBOutlet UIView                             *contentView;
 
+@property (strong, nonatomic) UIView                                    *darkCoverView;
+@property (strong, nonatomic) TagTreeTableViewController                *tagFilterVC;
 
 @property (strong, nonatomic) PointListViewController                   *pointListVC;
 @property (strong, nonatomic) PointMapViewController                    *pointMapVC;
 @property (weak, nonatomic)   UIViewController<PointsViewerProtocol>    *activeVC;
 
-@property (strong, nonatomic) NSManagedObjectContext                    *moContext;
+@property (strong, nonatomic) MComplexFilter                            *filter;
 
-@property (weak, nonatomic)   NSArray                                   *pointList;
 @property (strong, nonatomic) NSMutableSet                              *selectedPoints;
 @property (assign, nonatomic) SEL                                       multiSelectionDoneSel;
 
@@ -64,8 +69,6 @@
 //*********************************************************************************************************************
 @implementation PointsViewController
 
-
-@synthesize map = _map;
 
 
 
@@ -81,30 +84,14 @@
 #pragma mark Public methods
 //---------------------------------------------------------------------------------------------------------------------
 - (void) setMap:(MMap *)map {
-    
-    _map = map;
-    
-    // Por algun motivo necesita referenciar directamente al moContext
-    self.moContext = map.managedObjectContext;
+
+    self.filter.filterMap = map;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) editPoint:(MPoint *)point {
-    
-    // Crea un contexto hijo en el que crea una copia del punto para editarlo
-    NSManagedObjectContext *childContext = [BaseCoreDataService childContextFor:self.moContext];
-    MPoint *copiedPoint = (MPoint *)[childContext objectWithID:point.objectID];
-    
-    // Lanza la edicion
-    [self performSegueWithIdentifier: @"editSelectedPoint" sender: copiedPoint];
+- (NSArray *) pointList {
+    return self.filter.pointList;
 }
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) openInExternalApp:(MPoint *)point {
-    
-    [OpenInActionSheetViewController showOpenInActionSheetWithController:self point:point];
-}
-
 
 
 
@@ -116,26 +103,31 @@
     
     self = [super initWithCoder:aDecoder];
     if (self) {
-        // Custom initialization
+        // Crea un filtro vacio
+        self.filter = [MComplexFilter filter];
     }
     return self;
 }
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
+    
     [super viewDidLoad];
     
+    // Do any additional setup after loading the view from its nib
     self.doneToolbar.hidden = TRUE;
 
-    // Do any additional setup after loading the view from its nib
+    // Crea los ViewController de soporte (lista y mapa de puntos)
     self.pointListVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PointListViewController"];
     self.pointMapVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PointMapViewController"];
+    self.pointListVC.dataSource = self;
+    self.pointMapVC.dataSource = self;
     
-    self.pointListVC.delegate = self;
-    self.pointMapVC.delegate = self;
-    
+    // Añade el ViewController para gestionar el filtro
+    self.tagFilterVC = [self _createTagFilterViewController];
+
+    // Arranca sin puntos seleccionados
     self.selectedPoints = [NSMutableSet set];
 
 }
@@ -144,14 +136,12 @@
 - (void) viewDidAppear:(BOOL)animated {
     
     [super viewDidAppear:animated];
-    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) viewDidDisappear:(BOOL)animated {
 
     [super viewDidDisappear:animated];
-    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -162,28 +152,24 @@
 
     // Pone el titulo de la ventana atendiendo al titulo
     self.title = self.map ? self.map.name : @"Any Map";
-    
-    // Cada vez que esta ventana se muestra se establece como el delegate del side-menu
-    self.revealViewController.delegate = self;
-    
-    // Comienza mostrando los puntos en una lista
-    if(!self.activeVC) {
-        [self _transitionFromViewController:nil toViewController:self.pointListVC];
-    }
-    
-    
-    // La lista de puntos se carga desde el filtro activo
-    TagFilterViewController *tagFilterController = (TagFilterViewController *)self.revealViewController.rightViewController;
-    tagFilterController.delegate = self;
-
-    // La lista de puntos se carga desde el filtro activo
-    self.pointList = tagFilterController.filter.pointList;
-
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (void) viewDidLayoutSubviews {
+
+    [super viewDidLayoutSubviews];
+
+    // Hay que ajustar la vista del controlador activo para que "siga" al redimensionado de la ventana contenedora
+    self.activeVC.view.frame = self.contentView.bounds;
+
+    // Comienza mostrando los puntos en una lista (AQUI PORQUE ES DONDE ESTAN BIEN LOS TAMAÑOS DE LAS VISTAS)
+    if(!self.activeVC) {
+        [self _transitionFromViewController:nil toViewController:self.pointListVC];
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
@@ -192,6 +178,8 @@
 
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     self.activeVC.view.frame = self.contentView.bounds;
+    self.tagFilterVC.view.frame = [self _tagFilterRect];
+    self.darkCoverView.frame = self.view.frame;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -201,14 +189,14 @@
     // Make sure your segue name in storyboard is the same as this line
     if ([[segue identifier] isEqualToString:@"editSelectedPoint"]) {
         
-        // El objeto "sender" es el punto a editar (ya copiado)
+        // El objeto "sender" es el punto a editar (ya copiado a un contexto hijo)
         MPoint *copiedPoint = (MPoint *)sender;
         
         // Consigue la instancia del editor
         PointEditorViewController *editor = (PointEditorViewController *)segue.destinationViewController;
         
         // Propaga el color del tinte
-        editor.view.tintColor = self.view.tintColor;
+        editor.tintColor = self.view.tintColor;
 
         // Pasa la informacion necesaria
         editor.point = copiedPoint;
@@ -216,54 +204,6 @@
     }
 }
 
-- (void) startMultipleSelection:(SEL) multiSelectionDoneSel {
-    
-    self.multiSelectionDoneSel = multiSelectionDoneSel;
-    
-    CGFloat visibleY = self.toolBar.frame.origin.y;
-    CGFloat hiddenY = self.view.frame.origin.y+self.view.frame.size.height;
-    
-    
-    frameSetY(self.doneToolbar, hiddenY);
-    self.doneToolbar.hidden = FALSE;
-    
-    [UIView animateWithDuration:0.15
-                     animations:^{
-                         frameSetY(self.toolBar, hiddenY);
-                         [self.activeVC startMultiplePointSelection];
-                     }
-                     completion:^(BOOL finished) {
-                         self.toolBar.hidden = TRUE;
-                         [UIView animateWithDuration:0.15
-                                          animations:^{
-                                              frameSetY(self.doneToolbar, visibleY);
-                                          }];
-                     }];
-    
-}
-
-
-- (void) doneMultipleSelection {
-    
-    CGFloat visibleY = self.doneToolbar.frame.origin.y;
-    CGFloat hiddenY = self.view.frame.origin.y+self.view.frame.size.height;
-    
-    frameSetY(self.toolBar, hiddenY);
-    self.toolBar.hidden = FALSE;
-    
-    [UIView animateWithDuration:0.15
-                     animations:^{
-                         frameSetY(self.doneToolbar, hiddenY);
-                         [self.activeVC doneMultiplePointSelection];
-                     }
-                     completion:^(BOOL finished) {
-                         self.doneToolbar.hidden = TRUE;
-                         [UIView animateWithDuration:0.15
-                                          animations:^{
-                                              frameSetY(self.toolBar, visibleY);
-                                          }];
-                     }];
-}
 
 
 //=====================================================================================================================
@@ -276,45 +216,46 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)tbarCancelAction:(UIBarButtonItem *)sender {
-    [self doneMultipleSelection];
+    [self _doneMultipleSelection];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (IBAction)tbarChangeController:(UIBarButtonItem *)sender {
+    
+    if(self.activeVC == self.pointListVC) {
+        [self _transitionFromViewController:self.pointListVC toViewController:self.pointMapVC];
+        self.changeControllerTbItem.image = [UIImage imageNamed:@"tbar-viewList"];
+    } else {
+        [self _transitionFromViewController:self.pointMapVC toViewController:self.pointListVC];
+        self.changeControllerTbItem.image = [UIImage imageNamed:@"tbar-viewMap"];
+    }
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)tbarItemMultiSelect:(UIBarButtonItem *)sender {
 
-    [self startMultipleSelection:@selector(msDelete)];
+    [self _startMultipleSelection:@selector(msDelete)];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)tbarShowFilter:(UIBarButtonItem *)sender {
-    [self.revealViewController rightRevealToggle:self];
+    [self _toggleShowTagFilter];
+    //    [self.revealViewController rightRevealToggle:self];
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-- (IBAction)tbarChangeController:(UIBarButtonItem *)sender {
-
-    if(self.activeVC == self.pointListVC) {
-        [self _transitionFromViewController:self.pointListVC toViewController:self.pointMapVC];
-        self.changeControllerTbItem.image = [UIImage imageNamed:@"actions-view-list"];
-    } else {
-        [self _transitionFromViewController:self.pointMapVC toViewController:self.pointListVC];
-        self.changeControllerTbItem.image = [UIImage imageNamed:@"BlueMapIcon2-2"];
-    }
-    
-}
 
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)tbarItemAddNew:(UIBarButtonItem *)sender {
     
     
     // Crea un contexto hijo en el que crea un nuevo punto para editarlo
-    NSManagedObjectContext *childContext = [BaseCoreDataService childContextFor:self.moContext];
+    NSManagedObjectContext *childContext = [BaseCoreDataService childContextFor:self.filter.moContext];
     MMap *copiedMap = (MMap *)[childContext objectWithID:self.map.objectID];
     MPoint *pointToAdd = [MPoint emptyPointWithName:@"" inMap:copiedMap];
     
     // Si hay un filtro activo de Tags se los establece por defecto
-    TagFilterViewController *tagFilterController = (TagFilterViewController *)self.revealViewController.rightViewController;
-    NSSet *filterTags = tagFilterController.filter.filterTags;
+    NSSet *filterTags = self.filter.filterTags;
     for(MTag *tag in filterTags) {
         
         if(!tag.isAutoTagValue) {
@@ -341,31 +282,31 @@
     @[
       
       [KxMenuItem menuItem:@"Sort by name"
-                     image:[UIImage imageNamed:@"actions-sort"]
+                     image:[UIImage imageNamed:@"tbar-sort"]
                     target:self
                     action:@selector(pushMenuItem:)],
       [KxMenuItem menuItem:@"Sort by icon"
-                     image:[UIImage imageNamed:@"actions-sort"]
+                     image:[UIImage imageNamed:@"tbar-sort"]
                     target:self
                     action:@selector(pushMenuItem:)],
       [KxMenuItem menuItem:@"Sort by distance"
-                     image:[UIImage imageNamed:@"actions-sort"]
+                     image:[UIImage imageNamed:@"tbar-sort"]
                     target:self
                     action:@selector(pushMenuItem:)],
       [KxMenuItem menuItem:@"Sort by update"
-                     image:[UIImage imageNamed:@"actions-sort"]
+                     image:[UIImage imageNamed:@"tbar-sort"]
                     target:self
                     action:@selector(pushMenuItem:)],
       [KxMenuItem menuItem:@"Delete"
-                     image:[UIImage imageNamed:@"actions-delete"]
+                     image:[UIImage imageNamed:@"tbar-delete"]
                     target:self
                     action:@selector(pushMenuItem:)],
       [KxMenuItem menuItem:@"Move to map"
-                     image:[UIImage imageNamed:@"action_icon"]
+                     image:[UIImage imageNamed:@"tbar-move"]
                     target:self
                     action:@selector(pushMenuItem:)],
       [KxMenuItem menuItem:@"Tagging"
-                     image:[UIImage imageNamed:@"action_icon"]
+                     image:[UIImage imageNamed:@"tbar-move"]
                     target:self
                     action:@selector(pushMenuItem:)]
       ];
@@ -386,6 +327,30 @@
 
 
 
+
+//=====================================================================================================================
+#pragma mark -
+#pragma mark <PointsControllerDelegate> protocol methods
+//---------------------------------------------------------------------------------------------------------------------
+- (void) editPoint:(MPoint *)point {
+    
+    // Crea un contexto hijo en el que crea una copia del punto para editarlo
+    NSManagedObjectContext *childContext = [BaseCoreDataService childContextFor:self.filter.moContext];
+    MPoint *copiedPoint = (MPoint *)[childContext objectWithID:point.objectID];
+    
+    // Lanza la edicion
+    [self performSegueWithIdentifier: @"editSelectedPoint" sender: copiedPoint];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) openInExternalApp:(MPoint *)point {
+    
+    [OpenInActionSheetViewController showOpenInActionSheetWithController:self point:point];
+}
+
+
+
+
 //=====================================================================================================================
 #pragma mark -
 #pragma mark <PointEditorViewControllerDelegate> protocol methods
@@ -401,98 +366,155 @@
 }
 
 
+
+
 //=====================================================================================================================
 #pragma mark -
-#pragma mark <TagFilterViewControllerDelegate> protocol methods
+#pragma mark <TagTreeTableViewControllerDelegate> protocol methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void)filterHasChanged:(TagFilterViewController *)sender filter:(MComplexFilter *)filter {
+- (void)tagTreeTable:(TagTreeTableViewController *)sender tappedTagTreeNode:(TagTreeNode *)tappedNode {
     
-    // Refresca los puntos de la tabla desde el filtro
-    self.pointList = filter.pointList;
-
+    // Cambiar la seleccion depende de si es el nodo mas profundo seleccionado
+    TagTreeNode *selChild = tappedNode.selectedChild;
+    if(selChild) {
+        selChild.isSelected = FALSE;
+    } else {
+        [tappedNode toggleSelected];
+    }
+    
+    
+    // Actualiza el filtro con los TAGs seleccionado
+    self.filter.filterTags = [tappedNode.tree allDeepestSelectedChildrenTags];
+    
+    // Actualiza la tabla de filtros segun el cambio
+    NSSet *expandedTags = tappedNode.tag?[NSSet setWithObject:tappedNode.tag]:[NSSet set];
+    [self.tagFilterVC setTagList:self.filter.tagList selectedTags:self.filter.filterTags expandedTags:expandedTags];
+    
     // Actualiza los visores de puntos (lista y mapa)
     [self.activeVC pointsHaveChanged];
+    [self.selectedPoints removeAllObjects];
 }
 
-
-//=====================================================================================================================
-#pragma mark -
-#pragma mark <SWRevealViewControllerDelegate> protocol methods
-//---------------------------------------------------------------------------------------------------------------------
-// The following delegate methods will be called before and after the front view moves to a position
-- (void)revealController:(SWRevealViewController *)revealController willMoveToPosition:(FrontViewPosition)position {
-    
-    switch (position) {
-            
-            // Vuelve al estado normal con ambos paneles ocultos
-        case FrontViewPositionLeft:
-            break;
-            
-            // Se va a mostrar el panel de la izquierda
-        case FrontViewPositionLeftSide:
-            break;
-            
-            // Se va a mostrar el panel de la derecha
-        case FrontViewPositionRight:
-            break;
-            
-        default:
-            break;
-    }
-    // NSLog(@"- (void)revealController:(SWRevealViewController *)revealController willMoveToPosition:(FrontViewPosition)position");
-}
-
-- (void)revealController:(SWRevealViewController *)revealController didMoveToPosition:(FrontViewPosition)position {
-    //NSLog(@"- (void)revealController:(SWRevealViewController *)revealController didMoveToPosition:(FrontViewPosition)position");
-}
-
-// This will be called inside the reveal animation, thus you can use it to place your own code that will be animated in sync
-- (void)revealController:(SWRevealViewController *)revealController animateToPosition:(FrontViewPosition)position {
-    //NSLog(@"- (void)revealController:(SWRevealViewController *)revealController animateToPosition:(FrontViewPosition)position");
-}
-
-// Implement this to return NO when you want the pan gesture recognizer to be ignored
-- (BOOL)revealControllerPanGestureShouldBegin:(SWRevealViewController *)revealController {
-    //NSLog(@"- (BOOL)revealControllerPanGestureShouldBegin:(SWRevealViewController *)revealController");
-    return YES;
-}
-
-// Implement this to return NO when you want the tap gesture recognizer to be ignored
-- (BOOL)revealControllerTapGestureShouldBegin:(SWRevealViewController *)revealController {
-    //NSLog(@"- (BOOL)revealControllerTapGestureShouldBegin:(SWRevealViewController *)revealController");
-    return YES;
-}
-
-// Called when the gestureRecognizer began and ended
-- (void)revealControllerPanGestureBegan:(SWRevealViewController *)revealController {
-    //NSLog(@"- (void)revealControllerPanGestureBegan:(SWRevealViewController *)revealController");
-}
-
-- (void)revealControllerPanGestureEnded:(SWRevealViewController *)revealController {
-    //NSLog(@"- (void)revealControllerPanGestureEnded:(SWRevealViewController *)revealController");
-}
-
-// The following methods provide a means to track the evolution of the gesture recognizer.
-// The 'location' parameter is the X origin coordinate of the front view as the user drags it
-// The 'progress' parameter is a positive value from 0 to 1 indicating the front view location relative to the
-// rearRevealWidth or rightRevealWidth. 1 is fully revealed, dragging ocurring in the overDraw region will result in values above 1.
-- (void)revealController:(SWRevealViewController *)revealController panGestureBeganFromLocation:(CGFloat)location progress:(CGFloat)progress {
-    //NSLog(@"- (void)revealController:(SWRevealViewController *)revealController panGestureBeganFromLocation:(CGFloat)location progress:(CGFloat)progress");
-}
-
-- (void)revealController:(SWRevealViewController *)revealController panGestureMovedToLocation:(CGFloat)location progress:(CGFloat)progress {
-    //NSLog(@"- (void)revealController:(SWRevealViewController *)revealController panGestureMovedToLocation:(CGFloat)location progress:(CGFloat)progress");
-}
-
-- (void)revealController:(SWRevealViewController *)revealController panGestureEndedToLocation:(CGFloat)location progress:(CGFloat)progress {
-    //NSLog(@"- (void)revealController:(SWRevealViewController *)revealController panGestureEndedToLocation:(CGFloat)location progress:(CGFloat)progress");
-}
 
 
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark Private methods
+//---------------------------------------------------------------------------------------------------------------------
+- (TagTreeTableViewController *) _createTagFilterViewController {
+    
+    TagTreeTableViewController *tagFilterVC = [self.storyboard instantiateViewControllerWithIdentifier:@"TagTreeTableViewController"];
+    
+    tagFilterVC.view.hidden = TRUE;
+    tagFilterVC.view.frame = [self _tagFilterRect];
+    tagFilterVC.view.autoresizingMask = self.view.autoresizingMask;
+    
+    [self.view addSubview:tagFilterVC.view];
+    
+    [self addChildViewController:tagFilterVC];
+    [tagFilterVC didMoveToParentViewController:self];
+    
+    tagFilterVC.delegate = self;
+    
+    UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleTagFilterPan:)];
+    [tagFilterVC.view addGestureRecognizer:panRecognizer];
+
+    return tagFilterVC;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void)handleTagFilterPan:(UIPanGestureRecognizer *)recognizer {
+    
+
+    if(recognizer.state == UIGestureRecognizerStateBegan || recognizer.state == UIGestureRecognizerStateChanged) {
+        
+        CGPoint translation = [recognizer translationInView:recognizer.view];
+        CGFloat xPos = MAX(TAGFILTER_X_POS, self.tagFilterVC.view.frame.origin.x + translation.x);
+        frameSetX(self.tagFilterVC.view, xPos);
+        [recognizer setTranslation:CGPointMake(0, 0) inView:recognizer.view];
+
+    } else {
+        
+        CGPoint velocity = [recognizer velocityInView:recognizer.view];
+        if(velocity.x>0) {
+            [self _hideTagFilter:TRUE];
+        } else {
+            [self _showTagFilter];
+        }
+        
+    }
+    
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (CGRect) _tagFilterRect {
+
+    CGRect rect = self.view.frame;
+    
+    rect.origin.x = self.tagFilterVC.view.hidden ? self.view.frame.size.width : TAGFILTER_X_POS;
+    rect.origin.y = self.contentView.frame.origin.y;
+    rect.size.width = self.view.frame.size.width - TAGFILTER_X_POS;
+    rect.size.height = self.view.frame.size.height - self.contentView.frame.origin.y;
+
+    return rect;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _toggleShowTagFilter {
+    if(self.tagFilterVC.view.hidden) {
+        [self _showTagFilter];
+    } else {
+        [self _hideTagFilter:NO];
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _showTagFilter {
+
+
+    if(!self.darkCoverView) {
+        self.darkCoverView = [[UIView alloc] initWithFrame:self.view.frame];
+        self.darkCoverView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0];
+        [self.view insertSubview:self.darkCoverView belowSubview:self.tagFilterVC.view];
+        
+        self.tagFilterVC.view.frame = [self _tagFilterRect];
+        self.tagFilterVC.view.hidden = FALSE;
+
+        [self.tagFilterVC setTagList:self.filter.tagList selectedTags:self.filter.filterTags expandedTags:nil];
+    }
+    
+    [UIView animateWithDuration:0.35
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         self.tagFilterVC.view.frame = [self _tagFilterRect];
+                         self.darkCoverView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
+                     }
+                     completion:^(BOOL finished) {
+                         
+                     }];
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _hideTagFilter:(BOOL)fast {
+    
+    [UIView animateWithDuration:(fast ? 0.15 : 0.35)
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         frameSetX(self.tagFilterVC.view, self.view.frame.size.width);
+                         self.darkCoverView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0];
+                     }
+                     completion:^(BOOL finished) {
+                         self.tagFilterVC.view.hidden = TRUE;
+                         [self.darkCoverView removeFromSuperview];
+                         self.darkCoverView = nil;
+                     }];
+}
+
+
 //---------------------------------------------------------------------------------------------------------------------
 - (void) _transitionFromViewController:(UIViewController<PointsViewerProtocol> *)fromViewController
                       toViewController:(UIViewController<PointsViewerProtocol> *)toViewController {
@@ -629,6 +651,57 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+- (void) _startMultipleSelection:(SEL) multiSelectionDoneSel {
+    
+    self.multiSelectionDoneSel = multiSelectionDoneSel;
+    
+    CGFloat visibleY = self.toolBar.frame.origin.y;
+    CGFloat hiddenY = self.view.frame.origin.y+self.view.frame.size.height;
+    
+    
+    frameSetY(self.doneToolbar, hiddenY);
+    self.doneToolbar.hidden = FALSE;
+    
+    [UIView animateWithDuration:0.15
+                     animations:^{
+                         frameSetY(self.toolBar, hiddenY);
+                         [self.activeVC startMultiplePointSelection];
+                     }
+                     completion:^(BOOL finished) {
+                         self.toolBar.hidden = TRUE;
+                         [UIView animateWithDuration:0.15
+                                          animations:^{
+                                              frameSetY(self.doneToolbar, visibleY);
+                                          }];
+                     }];
+    
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _doneMultipleSelection {
+    
+    CGFloat visibleY = self.doneToolbar.frame.origin.y;
+    CGFloat hiddenY = self.view.frame.origin.y+self.view.frame.size.height;
+    
+    frameSetY(self.toolBar, hiddenY);
+    self.toolBar.hidden = FALSE;
+    
+    [UIView animateWithDuration:0.15
+                     animations:^{
+                         frameSetY(self.doneToolbar, hiddenY);
+                         [self.activeVC doneMultiplePointSelection];
+                     }
+                     completion:^(BOOL finished) {
+                         self.doneToolbar.hidden = TRUE;
+                         [UIView animateWithDuration:0.15
+                                          animations:^{
+                                              frameSetY(self.toolBar, visibleY);
+                                          }];
+                     }];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 - (void) msDelete {
     [BlockActionSheet showInView:self.view
                        withTitle:@"Delete Points"
@@ -637,7 +710,7 @@
                otherButtonTitles:nil
                             code:^(NSInteger buttonIndex) {
                                 NSLog(@"index = %d",buttonIndex);
-        [self doneMultipleSelection];
+        [self _doneMultipleSelection];
     }];
 }
 

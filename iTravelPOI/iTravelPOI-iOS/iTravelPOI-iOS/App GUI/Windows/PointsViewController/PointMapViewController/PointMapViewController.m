@@ -47,7 +47,7 @@
 @implementation PointMapViewController
 
 
-@synthesize delegate = _delegate;
+@synthesize dataSource = _dataSource;
 
 
 
@@ -122,11 +122,11 @@
             MKAnnotationView *view = (MKAnnotationView *)subview;
             MPoint *point = (MPoint *)view.annotation;
             
-            if([self.delegate.selectedPoints containsObject:point]) {
-                [self.delegate.selectedPoints removeObject:point];
+            if([self.dataSource.selectedPoints containsObject:point]) {
+                [self.dataSource.selectedPoints removeObject:point];
                 view.image = point.icon.image;
             } else {
-                [self.delegate.selectedPoints addObject:point];
+                [self.dataSource.selectedPoints addObject:point];
                 view.image = [point.icon.image burnTint:[UIColor redColor]];
             }
             
@@ -198,7 +198,7 @@
         view.draggable = YES;
         view.canShowCallout = YES;
         
-        UIImage *editImg = [UIImage imageNamed:@"actions-edit"];
+        UIImage *editImg = [UIImage imageNamed:@"tbar-edit"];
         UIButton *editBtn = [UIButton buttonWithType:UIButtonTypeSystem];
         [editBtn setImage:editImg  forState:UIControlStateNormal];
         editBtn.frame = CGRectMake(0, 0, editImg.size.width+10, editImg.size.height);
@@ -207,7 +207,7 @@
         
         
 
-        UIImage *openInImg = [UIImage imageNamed:@"actions-share"];
+        UIImage *openInImg = [UIImage imageNamed:@"tbar-share"];
         UIButton *openInBtn = [UIButton buttonWithType:UIButtonTypeSystem];
         [openInBtn setImage:openInImg  forState:UIControlStateNormal];
         openInBtn.frame = CGRectMake(0, 0, openInImg.size.width+10, openInImg.size.height);
@@ -220,7 +220,7 @@
 
     view.canShowCallout = FALSE;
     view.annotation = annotation;
-    if([self.delegate.selectedPoints containsObject:point]) {
+    if([self.dataSource.selectedPoints containsObject:point]) {
         view.image = [point.icon.image burnTint:[UIColor redColor]];
     } else {
         view.image = point.icon.image;
@@ -236,9 +236,9 @@
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
     
     if(control.tag == ACCESSORY_BTN_EDIT) {
-        [self.delegate editPoint:(MPoint *)view.annotation];
+        [self.dataSource editPoint:(MPoint *)view.annotation];
     } else if(control.tag == ACCESSORY_BTN_OPEN_IN) {
-        [self.delegate openInExternalApp:(MPoint *)view.annotation];
+        [self.dataSource openInExternalApp:(MPoint *)view.annotation];
     }    
 }
 
@@ -385,7 +385,7 @@
     }
     
     // Add new annotations from points
-    [self.pointsMapView addAnnotations:self.delegate.pointList];
+    [self.pointsMapView addAnnotations:self.dataSource.pointList];
     
     // Centers map
     [self _centerMapToShowAllPoints];

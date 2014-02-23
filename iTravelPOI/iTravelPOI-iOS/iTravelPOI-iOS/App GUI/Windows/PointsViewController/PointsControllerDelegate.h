@@ -22,7 +22,7 @@
 #pragma mark -
 #pragma mark PointsControllerDelegate Public protocol definition
 //*********************************************************************************************************************
-@protocol PointsControllerDelegate <NSObject>
+@protocol PointsControllerDataSource <NSObject>
 
 @property (weak, readonly, nonatomic) NSArray *pointList;
 @property (strong, readonly, nonatomic) NSMutableSet *selectedPoints;
@@ -39,7 +39,7 @@
 //*********************************************************************************************************************
 @protocol PointsViewerProtocol <NSObject>
 
-@property (weak, nonatomic) id<PointsControllerDelegate> delegate;
+@property (weak, nonatomic) id<PointsControllerDataSource> dataSource;
 
 - (void) pointsHaveChanged;
 - (void) startMultiplePointSelection;

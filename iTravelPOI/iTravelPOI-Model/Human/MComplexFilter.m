@@ -26,8 +26,6 @@
 @interface MComplexFilter ()
 
 // Redefine las propiedades como de escritura
-@property (nonatomic, strong)           NSManagedObjectContext  *moContext;
-
 @property (nonatomic, strong)           NSArray                 *pointList;
 @property (nonatomic, strong)           NSSet                   *tagList;
 
@@ -62,8 +60,14 @@
 
     MComplexFilter *me = [[MComplexFilter alloc] init];
     me.moContext = moContext;
-    me.pointOrder = @[MBaseOrderByNameAsc];
+    me.pointOrder = @[MBaseOrderByIconAsc, MBaseOrderByNameAsc];
     return me;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
++ (MComplexFilter *) filter {
+    
+    return [MComplexFilter filterWithContext:nil];
 }
 
 
@@ -80,6 +84,7 @@
     if((_filterMap || map) && ![_filterMap.objectID isEqual:map.objectID]) {
         [self reset];
         _filterMap = map;
+        _moContext = map.managedObjectContext;
     }
 }
 
@@ -110,8 +115,8 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (NSArray *) pointList {
-    
-    if(!_wpointList) {
+
+    if(!_wpointList && self.moContext) {
         [self _retrievePointsFromStorage];
     }
     return _wpointList;
@@ -120,7 +125,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (NSSet *) tagList {
     
-    if(!_wtagList) {
+    if(!_wtagList && self.moContext) {
         [self _retrieveTagsFromStorage];
     }
     return _wtagList;

@@ -85,8 +85,7 @@ static __strong NSMutableDictionary    *_nameToIndex = nil;
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
 }
 

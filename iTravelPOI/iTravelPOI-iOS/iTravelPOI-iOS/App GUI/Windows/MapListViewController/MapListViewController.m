@@ -11,7 +11,6 @@
 #import "BaseCoreDataService.h"
 #import "SWRevealViewController.h"
 #import "PointsViewController.h"
-#import "TagFilterViewController.h"
 
 
 
@@ -25,7 +24,7 @@
 #pragma mark -
 #pragma mark PRIVATE interface definition
 //*********************************************************************************************************************
-@interface MapListViewController () <UITableViewDelegate, UITableViewDataSource>
+@interface MapListViewController () <SWRevealViewControllerDelegate, UITableViewDelegate, UITableViewDataSource>
 
 
 @property (nonatomic) IBOutlet UIBarButtonItem* revealButtonItem;
@@ -82,6 +81,7 @@
 {
     [super viewWillAppear:animated];
     
+
     // Do any additional setup after loading the view from its nib.
     if(self.moContext==nil) {
         self.moContext = BaseCoreDataService.moContext;
@@ -90,9 +90,13 @@
     self.mapList = [MMap allMapsinContext:self.moContext includeMarkedAsDeleted:FALSE];
     
     
-    [self.revealButtonItem setTarget: self.revealViewController];
-    [self.revealButtonItem setAction: @selector( revealToggle: )];
-    [self.navigationController.navigationBar addGestureRecognizer: self.revealViewController.panGestureRecognizer];
+    // Cada vez que esta ventana se muestra se establece como el delegate del side-menu
+    if(self.revealViewController) {
+        self.revealViewController.delegate = self;
+        [self.revealButtonItem setTarget: self.revealViewController];
+        [self.revealButtonItem setAction: @selector( revealToggle: )];
+        [self.navigationController.navigationBar addGestureRecognizer: self.revealViewController.panGestureRecognizer];
+    }
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -136,11 +140,6 @@
 
     // Un cambio del mapa implica resetear el filtro
     MMap *map = [self _mapAtIndex:[indexPath indexAtPosition:1]];
-    TagFilterViewController *tagFilterController = (TagFilterViewController *)self.revealViewController.rightViewController;
-    tagFilterController.moContext = self.moContext;
-    tagFilterController.filter.filterMap = map;
-    tagFilterController.filter.filterTags = nil;
-
     [self performSegueWithIdentifier: @"MapList_to_PointsList" sender: map];
 
     // No dejamos nada seleccionado
@@ -214,6 +213,80 @@
     return cell;
 }
 
+
+
+//=====================================================================================================================
+#pragma mark -
+#pragma mark <SWRevealViewControllerDelegate> protocol methods
+//---------------------------------------------------------------------------------------------------------------------
+// The following delegate methods will be called before and after the front view moves to a position
+- (void)revealController:(SWRevealViewController *)revealController willMoveToPosition:(FrontViewPosition)position {
+    
+    switch (position) {
+            
+            // Vuelve al estado normal con ambos paneles ocultos
+        case FrontViewPositionLeft:
+            break;
+            
+            // Se va a mostrar el panel de la izquierda
+        case FrontViewPositionLeftSide:
+            break;
+            
+            // Se va a mostrar el panel de la derecha
+        case FrontViewPositionRight:
+            break;
+            
+        default:
+            break;
+    }
+    // NSLog(@"- (void)revealController:(SWRevealViewController *)revealController willMoveToPosition:(FrontViewPosition)position");
+}
+
+- (void)revealController:(SWRevealViewController *)revealController didMoveToPosition:(FrontViewPosition)position {
+    //NSLog(@"- (void)revealController:(SWRevealViewController *)revealController didMoveToPosition:(FrontViewPosition)position");
+}
+
+// This will be called inside the reveal animation, thus you can use it to place your own code that will be animated in sync
+- (void)revealController:(SWRevealViewController *)revealController animateToPosition:(FrontViewPosition)position {
+    //NSLog(@"- (void)revealController:(SWRevealViewController *)revealController animateToPosition:(FrontViewPosition)position");
+}
+
+// Implement this to return NO when you want the pan gesture recognizer to be ignored
+- (BOOL)revealControllerPanGestureShouldBegin:(SWRevealViewController *)revealController {
+    //NSLog(@"- (BOOL)revealControllerPanGestureShouldBegin:(SWRevealViewController *)revealController");
+    return YES;
+}
+
+// Implement this to return NO when you want the tap gesture recognizer to be ignored
+- (BOOL)revealControllerTapGestureShouldBegin:(SWRevealViewController *)revealController {
+    //NSLog(@"- (BOOL)revealControllerTapGestureShouldBegin:(SWRevealViewController *)revealController");
+    return YES;
+}
+
+// Called when the gestureRecognizer began and ended
+- (void)revealControllerPanGestureBegan:(SWRevealViewController *)revealController {
+    //NSLog(@"- (void)revealControllerPanGestureBegan:(SWRevealViewController *)revealController");
+}
+
+- (void)revealControllerPanGestureEnded:(SWRevealViewController *)revealController {
+    //NSLog(@"- (void)revealControllerPanGestureEnded:(SWRevealViewController *)revealController");
+}
+
+// The following methods provide a means to track the evolution of the gesture recognizer.
+// The 'location' parameter is the X origin coordinate of the front view as the user drags it
+// The 'progress' parameter is a positive value from 0 to 1 indicating the front view location relative to the
+// rearRevealWidth or rightRevealWidth. 1 is fully revealed, dragging ocurring in the overDraw region will result in values above 1.
+- (void)revealController:(SWRevealViewController *)revealController panGestureBeganFromLocation:(CGFloat)location progress:(CGFloat)progress {
+    //NSLog(@"- (void)revealController:(SWRevealViewController *)revealController panGestureBeganFromLocation:(CGFloat)location progress:(CGFloat)progress");
+}
+
+- (void)revealController:(SWRevealViewController *)revealController panGestureMovedToLocation:(CGFloat)location progress:(CGFloat)progress {
+    //NSLog(@"- (void)revealController:(SWRevealViewController *)revealController panGestureMovedToLocation:(CGFloat)location progress:(CGFloat)progress");
+}
+
+- (void)revealController:(SWRevealViewController *)revealController panGestureEndedToLocation:(CGFloat)location progress:(CGFloat)progress {
+    //NSLog(@"- (void)revealController:(SWRevealViewController *)revealController panGestureEndedToLocation:(CGFloat)location progress:(CGFloat)progress");
+}
 
 
 //=====================================================================================================================

@@ -45,11 +45,6 @@
 @implementation TagFilterViewController
 
 
-// Afecta al filtro aplicado
-@synthesize moContext = _moContext;
-
-
-
 
 //=====================================================================================================================
 #pragma mark -
@@ -62,19 +57,6 @@
 #pragma mark -
 #pragma mark Public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (NSManagedObjectContext *) moContext {
-    return self.filter.moContext;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) setMoContext:(NSManagedObjectContext *)moContext {
-
-    // Solo aplica si ha cambiado
-    if(![self.filter.moContext isEqual:moContext]) {
-        self.filter = [MComplexFilter filterWithContext:moContext];
-        _moContext = moContext;
-    }
-}
 
 
 
@@ -93,15 +75,28 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
+    
     [super viewDidLoad];
+    
+    // Crea un filtro vacio y sin contexto (no se puede ejecutar)
+    self.filter = [MComplexFilter filter];
+    
+    
+    // Se establece como el delegate del TagTreeTableViewController hijo
+    for(UIViewController *childController in self.childViewControllers) {
+        if([childController isKindOfClass:[TagTreeTableViewController class]]) {
+            self.tagTableView = (TagTreeTableViewController *)childController;
+            self.tagTableView.delegate = self;
+        }
+    }
     
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) viewDidAppear:(BOOL)animated {
     
+    [super viewDidAppear:animated];
     [self.tagTableView setTagList:self.filter.tagList selectedTags:self.filter.filterTags expandedTags:nil];
 }
 
@@ -110,21 +105,6 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    
-    // Make sure your segue name in storyboard is the same as this line
-    if ([[segue identifier] isEqualToString:@"TagFilter_to_TagTreeTable"])
-    {
-        // Get reference to the destination view controller
-        self.tagTableView = [segue destinationViewController];
-        
-        // Pass any objects to the view controller here, like...
-        self.tagTableView.delegate = self;
-    }
-    
 }
 
 

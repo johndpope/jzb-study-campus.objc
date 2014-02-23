@@ -2,7 +2,7 @@
 //  MPoint.h
 //
 
-
+#import <MapKit/MapKit.h>
 #import "_MPoint.h"
 
 
@@ -21,7 +21,7 @@
 #pragma mark -
 #pragma mark Public Interface definition
 //*********************************************************************************************************************
-@interface MPoint : _MPoint {}
+@interface MPoint : _MPoint <MKAnnotation> {}
 
 
 @property (nonatomic, readonly) NSSet *directTags; 

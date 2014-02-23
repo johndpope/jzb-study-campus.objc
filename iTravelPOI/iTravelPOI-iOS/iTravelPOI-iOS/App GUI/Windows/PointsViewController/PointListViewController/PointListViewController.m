@@ -49,7 +49,7 @@
 @implementation PointListViewController
 
 
-@synthesize delegate = _delegate;
+@synthesize dataSource = _dataSource;
 
 
 //=====================================================================================================================
@@ -74,7 +74,16 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) startMultiplePointSelection {
+    
+    [self.pointsTable beginUpdates];
+    
+    if(self.prevSelIndexPath) {
+        [self.pointsTable reloadRowsAtIndexPaths:@[self.prevSelIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
+    self.prevSelIndexPath = nil;
     [self.pointsTable setEditing:TRUE animated:TRUE];
+    
+    [self.pointsTable endUpdates];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -146,8 +155,8 @@
 - (void)cellBtnOpenInAction:(UIButton *)sender {
     
     if(self.prevSelIndexPath) {
-        MPoint *selectedPoint = (MPoint *)[self.delegate.pointList objectAtIndex:[self.prevSelIndexPath indexAtPosition:1]];
-        [self.delegate openInExternalApp:selectedPoint];
+        MPoint *selectedPoint = (MPoint *)[self.dataSource.pointList objectAtIndex:[self.prevSelIndexPath indexAtPosition:1]];
+        [self.dataSource openInExternalApp:selectedPoint];
     }
 }
 
@@ -155,8 +164,8 @@
 - (void)cellBtnEditAction:(UIButton *)sender {
     
     if(self.prevSelIndexPath) {
-        MPoint *selectedPoint = (MPoint *)[self.delegate.pointList objectAtIndex:[self.prevSelIndexPath indexAtPosition:1]];
-        [self.delegate editPoint:selectedPoint];
+        MPoint *selectedPoint = (MPoint *)[self.dataSource.pointList objectAtIndex:[self.prevSelIndexPath indexAtPosition:1]];
+        [self.dataSource editPoint:selectedPoint];
     }
 }
 
@@ -188,11 +197,11 @@
     
     if(tableView.isEditing) {
         
-        MPoint *itemToShow = (MPoint *)[self.delegate.pointList objectAtIndex:[indexPath indexAtPosition:1]];
-        if([self.delegate.selectedPoints containsObject:itemToShow.objectID]) {
-            [self.delegate.selectedPoints removeObject:itemToShow.objectID];
+        MPoint *itemToShow = (MPoint *)[self.dataSource.pointList objectAtIndex:[indexPath indexAtPosition:1]];
+        if([self.dataSource.selectedPoints containsObject:itemToShow.objectID]) {
+            [self.dataSource.selectedPoints removeObject:itemToShow.objectID];
         } else {
-            [self.delegate.selectedPoints addObject:itemToShow.objectID];
+            [self.dataSource.selectedPoints addObject:itemToShow.objectID];
         }
         [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
         
@@ -224,7 +233,7 @@
 #pragma mark <UITableViewDataSource> protocol methods
 //---------------------------------------------------------------------------------------------------------------------
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.delegate.pointList.count;
+    return self.dataSource.pointList.count;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -239,7 +248,7 @@
         cell.accessoryType = UITableViewCellAccessoryNone;
     }
 
-    MPoint *itemToShow = (MPoint *)[self.delegate.pointList objectAtIndex:[indexPath indexAtPosition:1]];
+    MPoint *itemToShow = (MPoint *)[self.dataSource.pointList objectAtIndex:[indexPath indexAtPosition:1]];
     
     cell.textLabel.text = itemToShow.name;
     cell.detailTextLabel.text = @"kkvaca";
@@ -247,7 +256,7 @@
 
     if(tableView.isEditing) {
 
-        cell.checked = [self.delegate.selectedPoints containsObject:itemToShow.objectID];
+        cell.checked = [self.dataSource.selectedPoints containsObject:itemToShow.objectID];
 
     } else {
         

@@ -21,7 +21,6 @@ UIKIT_EXTERN NSString *const MBaseOrderByIconAsc;
 UIKIT_EXTERN NSString *const MBaseOrderByIconDes;
 
 
-
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark Public Interface definition

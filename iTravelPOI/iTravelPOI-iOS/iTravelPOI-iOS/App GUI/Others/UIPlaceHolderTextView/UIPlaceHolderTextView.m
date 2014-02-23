@@ -40,6 +40,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (void)setup
 {
+    
     if ([self placeholder]) {
         [[self placeholder] removeFromSuperview];
         [self setPlaceholder:nil];
