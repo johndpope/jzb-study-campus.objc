@@ -1,20 +1,20 @@
 //
-//  PointEditorViewController.m
+//  PointDataEditorViewController.m
 //  iTravelPOI-iOS
 //
 //  Created by Jose Zarzuela on 22/12/13.
 //  Copyright (c) 2013 Jose Zarzuela. All rights reserved.
 //
 
-#define __PointEditorViewController__IMPL__
+#define __PointDataEditorViewController__IMPL__
 #import <CoreLocation/CoreLocation.h>
 #import <QuartzCore/QuartzCore.h>
-#import "PointEditorViewController.h"
+#import "PointDataEditorViewController.h"
 #import "UIImage+Tint.h"
 #import "BaseCoreDataService.h"
-#import "TagListEditorViewController.h"
 #import "IconEditorViewController.h"
 #import "LocationEditorViewController.h"
+#import "TagListEditorViewController.h"
 #import "UIPlaceHolderTextView.h"
 #import "MPoint.h"
 #import "MMap.h"
@@ -45,7 +45,7 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 #pragma mark -
 #pragma mark PRIVATE interface definition
 //*********************************************************************************************************************
-@interface PointEditorViewController () <TagListEditorViewControllerDelegate, IconEditorViewControllerDelegate,
+@interface PointDataEditorViewController () <TagListEditorViewControllerDelegate, IconEditorViewControllerDelegate,
                                          LocationEditorViewControllerDelegate,
                                          UITextFieldDelegate, UITextViewDelegate, CLLocationManagerDelegate>
 
@@ -62,7 +62,7 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem        *navBarSaveButton;
 
-@property (weak, nonatomic)   UIView                        *textFieldToScroll;
+@property (weak, nonatomic)   UIView                        *editedFieldToScroll;
 
 @property (strong, nonatomic) IBOutlet UIView               *iavView;
 @property (weak, nonatomic)   IBOutlet UILabel              *iavLabel;
@@ -83,7 +83,7 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 #pragma mark -
 #pragma mark Implementation
 //*********************************************************************************************************************
-@implementation PointEditorViewController
+@implementation PointDataEditorViewController
 
 
 @synthesize point = _point;
@@ -137,14 +137,7 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
     
     self = [super initWithCoder:aDecoder];
     if (self) {
-        
-        // Inicializa la geolocalizacion
-        self.locationManager = [[CLLocationManager alloc] init];
-        self.locationManager.delegate = self;
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation; // En metros
-        self.locationManager.distanceFilter = MIN_PRECISION_TO_STOP_GPS; // En metros
-        self.gpsAccuracyValue = GPS_UNKNOWN;
-
+    
     }
     return self;
 }
@@ -163,6 +156,13 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
     // Necesita establecer el tamaño minimo con el que fue creada la vista que contiene el resto de elmentos
     // para redimensionar todo adecuadamemte y gestionar las rotaciones y diferentes tamaños de pantalla
     self.minCVSize = self.kbContentView.bounds.size;
+
+    // Inicializa la geolocalizacion
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation; // En metros
+    self.locationManager.distanceFilter = MIN_PRECISION_TO_STOP_GPS; // En metros
+    self.gpsAccuracyValue = GPS_UNKNOWN;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -205,10 +205,6 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     [self _updateContentViewConstraints];
-}
-
-- (void) viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -269,7 +265,8 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
     } else if([[segue identifier] isEqualToString:@"PointEditor_to_LocationEditor"]) {
     
         LocationEditorViewController *locationEditor = (LocationEditorViewController *)segue.destinationViewController;
-        locationEditor.point = self.point;
+        locationEditor.coordinate = self.point.coordinate;
+        locationEditor.image = self.point.icon.image;
         locationEditor.delegate = self;
         [self.view endEditing:TRUE];
         
@@ -322,6 +319,9 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
     } else {
         // Simula haber tocado el campo de texto
         [self.iavTextField becomeFirstResponder];
+
+        // Establece la etiqueta como elemento "editado"
+        self.editedFieldToScroll = self.fimgLocationImage;
     }
 }
 
@@ -401,7 +401,7 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 
 // =====================================================================================================================
 #pragma mark -
-#pragma mark <CoreLocationControllerDelegate> protocol methods
+#pragma mark <CLLocationManagerDelegate> protocol methods
 // ---------------------------------------------------------------------------------------------------------------------
 // Our location updates are sent here
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
@@ -424,7 +424,9 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 // ---------------------------------------------------------------------------------------------------------------------
 // Any errors are sent here
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
+
     [self _stopLocationActivity];
+    
     self.gpsAccuracyValue = GPS_ERROR;
     [self _setLocationAndAccuracyField];
 }
@@ -436,7 +438,7 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
 
-    self.textFieldToScroll = textView;
+    self.editedFieldToScroll = textView;
     
     [self _stopLocationActivity];
     return  TRUE;
@@ -458,7 +460,7 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
 
-    self.textFieldToScroll = textField;
+    self.editedFieldToScroll = textField;
 
     [self _stopLocationActivity];
     
@@ -472,7 +474,6 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 
         // Si el teclado ya estaba visible muestra el campo
         [self _showInputAccesoryView];
-        
     }
     
     return TRUE;
@@ -529,28 +530,46 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 #pragma mark -
 #pragma mark Private methods
 //---------------------------------------------------------------------------------------------------------------------
+- (void) _scrollToMakeEditedFieldVisible {
+    
+    if(!self.editedFieldToScroll) return;
+    
+    // Comprueba si hace falta realizar un scroll para dejar el campo de texto a la vista
+    UIScrollView *sv = (UIScrollView *)self.kbContentView.superview;
+    CGRect svBounds = sv.bounds;
+    svBounds.size.height -= sv.contentInset.bottom;
+    BOOL isFullyVisible = CGRectContainsRect(svBounds, self.editedFieldToScroll.frame);
+    if(!isFullyVisible) {
+        [sv setContentOffset:CGPointMake(0, self.editedFieldToScroll.frame.origin.y) animated:YES];
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 - (void) keyboardDidShow {
     
     [super keyboardDidShow];
     
-    UIScrollView *sv = (UIScrollView *)self.kbContentView.superview;
-    
-    // Comprueba si hace falta realizar un scroll para dejar el campo de texto a la vista
-    CGRect svBounds = sv.bounds;
-    svBounds.size.height -= sv.contentInset.bottom;
-    BOOL isFullyVisible = CGRectContainsRect(svBounds, self.textFieldToScroll.frame);
-    if(!isFullyVisible) {
-        [sv setContentOffset:CGPointMake(0, self.textFieldToScroll.frame.origin.y) animated:YES];
-    }
-
     if(self.locationEditingState!=LocationEditingStateNone) {
         [self _showInputAccesoryView];
     }
+    
+    [self _scrollToMakeEditedFieldVisible];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) keyboardDidHide {
     [self _hideInputAccesoryView];
+    self.editedFieldToScroll = nil;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _updateInputAccesoryViewConstraints:(CGFloat)value {
+    
+    for(NSLayoutConstraint *constraint in self.iavView.superview.constraints) {
+        if(constraint.firstItem==self.iavView && constraint.firstAttribute==NSLayoutAttributeTop) {
+            constraint.constant = value;
+        }
+    }
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -558,10 +577,9 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
     
     if(self.isKeyboardVisible) {
         
-        CGPoint p = [self.view convertPoint:self.keyboardRect.origin fromView:nil];
-        p.y = self.keyboardRect.origin.y;
-        self.iavView.frame = CGRectMake(0, 0, self.iavView.bounds.size.width, self.iavView.bounds.size.height);
-        //frameSetY(self.iavView,p.y-self.iavView.bounds.size.height);
+        CGFloat newTop = self.keyboardRect.origin.y - self.iavView.bounds.size.height;
+        [self _updateInputAccesoryViewConstraints:newTop];
+        self.iavView.hidden = FALSE;
         
         // Le quita un poco mas al ScrollView
         UIScrollView *sv = (UIScrollView *)self.kbContentView.superview;
@@ -575,7 +593,8 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
     
     if(self.isKeyboardVisible) {
         
-        frameSetY(self.iavView,1000);
+        [self _updateInputAccesoryViewConstraints:1000];
+        self.iavView.hidden = TRUE;
         
         // Le pone un poco mas al ScrollView
         UIScrollView *sv = (UIScrollView *)self.kbContentView.superview;

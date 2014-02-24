@@ -1,5 +1,5 @@
 //
-//  PointEditorViewController.h
+//  PointDataEditorViewController.h
 //  iTravelPOI-iOS
 //
 //  Created by Jose Zarzuela on 22/12/13.
@@ -11,7 +11,7 @@
 #import "MPoint.h"
 #import "MMap.h"
 
-@class PointEditorViewController;
+@class PointDataEditorViewController;
 
 
 
@@ -20,11 +20,11 @@
 #pragma mark -
 #pragma mark Public Enumerations & definitions
 //*********************************************************************************************************************
-@protocol PointEditorViewControllerDelegate<NSObject>
+@protocol PointDataEditorViewControllerDelegate<NSObject>
 
 @optional
-- (void) pointEdiorSavePoint:(PointEditorViewController *)sender;
-- (void) pointEdiorCancelPoint:(PointEditorViewController *)sender;
+- (void) pointEdiorSavePoint:(PointDataEditorViewController *)sender;
+- (void) pointEdiorCancelPoint:(PointDataEditorViewController *)sender;
 
 @end
 
@@ -36,9 +36,9 @@
 #pragma mark -
 #pragma mark Public Interface definition
 //*********************************************************************************************************************
-@interface PointEditorViewController : BaseKeyboardViewController
+@interface PointDataEditorViewController : BaseKeyboardViewController
 
-@property (weak, nonatomic) id<PointEditorViewControllerDelegate>   delegate;
+@property (weak, nonatomic) id<PointDataEditorViewControllerDelegate>   delegate;
 
 @property (strong, nonatomic) MPoint                                *point;
 

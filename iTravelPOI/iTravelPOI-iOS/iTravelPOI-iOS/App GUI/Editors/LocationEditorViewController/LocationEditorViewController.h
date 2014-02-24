@@ -37,8 +37,9 @@
 //*********************************************************************************************************************
 @interface LocationEditorViewController : UIViewController
 
-@property (weak, nonatomic) id<LocationEditorViewControllerDelegate>    delegate;
-@property (strong, nonatomic) MPoint                                    *point;
+@property (weak, nonatomic)   id<LocationEditorViewControllerDelegate>  delegate;
+@property (assign, nonatomic) CLLocationCoordinate2D                    coordinate;
+@property (strong, nonatomic) UIImage                                   *image;
 
 
 

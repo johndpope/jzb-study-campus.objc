@@ -18,7 +18,7 @@
 #import "MComplexFilter.h"
 #import "MMap.h"
 
-#import "PointEditorViewController.h"
+#import "PointDataEditorViewController.h"
 #import "OpenInActionSheetViewController.h"
 
 #import "BlockActionSheet.h"
@@ -40,7 +40,7 @@
 #pragma mark PRIVATE interface definition
 //*********************************************************************************************************************
 @interface PointsViewController () <TagTreeTableViewControllerDelegate,
-                                    PointEditorViewControllerDelegate, PointsControllerDataSource>
+                                    PointDataEditorViewControllerDelegate, PointsControllerDataSource>
 
 @property (weak, nonatomic) IBOutlet UIToolbar                          *toolBar;
 @property (weak, nonatomic) IBOutlet UIToolbar                          *doneToolbar;
@@ -193,7 +193,7 @@
         MPoint *copiedPoint = (MPoint *)sender;
         
         // Consigue la instancia del editor
-        PointEditorViewController *editor = (PointEditorViewController *)segue.destinationViewController;
+        PointDataEditorViewController *editor = (PointDataEditorViewController *)segue.destinationViewController;
         
         // Propaga el color del tinte
         editor.tintColor = self.view.tintColor;
@@ -353,9 +353,9 @@
 
 //=====================================================================================================================
 #pragma mark -
-#pragma mark <PointEditorViewControllerDelegate> protocol methods
+#pragma mark <PointDataEditorViewControllerDelegate> protocol methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) pointEdiorSavePoint:(PointEditorViewController *)sender {
+- (void) pointEdiorSavePoint:(PointDataEditorViewController *)sender {
     
     // Graba los cambios en ambos contextos
     [BaseCoreDataService saveChangesInContext:sender.point.managedObjectContext];

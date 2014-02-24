@@ -14,16 +14,19 @@
 
 
 
-
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark Private Enumerations & definitions
 //*********************************************************************************************************************
-#define ICON_OFFSET 2.5
-#define ICON_SIZE 45.0
-#define ICONS_PER_ROW 7
-#define ICON_ROWS 14
+#define ICON_SIZE           45.0
+#define ICON_OFFSET         2.5
+#define NUM_ICONS           98
 
+#define P_ICONS_PER_ROW     7
+#define P_ICON_ROWS         14
+
+#define L_ICONS_PER_ROW     20
+#define L_ICON_ROWS         5
 
 
 //*********************************************************************************************************************
@@ -35,7 +38,8 @@
 @property (weak, nonatomic) IBOutlet UINavigationBar    *navBar;
 @property (weak, nonatomic) IBOutlet UIImageView        *iconImage;
 @property (weak, nonatomic) IBOutlet UIScrollView       *scrollView;
-@property (weak, nonatomic) IBOutlet UIImageView        *allGMapIconsImage;
+@property (weak, nonatomic)          UIImageView        *allGMapIconsImage;
+@property (strong, nonatomic)        UIImageView        *selectionFrame;
 
 @end
 
@@ -51,6 +55,7 @@
 static __strong NSMutableArray         *_indexToHref = nil;
 static __strong NSMutableDictionary    *_hrefToIndex = nil;
 static __strong NSMutableDictionary    *_nameToIndex = nil;
+
 
 
 
@@ -94,28 +99,35 @@ static __strong NSMutableDictionary    *_nameToIndex = nil;
 
     [super viewWillAppear:animated];
 
+    [self _setProperAllGMapIconsImage];
+
+    self.selectionFrame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"selectionFrame" burnTint:self.view.tintColor]];
+    [self _showSelectionFrame];
+    
     [self _updateFieldsFromIcon];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) viewDidAppear:(BOOL)animated {
-    
     [super viewDidAppear:animated];
-    
-    int row = [self _calcIconIndex] / ICONS_PER_ROW;
-    CGFloat yPos = ICON_OFFSET + ICON_SIZE * row;
-    [self.scrollView scrollRectToVisible:CGRectMake(0, yPos, ICON_SIZE, ICON_SIZE) animated:YES];
+    [self _scrollToSelectedIcon];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) viewDidLayoutSubviews {
-    
-    [super viewDidLayoutSubviews];
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
 
-    self.scrollView.contentInset = (UIEdgeInsets){self.navBar.frame.size.height,0,0,0};
-    self.scrollView.contentSize = self.allGMapIconsImage.frame.size;
-    
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    [self _setProperAllGMapIconsImage];
+    [self _showSelectionFrame];
 }
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+
+    [super didRotateFromInterfaceOrientation:toInterfaceOrientation];
+    [self _scrollToSelectedIcon];
+}
+
 
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -145,21 +157,25 @@ static __strong NSMutableDictionary    *_nameToIndex = nil;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (IBAction)allIconsImageTapped:(UITapGestureRecognizer *)sender {
+- (void) allIconsImageTapped:(UITapGestureRecognizer *)sender {
     
     CGPoint EndPoint = [sender locationInView:self.scrollView];
     
     int xPos = floor((EndPoint.x-ICON_OFFSET)/ICON_SIZE);
     int yPos = floor((EndPoint.y-ICON_OFFSET)/ICON_SIZE);
     
-    if(xPos>=0 && xPos<ICONS_PER_ROW && yPos>=0 && yPos<ICON_ROWS) {
-        unsigned index = xPos + yPos * ICONS_PER_ROW;
+    if(xPos>=0 && xPos<([self _isInLandscape] ? L_ICONS_PER_ROW : P_ICONS_PER_ROW) &&
+       yPos>=0 && yPos<([self _isInLandscape] ? L_ICON_ROWS : P_ICON_ROWS)) {
+
+        unsigned index = xPos + yPos * ([self _isInLandscape] ? L_ICONS_PER_ROW : P_ICONS_PER_ROW);
         NSString *iconHREF = [self _calcIconHrefFromIndex:index];
         if(iconHREF) {
             MIcon *newIcon = [MIcon iconForHref:iconHREF inContext:self.icon.managedObjectContext];
             self.icon = newIcon;
             [self _updateFieldsFromIcon];
+            [self _showSelectionFrame];
         }
+        
     }
 
 }
@@ -168,6 +184,70 @@ static __strong NSMutableDictionary    *_nameToIndex = nil;
 //=====================================================================================================================
 #pragma mark -
 #pragma mark Private methods
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _setProperAllGMapIconsImage {
+    
+    UIImageView *imgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[self _isInLandscape] ? @"allGmapIcons_H" : @"allGmapIcons_V"]];
+    
+    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(allIconsImageTapped:)];
+    [imgView addGestureRecognizer:recognizer];
+    [imgView setUserInteractionEnabled:TRUE];
+    
+    [self.allGMapIconsImage removeFromSuperview];
+    self.allGMapIconsImage = imgView;
+    [self.scrollView addSubview:self.allGMapIconsImage];
+    self.scrollView.contentSize = self.allGMapIconsImage.bounds.size;
+    self.scrollView.contentInset = (UIEdgeInsets){self.navBar.frame.size.height,0,0,0};
+    self.scrollView.contentOffset = CGPointMake(0, -self.navBar.frame.size.height);
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _scrollToSelectedIcon {
+    
+    CGRect iconRowRect;
+    
+    if([self _isInLandscape]) {
+        int col = [self _calcIconIndex] % L_ICONS_PER_ROW;
+        CGFloat xPos = ICON_OFFSET + ICON_SIZE * col;
+        iconRowRect = CGRectMake(xPos, 0, ICON_SIZE, ICON_SIZE);
+    } else {
+        int row = [self _calcIconIndex] / P_ICONS_PER_ROW;
+        CGFloat yPos = ICON_OFFSET + ICON_SIZE * row;
+        iconRowRect = CGRectMake(0, yPos, ICON_SIZE, ICON_SIZE);
+    }
+    
+    BOOL isFullyVisible = CGRectContainsRect(self.scrollView.bounds, iconRowRect);
+    if(!isFullyVisible) {
+        [self.scrollView scrollRectToVisible:iconRowRect animated:YES];
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _showSelectionFrame {
+    
+    
+    CGSize size = self.selectionFrame.bounds.size;
+    
+    int index = [self _calcIconIndex];
+    
+    int col = index % ([self _isInLandscape] ? L_ICONS_PER_ROW : P_ICONS_PER_ROW);
+    int row = index / ([self _isInLandscape] ? L_ICONS_PER_ROW : P_ICONS_PER_ROW);
+    
+    CGFloat xPos = ICON_OFFSET +  col * ICON_SIZE + (ICON_SIZE-size.width)/2;
+    CGFloat yPos = ICON_OFFSET +  row * ICON_SIZE + (ICON_SIZE-size.height)/2;
+    
+    [self.selectionFrame removeFromSuperview];
+    self.selectionFrame.frame = CGRectMake(xPos, yPos, size.width, size.height);
+    [self.scrollView insertSubview:self.selectionFrame atIndex:0];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL) _isInLandscape {
+    
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    return (orientation==UIDeviceOrientationLandscapeLeft || orientation==UIDeviceOrientationLandscapeRight);
+}
+
 //---------------------------------------------------------------------------------------------------------------------
 - (void) _updateFieldsFromIcon {
     

@@ -51,13 +51,6 @@
 		423F338218B8E29700845826 /* tbar-viewMap@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 423F334218B8E29700845826 /* tbar-viewMap@2x.png */; };
 		423F338318B8E29700845826 /* uncheckedMark.png in Resources */ = {isa = PBXBuildFile; fileRef = 423F334318B8E29700845826 /* uncheckedMark.png */; };
 		423F338418B8E29700845826 /* uncheckedMark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 423F334418B8E29700845826 /* uncheckedMark@2x.png */; };
-		423F33F518B8E2E100845826 /* IconEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 423F338918B8E2E100845826 /* IconEditorViewController.m */; };
-		423F33F618B8E2E100845826 /* allGmapIcons.png in Resources */ = {isa = PBXBuildFile; fileRef = 423F338B18B8E2E100845826 /* allGmapIcons.png */; };
-		423F33F718B8E2E100845826 /* allGMapIconsInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 423F338C18B8E2E100845826 /* allGMapIconsInfo.plist */; };
-		423F33F818B8E2E100845826 /* iconEditorBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 423F338D18B8E2E100845826 /* iconEditorBackground.png */; };
-		423F33F918B8E2E100845826 /* iconEditorBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 423F338E18B8E2E100845826 /* iconEditorBackground@2x.png */; };
-		423F33FA18B8E2E100845826 /* LocationEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 423F339118B8E2E100845826 /* LocationEditorViewController.m */; };
-		423F33FC18B8E2E100845826 /* TagListEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 423F339718B8E2E100845826 /* TagListEditorViewController.m */; };
 		423F33FD18B8E2E100845826 /* openInAppleMaps.png in Resources */ = {isa = PBXBuildFile; fileRef = 423F339B18B8E2E100845826 /* openInAppleMaps.png */; };
 		423F33FE18B8E2E100845826 /* openInAppleMaps@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 423F339C18B8E2E100845826 /* openInAppleMaps@2x.png */; };
 		423F33FF18B8E2E100845826 /* openInASheetBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 423F339D18B8E2E100845826 /* openInASheetBg.png */; };
@@ -138,7 +131,6 @@
 		423F344A18B8E2E100845826 /* TagTreeTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 423F33EE18B8E2E100845826 /* TagTreeTableViewController.m */; };
 		423F344B18B8E2E100845826 /* TreeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 423F33F018B8E2E100845826 /* TreeTableViewCell.m */; };
 		423F344C18B8E2E100845826 /* TagFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 423F33F418B8E2E100845826 /* TagFilterViewController.m */; };
-		423F345118B9385E00845826 /* PointEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 423F345018B9385E00845826 /* PointEditorViewController.m */; };
 		423F345418B944D000845826 /* tableHSepLine.png in Resources */ = {isa = PBXBuildFile; fileRef = 423F345218B944D000845826 /* tableHSepLine.png */; };
 		423F345518B944D000845826 /* tableHSepLine@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 423F345318B944D000845826 /* tableHSepLine@2x.png */; };
 		4272013C186AFA3E0062DF76 /* _PLISTs_.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4272013B186AFA3E0062DF76 /* _PLISTs_.bundle */; };
@@ -186,6 +178,19 @@
 		42CADFAE186837410057AE84 /* reveal-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42CADFAA186837410057AE84 /* reveal-icon@2x.png */; };
 		42CADFAF186837410057AE84 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CADFAC186837410057AE84 /* SWRevealViewController.m */; };
 		42CADFB718687BB20057AE84 /* KxMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CADFB618687BB20057AE84 /* KxMenu.m */; };
+		42F3A58718BB518500DBCB4A /* IconEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F3A57318BB518500DBCB4A /* IconEditorViewController.m */; };
+		42F3A58818BB518500DBCB4A /* _selectionFrame.png in Resources */ = {isa = PBXBuildFile; fileRef = 42F3A57518BB518500DBCB4A /* _selectionFrame.png */; };
+		42F3A58918BB518500DBCB4A /* _selectionFrame@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42F3A57618BB518500DBCB4A /* _selectionFrame@2x.png */; };
+		42F3A58A18BB518500DBCB4A /* allGmapIcons_H.png in Resources */ = {isa = PBXBuildFile; fileRef = 42F3A57718BB518500DBCB4A /* allGmapIcons_H.png */; };
+		42F3A58B18BB518500DBCB4A /* allGmapIcons_V.png in Resources */ = {isa = PBXBuildFile; fileRef = 42F3A57818BB518500DBCB4A /* allGmapIcons_V.png */; };
+		42F3A58C18BB518500DBCB4A /* allGMapIconsInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 42F3A57918BB518500DBCB4A /* allGMapIconsInfo.plist */; };
+		42F3A58D18BB518500DBCB4A /* iconEditorBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 42F3A57A18BB518500DBCB4A /* iconEditorBackground.png */; };
+		42F3A58E18BB518500DBCB4A /* iconEditorBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42F3A57B18BB518500DBCB4A /* iconEditorBackground@2x.png */; };
+		42F3A58F18BB518500DBCB4A /* selectionFrame.png in Resources */ = {isa = PBXBuildFile; fileRef = 42F3A57C18BB518500DBCB4A /* selectionFrame.png */; };
+		42F3A59018BB518500DBCB4A /* selectionFrame@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42F3A57D18BB518500DBCB4A /* selectionFrame@2x.png */; };
+		42F3A59118BB518500DBCB4A /* LocationEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F3A58018BB518500DBCB4A /* LocationEditorViewController.m */; };
+		42F3A59218BB518500DBCB4A /* PointDataEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F3A58318BB518500DBCB4A /* PointDataEditorViewController.m */; };
+		42F3A59718BB521200DBCB4A /* TagListEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F3A59618BB521200DBCB4A /* TagListEditorViewController.m */; };
 		42F6E81C1869FDFC00005AFB /* NSString+JavaStr.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F6E8161869FDFC00005AFB /* NSString+JavaStr.m */; };
 		42F6E81D1869FDFC00005AFB /* SimpleXMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F6E8181869FDFC00005AFB /* SimpleXMLReader.m */; };
 		42F6E81E1869FDFC00005AFB /* UIView+FirstResponder.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F6E81A1869FDFC00005AFB /* UIView+FirstResponder.m */; };
@@ -266,16 +271,6 @@
 		423F334218B8E29700845826 /* tbar-viewMap@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tbar-viewMap@2x.png"; sourceTree = "<group>"; };
 		423F334318B8E29700845826 /* uncheckedMark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = uncheckedMark.png; sourceTree = "<group>"; };
 		423F334418B8E29700845826 /* uncheckedMark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "uncheckedMark@2x.png"; sourceTree = "<group>"; };
-		423F338818B8E2E100845826 /* IconEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconEditorViewController.h; sourceTree = "<group>"; };
-		423F338918B8E2E100845826 /* IconEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IconEditorViewController.m; sourceTree = "<group>"; };
-		423F338B18B8E2E100845826 /* allGmapIcons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = allGmapIcons.png; sourceTree = "<group>"; };
-		423F338C18B8E2E100845826 /* allGMapIconsInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = allGMapIconsInfo.plist; sourceTree = "<group>"; };
-		423F338D18B8E2E100845826 /* iconEditorBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iconEditorBackground.png; sourceTree = "<group>"; };
-		423F338E18B8E2E100845826 /* iconEditorBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iconEditorBackground@2x.png"; sourceTree = "<group>"; };
-		423F339018B8E2E100845826 /* LocationEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationEditorViewController.h; sourceTree = "<group>"; };
-		423F339118B8E2E100845826 /* LocationEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationEditorViewController.m; sourceTree = "<group>"; };
-		423F339618B8E2E100845826 /* TagListEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagListEditorViewController.h; sourceTree = "<group>"; };
-		423F339718B8E2E100845826 /* TagListEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagListEditorViewController.m; sourceTree = "<group>"; };
 		423F339B18B8E2E100845826 /* openInAppleMaps.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = openInAppleMaps.png; sourceTree = "<group>"; };
 		423F339C18B8E2E100845826 /* openInAppleMaps@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "openInAppleMaps@2x.png"; sourceTree = "<group>"; };
 		423F339D18B8E2E100845826 /* openInASheetBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = openInASheetBg.png; sourceTree = "<group>"; };
@@ -361,8 +356,6 @@
 		423F33F018B8E2E100845826 /* TreeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TreeTableViewCell.m; sourceTree = "<group>"; };
 		423F33F318B8E2E100845826 /* TagFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagFilterViewController.h; sourceTree = "<group>"; };
 		423F33F418B8E2E100845826 /* TagFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagFilterViewController.m; sourceTree = "<group>"; };
-		423F344F18B9385E00845826 /* PointEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointEditorViewController.h; sourceTree = "<group>"; };
-		423F345018B9385E00845826 /* PointEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointEditorViewController.m; sourceTree = "<group>"; };
 		423F345218B944D000845826 /* tableHSepLine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tableHSepLine.png; sourceTree = "<group>"; };
 		423F345318B944D000845826 /* tableHSepLine@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tableHSepLine@2x.png"; sourceTree = "<group>"; };
 		4272013B186AFA3E0062DF76 /* _PLISTs_.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = _PLISTs_.bundle; sourceTree = "<group>"; };
@@ -435,6 +428,23 @@
 		42CADFAC186837410057AE84 /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
 		42CADFB518687BB20057AE84 /* KxMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KxMenu.h; sourceTree = "<group>"; };
 		42CADFB618687BB20057AE84 /* KxMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KxMenu.m; sourceTree = "<group>"; };
+		42F3A57218BB518500DBCB4A /* IconEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconEditorViewController.h; sourceTree = "<group>"; };
+		42F3A57318BB518500DBCB4A /* IconEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IconEditorViewController.m; sourceTree = "<group>"; };
+		42F3A57518BB518500DBCB4A /* _selectionFrame.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = _selectionFrame.png; sourceTree = "<group>"; };
+		42F3A57618BB518500DBCB4A /* _selectionFrame@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "_selectionFrame@2x.png"; sourceTree = "<group>"; };
+		42F3A57718BB518500DBCB4A /* allGmapIcons_H.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = allGmapIcons_H.png; sourceTree = "<group>"; };
+		42F3A57818BB518500DBCB4A /* allGmapIcons_V.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = allGmapIcons_V.png; sourceTree = "<group>"; };
+		42F3A57918BB518500DBCB4A /* allGMapIconsInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = allGMapIconsInfo.plist; sourceTree = "<group>"; };
+		42F3A57A18BB518500DBCB4A /* iconEditorBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iconEditorBackground.png; sourceTree = "<group>"; };
+		42F3A57B18BB518500DBCB4A /* iconEditorBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iconEditorBackground@2x.png"; sourceTree = "<group>"; };
+		42F3A57C18BB518500DBCB4A /* selectionFrame.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = selectionFrame.png; sourceTree = "<group>"; };
+		42F3A57D18BB518500DBCB4A /* selectionFrame@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "selectionFrame@2x.png"; sourceTree = "<group>"; };
+		42F3A57F18BB518500DBCB4A /* LocationEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationEditorViewController.h; sourceTree = "<group>"; };
+		42F3A58018BB518500DBCB4A /* LocationEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationEditorViewController.m; sourceTree = "<group>"; };
+		42F3A58218BB518500DBCB4A /* PointDataEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointDataEditorViewController.h; sourceTree = "<group>"; };
+		42F3A58318BB518500DBCB4A /* PointDataEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointDataEditorViewController.m; sourceTree = "<group>"; };
+		42F3A59518BB521200DBCB4A /* TagListEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagListEditorViewController.h; sourceTree = "<group>"; };
+		42F3A59618BB521200DBCB4A /* TagListEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagListEditorViewController.m; sourceTree = "<group>"; };
 		42F6E8151869FDFC00005AFB /* NSString+JavaStr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+JavaStr.h"; sourceTree = "<group>"; };
 		42F6E8161869FDFC00005AFB /* NSString+JavaStr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+JavaStr.m"; sourceTree = "<group>"; };
 		42F6E8171869FDFC00005AFB /* SimpleXMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleXMLReader.h; sourceTree = "<group>"; };
@@ -606,60 +616,10 @@
 		423F338518B8E2E100845826 /* __OLD__ */ = {
 			isa = PBXGroup;
 			children = (
-				423F338618B8E2E100845826 /* Editors */,
 				423F339818B8E2E100845826 /* Others */,
 				423F33F118B8E2E100845826 /* Windows */,
 			);
 			path = __OLD__;
-			sourceTree = "<group>";
-		};
-		423F338618B8E2E100845826 /* Editors */ = {
-			isa = PBXGroup;
-			children = (
-				423F338718B8E2E100845826 /* IconEditorViewController */,
-				423F338F18B8E2E100845826 /* LocationEditorViewController */,
-				423F339518B8E2E100845826 /* TagListEditorViewController */,
-			);
-			path = Editors;
-			sourceTree = "<group>";
-		};
-		423F338718B8E2E100845826 /* IconEditorViewController */ = {
-			isa = PBXGroup;
-			children = (
-				423F338818B8E2E100845826 /* IconEditorViewController.h */,
-				423F338918B8E2E100845826 /* IconEditorViewController.m */,
-				423F338A18B8E2E100845826 /* resources */,
-			);
-			path = IconEditorViewController;
-			sourceTree = "<group>";
-		};
-		423F338A18B8E2E100845826 /* resources */ = {
-			isa = PBXGroup;
-			children = (
-				423F338B18B8E2E100845826 /* allGmapIcons.png */,
-				423F338C18B8E2E100845826 /* allGMapIconsInfo.plist */,
-				423F338D18B8E2E100845826 /* iconEditorBackground.png */,
-				423F338E18B8E2E100845826 /* iconEditorBackground@2x.png */,
-			);
-			path = resources;
-			sourceTree = "<group>";
-		};
-		423F338F18B8E2E100845826 /* LocationEditorViewController */ = {
-			isa = PBXGroup;
-			children = (
-				423F339018B8E2E100845826 /* LocationEditorViewController.h */,
-				423F339118B8E2E100845826 /* LocationEditorViewController.m */,
-			);
-			path = LocationEditorViewController;
-			sourceTree = "<group>";
-		};
-		423F339518B8E2E100845826 /* TagListEditorViewController */ = {
-			isa = PBXGroup;
-			children = (
-				423F339618B8E2E100845826 /* TagListEditorViewController.h */,
-				423F339718B8E2E100845826 /* TagListEditorViewController.m */,
-			);
-			path = TagListEditorViewController;
 			sourceTree = "<group>";
 		};
 		423F339818B8E2E100845826 /* Others */ = {
@@ -809,21 +769,15 @@
 			path = TagFilterViewController;
 			sourceTree = "<group>";
 		};
-		423F344D18B9385E00845826 /* Editors */ = {
+		423F346418BA3F1C00845826 /* Editors */ = {
 			isa = PBXGroup;
 			children = (
-				423F344E18B9385E00845826 /* PointEditorViewController */,
+				42F3A59418BB521200DBCB4A /* TagListEditorViewController */,
+				42F3A57118BB518500DBCB4A /* IconEditorViewController */,
+				42F3A57E18BB518500DBCB4A /* LocationEditorViewController */,
+				42F3A58118BB518500DBCB4A /* PointDataEditorViewController */,
 			);
 			path = Editors;
-			sourceTree = "<group>";
-		};
-		423F344E18B9385E00845826 /* PointEditorViewController */ = {
-			isa = PBXGroup;
-			children = (
-				423F344F18B9385E00845826 /* PointEditorViewController.h */,
-				423F345018B9385E00845826 /* PointEditorViewController.m */,
-			);
-			path = PointEditorViewController;
 			sourceTree = "<group>";
 		};
 		42BE7A6818672C6F00AECD57 = {
@@ -991,8 +945,8 @@
 			children = (
 				423F338518B8E2E100845826 /* __OLD__ */,
 				423F330218B8E29700845826 /* Resources */,
+				423F346418BA3F1C00845826 /* Editors */,
 				423F30E318B8D71700845826 /* Others */,
-				423F344D18B9385E00845826 /* Editors */,
 				423F30F018B8D75E00845826 /* Windows */,
 			);
 			name = "App GUI";
@@ -1061,6 +1015,59 @@
 				42CADFB618687BB20057AE84 /* KxMenu.m */,
 			);
 			path = KxMenu;
+			sourceTree = "<group>";
+		};
+		42F3A57118BB518500DBCB4A /* IconEditorViewController */ = {
+			isa = PBXGroup;
+			children = (
+				42F3A57218BB518500DBCB4A /* IconEditorViewController.h */,
+				42F3A57318BB518500DBCB4A /* IconEditorViewController.m */,
+				42F3A57418BB518500DBCB4A /* resources */,
+			);
+			path = IconEditorViewController;
+			sourceTree = "<group>";
+		};
+		42F3A57418BB518500DBCB4A /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				42F3A57518BB518500DBCB4A /* _selectionFrame.png */,
+				42F3A57618BB518500DBCB4A /* _selectionFrame@2x.png */,
+				42F3A57718BB518500DBCB4A /* allGmapIcons_H.png */,
+				42F3A57818BB518500DBCB4A /* allGmapIcons_V.png */,
+				42F3A57918BB518500DBCB4A /* allGMapIconsInfo.plist */,
+				42F3A57A18BB518500DBCB4A /* iconEditorBackground.png */,
+				42F3A57B18BB518500DBCB4A /* iconEditorBackground@2x.png */,
+				42F3A57C18BB518500DBCB4A /* selectionFrame.png */,
+				42F3A57D18BB518500DBCB4A /* selectionFrame@2x.png */,
+			);
+			path = resources;
+			sourceTree = "<group>";
+		};
+		42F3A57E18BB518500DBCB4A /* LocationEditorViewController */ = {
+			isa = PBXGroup;
+			children = (
+				42F3A57F18BB518500DBCB4A /* LocationEditorViewController.h */,
+				42F3A58018BB518500DBCB4A /* LocationEditorViewController.m */,
+			);
+			path = LocationEditorViewController;
+			sourceTree = "<group>";
+		};
+		42F3A58118BB518500DBCB4A /* PointDataEditorViewController */ = {
+			isa = PBXGroup;
+			children = (
+				42F3A58218BB518500DBCB4A /* PointDataEditorViewController.h */,
+				42F3A58318BB518500DBCB4A /* PointDataEditorViewController.m */,
+			);
+			path = PointDataEditorViewController;
+			sourceTree = "<group>";
+		};
+		42F3A59418BB521200DBCB4A /* TagListEditorViewController */ = {
+			isa = PBXGroup;
+			children = (
+				42F3A59518BB521200DBCB4A /* TagListEditorViewController.h */,
+				42F3A59618BB521200DBCB4A /* TagListEditorViewController.m */,
+			);
+			path = TagListEditorViewController;
 			sourceTree = "<group>";
 		};
 		42F6E8141869FDFC00005AFB /* Utils */ = {
@@ -1181,19 +1188,20 @@
 				423F343118B8E2E100845826 /* OrangeTag-2.png in Resources */,
 				423F342518B8E2E100845826 /* GreenTag-1.png in Resources */,
 				423F340018B8E2E100845826 /* openInASheetBg@2x.png in Resources */,
+				42F3A59018BB518500DBCB4A /* selectionFrame@2x.png in Resources */,
 				423F337918B8E29700845826 /* tbar-move.png in Resources */,
 				423F340118B8E2E100845826 /* openInASheetCancelBtn.png in Resources */,
 				423F337218B8E29700845826 /* tbar-edit@2x.png in Resources */,
 				423F344818B8E2E100845826 /* RBlackTag-3@2x.png in Resources */,
 				423F342A18B8E2E100845826 /* GreenTag-2@2x.png in Resources */,
 				423F343318B8E2E100845826 /* OrangeTag-3.png in Resources */,
-				423F33F718B8E2E100845826 /* allGMapIconsInfo.plist in Resources */,
 				423F342118B8E2E100845826 /* DOrangeTag-2.png in Resources */,
+				42F3A58C18BB518500DBCB4A /* allGMapIconsInfo.plist in Resources */,
 				423F341B18B8E2E100845826 /* DGreenTag-2.png in Resources */,
 				423F337618B8E29700845826 /* tbar-gps@2x.png in Resources */,
-				423F33F818B8E2E100845826 /* iconEditorBackground.png in Resources */,
 				423F342F18B8E2E100845826 /* OrangeTag-11@2x.png in Resources */,
 				423F337A18B8E29700845826 /* tbar-move@2x.png in Resources */,
+				42F3A58818BB518500DBCB4A /* _selectionFrame.png in Resources */,
 				423F343418B8E2E100845826 /* OrangeTag-3@2x.png in Resources */,
 				423F337318B8E29700845826 /* tbar-ellipse.png in Resources */,
 				423F341D18B8E2E100845826 /* DGreenTag-3.png in Resources */,
@@ -1220,10 +1228,11 @@
 				423F340A18B8E2E100845826 /* _CircledTag@2x.png in Resources */,
 				423F343B18B8E2E100845826 /* folded.png in Resources */,
 				42BE7AEE18672EB200AECD57 /* tpl_protected_int.txt in Resources */,
+				42F3A58F18BB518500DBCB4A /* selectionFrame.png in Resources */,
 				423F342418B8E2E100845826 /* DOrangeTag-3@2x.png in Resources */,
-				423F33F918B8E2E100845826 /* iconEditorBackground@2x.png in Resources */,
 				423F341318B8E2E100845826 /* DBlueTag-1.png in Resources */,
 				423F342318B8E2E100845826 /* DOrangeTag-3.png in Resources */,
+				42F3A58A18BB518500DBCB4A /* allGmapIcons_H.png in Resources */,
 				42BE7A7F18672C6F00AECD57 /* InfoPlist.strings in Resources */,
 				42F6E822186A01A600005AFB /* MapIconImages.bundle in Resources */,
 				423F340618B8E2E100845826 /* openInTomtom@2x.png in Resources */,
@@ -1234,11 +1243,13 @@
 				423F341018B8E2E100845826 /* BlueTag-2@x.png in Resources */,
 				423F342018B8E2E100845826 /* DOrangeTag-1@2x.png in Resources */,
 				423F342B18B8E2E100845826 /* GreenTag-3.png in Resources */,
+				42F3A58918BB518500DBCB4A /* _selectionFrame@2x.png in Resources */,
 				423F33FF18B8E2E100845826 /* openInASheetBg.png in Resources */,
 				423F343818B8E2E100845826 /* CircledTag@2x.png in Resources */,
 				423F341918B8E2E100845826 /* DGreenTag-1.png in Resources */,
 				423F33FE18B8E2E100845826 /* openInAppleMaps@2x.png in Resources */,
 				423F336C18B8E29700845826 /* checkedMark@2x.png in Resources */,
+				42F3A58E18BB518500DBCB4A /* iconEditorBackground@2x.png in Resources */,
 				423F343018B8E2E100845826 /* OrangeTag-1@2x.png in Resources */,
 				42BE7AEB18672EB200AECD57 /* README.txt in Resources */,
 				423F342D18B8E2E100845826 /* OrangeTag-1.png in Resources */,
@@ -1250,11 +1261,11 @@
 				423F341E18B8E2E100845826 /* DGreenTag-3@2x.png in Resources */,
 				423F338318B8E29700845826 /* uncheckedMark.png in Resources */,
 				42CADFAE186837410057AE84 /* reveal-icon@2x.png in Resources */,
-				423F33F618B8E2E100845826 /* allGmapIcons.png in Resources */,
 				423F341518B8E2E100845826 /* DBlueTag-2.png in Resources */,
 				423F340518B8E2E100845826 /* openInTomtom.png in Resources */,
 				423F342818B8E2E100845826 /* GreenTag-1@2x.png in Resources */,
 				423F341618B8E2E100845826 /* DBlueTag-2@2x.png in Resources */,
+				42F3A58D18BB518500DBCB4A /* iconEditorBackground.png in Resources */,
 				423F336F18B8E29700845826 /* tbar-delete.png in Resources */,
 				423F337D18B8E29700845826 /* tbar-sort.png in Resources */,
 				423F340818B8E2E100845826 /* OpenInActionSheetViewController.xib in Resources */,
@@ -1264,6 +1275,7 @@
 				42BE7AEC18672EB200AECD57 /* tpl_implementation.txt in Resources */,
 				423F337118B8E29700845826 /* tbar-edit.png in Resources */,
 				423F341818B8E2E100845826 /* DBlueTag-3@2x.png in Resources */,
+				42F3A58B18BB518500DBCB4A /* allGmapIcons_V.png in Resources */,
 				423F344218B8E2E100845826 /* LBlackTag-3@2x.png in Resources */,
 				423F340918B8E2E100845826 /* openInAppInfo.plist in Resources */,
 				42BE7A8818672C6F00AECD57 /* Main.storyboard in Resources */,
@@ -1311,11 +1323,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				423F33F518B8E2E100845826 /* IconEditorViewController.m in Sources */,
 				423F312618B8D79300845826 /* MPointMapAnnotation.m in Sources */,
 				4235D9A4187AC6610023E00C /* _RPointTag.m in Sources */,
 				423F340718B8E2E100845826 /* OpenInActionSheetViewController.m in Sources */,
-				423F345118B9385E00845826 /* PointEditorViewController.m in Sources */,
 				42BBBBA51872A8D5009813A0 /* MTag.m in Sources */,
 				423F30F418B8D75E00845826 /* MapListViewController.m in Sources */,
 				42BBBBA61872A8D5009813A0 /* RPointTag.m in Sources */,
@@ -1336,16 +1346,18 @@
 				42BE7AEA18672EB200AECD57 /* DispatchQueueLogFormatter.m in Sources */,
 				4235D9A1187AC6610023E00C /* _MMap.m in Sources */,
 				42BE7AC418672EA500AECD57 /* MockUp.m in Sources */,
+				42F3A59118BB518500DBCB4A /* LocationEditorViewController.m in Sources */,
 				423F312518B8D79300845826 /* PointListViewController.m in Sources */,
 				4235D9A2187AC6610023E00C /* _MPoint.m in Sources */,
+				42F3A59718BB521200DBCB4A /* TagListEditorViewController.m in Sources */,
 				42F6E81C1869FDFC00005AFB /* NSString+JavaStr.m in Sources */,
-				423F33FC18B8E2E100845826 /* TagListEditorViewController.m in Sources */,
 				42BE7AE718672EB200AECD57 /* DDLog.m in Sources */,
 				42BE7ACD18672EAC00AECD57 /* ErrorManagerService.m in Sources */,
-				423F33FA18B8E2E100845826 /* LocationEditorViewController.m in Sources */,
 				42CADFAF186837410057AE84 /* SWRevealViewController.m in Sources */,
 				4235D9A0187AC6610023E00C /* _MIcon.m in Sources */,
 				423F30EF18B8D71700845826 /* UIPlaceHolderTextView.m in Sources */,
+				42F3A58718BB518500DBCB4A /* IconEditorViewController.m in Sources */,
+				42F3A59218BB518500DBCB4A /* PointDataEditorViewController.m in Sources */,
 				42BBBBA01872A8D5009813A0 /* MBase.m in Sources */,
 				423F344918B8E2E100845826 /* TagTree.m in Sources */,
 				42214EAE18745454006A72B9 /* UIImage+Tint.m in Sources */,

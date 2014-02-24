@@ -249,6 +249,7 @@
 
     // Recuerda que redimensiono
     self.notifiedWillShow = TRUE;
+    self.notifiedDidShow = FALSE;
 
     // Recuerda la posicion del teclado
     self.keyboardRect = [self _keyboardRectFromNotification:notification];
@@ -276,6 +277,7 @@
     if(self.notifiedDidShow) return;
     
     // Recuerda que redimensiono
+    self.notifiedWillShow = TRUE;
     self.notifiedDidShow = TRUE;
     
     // Recuerda la posicion del teclado
@@ -309,6 +311,7 @@
     
     // Recuerda que se restauro
     self.notifiedDidShow = FALSE;
+    self.notifiedWillShow = FALSE;
 
     // Recuerda la posicion del teclado
     self.keyboardRect = [self _keyboardRectFromNotification:notification];
