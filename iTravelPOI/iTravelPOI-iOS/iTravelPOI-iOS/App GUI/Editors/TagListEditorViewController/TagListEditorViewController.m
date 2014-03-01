@@ -42,22 +42,25 @@ typedef NS_ENUM(NSInteger, ActiveSection) {
                                             UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>
 
 
-@property (weak, nonatomic)     IBOutlet UIView             *viewContainer;
-@property (weak, nonatomic)     IBOutlet UILabel            *lblSelector;
-@property (weak, nonatomic)     IBOutlet UITextField        *txtNewTagName;
-@property (weak, nonatomic)     IBOutlet UITableView        *assignedTagsTableView;
-@property (strong, nonatomic)   TagTreeTableViewController  *tagTableView;
+@property (weak, nonatomic)     IBOutlet UILabel                        *lblSelector;
+@property (weak, nonatomic)     IBOutlet UITextField                    *txtNewTagName;
+@property (weak, nonatomic)     IBOutlet UITableView                    *assignedTagsTableView;
+@property (weak, nonatomic)     IBOutlet NSLayoutConstraint             *constraintTableLeft;
+@property (weak, nonatomic)     IBOutlet NSLayoutConstraint             *constraintTagsLeft;
+@property (weak, nonatomic)     IBOutlet NSLayoutConstraint             *constraintKBTop;
 
-@property (strong, nonatomic)   NSManagedObjectContext      *moContext;
-@property (strong, nonatomic)   NSMutableArray              *assignedTags;
-@property (strong, nonatomic)   NSMutableSet                *availableTags;
+@property (strong, nonatomic)            TagTreeTableViewController     *tagTableView;
 
-@property (nonatomic, assign)   ActiveSection               activeSection;
+@property (strong, nonatomic)   NSManagedObjectContext                  *moContext;
+@property (strong, nonatomic)   NSMutableArray                          *assignedTags;
+@property (strong, nonatomic)   NSMutableSet                            *availableTags;
 
-@property (strong, nonatomic)   NSArray                     *searchedTags;
-@property (nonatomic, assign)   BOOL                        isEditingTagName;
+@property (nonatomic, assign)   ActiveSection                           activeSection;
+@property (weak, nonatomic)     IBOutlet NSLayoutConstraint             *constraintSelectionLblLeft;
+@property (nonatomic, assign)   CGFloat                                 lblDistX;
 
-@property (nonatomic, assign) CGFloat                       tableHeight;
+@property (strong, nonatomic)   NSArray                                 *searchedTags;
+@property (nonatomic, assign)   BOOL                                    isEditingTagName;
 
 @end
 
@@ -90,14 +93,9 @@ typedef NS_ENUM(NSInteger, ActiveSection) {
     
     [super keyboardWillShow];
     
-    CGRect tblFrame = self.assignedTagsTableView.frame;
-    
-    // Tiene que quitar un poco mas de altura y desplazarlo hacia abajo para el textField
-    CGFloat newY = self.txtNewTagName.frame.size.height + self.txtNewTagName.frame.origin.y * 2 /* espaciado */;
-    CGFloat newH = self.assignedTagsTableView.frame.size.height;
-    newH -= newY;
-    
-    self.assignedTagsTableView.frame = CGRectMake(0, newY, tblFrame.size.width, newH);
+    // Tiene que desplazar la tabla hacia abajo para ver el textField
+    CGFloat newTop = self.txtNewTagName.frame.size.height + self.txtNewTagName.frame.origin.y * 2; // Deja un espaciado con el textField
+    self.constraintKBTop.constant = newTop;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -105,11 +103,8 @@ typedef NS_ENUM(NSInteger, ActiveSection) {
     
     [super keyboardWillHide];
     
-    CGRect tblFrame = self.assignedTagsTableView.frame;
-    
     // Le devuelve la posicion a la tabla
-    self.assignedTagsTableView.frame = CGRectMake(0, 0, tblFrame.size.width, tblFrame.size.height);
-    
+    self.constraintKBTop.constant = 0;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -135,7 +130,7 @@ typedef NS_ENUM(NSInteger, ActiveSection) {
     self = [super initWithCoder:aDecoder];
     if (self) {
         // Custom initialization
-        self.activeSection = ActiveSectionAssigned;
+        _activeSection = ActiveSectionAssigned;
         self.isEditingTagName = FALSE;
     }
     return self;
@@ -147,19 +142,23 @@ typedef NS_ENUM(NSInteger, ActiveSection) {
 {
     [super viewDidLoad];
     self.txtNewTagName.placeholder = [NSString stringWithFormat:@"Tag path names separated by '%@'",TAG_NAME_SEPARATOR];
-    self.kbContentView = self.assignedTagsTableView;
 }
-
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) viewWillAppear:(BOOL)animated {
     
     [super viewWillAppear:animated];
-    
+
+    // Recuerda informacion sobre la etiqueta selectora para posicionarla
+    self.lblDistX = self.constraintSelectionLblLeft.constant;
+
     // Ajusta el color dependiendo del tinte
     self.lblSelector.backgroundColor = self.view.tintColor;
 
+    // Ajusta el ancho de las tablas al de la pantalla
+    [self __updateTablesWidth:FALSE];
     
+
     //****************************************************************************************************
     if(!self.moContext) {
         self.moContext = [BaseCoreDataService moContext];
@@ -188,6 +187,20 @@ typedef NS_ENUM(NSInteger, ActiveSection) {
     
     // La seccion activa es la de asignados
     self.activeSection = ActiveSectionAssigned;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void)viewDidLayoutSubviews {
+    
+    [super viewDidLayoutSubviews];
+
+    // Detecta si hubo una rotacion para reajustar las restricciones
+    CGFloat tableLC = fabs(self.constraintTableLeft.constant);
+    CGFloat tagsLC = fabs(self.constraintTagsLeft.constant);
+    CGFloat leftConstraint = MAX(tableLC, tagsLC);
+    if(self.view.bounds.size.width!=leftConstraint) {
+        [self __updateTablesWidth:FALSE];
+    }
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -374,36 +387,51 @@ typedef NS_ENUM(NSInteger, ActiveSection) {
 //---------------------------------------------------------------------------------------------------------------------
 - (void) setActiveSection:(ActiveSection) section {
     
-    static CGFloat OFFSET_X1 = 36;
-    static CGFloat OFFSET_X2 = 205;
-    static CGFloat SCREEN_WIDTH = 320;
-    
     // Solo hay que hacer algo en caso de cambio
     if(self.activeSection == section) return;
     
     // Almacena el nuevo valor
     _activeSection = section;
 
-    // Mueve los elementos segun la seccion indicada
-    if(self.activeSection == ActiveSectionAssigned) {
-        
-        [UIView animateWithDuration:0.3 animations:^{
-            frameSetX(self.lblSelector, OFFSET_X1);
-            frameSetX(self.viewContainer, 0);
-        } completion:^(BOOL finished) {
-            frameSetX(self.lblSelector, OFFSET_X1);
-            frameSetX(self.viewContainer, 0);
-        }];
-        
+    // Ajusta el ancho de las tablas de acuerdo a la seleccion
+    [self __updateTablesWidth:TRUE];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) __updateTablesWidth {
+
+    // Calcula el ancho actual
+    CGFloat viewWidth = self.view.bounds.size.width;
+
+    CGFloat tableLeft = (self.activeSection == ActiveSectionAssigned) ? 0 : -viewWidth;
+    CGFloat tagsLeft = (self.activeSection == ActiveSectionAssigned) ? viewWidth : 0;
+
+    // Ajusta la posicion de las tablas mediante las restricciones
+    self.constraintTableLeft.constant = tableLeft;
+    self.constraintTagsLeft.constant = tagsLeft;
+
+    // Ajusta la posicion de la etiqueta que sirve como selector
+    CGFloat lblLeft = (self.activeSection == ActiveSectionAssigned) ? self.lblDistX : viewWidth - self.lblDistX - self.lblSelector.bounds.size.width;
+    self.constraintSelectionLblLeft.constant = lblLeft;
+
+    // Recoloca todo
+    [self.view layoutIfNeeded];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) __updateTablesWidth:(BOOL)animated {
+    
+    if(!animated) {
+        [self __updateTablesWidth];
     } else {
         
+        // Establece la nueva de forma animada
         [UIView animateWithDuration:0.3 animations:^{
-            frameSetX(self.lblSelector, OFFSET_X2);
-            frameSetX(self.viewContainer,-SCREEN_WIDTH);
+            [self __updateTablesWidth];
         } completion:^(BOOL finished) {
-            frameSetX(self.lblSelector, OFFSET_X2);
-            frameSetX(self.viewContainer,-SCREEN_WIDTH);
+            [self __updateTablesWidth];
         }];
+        
     }
 }
 
@@ -424,14 +452,18 @@ typedef NS_ENUM(NSInteger, ActiveSection) {
     
     if(self.isEditingTagName) return;
 
+    
+    // Solo se pueden añadir nuevos tags en la vista de la tabla
     self.activeSection = ActiveSectionAssigned;
-    
-    [self.txtNewTagName becomeFirstResponder];
-    
+
+    // Prepara el campo de texto y la tabla
     self.txtNewTagName.text = nil;
     self.isEditingTagName = TRUE;
     self.assignedTagsTableView.editing = FALSE;
     [self.assignedTagsTableView reloadData];
+    
+    // Activa el teclado
+    [self.txtNewTagName becomeFirstResponder];
 }
 
 //---------------------------------------------------------------------------------------------------------------------

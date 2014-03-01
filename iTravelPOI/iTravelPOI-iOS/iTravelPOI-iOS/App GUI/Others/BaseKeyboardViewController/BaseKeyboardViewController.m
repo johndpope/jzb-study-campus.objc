@@ -66,7 +66,7 @@
 - (CGSize) calcNewKeyboardContentViewSize:(UIView *)aView kbRect:(CGRect)kbRect {
     
     // Pone al teclado y la vista en el mismo origen de coordenadas
-    CGRect aViewRect = [self.view convertRect:aView.frame fromView:aView];
+    CGRect aViewRect = (aView.superview==self.view) ? aView.frame : [self.view convertRect:aView.frame fromView:aView];
 
     // Retorna la nueva altura de la ventana para quitarla de debajo del teclado
     CGFloat newHeight = kbRect.origin.y-aViewRect.origin.y;
@@ -77,22 +77,30 @@
 - (void) keyboardWillShow {
     
     // Si se ha establecido una vista con el contenido la redimensiona
-    if(!self.kbContentView) return;
-    UIView *kbContentView = self.kbContentView;
+    if(!self.kbContentView && !self.kbContentVTrailing) return;
     
-    // El comportamiento depende de si kbContentView esta dentro de un UIScrollView
-    if(![kbContentView.superview isKindOfClass:UIScrollView.class]) {
-        
-        CGSize newSize = [self calcNewKeyboardContentViewSize:kbContentView kbRect:self.keyboardRect];
-        self.prevSize = kbContentView.frame.size;
-        frameSetSize(kbContentView, newSize.width, newSize.height);
-        
+    
+    // Si se ajusta por el trailing o por el alto
+    if(self.kbContentVTrailing) {
+        CGSize newSize = [self calcNewKeyboardContentViewSize:self.kbContentView kbRect:self.keyboardRect];
+        UIView *contentView = self.kbContentVTrailing.firstAttribute==NSLayoutAttributeBottom ? self.kbContentVTrailing.firstItem : self.kbContentVTrailing.secondItem;
+        CGFloat newTrailing = contentView.bounds.size.height - newSize.height;
+        self.kbContentVTrailing.constant = newTrailing;
     } else {
-        
-        UIScrollView *sv = (UIScrollView *)kbContentView.superview;
-        sv.contentInset = (UIEdgeInsets){0, 0, self.keyboardRect.size.height, 0};
-        sv.contentSize = kbContentView.frame.size;
-        
+        // El comportamiento depende de si kbContentView esta dentro de un UIScrollView
+        if(![self.kbContentView.superview isKindOfClass:UIScrollView.class]) {
+            
+            CGSize newSize = [self calcNewKeyboardContentViewSize:self.kbContentView kbRect:self.keyboardRect];
+            self.prevSize = self.kbContentView.frame.size;
+            frameSetSize(self.kbContentView, newSize.width, newSize.height);
+            
+        } else {
+            
+            UIScrollView *sv = (UIScrollView *)self.kbContentView.superview;
+            sv.contentInset = (UIEdgeInsets){0, 0, self.keyboardRect.size.height, 0};
+            sv.contentSize = self.kbContentView.frame.size;
+            
+        }
     }
 }
 
@@ -106,20 +114,26 @@
     
     // Si se ha establecido una vista con el contenido la redimensiona
     if(!self.kbContentView) return;
-    UIView *kbContentView = self.kbContentView;
     
-    // El comportamiento depende de si kbContentView esta dentro de un UIScrollView
-    if(![kbContentView.superview isKindOfClass:UIScrollView.class]) {
-        
-        frameSetSize(kbContentView, self.prevSize.width, self.prevSize.height);
-        
+    // Si se ajusta por el trailing o por el alto
+    if(self.kbContentVTrailing) {
+        self.kbContentVTrailing.constant = 0;
     } else {
-        
-        UIScrollView *sv = (UIScrollView *)kbContentView.superview;
-        sv.contentInset = (UIEdgeInsets){0, 0, 0, 0};
-        sv.contentSize = kbContentView.frame.size;
-        
+        // El comportamiento depende de si kbContentView esta dentro de un UIScrollView
+        if(![self.kbContentView.superview isKindOfClass:UIScrollView.class]) {
+            
+            frameSetSize(self.kbContentView, self.prevSize.width, self.prevSize.height);
+            
+        } else {
+            
+            UIScrollView *sv = (UIScrollView *)self.kbContentView.superview;
+            sv.contentInset = (UIEdgeInsets){0, 0, 0, 0};
+            sv.contentSize = self.kbContentView.frame.size;
+            
+        }
     }
+
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
