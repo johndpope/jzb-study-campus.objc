@@ -541,6 +541,7 @@
     [self.contentView addSubview:toViewController.view];
 
     self.activeVC = toViewController;
+    [self.activeVC.view layoutIfNeeded];
     
     
     // No viene de uno previo

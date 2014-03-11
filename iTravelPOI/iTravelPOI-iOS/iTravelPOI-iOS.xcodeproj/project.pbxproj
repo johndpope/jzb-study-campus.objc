@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		421FA3DB18C46F9800792990 /* TestMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 421FA3DA18C46F9800792990 /* TestMapViewController.m */; };
 		42214EA81874245B006A72B9 /* BenchMark.m in Sources */ = {isa = PBXBuildFile; fileRef = 42214EA71874245B006A72B9 /* BenchMark.m */; };
 		42214EAE18745454006A72B9 /* UIImage+Tint.m in Sources */ = {isa = PBXBuildFile; fileRef = 42214EAD18745454006A72B9 /* UIImage+Tint.m */; };
 		4235D99E187AC6610023E00C /* _MBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 4235D991187AC6610023E00C /* _MBase.m */; };
@@ -16,6 +17,7 @@
 		4235D9A2187AC6610023E00C /* _MPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 4235D999187AC6610023E00C /* _MPoint.m */; };
 		4235D9A3187AC6610023E00C /* _MTag.m in Sources */ = {isa = PBXBuildFile; fileRef = 4235D99B187AC6610023E00C /* _MTag.m */; };
 		4235D9A4187AC6610023E00C /* _RPointTag.m in Sources */ = {isa = PBXBuildFile; fileRef = 4235D99D187AC6610023E00C /* _RPointTag.m */; };
+		4236F7C218C326C900A88CC6 /* MKMapView+ZoomLevel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4236F7C118C326C900A88CC6 /* MKMapView+ZoomLevel.m */; };
 		423F30ED18B8D71700845826 /* BaseKeyboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 423F30E618B8D71700845826 /* BaseKeyboardViewController.m */; };
 		423F30EE18B8D71700845826 /* BlockActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 423F30E918B8D71700845826 /* BlockActionSheet.m */; };
 		423F30EF18B8D71700845826 /* UIPlaceHolderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 423F30EC18B8D71700845826 /* UIPlaceHolderTextView.m */; };
@@ -208,6 +210,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		421FA3D918C46F9800792990 /* TestMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestMapViewController.h; sourceTree = "<group>"; };
+		421FA3DA18C46F9800792990 /* TestMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestMapViewController.m; sourceTree = "<group>"; };
 		42214EA61874245B006A72B9 /* BenchMark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenchMark.h; sourceTree = "<group>"; };
 		42214EA71874245B006A72B9 /* BenchMark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenchMark.m; sourceTree = "<group>"; };
 		42214EAC18745454006A72B9 /* UIImage+Tint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Tint.h"; sourceTree = "<group>"; };
@@ -226,6 +230,8 @@
 		4235D99B187AC6610023E00C /* _MTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MTag.m; sourceTree = "<group>"; };
 		4235D99C187AC6610023E00C /* _RPointTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _RPointTag.h; sourceTree = "<group>"; };
 		4235D99D187AC6610023E00C /* _RPointTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _RPointTag.m; sourceTree = "<group>"; };
+		4236F7C018C326C900A88CC6 /* MKMapView+ZoomLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MKMapView+ZoomLevel.h"; sourceTree = "<group>"; };
+		4236F7C118C326C900A88CC6 /* MKMapView+ZoomLevel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MKMapView+ZoomLevel.m"; sourceTree = "<group>"; };
 		423F30E518B8D71700845826 /* BaseKeyboardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseKeyboardViewController.h; sourceTree = "<group>"; };
 		423F30E618B8D71700845826 /* BaseKeyboardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseKeyboardViewController.m; sourceTree = "<group>"; };
 		423F30E818B8D71700845826 /* BlockActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockActionSheet.h; sourceTree = "<group>"; };
@@ -523,6 +529,8 @@
 			children = (
 				423F30F518B8D79200845826 /* PointsViewController */,
 				423F30F118B8D75E00845826 /* MapListViewController */,
+				421FA3D918C46F9800792990 /* TestMapViewController.h */,
+				421FA3DA18C46F9800792990 /* TestMapViewController.m */,
 			);
 			path = Windows;
 			sourceTree = "<group>";
@@ -1073,6 +1081,8 @@
 		42F6E8141869FDFC00005AFB /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				4236F7C018C326C900A88CC6 /* MKMapView+ZoomLevel.h */,
+				4236F7C118C326C900A88CC6 /* MKMapView+ZoomLevel.m */,
 				42214EAC18745454006A72B9 /* UIImage+Tint.h */,
 				42214EAD18745454006A72B9 /* UIImage+Tint.m */,
 				42214EA61874245B006A72B9 /* BenchMark.h */,
@@ -1353,6 +1363,7 @@
 				42F6E81C1869FDFC00005AFB /* NSString+JavaStr.m in Sources */,
 				42BE7AE718672EB200AECD57 /* DDLog.m in Sources */,
 				42BE7ACD18672EAC00AECD57 /* ErrorManagerService.m in Sources */,
+				4236F7C218C326C900A88CC6 /* MKMapView+ZoomLevel.m in Sources */,
 				42CADFAF186837410057AE84 /* SWRevealViewController.m in Sources */,
 				4235D9A0187AC6610023E00C /* _MIcon.m in Sources */,
 				423F30EF18B8D71700845826 /* UIPlaceHolderTextView.m in Sources */,
@@ -1361,6 +1372,7 @@
 				42BBBBA01872A8D5009813A0 /* MBase.m in Sources */,
 				423F344918B8E2E100845826 /* TagTree.m in Sources */,
 				42214EAE18745454006A72B9 /* UIImage+Tint.m in Sources */,
+				421FA3DB18C46F9800792990 /* TestMapViewController.m in Sources */,
 				423F30EE18B8D71700845826 /* BlockActionSheet.m in Sources */,
 				423F344C18B8E2E100845826 /* TagFilterViewController.m in Sources */,
 				423F344B18B8E2E100845826 /* TreeTableViewCell.m in Sources */,

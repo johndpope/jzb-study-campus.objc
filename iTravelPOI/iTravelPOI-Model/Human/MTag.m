@@ -192,8 +192,7 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 + (NSPredicate *) _predicateAllWithNameLike:(NSString *)name {
-    return [NSPredicate predicateWithFormat:@"name CONTAINS[cd] %@ AND rPoints.@count>0", name];
-    
+    return [NSPredicate predicateWithFormat:@"isAutoTag==NO AND name CONTAINS[cd] %@ AND rPoints.@count>0", name];
 }
 
 //---------------------------------------------------------------------------------------------------------------------

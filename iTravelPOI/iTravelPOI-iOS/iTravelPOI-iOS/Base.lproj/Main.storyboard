@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="PQO-Cx-hme">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="MnG-Ha-daA">
     <dependencies>
         <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
@@ -342,6 +342,70 @@
             </objects>
             <point key="canvasLocation" x="-950" y="-361"/>
         </scene>
+        <!--Test Map View Controller-->
+        <scene sceneID="5Lz-S8-Htp">
+            <objects>
+                <viewController id="MnG-Ha-daA" customClass="TestMapViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="XDp-Wh-FA4"/>
+                        <viewControllerLayoutGuide type="bottom" id="Umn-z0-s9K"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="S1s-iD-bc1">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" rotateEnabled="NO" pitchEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CWV-sb-Jxr">
+                                <rect key="frame" x="0.0" y="28" width="320" height="374"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <connections>
+                                    <outlet property="delegate" destination="MnG-Ha-daA" id="ecs-7B-GhP"/>
+                                </connections>
+                            </mapView>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="4" minValue="0.0" maxValue="40" translatesAutoresizingMaskIntoConstraints="NO" id="GPa-aj-8Qm">
+                                <rect key="frame" x="18" y="410" width="284" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="33" id="Akv-Jv-0rv"/>
+                                </constraints>
+                                <connections>
+                                    <action selector="zoomChanged:" destination="MnG-Ha-daA" eventType="valueChanged" id="BVV-QD-gmQ"/>
+                                </connections>
+                            </slider>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Zoom: ?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="92P-l6-Ihi">
+                                <rect key="frame" x="20" y="451" width="280" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="7OZ-z6-6j2"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="92P-l6-Ihi" firstAttribute="top" secondItem="GPa-aj-8Qm" secondAttribute="bottom" constant="8" symbolic="YES" id="794-Nu-hSd"/>
+                            <constraint firstAttribute="trailing" secondItem="92P-l6-Ihi" secondAttribute="trailing" constant="20" symbolic="YES" id="SZp-Zd-RBv"/>
+                            <constraint firstAttribute="trailing" secondItem="GPa-aj-8Qm" secondAttribute="trailing" constant="20" symbolic="YES" id="cAW-Fe-Iwm"/>
+                            <constraint firstItem="CWV-sb-Jxr" firstAttribute="leading" secondItem="S1s-iD-bc1" secondAttribute="leading" id="epc-ly-oGk"/>
+                            <constraint firstItem="92P-l6-Ihi" firstAttribute="leading" secondItem="S1s-iD-bc1" secondAttribute="leading" constant="20" symbolic="YES" id="fWy-Q4-hPo"/>
+                            <constraint firstItem="CWV-sb-Jxr" firstAttribute="top" secondItem="XDp-Wh-FA4" secondAttribute="bottom" constant="20" symbolic="YES" id="k3b-yv-RLt"/>
+                            <constraint firstItem="Umn-z0-s9K" firstAttribute="top" secondItem="92P-l6-Ihi" secondAttribute="bottom" constant="20" symbolic="YES" id="qfW-oi-WmD"/>
+                            <constraint firstItem="GPa-aj-8Qm" firstAttribute="top" secondItem="CWV-sb-Jxr" secondAttribute="bottom" constant="8" symbolic="YES" id="qtZ-P8-e73"/>
+                            <constraint firstItem="GPa-aj-8Qm" firstAttribute="leading" secondItem="S1s-iD-bc1" secondAttribute="leading" constant="20" symbolic="YES" id="raz-uB-KqV"/>
+                            <constraint firstAttribute="trailing" secondItem="CWV-sb-Jxr" secondAttribute="trailing" id="xux-FZ-mDU"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="mapView" destination="CWV-sb-Jxr" id="QoJ-LY-DN5"/>
+                        <outlet property="zoomLabel" destination="92P-l6-Ihi" id="vjD-ne-w4b"/>
+                        <outlet property="zoomSlider" destination="GPa-aj-8Qm" id="3Db-X8-5Ch"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tHy-Am-Ia0" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-938" y="-1206"/>
+        </scene>
         <!--Side Configuration-->
         <scene sceneID="ZwC-M7-cNQ">
             <objects>
@@ -674,6 +738,8 @@ HKJHDSKJAHSDKJ-DJASKJDSA</string>
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="constraintContentHeight" destination="9M4-7g-SUv" id="JcG-jE-sw9"/>
+                        <outlet property="constraintContentWidth" destination="8v0-Ki-uhR" id="ze3-J1-up6"/>
                         <outlet property="fbtnIcon" destination="dxa-kf-4pI" id="PJx-gE-suh"/>
                         <outlet property="fimgLocationImage" destination="EKc-2e-uEI" id="4Pa-g1-Fu7"/>
                         <outlet property="flblExtraInfo" destination="LoR-10-4fT" id="qEZ-ak-WVo"/>
@@ -685,7 +751,7 @@ HKJHDSKJAHSDKJ-DJASKJDSA</string>
                         <outlet property="iavLabel" destination="UNw-V4-CCd" id="jNY-Vi-Lgw"/>
                         <outlet property="iavTextField" destination="6Ud-cE-QtU" id="gw9-5i-3lS"/>
                         <outlet property="iavView" destination="5UY-Qo-uku" id="sSi-dV-ztE"/>
-                        <outlet property="kbContentView" destination="bA6-oI-GBK" id="u0F-oR-wz5"/>
+                        <outlet property="kbContentVTrailing" destination="bGZ-fN-eVj" id="loe-sU-uaR"/>
                         <outlet property="navBarSaveButton" destination="7fv-n6-RJL" id="OiZ-fz-6vJ"/>
                         <outlet property="scrollView" destination="7ls-JK-wq3" id="APc-ct-2SC"/>
                         <segue destination="5q2-c2-EmD" kind="modal" identifier="PointEditor_to_TagListEditor" id="aby-yH-kS1"/>
@@ -746,7 +812,7 @@ HKJHDSKJAHSDKJ-DJASKJDSA</string>
                                             <outlet property="delegate" destination="5q2-c2-EmD" id="SUh-Es-Rdu"/>
                                         </connections>
                                     </textField>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="dXG-kA-Tcj" userLabel="Table-current">
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="76" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="dXG-kA-Tcj" userLabel="Table-current">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="372"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -849,7 +915,6 @@ HKJHDSKJAHSDKJ-DJASKJDSA</string>
                         <outlet property="constraintTableLeft" destination="zPV-Sc-mQX" id="NBc-85-IJ8"/>
                         <outlet property="constraintTagsLeft" destination="L0y-Nd-2rI" id="aIf-Pf-ET1"/>
                         <outlet property="kbContentVTrailing" destination="wQw-X4-NTv" id="0th-kp-DZR"/>
-                        <outlet property="kbContentView" destination="CjX-cc-Gpg" id="lId-nB-Ye2"/>
                         <outlet property="lblSelector" destination="vcr-5E-eOS" id="5d1-5p-YVQ"/>
                         <outlet property="txtNewTagName" destination="KW7-4e-iUr" id="g4X-pv-NdE"/>
                     </connections>
@@ -877,6 +942,16 @@ HKJHDSKJAHSDKJ-DJASKJDSA</string>
                                     <outlet property="delegate" destination="cIS-fI-kmC" id="ebU-Iu-3Zj"/>
                                 </connections>
                             </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dxy-td-7yv">
+                                <rect key="frame" x="254" y="430" width="46" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="kkButton:" destination="cIS-fI-kmC" eventType="touchUpInside" id="abV-sF-zQx"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>

@@ -15,8 +15,6 @@
 
 
 
-
-
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark Private Enumerations & definitions
@@ -63,7 +61,12 @@
 #pragma mark Public methods
 //---------------------------------------------------------------------------------------------------------------------
 - (void) pointsHaveChanged {
+    
+    // Sets new points
     [self _setPointsAsAnnotationsInMap];
+    
+    // Centers map
+    [self _centerMapToShowAllPoints];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -76,6 +79,30 @@
     
 }
 
+- (IBAction)kkButton:(UIButton *)sender {
+    
+    // 134217728
+
+    //CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(42.35788,-71.0513);
+    //[self.pointsMapView setCenterCoordinate:coordinate zoomLevel:6 animated:FALSE];
+
+    CLLocationCoordinate2D center = CLLocationCoordinate2DMake(0,0); 
+    MKCoordinateSpan span = MKCoordinateSpanMake(15,30); // latDelta, LngDelta
+
+    MKCoordinateRegion region1 = MKCoordinateRegionMake(center, span);
+    NSLog(@"lat=%f, lng=%f, latDelta=%f, lngDelta=%f",region1.center.latitude,region1.center.longitude,region1.span.latitudeDelta,region1.span.longitudeDelta);
+    
+    MKCoordinateRegion region2 = [self.pointsMapView regionThatFits:region1];
+    NSLog(@"lat=%f, lng=%f, latDelta=%f, lngDelta=%f",region2.center.latitude,region2.center.longitude,region2.span.latitudeDelta,region2.span.longitudeDelta);
+    
+    self.pointsMapView.region = region2;
+    
+    MKMapRect vrect = self.pointsMapView.visibleMapRect;
+    NSLog(@"vrect  => x=%f, y=%f, w=%f, h=%f",vrect.origin.x,vrect.origin.y,vrect.size.width,vrect.size.height);
+    
+    MKCoordinateRegion region = self.pointsMapView.region;
+    NSLog(@"lat=%f, lng=%f, latDelta=%f, lngDelta=%f",region.center.latitude,region.center.longitude,region.span.latitudeDelta,region.span.longitudeDelta);
+}
 
 
 //=====================================================================================================================
@@ -104,7 +131,31 @@
     tapGesture.delegate = self;
     
     [self.pointsMapView addGestureRecognizer:tapGesture];
+    
 }
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) viewDidAppear:(BOOL)animated {
+    
+    [super viewDidAppear:animated];
+    
+    if(self.pointsMapView.annotations.count==0) {
+        // Sets points
+        [self _setPointsAsAnnotationsInMap];
+        // Centers map
+        [self _centerMapToShowAllPoints];
+    }
+    
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) viewWillAppear:(BOOL)animated {
+    
+    
+    [super viewWillAppear:animated];
+    
+}
+
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer {
     return TRUE;
@@ -135,31 +186,6 @@
     }
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-- (void) viewDidAppear:(BOOL)animated {
-    
-    [super viewDidAppear:animated];
-    
-    if(self.pointsMapView.annotations.count==0) {
-        [self _setPointsAsAnnotationsInMap];
-    }
-    
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) viewDidDisappear:(BOOL)animated {
-    
-    [super viewDidDisappear:animated];
-    
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) viewWillAppear:(BOOL)animated {
-    
-    
-    [super viewWillAppear:animated];
-    
-}
 
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -244,6 +270,16 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
+
+    MKCoordinateRegion region = self.pointsMapView.region;
+    CGRect bounds = self.pointsMapView.bounds;
+    MKMapRect vrect = self.pointsMapView.visibleMapRect;
+
+    NSLog(@"------------------");
+    NSLog(@"bounds => x=%f, y=%f, w=%f, h=%f",bounds.origin.x,bounds.origin.y,bounds.size.width,bounds.size.height);
+    NSLog(@"vrect  => x=%f, y=%f, w=%f, h=%f",vrect.origin.x,vrect.origin.y,vrect.size.width,vrect.size.height);
+    NSLog(@"region => lat=%f, lng=%f, latDelta=%f, lngDelta=%f",region.center.latitude,region.center.longitude,region.span.latitudeDelta,region.span.longitudeDelta);
+    NSLog(@"------------------");
 
     /*************
     // Si estaba cambiando de region porque estaba centrando un punto en edicion lo muestra
@@ -363,7 +399,6 @@
 
 
 
-
 //=====================================================================================================================
 #pragma mark -
 #pragma mark Private methods
@@ -386,10 +421,6 @@
     
     // Add new annotations from points
     [self.pointsMapView addAnnotations:self.dataSource.pointList];
-    
-    // Centers map
-    [self _centerMapToShowAllPoints];
-    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -446,6 +477,10 @@
         double degreesByPoint2 = regSpan.latitudeDelta / self.pointsMapView.frame.size.width;
         double iconSizeInDegrees2 = 64.0 * degreesByPoint2;
         regSpan.latitudeDelta  += iconSizeInDegrees2;
+        
+        // Ajusta por si nos hemos pasado
+        regSpan.latitudeDelta = MIN(90, regSpan.latitudeDelta);
+        regSpan.longitudeDelta = MIN(180, regSpan.longitudeDelta);
     }
     
     // Ajusta la vista del mapa a la region, centrandolo

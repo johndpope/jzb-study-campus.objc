@@ -332,6 +332,12 @@ typedef NS_ENUM(NSInteger, ActiveSection) {
 }
 
 
+//---------------------------------------------------------------------------------------------------------------------
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    return 76;//76;
+}
+
 
 //=====================================================================================================================
 #pragma mark -

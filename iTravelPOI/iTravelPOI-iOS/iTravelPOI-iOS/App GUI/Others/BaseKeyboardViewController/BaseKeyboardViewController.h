@@ -21,14 +21,11 @@
 //*********************************************************************************************************************
 @interface BaseKeyboardViewController : UIViewController
 
-@property (weak, nonatomic)                 IBOutlet    UIView              *kbContentView;
 @property (weak, nonatomic)                 IBOutlet    NSLayoutConstraint  *kbContentVTrailing;
 
 @property (nonatomic, assign, readonly)     BOOL                            isKeyboardVisible;
 @property (nonatomic, assign, readonly)     CGRect                          keyboardRect;
 
-
-- (CGSize) calcNewKeyboardContentViewSize:(UIView *)aView kbRect:(CGRect)kbRect;
 
 - (void) keyboardWillShow;
 - (void) keyboardDidShow;

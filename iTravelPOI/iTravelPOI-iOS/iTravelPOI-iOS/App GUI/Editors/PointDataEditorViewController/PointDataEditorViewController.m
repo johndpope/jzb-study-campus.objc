@@ -49,6 +49,9 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
                                          LocationEditorViewControllerDelegate,
                                          UITextFieldDelegate, UITextViewDelegate, CLLocationManagerDelegate>
 
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint     *constraintContentWidth;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint     *constraintContentHeight;
+@property (assign, nonatomic)        CGSize                 minContentSize;
 
 @property (weak, nonatomic) IBOutlet UIButton               *fbtnIcon;
 @property (weak, nonatomic) IBOutlet UITextField            *ftxtName;
@@ -59,7 +62,7 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 @property (weak, nonatomic) IBOutlet UIView                 *fvTagsView;
 @property (weak, nonatomic) IBOutlet UILabel                *flblExtraInfo;
 
-@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (weak, nonatomic) IBOutlet UIScrollView           *scrollView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem        *navBarSaveButton;
 
 @property (weak, nonatomic)   UIView                        *editedFieldToScroll;
@@ -74,7 +77,6 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 
 @property (strong, nonatomic) NSManagedObjectContext        *moContext;
 
-@property (assign, nonatomic) CGSize minCVSize;
 @end
 
 
@@ -153,10 +155,6 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
     self.ftxtDescription.placeholderText = @"Description goes here";
     self.navBarSaveButton.enabled = FALSE;
     
-    // Necesita establecer el tamaño minimo con el que fue creada la vista que contiene el resto de elmentos
-    // para redimensionar todo adecuadamemte y gestionar las rotaciones y diferentes tamaños de pantalla
-    self.minCVSize = self.kbContentView.bounds.size;
-
     // Inicializa la geolocalizacion
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
@@ -170,8 +168,8 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
     
     [super viewWillAppear:animated];
     
-    // Actualiza las dimensiones de la vista a las de la pantalla y rotacion actuales
-    [self _updateContentViewConstraints];
+    // Apunta las dimensiones minimas
+    self.minContentSize = CGSizeMake(self.constraintContentWidth.constant, self.constraintContentHeight.constant);
     
     // Resetea el valor del estado de edicion de la informacion de localizacion
     self.locationEditingState = LocationEditingStateNone;
@@ -195,6 +193,14 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+- (void) viewDidLayoutSubviews {
+
+    [super viewDidLayoutSubviews];
+    [self _updateContentViewConstraints];
+    
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -210,22 +216,17 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 //---------------------------------------------------------------------------------------------------------------------
 - (void) _updateContentViewConstraints {
     
-    CGFloat newHeight = self.view.bounds.size.height - self.kbContentView.superview.frame.origin.y;
-    if(newHeight>=self.minCVSize.height && newHeight!=self.kbContentView.bounds.size.height) {
-        for(NSLayoutConstraint *constraint in self.kbContentView.constraints) {
-            if(constraint.secondItem==nil && constraint.firstItem==self.kbContentView && constraint.firstAttribute==NSLayoutAttributeHeight) {
-                constraint.constant = newHeight;
-            }
-        }
-    }
+    CGRect frame = self.scrollView.frame;
+    CGFloat with = MAX(self.minContentSize.width, frame.size.width);
+    CGFloat height = MAX(self.minContentSize.height, frame.size.height);
 
-    CGFloat newWidth = self.view.bounds.size.width - self.kbContentView.superview.frame.origin.x;
-    if(newWidth>=self.minCVSize.width && newWidth!=self.kbContentView.bounds.size.width) {
-        for(NSLayoutConstraint *constraint in self.kbContentView.constraints) {
-            if(constraint.secondItem==nil && constraint.firstItem==self.kbContentView && constraint.firstAttribute==NSLayoutAttributeWidth) {
-                constraint.constant = newWidth;
-            }
-        }
+    if(with!=self.constraintContentWidth.constant || height!=self.constraintContentHeight.constant) {
+        
+        self.minContentSize = CGSizeMake(MIN(self.minContentSize.width, with), MAX(self.minContentSize.height, height));
+        self.constraintContentWidth.constant = with;
+        self.constraintContentHeight.constant = height;
+        
+        [self.view layoutIfNeeded];
     }
 }
 
@@ -535,12 +536,11 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
     if(!self.editedFieldToScroll) return;
     
     // Comprueba si hace falta realizar un scroll para dejar el campo de texto a la vista
-    UIScrollView *sv = (UIScrollView *)self.kbContentView.superview;
-    CGRect svBounds = sv.bounds;
-    svBounds.size.height -= sv.contentInset.bottom;
+    CGRect svBounds = self.scrollView.bounds;
+    svBounds.size.height -= self.scrollView.contentInset.bottom;
     BOOL isFullyVisible = CGRectContainsRect(svBounds, self.editedFieldToScroll.frame);
     if(!isFullyVisible) {
-        [sv setContentOffset:CGPointMake(0, self.editedFieldToScroll.frame.origin.y) animated:YES];
+        [self.scrollView setContentOffset:CGPointMake(0, self.editedFieldToScroll.frame.origin.y) animated:YES];
     }
 }
 
@@ -582,9 +582,7 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
         self.iavView.hidden = FALSE;
         
         // Le quita un poco mas al ScrollView
-        UIScrollView *sv = (UIScrollView *)self.kbContentView.superview;
-        sv.contentInset = (UIEdgeInsets){0, 0, self.keyboardRect.size.height+self.iavView.bounds.size.height, 0};
-        sv.contentSize = self.kbContentView.bounds.size;
+        self.kbContentVTrailing.constant += self.iavView.bounds.size.height;
     }
 }
 
@@ -597,9 +595,7 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
         self.iavView.hidden = TRUE;
         
         // Le pone un poco mas al ScrollView
-        UIScrollView *sv = (UIScrollView *)self.kbContentView.superview;
-        sv.contentInset = (UIEdgeInsets){0, 0, self.keyboardRect.size.height, 0};
-        sv.contentSize = self.kbContentView.frame.size;
+        self.kbContentVTrailing.constant -= self.iavView.bounds.size.height;
     }
 }
 
