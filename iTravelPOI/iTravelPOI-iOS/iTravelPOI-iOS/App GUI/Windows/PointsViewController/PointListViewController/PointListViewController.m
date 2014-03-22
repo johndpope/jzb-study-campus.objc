@@ -133,7 +133,14 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void) refreshSelectedPoint {
     
+    NSUInteger index = [self.dataSource.pointList indexOfObject:self.dataSource.selectedPoint];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+    if(![self.prevSelIndexPath isEqual:indexPath] && (self.prevSelIndexPath!=nil || index!=NSNotFound)) {
+        [self tableView:self.pointsTable willSelectRowAtIndexPath:(index!=NSNotFound?indexPath:self.prevSelIndexPath)];
+    }
+
     if(self.dataSource.selectedPoint) {
+        
         [self scrollToShowPoint:self.dataSource.selectedPoint.objectID selectRow:TRUE];
     }
 }

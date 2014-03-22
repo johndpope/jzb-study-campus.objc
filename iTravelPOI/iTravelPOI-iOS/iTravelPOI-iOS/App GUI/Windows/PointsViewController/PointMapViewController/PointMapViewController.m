@@ -64,15 +64,22 @@
 #pragma mark Public methods
 //---------------------------------------------------------------------------------------------------------------------
 - (id) pointListWillChange {
-    // nothing to be done
+
+    // No hace nada
     return nil;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) pointListDidChange:(id)prevInfo {
 
+    // Remenber previous selected point
+    MPoint *selPoint = self.dataSource.selectedPoint;
+
     // Sets new points
     [self _setPointsAsAnnotationsInMap: self.dataSource.pointList];
+    
+    // Restores previous selected point
+    [self.pointsMapView selectAnnotation:selPoint animated:FALSE];
     
     // Centers map
     [self _centerAndZoomMap];
@@ -222,8 +229,6 @@
         editBtn.frame = CGRectMake(0, 0, editImg.size.width+10, editImg.size.height);
         editBtn.tag = ACCESSORY_BTN_EDIT;
         view.leftCalloutAccessoryView = editBtn;
-        
-        
 
         UIImage *openInImg = [UIImage imageNamed:@"tbar-share"];
         UIButton *openInBtn = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -236,7 +241,7 @@
 
     MPoint *point = (MPoint *)annotation;
 
-    view.canShowCallout = FALSE;
+    view.canShowCallout = TRUE;
     view.annotation = annotation;
     if([self.dataSource.checkedPoints containsObject:point]) {
         view.image = [point.icon.image burnTint:[UIColor redColor]];
@@ -288,28 +293,14 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
     
-    /*************
-    // Habilita los botones de edicion
-    if([view.annotation isKindOfClass:[MPointMapAnnotation class]] && [(MPointMapAnnotation *)view.annotation point]!=nil) {
-        [self.scrollableToolbar enableItemWithTagID:BTN_ID_OPEN_IN enabled:YES];
-        [self.scrollableToolbar enableItemWithTagID:BTN_ID_EDIT_LOC enabled:YES];
-        [self.scrollableToolbar enableItemWithTagID:BTN_ID_EDIT_ALL enabled:YES];
-    }
-     **************/
-    
+    MPoint *point = (MPoint *)view.annotation;
+    self.dataSource.selectedPoint=point;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view {
     
-    /*************
-    // Inhabilita los botones de edicion
-    if([view.annotation isKindOfClass:[MPointMapAnnotation class]] && [(MPointMapAnnotation *)view.annotation point]!=nil) {
-        [self.scrollableToolbar enableItemWithTagID:BTN_ID_OPEN_IN enabled:NO];
-        [self.scrollableToolbar enableItemWithTagID:BTN_ID_EDIT_LOC enabled:NO];
-        [self.scrollableToolbar enableItemWithTagID:BTN_ID_EDIT_ALL enabled:NO];
-    }
-    **************/
+    self.dataSource.selectedPoint=nil;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -423,11 +414,23 @@
 - (void) _centerAndZoomMap {
     
     if(!self.dataSource.selectedPoint) {
+        
         // Centers map showing ALL the points
         [self.pointsMapView centerAndZoomToShowAnnotations:32 animated:FALSE];
+        
+        // Deselect all points
+        [self.pointsMapView selectAnnotation:nil animated:FALSE];
+        
     } else {
+        
         // Centers map showing THAT selected point
         [self.pointsMapView setCenterCoordinate:self.dataSource.selectedPoint.coordinate zoomLevel:17 animated:FALSE];
+
+        // Selects the point
+        if([self.pointsMapView.annotations containsObject:self.dataSource.selectedPoint]) {
+            [self.pointsMapView selectAnnotation:self.dataSource.selectedPoint animated:FALSE];
+        }
+        
     }
 }
 
