@@ -12,7 +12,7 @@
 
 #import "PointListViewController.h"
 #import "PointMapViewController.h"
-#import "TagTreeTableViewController.h"
+#import "TagFilterViewController.h"
 
 #import "BaseCoreDataService.h"
 #import "MComplexFilter.h"
@@ -34,9 +34,6 @@
 #pragma mark -
 #pragma mark Private Enumerations & definitions
 //*********************************************************************************************************************
-#define TAGFILTER_X_POS 60.0
-
-
 typedef NS_ENUM(NSUInteger, MENU_MORE_CMDS) {
     MENU_MORE_MOVE=1,
     MENU_MORE_TAGGING=2,
@@ -56,8 +53,7 @@ typedef NS_ENUM(NSUInteger, MENU_MORE_CMDS) {
 @property (weak, nonatomic) IBOutlet UIBarButtonItem                    *changeControllerTbItem;
 @property (weak, nonatomic) IBOutlet UIView                             *contentView;
 
-@property (strong, nonatomic) UIView                                    *darkCoverView;
-@property (strong, nonatomic) TagTreeTableViewController                *tagFilterVC;
+@property (strong, nonatomic) TagFilterViewController                   *tagsFilterVC;
 
 @property (strong, nonatomic) PointListViewController                   *pointListVC;
 @property (strong, nonatomic) PointMapViewController                    *pointMapVC;
@@ -145,7 +141,7 @@ typedef NS_ENUM(NSUInteger, MENU_MORE_CMDS) {
     self.pointMapVC.dataSource = self;
     
     // Añade el ViewController para gestionar el filtro
-    self.tagFilterVC = [self _createTagFilterViewController];
+    self.tagsFilterVC = [TagFilterViewController createInstanceWithDelegate:self];
 
     // Arranca sin puntos seleccionados
     self.checkedPoints = [NSMutableSet set];
@@ -215,8 +211,6 @@ typedef NS_ENUM(NSUInteger, MENU_MORE_CMDS) {
 
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     self.activeVC.view.frame = self.contentView.bounds;
-    self.tagFilterVC.view.frame = [self _calcTagFilterRect];
-    self.darkCoverView.frame = self.view.frame;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -308,7 +302,9 @@ typedef NS_ENUM(NSUInteger, MENU_MORE_CMDS) {
 
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)tbarShowFilter:(UIBarButtonItem *)sender {
-    [self _toggleShowTagFilter];
+    
+    [self.tagsFilterVC setTagList:self.filter.tagsForPointList selectedTags:self.filter.filterTags expandedTags:nil];
+    [self.tagsFilterVC toggleShowFilter];
 }
 
 
@@ -511,7 +507,7 @@ typedef NS_ENUM(NSUInteger, MENU_MORE_CMDS) {
     
     // Actualiza la tabla de filtros segun el cambio
     NSSet *expandedTags = tappedNode.tag?[NSSet setWithObject:tappedNode.tag]:[NSSet set];
-    [self.tagFilterVC setTagList:self.filter.tagsForPointList selectedTags:self.filter.filterTags expandedTags:expandedTags];
+    [self.tagsFilterVC setTagList:self.filter.tagsForPointList selectedTags:self.filter.filterTags expandedTags:expandedTags];
     
     // Actualiza los visores de puntos (lista y mapa)
     [self.checkedPoints removeAllObjects];
@@ -541,120 +537,6 @@ typedef NS_ENUM(NSUInteger, MENU_MORE_CMDS) {
     // Le pasa la informacion que este habia preparado para que refresque bien el UI
     [self.activeVC pointListDidChange:prevInfo];
 }
-
-//---------------------------------------------------------------------------------------------------------------------
-- (TagTreeTableViewController *) _createTagFilterViewController {
-    
-    TagTreeTableViewController *tagFilterVC = [self.storyboard instantiateViewControllerWithIdentifier:@"TagTreeTableViewController"];
-    
-    tagFilterVC.view.hidden = TRUE;
-    tagFilterVC.view.frame = [self _calcTagFilterRect];
-    tagFilterVC.view.autoresizingMask = self.view.autoresizingMask;
-    
-    [self.view addSubview:tagFilterVC.view];
-    
-    [self addChildViewController:tagFilterVC];
-    [tagFilterVC didMoveToParentViewController:self];
-    
-    tagFilterVC.delegate = self;
-    
-    UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleTagFilterPan:)];
-    [tagFilterVC.view addGestureRecognizer:panRecognizer];
-
-    return tagFilterVC;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)handleTagFilterPan:(UIPanGestureRecognizer *)recognizer {
-    
-
-    if(recognizer.state == UIGestureRecognizerStateBegan || recognizer.state == UIGestureRecognizerStateChanged) {
-        
-        CGPoint translation = [recognizer translationInView:recognizer.view];
-        CGFloat xPos = MAX(TAGFILTER_X_POS, self.tagFilterVC.view.frame.origin.x + translation.x);
-        frameSetX(self.tagFilterVC.view, xPos);
-        [recognizer setTranslation:CGPointMake(0, 0) inView:recognizer.view];
-
-    } else {
-        
-        CGPoint velocity = [recognizer velocityInView:recognizer.view];
-        if(velocity.x>0) {
-            [self _hideTagFilter:TRUE];
-        } else {
-            [self _showTagFilter];
-        }
-        
-    }
-    
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (CGRect) _calcTagFilterRect {
-
-    CGRect rect = self.view.frame;
-    
-    rect.origin.x = self.tagFilterVC.view.hidden ? self.view.frame.size.width : TAGFILTER_X_POS;
-    rect.origin.y = self.contentView.frame.origin.y;
-    rect.size.width = self.contentView.frame.size.width - TAGFILTER_X_POS;
-    rect.size.height = self.contentView.frame.size.height;
-
-    return rect;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _toggleShowTagFilter {
-    if(self.tagFilterVC.view.hidden) {
-        [self _showTagFilter];
-    } else {
-        [self _hideTagFilter:NO];
-    }
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _showTagFilter {
-
-
-    if(!self.darkCoverView) {
-        self.darkCoverView = [[UIView alloc] initWithFrame:self.view.frame];
-        self.darkCoverView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0];
-        [self.view insertSubview:self.darkCoverView belowSubview:self.tagFilterVC.view];
-        
-        self.tagFilterVC.view.frame = [self _calcTagFilterRect];
-        self.tagFilterVC.view.hidden = FALSE;
-
-        [self.tagFilterVC setTagList:self.filter.tagsForPointList selectedTags:self.filter.filterTags expandedTags:nil];
-    }
-    
-    [UIView animateWithDuration:0.35
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         self.tagFilterVC.view.frame = [self _calcTagFilterRect];
-                         self.darkCoverView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
-                     }
-                     completion:^(BOOL finished) {
-                         
-                     }];
-}
-
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _hideTagFilter:(BOOL)fast {
-    
-    [UIView animateWithDuration:(fast ? 0.15 : 0.35)
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         frameSetX(self.tagFilterVC.view, self.view.frame.size.width);
-                         self.darkCoverView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0];
-                     }
-                     completion:^(BOOL finished) {
-                         self.tagFilterVC.view.hidden = TRUE;
-                         [self.darkCoverView removeFromSuperview];
-                         self.darkCoverView = nil;
-                     }];
-}
-
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) _transitionFromViewController:(UIViewController<PointsViewerProtocol> *)fromViewController

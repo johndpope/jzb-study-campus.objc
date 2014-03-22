@@ -68,42 +68,46 @@
             </objects>
             <point key="canvasLocation" x="232" y="-355"/>
         </scene>
-        <!--Tag Tree Table View Controller-->
-        <scene sceneID="SrR-Ft-D93">
+        <!--Tag Filter View Controller-->
+        <scene sceneID="WWr-im-Mz8">
             <objects>
-                <viewController storyboardIdentifier="TagTreeTableViewController" id="Hpj-I7-rcU" customClass="TagTreeTableViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TagFilterViewController" id="U2T-0F-lou" userLabel="Tag Filter View Controller" customClass="TagFilterViewController" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="2ap-ff-VXI"/>
-                        <viewControllerLayoutGuide type="bottom" id="L5l-Ff-bgU"/>
+                        <viewControllerLayoutGuide type="top" id="gsV-R8-jtb"/>
+                        <viewControllerLayoutGuide type="bottom" id="N4g-z9-X8N"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="b68-nW-fzz">
+                    <view key="view" contentMode="scaleToFill" id="FqT-s9-bfP">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="AOj-yv-PbT">
-                                <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                            <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lv4-7H-hvQ">
+                                <rect key="frame" x="60" y="20" width="260" height="450"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="260" id="h4M-WU-g5c"/>
+                                </constraints>
                                 <connections>
-                                    <outlet property="dataSource" destination="Hpj-I7-rcU" id="YVO-VT-2hR"/>
-                                    <outlet property="delegate" destination="Hpj-I7-rcU" id="lq1-KP-ucR"/>
+                                    <segue destination="ktp-uI-wHt" kind="embed" identifier="tagListTree" id="Tod-YC-Luq"/>
                                 </connections>
-                            </tableView>
+                            </containerView>
                         </subviews>
+                        <color key="backgroundColor" name="selectedControlColor" catalog="System" colorSpace="catalog"/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="AOj-yv-PbT" secondAttribute="bottom" id="ZXN-7y-8Uq"/>
-                            <constraint firstItem="AOj-yv-PbT" firstAttribute="top" secondItem="2ap-ff-VXI" secondAttribute="bottom" id="Zsx-CR-xGX"/>
-                            <constraint firstAttribute="trailing" secondItem="AOj-yv-PbT" secondAttribute="trailing" id="hwc-hi-ica"/>
-                            <constraint firstItem="AOj-yv-PbT" firstAttribute="leading" secondItem="b68-nW-fzz" secondAttribute="leading" id="oH4-dM-mqa"/>
+                            <constraint firstItem="Lv4-7H-hvQ" firstAttribute="leading" secondItem="FqT-s9-bfP" secondAttribute="leading" constant="60" id="AGs-54-OfV"/>
+                            <constraint firstAttribute="bottom" secondItem="Lv4-7H-hvQ" secondAttribute="bottom" constant="10" id="NJ3-aP-sZe"/>
+                            <constraint firstItem="Lv4-7H-hvQ" firstAttribute="top" secondItem="FqT-s9-bfP" secondAttribute="top" constant="20" id="RJg-8H-mdX"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="tagsTable" destination="AOj-yv-PbT" id="1Kb-YZ-JeP"/>
+                        <outlet property="tableView" destination="Lv4-7H-hvQ" id="n6j-HN-Rt3"/>
+                        <outlet property="tagsLeftConstraint" destination="AGs-54-OfV" id="brU-49-yha"/>
+                        <outlet property="tagsWidthConstraint" destination="h4M-WU-g5c" id="xWt-HH-H1A"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ueP-SP-azc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Pza-Uu-VLa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1559" y="-760"/>
+            <point key="canvasLocation" x="1565" y="-871"/>
         </scene>
         <!--Points View Controller - Points-->
         <scene sceneID="UbN-nU-oEE">
@@ -194,9 +198,9 @@
                         <segue destination="hGX-iL-8U7" kind="custom" identifier="Points_to_PointList" id="xY4-Q9-Zjw"/>
                         <segue destination="cIS-fI-kmC" kind="custom" identifier="Points_to_PointMap" id="Ao1-hm-wKr"/>
                         <segue destination="uZA-46-x2b" kind="modal" identifier="editSelectedPoint" modalTransitionStyle="coverVertical" id="1aZ-M1-UpQ"/>
-                        <segue destination="Hpj-I7-rcU" kind="custom" identifier="Points_to_TagFilter" id="ksG-9v-LK3"/>
                         <segue destination="5q2-c2-EmD" kind="modal" identifier="editPointsTags" id="Uv4-88-LLB"/>
                         <segue destination="bq8-ny-NRp" kind="custom" identifier="openInApp" id="J8Q-nG-c51"/>
+                        <segue destination="U2T-0F-lou" kind="custom" identifier="Points_to_TagFilter" id="Kgo-mJ-2ze"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ebn-0o-7o5" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1201,6 +1205,45 @@ HKJHDSKJAHSDKJ-DJASKJDSA</string>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Y8Y-rw-oyZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3745" y="342"/>
+        </scene>
+        <!--Tag Tree Table View Controller-->
+        <scene sceneID="fYF-Tr-sNR">
+            <objects>
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="ktp-uI-wHt" customClass="TagTreeTableViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="wCe-cF-7w0"/>
+                        <viewControllerLayoutGuide type="bottom" id="Df2-5r-XMF"/>
+                    </layoutGuides>
+                    <view key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="APK-3p-tZb">
+                        <rect key="frame" x="0.0" y="0.0" width="260" height="450"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="ZBF-7u-Lpl">
+                                <rect key="frame" x="0.0" y="0.0" width="260" height="450"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="ktp-uI-wHt" id="riZ-ge-Iar"/>
+                                    <outlet property="delegate" destination="ktp-uI-wHt" id="Ucq-Xm-lac"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="ZBF-7u-Lpl" secondAttribute="bottom" id="4LO-Aw-nob"/>
+                            <constraint firstItem="ZBF-7u-Lpl" firstAttribute="leading" secondItem="APK-3p-tZb" secondAttribute="leading" id="TlE-3c-klT"/>
+                            <constraint firstItem="ZBF-7u-Lpl" firstAttribute="top" secondItem="APK-3p-tZb" secondAttribute="top" id="bG4-Ei-OYe"/>
+                            <constraint firstAttribute="trailing" secondItem="ZBF-7u-Lpl" secondAttribute="trailing" id="pC8-AN-2Kb"/>
+                        </constraints>
+                    </view>
+                    <toolbarItems/>
+                    <connections>
+                        <outlet property="tagsTable" destination="ZBF-7u-Lpl" id="YmN-kY-PVn"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="AVi-Qv-ZxM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2015" y="-871"/>
         </scene>
     </scenes>
     <resources>

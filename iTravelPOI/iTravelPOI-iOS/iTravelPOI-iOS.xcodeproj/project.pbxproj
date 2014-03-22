@@ -83,6 +83,7 @@
 		42828E1C18DDD0A40003B092 /* MyCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 42828E1B18DDD0A40003B092 /* MyCollectionViewCell.m */; };
 		42828E2018DDF0DF0003B092 /* TopViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42828E1F18DDF0DF0003B092 /* TopViewController.m */; };
 		42828E2318DE03C60003B092 /* ChildViewControllerSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 42828E2218DE03C60003B092 /* ChildViewControllerSegue.m */; };
+		42828E2718DE0E3D0003B092 /* TagFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42828E2618DE0E3D0003B092 /* TagFilterViewController.m */; };
 		42BBBBA01872A8D5009813A0 /* MBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BBBB931872A8D5009813A0 /* MBase.m */; };
 		42BBBBA11872A8D5009813A0 /* MBaseSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BBBB951872A8D5009813A0 /* MBaseSync.m */; };
 		42BBBBA21872A8D5009813A0 /* MIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BBBB971872A8D5009813A0 /* MIcon.m */; };
@@ -259,6 +260,8 @@
 		42828E1F18DDF0DF0003B092 /* TopViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TopViewController.m; sourceTree = "<group>"; };
 		42828E2118DE03C60003B092 /* ChildViewControllerSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChildViewControllerSegue.h; sourceTree = "<group>"; };
 		42828E2218DE03C60003B092 /* ChildViewControllerSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChildViewControllerSegue.m; sourceTree = "<group>"; };
+		42828E2518DE0E3D0003B092 /* TagFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagFilterViewController.h; sourceTree = "<group>"; };
+		42828E2618DE0E3D0003B092 /* TagFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagFilterViewController.m; sourceTree = "<group>"; };
 		42BBBB921872A8D5009813A0 /* MBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBase.h; sourceTree = "<group>"; };
 		42BBBB931872A8D5009813A0 /* MBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBase.m; sourceTree = "<group>"; };
 		42BBBB941872A8D5009813A0 /* MBaseSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBaseSync.h; sourceTree = "<group>"; };
@@ -422,6 +425,7 @@
 		423F30F018B8D75E00845826 /* Windows */ = {
 			isa = PBXGroup;
 			children = (
+				42828E2418DE0E3D0003B092 /* TagFilterViewController */,
 				42828E1D18DDF0DF0003B092 /* TopViewController */,
 				423F30F518B8D79200845826 /* PointsViewController */,
 				423F30F118B8D75E00845826 /* MapListViewController */,
@@ -588,6 +592,15 @@
 				42828E1F18DDF0DF0003B092 /* TopViewController.m */,
 			);
 			path = TopViewController;
+			sourceTree = "<group>";
+		};
+		42828E2418DE0E3D0003B092 /* TagFilterViewController */ = {
+			isa = PBXGroup;
+			children = (
+				42828E2518DE0E3D0003B092 /* TagFilterViewController.h */,
+				42828E2618DE0E3D0003B092 /* TagFilterViewController.m */,
+			);
+			path = TagFilterViewController;
 			sourceTree = "<group>";
 		};
 		42BE7A6818672C6F00AECD57 = {
@@ -1077,6 +1090,7 @@
 				42BBBBA11872A8D5009813A0 /* MBaseSync.m in Sources */,
 				423F312818B8D79300845826 /* PointsViewController.m in Sources */,
 				42BE7AC018672EA500AECD57 /* iTravelPOI-Model.xcdatamodeld in Sources */,
+				42828E2718DE0E3D0003B092 /* TagFilterViewController.m in Sources */,
 				42BBBBA41872A8D5009813A0 /* MPoint.m in Sources */,
 				42F6E81D1869FDFC00005AFB /* SimpleXMLReader.m in Sources */,
 				42828E2318DE03C60003B092 /* ChildViewControllerSegue.m in Sources */,
