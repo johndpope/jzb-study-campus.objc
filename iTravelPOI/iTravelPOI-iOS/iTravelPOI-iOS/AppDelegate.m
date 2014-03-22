@@ -22,6 +22,7 @@
 #pragma mark PRIVATE interface definition
 // *********************************************************************************************************************
 @interface AppDelegate()
+
 @end
 
 
@@ -32,8 +33,6 @@
 // *********************************************************************************************************************
 @implementation AppDelegate
 
-#define MERCATOR_OFFSET 268435456.0
-
 
 
 // =====================================================================================================================
@@ -42,41 +41,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
-    CLLocationCoordinate2D coordinate2;
-    MKMapPoint point2;
-    coordinate2 = CLLocationCoordinate2DMake(90, -180);
-    point2 = MKMapPointForCoordinate(coordinate2);
-    NSLog(@"px:%f, py:%f", point2.x, point2.y);
-    coordinate2 = CLLocationCoordinate2DMake(-90, 180);
-    point2 = MKMapPointForCoordinate(coordinate2);
-    NSLog(@"px:%f, py:%f", point2.x, point2.y);
-    coordinate2 = CLLocationCoordinate2DMake(0, 0);
-    point2 = MKMapPointForCoordinate(coordinate2);
-    NSLog(@"px:%f, py:%f", point2.x, point2.y);
 
-    
-    
-    // Google zoom -> 0 - 22
-    long zoomLevel = 17; // 3 - ??
-    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(42.35788,-71.0513);
-    MKMapPoint point = MKMapPointForCoordinate(coordinate);
-    
-    double zoomFactor =  (256.0 * powl(2,zoomLevel)) / MERCATOR_OFFSET;
-    double tileZoomFactor = powl(2,zoomLevel) / MERCATOR_OFFSET;
-    
-    double x = point.x * zoomFactor;
-    double y = point.y * zoomFactor;
-
-    double tx = point.x * tileZoomFactor;
-    double ty = point.y * tileZoomFactor;
-    
-    NSLog(@"px:%f, py:%f", point.x, point.y);
-    NSLog(@"x:%f, y:%f", x,y);
-    NSLog(@"tx:%f, ty:%f", tx,ty);
-
-    NSLog(@"http://mt0.google.com/vt/x=%d&y=%d&z=%d",(int)tx,(int)ty,(int)zoomLevel);
-    
     // Establece un gestor especial de excepciones
     NSSetUncaughtExceptionHandler(&_uncaughtExceptionHandler);
     
@@ -142,7 +107,7 @@ void _uncaughtExceptionHandler(NSException *exception) {
     
     // ---------------------------------------
     // ---------------------------------------
-////////    [MockUp resetModel:@"iTravelPOI-Model"];
+//////// [MockUp resetModel:@"iTravelPOI-Model"];
     // ---------------------------------------
     // ---------------------------------------
     
@@ -154,7 +119,7 @@ void _uncaughtExceptionHandler(NSException *exception) {
     
     // ---------------------------------------
     // ---------------------------------------
-////////    [MockUp populateModelFromPListFiles];
+//////// [MockUp populateModelFromPListFiles];
     // ---------------------------------------
     // ---------------------------------------
 

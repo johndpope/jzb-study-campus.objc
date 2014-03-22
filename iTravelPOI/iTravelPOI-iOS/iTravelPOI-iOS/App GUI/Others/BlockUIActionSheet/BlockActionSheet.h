@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void (^TActionSheetCode)(NSInteger buttonIndex);
+@class BlockActionSheet;
+typedef void (^TActionSheetCode)(BlockActionSheet *actionSheet, NSInteger buttonIndex);
 
 @interface BlockActionSheet : UIActionSheet
 

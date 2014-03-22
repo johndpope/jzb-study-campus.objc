@@ -36,7 +36,6 @@
 @interface IconEditorViewController ()
 
 @property (weak, nonatomic) IBOutlet UINavigationBar    *navBar;
-@property (weak, nonatomic) IBOutlet UIImageView        *iconImage;
 @property (weak, nonatomic) IBOutlet UIScrollView       *scrollView;
 @property (weak, nonatomic)          UIImageView        *allGMapIconsImage;
 @property (strong, nonatomic)        UIImageView        *selectionFrame;
@@ -156,6 +155,14 @@ static __strong NSMutableDictionary    *_nameToIndex = nil;
     }];
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
+- (IBAction)cancelAction:(UIBarButtonItem *)sender {
+
+    [self dismissViewControllerAnimated:YES completion:^{
+        self.icon = nil;
+    }];
+}
+
 //---------------------------------------------------------------------------------------------------------------------
 - (void) allIconsImageTapped:(UITapGestureRecognizer *)sender {
     
@@ -252,7 +259,6 @@ static __strong NSMutableDictionary    *_nameToIndex = nil;
 - (void) _updateFieldsFromIcon {
     
     self.navBar.topItem.title = self.icon.name;
-    self.iconImage.image = self.icon.image;
 }
 
 //---------------------------------------------------------------------------------------------------------------------

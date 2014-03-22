@@ -92,6 +92,11 @@
 
     BenchMark *benchMark = [BenchMark benchMarkLogging:@"TagTreeTableViewController:setTagList"];
     
+    // Hay un caso especial que consiste en que la lista de tags esta vacia y hay algun tag seleccionado
+    if(tagList.count==0 && selectedTags.count>0) {
+        tagList = [NSSet setWithSet:selectedTags];
+    }
+    
     // Crea el arbol de nodos expandiendo los tags indicados y los seleccionados
     self.tagTree = [TagTree tagTreeWithTags:tagList expandedTags:expandedTags selectedTags:selectedTags];
     [benchMark logStepTime:@"Created root tree node from tags"];
@@ -262,8 +267,8 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (UIImage *) _tagImageForNode:(TagTreeNode *)node seleted:(BOOL) selected {
     
-    static NSString *normalTagImageName = @"BlackTag";
-    static NSString *selectedTagImageName = @"CircledTag";
+    static NSString *normalTagImageName = @"tagtree-tagIcon";
+    static NSString *selectedTagImageName = @"tagtree-circledTagIcon";
     
     
     static NSArray *_normalTagImages = nil;
@@ -310,8 +315,8 @@
     static UIImage *_imageExpanded = nil;
     static dispatch_once_t _predicate;
     dispatch_once(&_predicate, ^{
-        _imageFolded = [UIImage imageNamed:@"folded" burnTint:self.view.tintColor];
-        _imageExpanded = [UIImage imageNamed:@"expanded" burnTint:self.view.tintColor];
+        _imageFolded = [UIImage imageNamed:@"tagtree-folded" burnTint:self.view.tintColor];
+        _imageExpanded = [UIImage imageNamed:@"tagtree-expanded" burnTint:self.view.tintColor];
     });
 
     return  isExpanded?_imageExpanded : _imageFolded;

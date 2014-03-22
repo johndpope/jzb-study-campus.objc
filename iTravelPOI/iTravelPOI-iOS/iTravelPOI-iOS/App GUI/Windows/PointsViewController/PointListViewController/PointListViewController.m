@@ -7,6 +7,7 @@
 //
 
 #define __PointListViewController__IMPL__
+#import <CoreLocation/CoreLocation.h>
 #import "PointListViewController.h"
 #import "PointListViewCell.h"
 #import "MPoint.h"
@@ -20,23 +21,28 @@
 #pragma mark -
 #pragma mark Private Enumerations & definitions
 //*********************************************************************************************************************
-
+#define MIN_GPS_DISTANCE_PRECISION   +50
+#define LOCATION_TIMER_INTERVAL      60.0
 
 
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark PRIVATE interface definition
 //*********************************************************************************************************************
-@interface PointListViewController () <UITableViewDelegate, UITableViewDataSource>
+@interface PointListViewController () <UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate>
 
 
 @property (weak, nonatomic) IBOutlet UITableView        *pointsTable;
-
 
 @property (strong, nonatomic) UIView                    *tableAccesoryView;
 
 @property (strong, nonatomic) NSIndexPath               *prevSelIndexPath;
 
+@property (strong, nonatomic) CLLocationManager         *locationManager;
+@property (strong, nonatomic) NSTimer                   *timer;
+
+@property (strong, nonatomic) NSNumberFormatter         *distanceFormatterMeters;
+@property (strong, nonatomic) NSNumberFormatter         *distanceFormatterKm;
 
 @end
 
@@ -63,13 +69,40 @@
 #pragma mark -
 #pragma mark Public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) pointsHaveChanged {
+- (id) pointListWillChange {
+    
+    // "Recuerda" el ID del primer punto visible en la tabla
+    NSArray *visibleRows = self.pointsTable.indexPathsForVisibleRows;
+    NSIndexPath *index = visibleRows.count<=0 ? nil : [visibleRows objectAtIndex:0];
+    if(index) {
+        MPoint *point = (MPoint *)[self.dataSource.pointList objectAtIndex:[index indexAtPosition:1]];
+        return point.objectID;
+    } else {
+        return nil;
+    }
+}
 
-    // Elimina la seleccion anterior
-    self.prevSelIndexPath = nil;
+//---------------------------------------------------------------------------------------------------------------------
+- (void) pointListDidChange:(id)prevInfo {
+
+    // Actualiza el valor de indice del elemento seleccionado acorde a los cambios
+    NSUInteger index = [self.dataSource.pointList indexOfObject:self.dataSource.selectedPoint];
+    if(index!=NSNotFound) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+        self.prevSelIndexPath = indexPath;
+    } else {
+        self.prevSelIndexPath = nil;
+        self.dataSource.selectedPoint = nil;
+    }
     
     // Recarga la informacion
     [self.pointsTable reloadData];
+
+    // Calcula el ID del punto que debe quedar visible
+    MPointID *pointToShowID = self.dataSource.selectedPoint ? self.dataSource.selectedPoint.objectID : (MPointID *)prevInfo;
+
+    // Muestra la fila previa si existe aun
+    [self scrollToShowPoint:pointToShowID selectRow:FALSE];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -77,10 +110,16 @@
     
     [self.pointsTable beginUpdates];
     
-    if(self.prevSelIndexPath) {
-        [self.pointsTable reloadRowsAtIndexPaths:@[self.prevSelIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    // Elimina las marcas previas que pudiesen haber quedado en las celdas visibles antes de poner la tabla en edicion
+    for (NSIndexPath *path in [self.pointsTable indexPathsForVisibleRows]) {
+        PointListViewCell *cell = (PointListViewCell *)[self.pointsTable cellForRowAtIndexPath:path];
+        cell.checked = FALSE;
     }
-    self.prevSelIndexPath = nil;
+
+    // Mientras esta editando elimina no hay elemento seleccionado
+    [self setSelectedPointAndPath:nil];
+    
+    // Pone la tabla en edicion de forma animada
     [self.pointsTable setEditing:TRUE animated:TRUE];
     
     [self.pointsTable endUpdates];
@@ -89,6 +128,14 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void) doneMultiplePointSelection {
     [self.pointsTable setEditing:FALSE animated:TRUE];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) refreshSelectedPoint {
+    
+    if(self.dataSource.selectedPoint) {
+        [self scrollToShowPoint:self.dataSource.selectedPoint.objectID selectRow:TRUE];
+    }
 }
 
 
@@ -114,8 +161,26 @@
     // Do any additional setup after loading the view from its nib
     self.tableAccesoryView = [self createTableAccesoryView];
 
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters; // En metros
+    self.locationManager.distanceFilter = MIN_GPS_DISTANCE_PRECISION; // En metros
+
+    // Formateador para las distancias de los puntos
+    self.distanceFormatterMeters = [[NSNumberFormatter alloc] init];
+    [self.distanceFormatterMeters setNumberStyle:NSNumberFormatterDecimalStyle];
+    [self.distanceFormatterMeters setMaximumFractionDigits:0];
+    [self.distanceFormatterMeters setRoundingMode:NSNumberFormatterRoundHalfUp];
+    [self.distanceFormatterMeters setPositiveFormat:@"#,##0 m"];
+    
+    self.distanceFormatterKm = [[NSNumberFormatter alloc] init];
+    [self.distanceFormatterKm setNumberStyle:NSNumberFormatterDecimalStyle];
+    [self.distanceFormatterKm setMaximumFractionDigits:2];
+    [self.distanceFormatterKm setRoundingMode:NSNumberFormatterRoundHalfUp];
+    [self.distanceFormatterKm setPositiveFormat:@"#,##0.# Km"];
+
     // Empieza sin celdas seleccionadas
-    self.prevSelIndexPath = nil;
+    [self setSelectedPointAndPath:nil];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -123,20 +188,17 @@
     
     [super viewDidAppear:animated];
     
+    [self.locationManager startUpdatingLocation];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) viewDidDisappear:(BOOL)animated {
+- (void) viewWillDisappear:(BOOL)animated {
 
-    [super viewDidDisappear:animated];
-    
-}
+    [super viewWillDisappear:animated];
 
-//---------------------------------------------------------------------------------------------------------------------
-- (void) viewWillAppear:(BOOL)animated {
-
-    
-    [super viewWillAppear:animated];
+    [self.locationManager stopUpdatingLocation];
+    [self.timer invalidate];
+    self.timer = nil;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -154,18 +216,16 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void)cellBtnOpenInAction:(UIButton *)sender {
     
-    if(self.prevSelIndexPath) {
-        MPoint *selectedPoint = (MPoint *)[self.dataSource.pointList objectAtIndex:[self.prevSelIndexPath indexAtPosition:1]];
-        [self.dataSource openInExternalApp:selectedPoint];
+    if(self.dataSource.selectedPoint) {
+        [self.dataSource openInExternalApp:self.dataSource.selectedPoint];
     }
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void)cellBtnEditAction:(UIButton *)sender {
     
-    if(self.prevSelIndexPath) {
-        MPoint *selectedPoint = (MPoint *)[self.dataSource.pointList objectAtIndex:[self.prevSelIndexPath indexAtPosition:1]];
-        [self.dataSource editPoint:selectedPoint];
+    if(self.dataSource.selectedPoint) {
+        [self.dataSource editPoint:self.dataSource.selectedPoint];
     }
 }
 
@@ -198,10 +258,10 @@
     if(tableView.isEditing) {
         
         MPoint *itemToShow = (MPoint *)[self.dataSource.pointList objectAtIndex:[indexPath indexAtPosition:1]];
-        if([self.dataSource.selectedPoints containsObject:itemToShow.objectID]) {
-            [self.dataSource.selectedPoints removeObject:itemToShow.objectID];
+        if([self.dataSource.checkedPoints containsObject:itemToShow.objectID]) {
+            [self.dataSource.checkedPoints removeObject:itemToShow.objectID];
         } else {
-            [self.dataSource.selectedPoints addObject:itemToShow.objectID];
+            [self.dataSource.checkedPoints addObject:itemToShow.objectID];
         }
         [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
         
@@ -209,15 +269,15 @@
         
         [tableView beginUpdates];
         
-        BOOL equals = [indexPath compare:self.prevSelIndexPath]==NSOrderedSame;
+        BOOL sameIndexPath = [indexPath compare:self.prevSelIndexPath]==NSOrderedSame;
         
-        if(!self.prevSelIndexPath || equals) {
+        if(!self.prevSelIndexPath || sameIndexPath) {
             [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
         } else {
             [tableView reloadRowsAtIndexPaths:@[indexPath,self.prevSelIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
         }
-        
-        self.prevSelIndexPath = equals ? nil : indexPath;
+
+        [self setSelectedPointAndPath:sameIndexPath ? nil : indexPath];
         
         [tableView endUpdates];
     }
@@ -251,12 +311,12 @@
     MPoint *itemToShow = (MPoint *)[self.dataSource.pointList objectAtIndex:[indexPath indexAtPosition:1]];
     
     cell.textLabel.text = itemToShow.name;
-    cell.detailTextLabel.text = @"kkvaca";
+    cell.detailTextLabel.text = itemToShow.viewStringDistance;
     cell.imageView.image = itemToShow.icon.image;
 
     if(tableView.isEditing) {
 
-        cell.checked = [self.dataSource.selectedPoints containsObject:itemToShow.objectID];
+        cell.checked = [self.dataSource.checkedPoints containsObject:itemToShow.objectID];
 
     } else {
         
@@ -270,6 +330,45 @@
     
     return cell;
 }
+
+
+// =====================================================================================================================
+#pragma mark -
+#pragma mark <CLLocationManagerDelegate> protocol methods
+// ---------------------------------------------------------------------------------------------------------------------
+// Our location updates are sent here
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
+
+    // Actualiza la información si ha habido un cambio importante de posicion
+    CLLocationDistance dist = [newLocation distanceFromLocation:oldLocation];
+    if(!oldLocation || dist>=MIN_GPS_DISTANCE_PRECISION) {
+        [self updatePointsDistanceWithLocation:newLocation];
+    }
+    
+    // Si la precision ya es buena, para el uso del GPS y estableciendo 2 minutos para activarlo de nuevo
+    if(newLocation && newLocation.horizontalAccuracy<=MIN_GPS_DISTANCE_PRECISION) {
+        [self.locationManager stopUpdatingLocation];
+        [self.timer invalidate];
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:LOCATION_TIMER_INTERVAL
+                                                      target:self selector:@selector(locationTimerFired:)
+                                                    userInfo:nil
+                                                     repeats:FALSE];
+    }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Any errors are sent here
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
+    
+    [self updatePointsDistanceWithLocation:nil];
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) locationTimerFired:(NSTimer *)sender {
+
+    [self.locationManager startUpdatingLocation];
+}
+
 
 
 //=====================================================================================================================
@@ -288,7 +387,7 @@
     
     UIButton *btnOpenIn = [UIButton buttonWithType:UIButtonTypeSystem];
     btnOpenIn.frame = CGRectMake(0, 48, 42, 42);
-    [btnOpenIn setImage:[UIImage imageNamed:@"actions-share"] forState:UIControlStateNormal];
+    [btnOpenIn setImage:[UIImage imageNamed:@"tbar-share"] forState:UIControlStateNormal];
     btnOpenIn.imageView.contentMode = UIViewContentModeCenter;
     [btnOpenIn addTarget:self action:@selector(cellBtnOpenInAction:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:btnOpenIn];
@@ -296,5 +395,73 @@
     return view;
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (void) scrollToShowPoint:(MPointID *)pointToShowID selectRow:(BOOL)selectRow {
+    
+    for(int n=0;n<self.dataSource.pointList.count;n++) {
+
+        MPoint *point = self.dataSource.pointList[n];
+        
+        if([point.objectID isEqual:pointToShowID]) {
+            
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:n inSection:0];
+            
+            if(![self.pointsTable.indexPathsForVisibleRows containsObject:indexPath]) {
+                [self.pointsTable scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:FALSE];
+            }
+            
+            if(selectRow) {
+                [self.pointsTable selectRowAtIndexPath:indexPath animated:FALSE scrollPosition:UITableViewScrollPositionNone];
+            }
+            
+            break;
+        }
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) setSelectedPointAndPath:(NSIndexPath *)indexPath {
+    
+    self.prevSelIndexPath = indexPath;
+    
+    if(!indexPath) {
+        self.dataSource.selectedPoint = nil;
+    } else {
+        MPoint *selectedPoint = (MPoint *)[self.dataSource.pointList objectAtIndex:[self.prevSelIndexPath indexAtPosition:1]];
+        self.dataSource.selectedPoint = selectedPoint;
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) updatePointsDistanceWithLocation:(CLLocation *)location {
+    
+    // Actualiza la distancia a visualizar del punto con respecto a la nueva localizacion
+    for(MPoint *point in self.dataSource.pointList) {
+        
+        if(!location) {
+            point.viewDistance = 0;
+            point.viewStringDistance = nil;
+        } else {
+            CLLocation *pointLocation = [[CLLocation alloc] initWithLatitude:point.coordinate.latitude longitude:point.coordinate.longitude];
+            point.viewDistance = [location distanceFromLocation:pointLocation];
+            if(point.viewDistance<10000) {
+                NSNumber *number = [NSNumber numberWithDouble:point.viewDistance];
+                point.viewStringDistance = [self.distanceFormatterMeters stringFromNumber:number];
+            } else {
+                NSNumber *number = [NSNumber numberWithDouble:point.viewDistance/1000.0];
+                point.viewStringDistance = [self.distanceFormatterKm stringFromNumber:number];
+            }
+        }
+        
+    }
+    
+    // Reordena los puntos con la nueva informacion
+    [self.dataSource resortPoints];
+    
+    // Actualiza la informacion en la tabla
+    [self.pointsTable reloadData];
+
+}
 
 @end

@@ -54,7 +54,8 @@ destructiveButtonTitle:(NSString *)destructiveButtonTitle
 // before animation and hiding view
 - (void)actionSheet:(UIActionSheet *)actionSheet willDismissWithButtonIndex:(NSInteger)buttonIndex {
     if(self.blockCode) {
-        self.blockCode(buttonIndex);
+        __weak BlockActionSheet *myself = self;
+        self.blockCode(myself, buttonIndex);
     }
 }
 

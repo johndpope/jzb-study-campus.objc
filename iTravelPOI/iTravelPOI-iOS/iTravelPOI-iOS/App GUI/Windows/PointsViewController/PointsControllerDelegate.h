@@ -24,12 +24,14 @@
 //*********************************************************************************************************************
 @protocol PointsControllerDataSource <NSObject>
 
-@property (weak, readonly, nonatomic) NSArray *pointList;
-@property (strong, readonly, nonatomic) NSMutableSet *selectedPoints;
+@property (weak, readonly, nonatomic)   NSArray         *pointList;
+@property (strong, readonly, nonatomic) NSMutableSet    *checkedPoints;
+@property (weak, nonatomic)             MPoint          *selectedPoint;
 
 
 - (void) editPoint:(MPoint *)point;
 - (void) openInExternalApp:(MPoint *)point;
+- (void) resortPoints;
 
 @end
 
@@ -41,9 +43,13 @@
 
 @property (weak, nonatomic) id<PointsControllerDataSource> dataSource;
 
-- (void) pointsHaveChanged;
+- (id) pointListWillChange;
+- (void) pointListDidChange:(id)prevInfo;
+
 - (void) startMultiplePointSelection;
 - (void) doneMultiplePointSelection;
+
+- (void) refreshSelectedPoint;
 
 
 @end

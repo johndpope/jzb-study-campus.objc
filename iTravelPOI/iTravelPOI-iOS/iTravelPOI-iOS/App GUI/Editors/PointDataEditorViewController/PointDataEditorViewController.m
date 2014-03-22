@@ -341,29 +341,17 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 #pragma mark -
 #pragma mark <TagListEditorViewControllerDelegate> protocol methods
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) tagListEditor:(TagListEditorViewController *)sender assignedTags:(NSArray *)assignedTags {
+- (void) tagListEditor:(TagListEditorViewController *)sender assignedTags:(NSArray *)assignedTags tagsRemoved:(NSSet *)tagsRemoved tagsAdded:(NSSet *)tagsAdded {
     
-    // Comprueba si ambos conjuntos de tags son iguales
-    NSSet *currentTags = self.point.directNoAutoTags;
-    NSSet *newTags = [NSMutableSet setWithArray:assignedTags];
-    
-    
-    NSMutableSet *tagsToRemove = [NSMutableSet setWithSet:currentTags];
-    [tagsToRemove minusSet:newTags];
-
-    NSMutableSet *tagsToAdd = [NSMutableSet setWithSet:newTags];
-    [tagsToAdd minusSet:currentTags];
-    
-
-    for(MTag *tag in tagsToRemove) {
+    for(MTag *tag in tagsRemoved) {
         [tag untagPoint:self.point];
     }
 
-    for(MTag *tag in tagsToAdd) {
+    for(MTag *tag in tagsAdded) {
         [tag tagPoint:self.point];
     }
 
-    if(tagsToAdd.count>0 || tagsToRemove.count>0) {
+    if(tagsAdded.count>0 || tagsRemoved.count>0) {
         self.navBarSaveButton.enabled = TRUE;
     }
 }
@@ -512,6 +500,8 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
             [self.view endEditing:TRUE];
         }
 
+    } else {
+        [self.view endEditing:TRUE];
     }
     
     return TRUE;

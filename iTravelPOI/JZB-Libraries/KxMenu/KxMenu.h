@@ -36,17 +36,20 @@
 
 @interface KxMenuItem : NSObject
 
-@property (readwrite, nonatomic, strong) UIImage *image;
-@property (readwrite, nonatomic, strong) NSString *title;
-@property (readwrite, nonatomic, weak) id target;
-@property (readwrite, nonatomic) SEL action;
-@property (readwrite, nonatomic, strong) UIColor *foreColor;
-@property (readwrite, nonatomic) NSTextAlignment alignment;
+@property (strong, nonatomic, strong) UIImage *image;
+@property (strong, nonatomic, strong) NSString *title;
+@property (weak, nonatomic, weak) id target;
+@property (assign, nonatomic) SEL action;
+@property (strong, nonatomic, strong) UIColor *foreColor;
+@property (assign, nonatomic) NSTextAlignment alignment;
+@property (strong, nonatomic) id cmdData;
+
 
 + (instancetype) menuItem:(NSString *) title
                     image:(UIImage *) image
                    target:(id)target
-                   action:(SEL) action;
+                   action:(SEL) action
+                  cmdData:(id) cmdData;
 
 @end
 

@@ -1,13 +1,13 @@
 //
-//  TagFilterViewController.h
+//  ChildViewControllerSegue.h
 //  iTravelPOI-iOS
 //
-//  Created by Jose Zarzuela on 22/12/13.
-//  Copyright (c) 2013 Jose Zarzuela. All rights reserved.
+//  Created by Jose Zarzuela on 22/03/14.
+//  Copyright (c) 2014 Jose Zarzuela. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-#import "MComplexFilter.h"
+
 
 
 
@@ -18,28 +18,14 @@
 
 
 
-//*********************************************************************************************************************
-#pragma mark -
-#pragma mark TagFilterViewControllerDelegate Public protocol definition
-//*********************************************************************************************************************
-@class TagFilterViewController;
-@protocol TagFilterViewControllerDelegate <NSObject>
-
-@optional
-- (void)filterHasChanged:(TagFilterViewController *)sender filter:(MComplexFilter *)filter;
-
-@end
-
 
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark Public Interface definition
 //*********************************************************************************************************************
-@interface TagFilterViewController : UIViewController
+@interface ChildViewControllerSegue : UIStoryboardSegue
 
-@property (weak, nonatomic)             id<TagFilterViewControllerDelegate> delegate;
 
-@property (strong, nonatomic, readonly) MComplexFilter                      *filter;
 
 
 //=====================================================================================================================
@@ -48,11 +34,11 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 
-
 //=====================================================================================================================
 #pragma mark -
 #pragma mark INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
+
 
 
 @end

@@ -1,14 +1,14 @@
 //
-//  MPointMapAnnotation.m
-//  iTravelPOI-Mac
+//  TopViewController.m
+//  iTravelPoint-iOS
 //
-//  Created by Jose Zarzuela on 16/02/13.
+//  Created by Jose Zarzuela on 22/12/13.
 //  Copyright (c) 2013 Jose Zarzuela. All rights reserved.
 //
 
-#define __MPointMapAnnotation__IMPL__
-#import "MPointMapAnnotation.h"
-#import "MIcon.h"
+#define __TopViewController__IMPL__
+#import "TopViewController.h"
+
 
 
 
@@ -17,21 +17,17 @@
 #pragma mark -
 #pragma mark Private Enumerations & definitions
 //*********************************************************************************************************************
-
-
+static TopViewController *_instance;
 
 
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark PRIVATE interface definition
 //*********************************************************************************************************************
-@interface MPointMapAnnotation()
+@interface TopViewController ()
 
-@property (strong, nonatomic)   MPoint *point;
-@property (strong, nonatomic)   UIImage *image;
 
 @end
-
 
 
 
@@ -39,7 +35,7 @@
 #pragma mark -
 #pragma mark Implementation
 //*********************************************************************************************************************
-@implementation MPointMapAnnotation
+@implementation TopViewController
 
 
 
@@ -49,31 +45,24 @@
 #pragma mark -
 #pragma mark CLASS methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (MPointMapAnnotation *) annotationWithTitle:(NSString *)title image:(UIImage *)image lat:(CGFloat)lat lng:(CGFloat)lng {
-
-    MPointMapAnnotation *me = [[MPointMapAnnotation alloc] init];
-    me.point = nil;
-    me.title = title;
-    me.subtitle = nil;
-    me.image = image;
-    CLLocationCoordinate2D coord = {.latitude = lat, .longitude = lng};
-    me.coordinate = coord;
-    return me;
++ (void) addChildViewController:(UIViewController *)childController {
+    
+    [childController willMoveToParentViewController:_instance];
+    [_instance addChildViewController:childController];
+    [_instance.view addSubview:childController.view];
+    childController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    childController.view.frame = _instance.view.bounds;
+    [childController didMoveToParentViewController:_instance];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-+ (MPointMapAnnotation *) annotationWithPoint:(MPoint *)point {
-   
-    // No tiene sentido sin un punto
-    if(point==nil) return  nil;
++ (void) removeChildViewController:(UIViewController *)childController {
     
-    // Crea la anotacion y almacena el punto asociado
-    MPointMapAnnotation *me = [MPointMapAnnotation annotationWithTitle:point.name image:point.icon.image lat:point.latitudeValue lng:point.longitudeValue];
-    me.point = point;
-    return me;
+    [childController willMoveToParentViewController:nil];
+    [childController removeFromParentViewController];
+    [childController.view removeFromSuperview];
+    [childController didMoveToParentViewController:nil];
 }
-
-
 
 
 
@@ -84,11 +73,40 @@
 
 
 
+//=====================================================================================================================
+#pragma mark -
+#pragma mark <UIViewController> superclass methods
+//---------------------------------------------------------------------------------------------------------------------
+- (id) initWithCoder:(NSCoder *)aDecoder {
+    
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void)viewDidLoad {
+    
+    [super viewDidLoad];
+
+    // Recuerda esta instancia como una propiedad de clase
+    _instance = self;
+
+    // Crea el root ViewController
+    [self performSegueWithIdentifier:@"rootVC" sender:self];
+    
+}
+
+
+
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark Private methods
 //---------------------------------------------------------------------------------------------------------------------
 
-@end
 
+
+@end

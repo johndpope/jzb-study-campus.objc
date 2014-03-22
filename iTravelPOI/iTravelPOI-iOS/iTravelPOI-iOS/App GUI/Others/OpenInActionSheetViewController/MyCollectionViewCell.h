@@ -1,14 +1,12 @@
 //
-//  OpenInActionSheetViewController.h
+//  MyCollectionViewCell.h
 //  iTravelPOI-iOS
 //
-//  Created by Jose Zarzuela on 31/03/13.
-//  Copyright (c) 2013 Jose Zarzuela. All rights reserved.
+//  Created by Jose Zarzuela on 22/03/14.
+//  Copyright (c) 2014 Jose Zarzuela. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-#import "MPoint.h"
-
 
 //*********************************************************************************************************************
 #pragma mark -
@@ -22,15 +20,9 @@
 #pragma mark -
 #pragma mark Public Interface definition
 //*********************************************************************************************************************
-@interface OpenInActionSheetViewController : UIViewController
+@interface MyCollectionViewCell : UICollectionViewCell
 
-
-
-//=====================================================================================================================
-#pragma mark -
-#pragma mark CLASS public methods
-//---------------------------------------------------------------------------------------------------------------------
-+ (void) showOpenInActionSheetWithController:(UIViewController *)controller point:(MPoint *)point;
-
+@property (weak, nonatomic) IBOutlet UILabel *label;
+@property (weak, nonatomic) IBOutlet UIImageView *image;
 
 @end

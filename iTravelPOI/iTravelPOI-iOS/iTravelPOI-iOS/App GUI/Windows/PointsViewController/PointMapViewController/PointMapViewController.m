@@ -12,7 +12,11 @@
 #import "MPoint.h"
 #import "MIcon.h"
 #import "UIImage+Tint.h"
+#import "MKMapView+ZoomLevel.h"
 
+
+#import "MMap.h"
+#import "BaseCoreDataService.h"
 
 
 //*********************************************************************************************************************
@@ -32,7 +36,6 @@
 
 
 @property (weak, nonatomic) IBOutlet MKMapView          *pointsMapView;
-
 
 @end
 
@@ -60,13 +63,19 @@
 #pragma mark -
 #pragma mark Public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) pointsHaveChanged {
-    
+- (id) pointListWillChange {
+    // nothing to be done
+    return nil;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) pointListDidChange:(id)prevInfo {
+
     // Sets new points
-    [self _setPointsAsAnnotationsInMap];
+    [self _setPointsAsAnnotationsInMap: self.dataSource.pointList];
     
     // Centers map
-    [self _centerMapToShowAllPoints];
+    [self _centerAndZoomMap];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -79,29 +88,10 @@
     
 }
 
-- (IBAction)kkButton:(UIButton *)sender {
+//---------------------------------------------------------------------------------------------------------------------
+- (void) refreshSelectedPoint {
     
-    // 134217728
-
-    //CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(42.35788,-71.0513);
-    //[self.pointsMapView setCenterCoordinate:coordinate zoomLevel:6 animated:FALSE];
-
-    CLLocationCoordinate2D center = CLLocationCoordinate2DMake(0,0); 
-    MKCoordinateSpan span = MKCoordinateSpanMake(15,30); // latDelta, LngDelta
-
-    MKCoordinateRegion region1 = MKCoordinateRegionMake(center, span);
-    NSLog(@"lat=%f, lng=%f, latDelta=%f, lngDelta=%f",region1.center.latitude,region1.center.longitude,region1.span.latitudeDelta,region1.span.longitudeDelta);
-    
-    MKCoordinateRegion region2 = [self.pointsMapView regionThatFits:region1];
-    NSLog(@"lat=%f, lng=%f, latDelta=%f, lngDelta=%f",region2.center.latitude,region2.center.longitude,region2.span.latitudeDelta,region2.span.longitudeDelta);
-    
-    self.pointsMapView.region = region2;
-    
-    MKMapRect vrect = self.pointsMapView.visibleMapRect;
-    NSLog(@"vrect  => x=%f, y=%f, w=%f, h=%f",vrect.origin.x,vrect.origin.y,vrect.size.width,vrect.size.height);
-    
-    MKCoordinateRegion region = self.pointsMapView.region;
-    NSLog(@"lat=%f, lng=%f, latDelta=%f, lngDelta=%f",region.center.latitude,region.center.longitude,region.span.latitudeDelta,region.span.longitudeDelta);
+    [self _centerAndZoomMap];
 }
 
 
@@ -139,11 +129,13 @@
     
     [super viewDidAppear:animated];
     
-    if(self.pointsMapView.annotations.count==0) {
+    if(self.pointsMapView.annotations.count==0 || (self.pointsMapView.annotations.count==1 && [self.pointsMapView.annotations[0] isKindOfClass:MKUserLocation.class])) {
+        
         // Sets points
-        [self _setPointsAsAnnotationsInMap];
-        // Centers map
-        [self _centerMapToShowAllPoints];
+        [self _setPointsAsAnnotationsInMap: self.dataSource.pointList];
+
+        // Center and Zoom map adecuately
+        [self _centerAndZoomMap];
     }
     
 }
@@ -173,11 +165,11 @@
             MKAnnotationView *view = (MKAnnotationView *)subview;
             MPoint *point = (MPoint *)view.annotation;
             
-            if([self.dataSource.selectedPoints containsObject:point]) {
-                [self.dataSource.selectedPoints removeObject:point];
+            if([self.dataSource.checkedPoints containsObject:point]) {
+                [self.dataSource.checkedPoints removeObject:point];
                 view.image = point.icon.image;
             } else {
-                [self.dataSource.selectedPoints addObject:point];
+                [self.dataSource.checkedPoints addObject:point];
                 view.image = [point.icon.image burnTint:[UIColor redColor]];
             }
             
@@ -246,7 +238,7 @@
 
     view.canShowCallout = FALSE;
     view.annotation = annotation;
-    if([self.dataSource.selectedPoints containsObject:point]) {
+    if([self.dataSource.checkedPoints containsObject:point]) {
         view.image = [point.icon.image burnTint:[UIColor redColor]];
     } else {
         view.image = point.icon.image;
@@ -266,6 +258,10 @@
     } else if(control.tag == ACCESSORY_BTN_OPEN_IN) {
         [self.dataSource openInExternalApp:(MPoint *)view.annotation];
     }    
+}
+- (IBAction)kkButton:(UIButton *)sender {
+    [self.pointsMapView centerAndZoomToShowAnnotations:32 animated:FALSE];
+    [self mapView:self.pointsMapView regionDidChangeAnimated:TRUE];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -403,7 +399,7 @@
 #pragma mark -
 #pragma mark Private methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) _setPointsAsAnnotationsInMap {
+- (void) _setPointsAsAnnotationsInMap:(NSArray *) pointList {
     
     id userLocation = self.pointsMapView.userLocation;
 
@@ -420,77 +416,19 @@
     }
     
     // Add new annotations from points
-    [self.pointsMapView addAnnotations:self.dataSource.pointList];
+    [self.pointsMapView addAnnotations:pointList];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) _centerMapToShowAllPoints {
+- (void) _centerAndZoomMap {
     
-    
-    CLLocationDegrees regMinLat=1000, regMaxLat=-1000, regMinLng=1000, regMaxLng=-1000;
-    CLLocationCoordinate2D regCenter = CLLocationCoordinate2DMake(0, 0);
-    MKCoordinateSpan regSpan = MKCoordinateSpanMake(0, 0);
-    
-    if(self.pointsMapView.annotations.count==0) {
-        
-        MKUserLocation *uloc=self.pointsMapView.userLocation;
-        regCenter.latitude = uloc.coordinate.latitude;
-        regCenter.longitude = uloc.coordinate.longitude;
-        regSpan.latitudeDelta = 0.05;
-        regSpan.longitudeDelta = 0.05;
-        
-    } else if(self.pointsMapView.annotations.count==1) {
-        
-        MKPointAnnotation *pin = self.pointsMapView.annotations[0];
-        regCenter.latitude = pin.coordinate.latitude;
-        regCenter.longitude = pin.coordinate.longitude;
-        regSpan.latitudeDelta = 0.05;
-        regSpan.longitudeDelta = 0.05;
-        
+    if(!self.dataSource.selectedPoint) {
+        // Centers map showing ALL the points
+        [self.pointsMapView centerAndZoomToShowAnnotations:32 animated:FALSE];
     } else {
-        
-        // Calcula los extremos
-        for(MKPointAnnotation *pin in self.pointsMapView.annotations) {
-            
-            // Se salta la posicion del usuario y se centra en los puntos
-            if([pin isKindOfClass:MKUserLocation.class]) continue;
-            
-            regMinLat = regMinLat <= pin.coordinate.latitude  ? regMinLat : pin.coordinate.latitude;
-            regMaxLat = regMaxLat >  pin.coordinate.latitude  ? regMaxLat : pin.coordinate.latitude;
-            regMinLng = regMinLng <= pin.coordinate.longitude ? regMinLng : pin.coordinate.longitude;
-            regMaxLng = regMaxLng >  pin.coordinate.longitude ? regMaxLng : pin.coordinate.longitude;
-        }
-        
-        // Establece el centro
-        regCenter.latitude = regMinLat+(regMaxLat-regMinLat)/2;
-        regCenter.longitude = regMinLng+(regMaxLng-regMinLng)/2;
-        
-        // Establece el span
-        regSpan.latitudeDelta = regMaxLat-regMinLat;
-        regSpan.longitudeDelta = regMaxLng-regMinLng;
-        
-        // Deja espacio para que se vean los iconos
-        double degreesByPoint1 = regSpan.longitudeDelta / self.pointsMapView.frame.size.height;
-        double iconSizeInDegrees1 = 64.0 * degreesByPoint1;
-        regSpan.longitudeDelta  += iconSizeInDegrees1;
-        
-        double degreesByPoint2 = regSpan.latitudeDelta / self.pointsMapView.frame.size.width;
-        double iconSizeInDegrees2 = 64.0 * degreesByPoint2;
-        regSpan.latitudeDelta  += iconSizeInDegrees2;
-        
-        // Ajusta por si nos hemos pasado
-        regSpan.latitudeDelta = MIN(90, regSpan.latitudeDelta);
-        regSpan.longitudeDelta = MIN(180, regSpan.longitudeDelta);
+        // Centers map showing THAT selected point
+        [self.pointsMapView setCenterCoordinate:self.dataSource.selectedPoint.coordinate zoomLevel:17 animated:FALSE];
     }
-    
-    // Ajusta la vista del mapa a la region, centrandolo
-    MKCoordinateRegion region1 = MKCoordinateRegionMake(regCenter, regSpan);
-    MKCoordinateRegion region2 =[self.pointsMapView regionThatFits:region1];
-    //self.pointsMapView.centerCoordinate = region2.center;
-    [self.pointsMapView setRegion:region2 animated:TRUE];
-    
 }
-
-
 
 @end

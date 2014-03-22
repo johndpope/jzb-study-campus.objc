@@ -7,7 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MMap.h"
+
 
 @interface TestMapViewController : UIViewController
+
+@property (strong, nonatomic) MMap *map;
 
 @end

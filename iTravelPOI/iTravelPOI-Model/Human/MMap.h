@@ -34,6 +34,6 @@
 #pragma mark INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL) updateSummary:(NSString *)value;
-
+- (NSInteger) pointsCount;
 
 @end

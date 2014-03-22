@@ -9,8 +9,11 @@
 #define __TestMapViewController__IMPL__
 #import <MapKit/MapKit.h>
 #import "TestMapViewController.h"
+#import "MKMapView+ZoomLevel.h"
 
 
+
+//*********************************************************************************************************************
 @interface TPointPath : NSObject
 
 @property (assign,nonatomic) NSInteger x;
@@ -224,7 +227,12 @@
 
     self.zoomLabel.text = [NSString stringWithFormat:@"Zoom: %u", self.mapZoom];
     self.overlay.minimumZ = self.overlay.maximumZ = self.mapZoom;
-    [self centerMap:self.mapView centre:self.mapView.centerCoordinate withZoom:self.mapZoom animated:FALSE];
+    [self.mapView setCenterCoordinate:self.mapView.centerCoordinate zoomLevel:self.mapZoom animated:FALSE];
+
+    NSUInteger z = [self.mapView zoomLevel];
+    if(self.mapZoom!=z) {
+        NSLog(@"%lu # %lu", (unsigned long)self.mapZoom, (unsigned long)z);
+    }
 }
 
 
@@ -273,7 +281,6 @@
     self = [super initWithCoder:aDecoder];
     if (self) {
         // Custom initialization
-        [self mercatorTest];
     }
     return self;
 }
@@ -339,9 +346,13 @@
 
     centre = CLLocationCoordinate2DMake(42.36324150000002, -71.05624399999999); // Mapa 2
     
-    [self centerMap:self.mapView centre:centre withZoom:self.mapZoom animated:FALSE];
-    
-    
+    [self.mapView setCenterCoordinate:centre zoomLevel:self.mapZoom animated:FALSE];
+
+    NSUInteger z = [self.mapView zoomLevel];
+    if(self.mapZoom!=z) {
+        NSLog(@"%lu # %lu", (unsigned long)self.mapZoom, (unsigned long)z);
+    }
+
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -812,114 +823,6 @@
     }
 
     return regCenter;
-}
-
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) centerMap:(MKMapView *)map centre:(CLLocationCoordinate2D)centreCoord withZoom:(int)zoom animated:(BOOL)animated {
-    
-    MKMapPoint centrePoint = MKMapPointForCoordinate(centreCoord);
-    
-    CGFloat rectWidth = 2 * map.bounds.size.width * pow(2, 20-zoom);
-    CGFloat rectHeight = 2 * map.bounds.size.height * pow(2, 20-zoom);
-    
-    MKMapRect visibleRect = MKMapRectMake(centrePoint.x-rectWidth/2, centrePoint.y-rectHeight/2, rectWidth, rectHeight);
-    NSLog(@"zoom = %d, visibleRect = %0.2f, %0.2f - %0.2f, %0.2f", zoom, visibleRect.origin.x, visibleRect.origin.y, visibleRect.size.width, visibleRect.size.height);
-    
-    [map setVisibleMapRect:visibleRect animated:animated];
-
-    
-    CLLocationCoordinate2D coord;
-    MKMapPoint point;
-    
-    coord = [self.mapView convertPoint:CGPointMake(0, 0) toCoordinateFromView:self.mapView];
-    point = MKMapPointForCoordinate(coord);
-    NSLog(@"%0.2f, %0.2f", point.x,point.y);
-
-    coord = [self.mapView convertPoint:CGPointMake(self.mapView.bounds.size.width, self.mapView.bounds.size.height) toCoordinateFromView:self.mapView];
-    point = MKMapPointForCoordinate(coord);
-    NSLog(@"%0.2f, %0.2f", point.x,point.y);
-
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-// Specifically, most spherical mercator maps use an extent of the world from -180 to 180 longitude, and
-// from -85.0511 to 85.0511 latitude. Because the mercator projection stretches to infinity as you approach the poles,
-// a cutoff in the north-south direction is required, and this particular cutoff results in a perfect square of projected meters.
-
-
-// Se usa un ZOOM de 20 para MAPA completo con un numero de puntos = 256*2^20 = 268.435.456 (134.217.728 centro)
-//#define MERCATOR_RADIUS 20037508.34
-#define MERCATOR_RADIUS 134217728
-
-- (void) mercatorTest {
-    
-    MKMapPoint point;
-    CLLocationCoordinate2D coord;
-
-    NSLog(@"---------------------------------------------------");
-
-    NSLog(@"MKMapRectWorld = %f,%f - %f,%f",MKMapRectWorld.origin.x,MKMapRectWorld.origin.y,MKMapRectWorld.size.width,MKMapRectWorld.size.height);
-    
-    
-    coord = CLLocationCoordinate2DMake(85, -180);
-    point = [self toMercatorCoord:coord];
-    NSLog(@"lat=%f, lng=%f --> x=%f, y=%f",coord.latitude, coord.longitude, point.x, point.y);
-    
-    
-    coord = CLLocationCoordinate2DMake(-85, 180);
-    point = [self toMercatorCoord:coord];
-    NSLog(@"lat=%f, lng=%f --> x=%f, y=%f",coord.latitude, coord.longitude, point.x, point.y);
-
-    coord = CLLocationCoordinate2DMake(0, 0);
-    point = [self toMercatorCoord:coord];
-    NSLog(@"lat=%f, lng=%f --> x=%f, y=%f",coord.latitude, coord.longitude, point.x, point.y);
-
-    
-
-    point = MKMapPointMake(100139008, 108003327);
-    coord = [self fromMercatorPoint:point];
-    NSLog(@"lat=%f, lng=%f --> x=%f, y=%f",coord.latitude, coord.longitude, point.x, point.y);
-
-    point = MKMapPointMake(100139008+68157439, 108003327+52428801);
-    coord = [self fromMercatorPoint:point];
-    NSLog(@"lat=%f, lng=%f --> x=%f, y=%f",coord.latitude, coord.longitude, point.x, point.y);
-
-    point = MKMapPointMake(134217728, 134217728);
-    coord = [self fromMercatorPoint:point];
-    NSLog(@"lat=%f, lng=%f --> x=%f, y=%f",coord.latitude, coord.longitude, point.x, point.y);
-
-    NSLog(@"---------------------------------------------------");
-    
-}
-
-- (MKMapPoint) toMercatorCoord:(CLLocationCoordinate2D) coord {
-
-    MKMapPoint point;
-    
-    point.x = coord.longitude * MERCATOR_RADIUS / 180;
-    point.y = log(tan((90 + coord.latitude) * M_PI / 360)) / (M_PI / 180);
-    point.y = point.y * MERCATOR_RADIUS / 180;
-
-    // [0..Max]
-    point.x = point.x + MERCATOR_RADIUS;
-    point.y = -(point.y - MERCATOR_RADIUS);
-
-    return point;
-}
-
-- (CLLocationCoordinate2D) fromMercatorPoint:(MKMapPoint)point {
-   
-    CLLocationCoordinate2D coord;
-
-    // [-Max/2..Max/2]
-    point.x = point.x - MERCATOR_RADIUS;
-    point.y = -point.y + MERCATOR_RADIUS;
-
-    coord.longitude = (point.x / MERCATOR_RADIUS) * 180;
-    coord.latitude = (point.y / MERCATOR_RADIUS) * 180;
-    coord.latitude = 180/M_PI * (2 * atan(exp(coord.latitude * M_PI / 180)) - M_PI_2);
-    return coord;
 }
 
 

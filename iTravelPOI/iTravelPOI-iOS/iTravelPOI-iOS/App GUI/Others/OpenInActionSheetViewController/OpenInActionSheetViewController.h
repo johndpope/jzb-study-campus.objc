@@ -1,14 +1,13 @@
 //
-//  MPointMapAnnotation.h
-//  iTravelPOI-Mac
+//  OpenInActionSheetViewController.h
+//  iTravelPOI-iOS
 //
-//  Created by Jose Zarzuela on 16/02/13.
+//  Created by Jose Zarzuela on 31/03/13.
 //  Copyright (c) 2013 Jose Zarzuela. All rights reserved.
 //
 
-#import <MapKit/MapKit.h>
+#import <UIKit/UIKit.h>
 #import "MPoint.h"
-
 
 
 //*********************************************************************************************************************
@@ -23,25 +22,15 @@
 #pragma mark -
 #pragma mark Public Interface definition
 //*********************************************************************************************************************
-@interface MPointMapAnnotation : MKPointAnnotation
+@interface OpenInActionSheetViewController : UIViewController
 
-
-@property (strong, nonatomic, readonly) MPoint *point;
-@property (strong, nonatomic, readonly) UIImage *image;
 
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (MPointMapAnnotation *) annotationWithPoint:(MPoint *)point;
-+ (MPointMapAnnotation *) annotationWithTitle:(NSString *)title image:(UIImage *)image lat:(CGFloat)lat lng:(CGFloat)lng;
-
-
-//=====================================================================================================================
-#pragma mark -
-#pragma mark INSTANCE public methods
-//---------------------------------------------------------------------------------------------------------------------
++ (void) showOpenInActionSheetWithControllerWithPoint:(MPoint *)point;
 
 
 @end

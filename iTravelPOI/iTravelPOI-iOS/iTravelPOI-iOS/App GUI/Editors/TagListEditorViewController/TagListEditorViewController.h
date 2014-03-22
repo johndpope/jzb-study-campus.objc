@@ -22,7 +22,10 @@
 @protocol TagListEditorViewControllerDelegate <NSObject>
 
 @optional
-- (void) tagListEditor:(TagListEditorViewController *)sender assignedTags:(NSArray *)assignedTags;
+- (void) tagListEditor:(TagListEditorViewController *)sender
+          assignedTags:(NSArray *)assignedTags
+           tagsRemoved:(NSSet *)tagsRemoved
+             tagsAdded:(NSSet *)tagsAdded;
 
 @end
 

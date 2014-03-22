@@ -47,6 +47,8 @@
 @synthesize directTags = _directTags;
 @synthesize directNoAutoTags = _directNoAutoTags;
 @synthesize coordinate = _coordinate;
+@synthesize viewDistance = _viewDistance;
+@synthesize viewStringDistance = _viewStringDistance;
 
 
 

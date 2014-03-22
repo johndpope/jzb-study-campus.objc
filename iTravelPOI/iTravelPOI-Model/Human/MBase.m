@@ -30,6 +30,9 @@ NSString *const MBaseOrderByIconAsc         = @"MBaseOrderByIconAsc";
 NSString *const MBaseOrderByIconDes         = @"MBaseOrderByIconDes";
 
 
+NSString *const InMemoryOrderByDistanceAsc = @"InMemoryOrderByDistanceAsc";  // OJO!, esta ordenacion solo
+NSString *const InMemoryOrderByDistanceDes = @"InMemoryOrderByDistanceDes";  // se puede hacer en memoria
+
 
 //*********************************************************************************************************************
 #pragma mark -
@@ -87,11 +90,16 @@ NSString *const MBaseOrderByIconDes         = @"MBaseOrderByIconDes";
         } else if((order == MBaseOrderByIconAsc) || (order == MBaseOrderByIconAsc)) {
             NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:[NSString stringWithFormat:@"%@icon.name", fieldName] ascending:(order == MBaseOrderByIconAsc)];
             [sortDescriptors addObject:sortDescriptor];
+        } else if((order == InMemoryOrderByDistanceAsc) || (order == InMemoryOrderByDistanceDes)) {
+            NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:[NSString stringWithFormat:@"%@viewDistance", fieldName] ascending:(order == InMemoryOrderByDistanceAsc)];
+            [sortDescriptors addObject:sortDescriptor];
         }
+        
     }
     
     // Retorna el resultado
-    return  sortDescriptors;}
+    return  sortDescriptors;
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 + (NSMutableArray *) sortDescriptorsByOrder:(NSArray *)orderArray {

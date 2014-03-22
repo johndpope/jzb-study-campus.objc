@@ -27,6 +27,8 @@
 @property (nonatomic, readonly) NSSet *directTags; 
 @property (nonatomic, readonly) NSSet *directNoAutoTags;
 
+@property (nonatomic, assign)   CLLocationDistance   viewDistance;
+@property (nonatomic, strong)   NSString            *viewStringDistance;
 
 
 //=====================================================================================================================

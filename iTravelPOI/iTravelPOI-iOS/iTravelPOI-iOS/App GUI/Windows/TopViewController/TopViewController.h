@@ -1,13 +1,12 @@
 //
-//  MComplexFilter.h
+//  TopViewController.h
+//  iTravelPOI-iOS
+//
+//  Created by Jose Zarzuela on 03/03/14.
+//  Copyright (c) 2014 Jose Zarzuela. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-#import "MMap.h"
-#import "MPoint.h"
-#import "MTag.h"
-
-
 
 
 //*********************************************************************************************************************
@@ -17,22 +16,12 @@
 
 
 
+
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark Public Interface definition
 //*********************************************************************************************************************
-@interface MComplexFilter : NSObject
-
-
-@property (nonatomic, strong)           NSManagedObjectContext  *moContext;
-
-@property (nonatomic, strong)           MMap                    *filterMap;
-@property (nonatomic, strong)           NSSet                   *filterTags;
-@property (nonatomic, strong)           NSArray                 *pointOrder; // MBase.h -> MBaseOrderByNameAsc
-
-@property (nonatomic, strong, readonly) NSArray                 *pointList;
-@property (nonatomic, strong, readonly) NSSet                   *tagsForPointList;
-
+@interface TopViewController : UIViewController
 
 
 
@@ -40,16 +29,13 @@
 #pragma mark -
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (MComplexFilter *) filter;
-+ (MComplexFilter *) filterWithContext:(NSManagedObjectContext *)moContext;
-
++ (void) addChildViewController:(UIViewController *)childController;
++ (void) removeChildViewController:(UIViewController *)childController;
 
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) reset;
-- (void) resortPoints;
 
 @end

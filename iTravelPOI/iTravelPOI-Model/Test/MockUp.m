@@ -135,7 +135,7 @@ BOOL _init_model_ = TRUE;
     filter.filterTags = tags;
     filter.filterMap = nil;
     //NSArray *allPoints = filter.pointList;
-    NSSet *filteredTags = filter.tagList;
+    NSSet *filteredTags = filter.tagsForPointList;
 
     // Ordena el set
     NSMutableArray *array = [NSMutableArray arrayWithArray:[filteredTags allObjects]];
@@ -153,9 +153,9 @@ BOOL _init_model_ = TRUE;
     
     NSLog(@"MockUp - _testTags1 - out = %f",[start timeIntervalSinceNow]);
     
-    for(MTag *tag in array) {
-        //NSLog(@"tag - %@",tag.name);
-    }
+    //    for(MTag *tag in array) {
+    //        NSLog(@"tag - %@",tag.name);
+    //    }
     
     NSLog(@"-- %ld --", (unsigned long)array.count);
     
@@ -179,9 +179,9 @@ BOOL _init_model_ = TRUE;
     
     NSLog(@"MockUp - _testPoint1 - out = %f",[start timeIntervalSinceNow]);
     
-    for(MPoint *obj in array) {
-        //NSLog(@"%@",obj.name);
-    }
+    //    for(MPoint *obj in array) {
+    //        NSLog(@"%@",obj.name);
+    //    }
     
     NSLog(@"-- %ld --", (unsigned long)array.count);
     return array;

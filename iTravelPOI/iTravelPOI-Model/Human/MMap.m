@@ -128,6 +128,24 @@
     }
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (NSInteger) pointsCount {
+    
+    // Crea la peticion de busqueda
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"MPoint"];
+    
+    // Se asigna una condicion de filtro
+    NSPredicate *query = [NSPredicate predicateWithFormat:@"map=%@ AND markedAsDeleted=NO",self];
+    [request setPredicate:query];
+
+    // Se ejecuta y retorna el resultado
+    NSError *localError = nil;
+    NSInteger count = [self.managedObjectContext countForFetchRequest:request error:&localError];
+    if(localError!=nil) {
+        [ErrorManagerService manageError:localError compID:@"Model" messageWithFormat:@"MMap:pointsCount - Error fetching point count in map"];
+    }
+    return count;
+}
 
 
 //=====================================================================================================================

@@ -38,6 +38,9 @@
 
 #import "KxMenu.h"
 #import <QuartzCore/QuartzCore.h>
+#import "UIImage+Tint.h"
+
+
 
 const CGFloat kArrowSize = 12.f;
 
@@ -95,17 +98,20 @@ const CGFloat kArrowSize = 12.f;
                     image:(UIImage *) image
                    target:(id)target
                    action:(SEL) action
+                  cmdData:(id) cmdData
 {
     return [[KxMenuItem alloc] init:title
                               image:image
                              target:target
-                             action:action];
+                             action:action
+                              cmdData:cmdData];
 }
 
 - (id) init:(NSString *) title
       image:(UIImage *) image
      target:(id)target
      action:(SEL) action
+    cmdData:(id) cmdData
 {
     NSParameterAssert(title.length || image);
     
@@ -116,6 +122,7 @@ const CGFloat kArrowSize = 12.f;
         _image = image;
         _target = target;
         _action = action;
+        _cmdData = cmdData;
     }
     return self;
 }
@@ -508,7 +515,7 @@ typedef enum {
             titleLabel.text = menuItem.title;
             titleLabel.font = titleFont;
             titleLabel.textAlignment = menuItem.alignment;
-            titleLabel.textColor = menuItem.foreColor ? menuItem.foreColor : [UIColor whiteColor];
+            titleLabel.textColor = menuItem.foreColor ? menuItem.foreColor : [UIColor blackColor];
             titleLabel.backgroundColor = [UIColor clearColor];
             titleLabel.autoresizingMask = UIViewAutoresizingNone;
             //titleLabel.backgroundColor = [UIColor greenColor];
@@ -519,7 +526,7 @@ typedef enum {
             
             const CGRect imageFrame = {kMarginX * 2, kMarginY, maxImageWidth, maxItemHeight - kMarginY * 2};
             UIImageView *imageView = [[UIImageView alloc] initWithFrame:imageFrame];
-            imageView.image = menuItem.image;
+            imageView.image = [menuItem.image burnTint:self.tintColor];
             imageView.clipsToBounds = YES;
             imageView.contentMode = UIViewContentModeCenter;
             imageView.autoresizingMask = UIViewAutoresizingNone;
@@ -629,10 +636,12 @@ typedef enum {
 - (void)drawBackground:(CGRect)frame
              inContext:(CGContextRef) context
 {
-    CGFloat R0 = 0.267, G0 = 0.303, B0 = 0.335;
-    CGFloat R1 = 0.040, G1 = 0.040, B1 = 0.040;
+    //CGFloat R0 = 0.267, G0 = 0.303, B0 = 0.335;
+    //CGFloat R1 = 0.040, G1 = 0.040, B1 = 0.040;
     //CGFloat R0 = 1.0, G0 = 1.0, B0 = 1.0;
     //CGFloat R1 = 0.9, G1 = 0.9, B1 = 0.9;
+    CGFloat R0 = 0.97255, G0 = 0.97255, B0 = 0.97255;
+    CGFloat R1 = 0.97255, G1 = 0.97255, B1 = 0.97255;
     
     UIColor *tintColor = [KxMenu tintColor];
     if (tintColor) {
@@ -839,6 +848,7 @@ static KxMenu *gMenu;
 
     
     _menuView = [[KxMenuView alloc] init];
+    _menuView.tintColor = view.tintColor;
     [_menuView showMenuInView:view fromRect:rect menuItems:menuItems];    
 }
 

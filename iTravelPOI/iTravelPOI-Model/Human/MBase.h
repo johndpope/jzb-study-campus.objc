@@ -20,6 +20,10 @@ UIKIT_EXTERN NSString *const MBaseOrderByTUpdateDes;
 UIKIT_EXTERN NSString *const MBaseOrderByIconAsc;
 UIKIT_EXTERN NSString *const MBaseOrderByIconDes;
 
+UIKIT_EXTERN NSString *const InMemoryOrderByDistanceAsc;  // OJO!, esta ordenacion solo
+UIKIT_EXTERN NSString *const InMemoryOrderByDistanceDes;  // se puede hacer en memoria
+
+
 
 //*********************************************************************************************************************
 #pragma mark -

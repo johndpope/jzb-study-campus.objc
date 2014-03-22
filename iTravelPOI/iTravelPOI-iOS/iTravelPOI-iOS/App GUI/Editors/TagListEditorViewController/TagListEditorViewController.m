@@ -52,6 +52,7 @@ typedef NS_ENUM(NSInteger, ActiveSection) {
 @property (strong, nonatomic)            TagTreeTableViewController     *tagTableView;
 
 @property (strong, nonatomic)   NSManagedObjectContext                  *moContext;
+@property (strong, nonatomic)   NSSet                                   *initialAssignedTags;
 @property (strong, nonatomic)   NSMutableArray                          *assignedTags;
 @property (strong, nonatomic)   NSMutableSet                            *availableTags;
 
@@ -111,7 +112,9 @@ typedef NS_ENUM(NSInteger, ActiveSection) {
 - (void) setContext:(NSManagedObjectContext *)moContext assignedTags:(NSSet *)assignedTags availableTags:(NSMutableSet *)availableTags {
     
     self.moContext = moContext;
+    
     // @TODO: hay que ordenarlos
+    self.initialAssignedTags = assignedTags;
     self.assignedTags = [NSMutableArray arrayWithArray:[assignedTags allObjects]];
     self.availableTags = availableTags;
 }
@@ -157,27 +160,6 @@ typedef NS_ENUM(NSInteger, ActiveSection) {
 
     // Ajusta el ancho de las tablas al de la pantalla
     [self __updateTablesWidth:FALSE];
-    
-
-    //****************************************************************************************************
-    if(!self.moContext) {
-        self.moContext = [BaseCoreDataService moContext];
-        NSArray *pointsByName = [MPoint allWithName:@"Iglesia de San Pedro" sortOrder:@[MBaseOrderByNameAsc] inContext:self.moContext];
-        MPoint *point = pointsByName[0];
-        
-        //@TODO Hay que ordenarlo
-        self.assignedTags = [NSMutableArray arrayWithArray:[point.directNoAutoTags allObjects]];
-        for(int n=0;n<20;n++) {
-            [self.assignedTags addObject:[MTag tagWithFullName:[NSString stringWithFormat:@"un-tag-%d",n] inContext:self.moContext]];
-        }
-        //@TODO Hay que quitar los tags que sean automaticos
-        NSArray *allPoints = [MPoint allWithMap:point.map sortOrder:@[MBaseOrderNone]];
-        self.availableTags = [NSMutableSet set];
-        for(MTag *tag in [MPoint allTagsFromPoints:allPoints]) {
-            if(!tag.isAutoTagValue) [self.availableTags addObject:tag];
-        }
-    }
-    //****************************************************************************************************
     
     // Establece los tags, una vez filtrados los asignados, a la tabla de seleccion de disponibles
     [self.tagTableView setTagList:[self _filteredAvailableTags] selectedTags:nil expandedTags:nil];
@@ -243,12 +225,25 @@ typedef NS_ENUM(NSInteger, ActiveSection) {
 //---------------------------------------------------------------------------------------------------------------------
 - (IBAction)doneButtonAction:(UIBarButtonItem *)sender {
     
-    if(self.delegate && [self.delegate respondsToSelector:@selector(tagListEditor:assignedTags:)]) {
-        [self.delegate tagListEditor:self assignedTags:self.assignedTags];
+    if(self.delegate && [self.delegate respondsToSelector:@selector(tagListEditor:assignedTags:tagsRemoved:tagsAdded:)]) {
+        
+        // Calcula los cambios introducidos
+        NSSet *currentTags = self.initialAssignedTags;
+        NSSet *newTags = [NSSet setWithArray:self.assignedTags];
+        
+        NSMutableSet *tagsToRemove = [NSMutableSet setWithSet:currentTags];
+        [tagsToRemove minusSet:newTags];
+        
+        NSMutableSet *tagsToAdd = [NSMutableSet setWithSet:newTags];
+        [tagsToAdd minusSet:currentTags];
+    
+        // Avisa al delegate
+        [self.delegate tagListEditor:self assignedTags:self.assignedTags tagsRemoved:tagsToRemove tagsAdded:tagsToAdd];
     }
     
     [self dismissViewControllerAnimated:YES completion:^{
         self.moContext = nil;
+        self.initialAssignedTags = nil;
         self.assignedTags = nil;
         self.availableTags = nil;
     }];

@@ -107,9 +107,11 @@
         _pointOrder = order;
         
         // si ya hay elementos cargados hace la ordenacion en memoria
+        // En otro caso ya se ordenaran cuando se haga la busqueda
         if(_wpointList.count>0) {
             _wpointList = [self _reSortPoints:[NSMutableArray arrayWithArray:_wpointList]];
         }
+        
     }
 }
 
@@ -123,7 +125,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (NSSet *) tagList {
+- (NSSet *) tagsForPointList {
     
     if(!_wtagList && self.moContext) {
         [self _retrieveTagsFromStorage];
@@ -137,10 +139,28 @@
     _wtagList = nil;
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (void) resortPoints {
+    
+    // No tiene sentido reordenar si no hay un filtro "in memory" o si no hay puntos
+    if(_wpointList.count>0 && ([_pointOrder containsObject:InMemoryOrderByDistanceAsc] || [_pointOrder containsObject:InMemoryOrderByDistanceDes])) {
+        _wpointList = [self _reSortPoints:[NSMutableArray arrayWithArray:_wpointList]];
+    }
+}
+
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark Private methods
+//---------------------------------------------------------------------------------------------------------------------
+- (NSArray *) coreDataPointOrder {
+ 
+    NSMutableArray *cdPointOrder = [NSMutableArray arrayWithArray:_pointOrder];
+    [cdPointOrder removeObject:InMemoryOrderByDistanceAsc];
+    [cdPointOrder removeObject:InMemoryOrderByDistanceDes];
+    return  cdPointOrder;
+}
+
 //---------------------------------------------------------------------------------------------------------------------
 - (void) _retrievePointsFromStorage {
     
@@ -152,18 +172,22 @@
     if(!self.filterMap && self.filterTags.count==0) {
         
         // No hay filtro alguno. Se recuperan todos
-        _wpointList = [MPoint allInContext:self.moContext sortOrder:self.pointOrder includeMarkedAsDeleted:FALSE];
+        _wpointList = [MPoint allInContext:self.moContext sortOrder:self.coreDataPointOrder includeMarkedAsDeleted:FALSE];
         
     } else if(self.filterMap && self.filterTags.count==0) {
         
         // Solo se filtra por mapa
-        _wpointList = [MPoint allWithMap:self.filterMap sortOrder:self.pointOrder];
+        _wpointList = [MPoint allWithMap:self.filterMap sortOrder:self.coreDataPointOrder];
         
     } else {
         
         // Ordena por TAGGING (teniendo en cuenta el mapa)
         [self _retrievePointsWithTagging];
     }
+    
+    
+    // Reordena los puntos si tenia un elemento que fuerza a hacerla en memoria
+    [self resortPoints];
     
     [benchMark logTotalTime:@"All filtered points properly fectched (count=%ld)",_wpointList.count];
 }
@@ -221,7 +245,7 @@
     }
     
     // Se asigna el criterio de ordenacion
-    [request setSortDescriptors:[MBase sortDescriptorsByOrder:self.pointOrder fieldName:@"point."]];
+    [request setSortDescriptors:[MBase sortDescriptorsByOrder:self.coreDataPointOrder fieldName:@"point."]];
     
     // Se ejecuta y retorna el resultado
     NSError *localError = nil;
@@ -258,11 +282,11 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (NSMutableArray *) _reSortPoints:(NSMutableArray *)pointsToSort {
     
-    BenchMark *benchMark = [BenchMark benchMarkLogging:@"MComplexFilter:_reSortPoints"];
+    BenchMark *benchMark = [BenchMark benchMarkLogging:@"MComplexFilter:_reSortPoints (in memory)"];
     
     // Crea el criterio de ordenacion
     NSArray *sortDescriptors = [MBase sortDescriptorsByOrder:self.pointOrder];
-    
+
     // Filtra con los criterios indicados
     [pointsToSort sortUsingDescriptors:sortDescriptors];
     
