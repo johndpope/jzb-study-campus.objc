@@ -15,7 +15,7 @@ NSString *const kXMLReaderTextNodeKey = @"text";
 @property (nonatomic, strong) NSMutableString *textInProgress;
 @property (nonatomic, assign) NSError *__autoreleasing *errorPointer;
 
-- (id) initWithError:(NSError **)error;
+- (id) initWithError:(NSError * __autoreleasing *)error;
 - (NSDictionary *) objectWithData:(NSData *)data;
 
 @end
@@ -32,13 +32,13 @@ NSString *const kXMLReaderTextNodeKey = @"text";
 #pragma mark -
 #pragma mark Public methods
 
-+ (NSDictionary *) dictionaryForXMLData:(NSData *)data error:(NSError **)error {
++ (NSDictionary *) dictionaryForXMLData:(NSData *)data error:(NSError * __autoreleasing *)error {
     SimpleXMLReader *reader = [[SimpleXMLReader alloc] initWithError:error];
     NSDictionary *rootDictionary = [reader objectWithData:data];
     return rootDictionary;
 }
 
-+ (NSDictionary *) dictionaryForXMLString:(NSString *)string error:(NSError **)error {
++ (NSDictionary *) dictionaryForXMLString:(NSString *)string error:(NSError * __autoreleasing *)error {
     NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
     return [SimpleXMLReader dictionaryForXMLData:data error:error];
 }
@@ -46,7 +46,7 @@ NSString *const kXMLReaderTextNodeKey = @"text";
 #pragma mark -
 #pragma mark Parsing
 
-- (id) initWithError:(NSError **)error {
+- (id) initWithError:(NSError * __autoreleasing *)error {
     if(self = [super init]) {
         self.errorPointer = error;
     }

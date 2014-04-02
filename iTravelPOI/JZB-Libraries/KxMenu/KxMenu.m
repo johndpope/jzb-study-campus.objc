@@ -515,7 +515,7 @@ typedef enum {
             titleLabel.text = menuItem.title;
             titleLabel.font = titleFont;
             titleLabel.textAlignment = menuItem.alignment;
-            titleLabel.textColor = menuItem.foreColor ? menuItem.foreColor : [UIColor blackColor];
+            titleLabel.textColor = menuItem.foreColor ? menuItem.foreColor : self.tintColor;
             titleLabel.backgroundColor = [UIColor clearColor];
             titleLabel.autoresizingMask = UIViewAutoresizingNone;
             //titleLabel.backgroundColor = [UIColor greenColor];
@@ -782,9 +782,9 @@ typedef enum {
 
 @interface KxMenu()
 
-@property (nonatomic,strong) UIColor *tintColor;
-@property (nonatomic,strong) UIFont *titleFont;
-@property (nonatomic,strong) KxMenuView *menuView;
+@property (strong, nonatomic) UIColor *tintColor;
+@property (strong, nonatomic) UIFont *titleFont;
+@property (strong, nonatomic) KxMenuView *menuView;
 
 @end
 

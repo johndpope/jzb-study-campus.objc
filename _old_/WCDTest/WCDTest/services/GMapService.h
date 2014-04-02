@@ -25,10 +25,10 @@
 - (void) logout;
 - (BOOL) isLoggedIn;
 
-- (NSArray *) fetchUserMapList: (NSError **)error;
-- (TMap *)    fetchMapData:(TMap *)map error:(NSError **)error;
-- (TMap *)    createNewEmptyGMap: (TMap *)map error:(NSError **)error;
-- (TMap *)    deleteGMap: (TMap *)map error:(NSError **)error;
-- (TMap *)    updateGMap: (TMap *)map error:(NSError **)error;
+- (NSArray *) fetchUserMapList: (NSError * __autoreleasing *)error;
+- (TMap *)    fetchMapData:(TMap *)map error:(NSError * __autoreleasing *)error;
+- (TMap *)    createNewEmptyGMap: (TMap *)map error:(NSError * __autoreleasing *)error;
+- (TMap *)    deleteGMap: (TMap *)map error:(NSError * __autoreleasing *)error;
+- (TMap *)    updateGMap: (TMap *)map error:(NSError * __autoreleasing *)error;
 
 @end

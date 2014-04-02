@@ -84,7 +84,7 @@
 #pragma mark -
 #pragma mark CLASS methods
 // ---------------------------------------------------------------------------------------------------------------------
-+ (GM_Test *) testWithEmail:(NSString *)email password:(NSString *)password exitOnError:(BOOL)exitOnError error:(NSError **)err {
++ (GM_Test *) testWithEmail:(NSString *)email password:(NSString *)password exitOnError:(BOOL)exitOnError error:(NSError * __autoreleasing *)err {
 
     __autoreleasing NSError *localError = nil;
     if(err == nil) err = &localError;

@@ -15,6 +15,7 @@
 #import "RPointTag.h"
 #import "ErrorManagerService.h"
 #import "BenchMark.h"
+#import "NSString+JavaStr.h"
 
 
 
@@ -145,7 +146,7 @@
 #pragma mark -
 #pragma mark Public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) _deleteEntity {
+- (void) deleteEntity {
     
     // Marca el mapa como modificado y se elimina
     [self.map markAsModified];
@@ -154,24 +155,27 @@
     self.descr = nil;
     self.latitudeValue = self.longitudeValue = 0.0;
     
-    [super _deleteEntity];
+    [super deleteEntity];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) markAsDeleted:(BOOL) value {
     
+    [super markAsDeleted:value];
+
     if(self.markedAsDeletedValue != value) {
-        
-        [super _markAsDeleted:value];
-        
+       
         // Marca el mapa como modificado
         [self.map markAsModified];
-        
+    }
+    
+    if(value == TRUE) {
         // Borra la relacion con todos sus tags
-        for(RPointTag *rpt in self.rTags) {
+        for(RPointTag *rpt in [self.rTags copy]) {
             [rpt deleteEntity];
         }
     }
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -180,7 +184,7 @@
     // Marca el mapa como modificado
     [self.map markAsModified];
     
-    [super _markAsModified];
+    [super markAsModified];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -253,6 +257,76 @@
     }
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (void) removeAllNonAutoTags {
+    
+    for(MTag *tag in [self.directNoAutoTags copy]) {
+        [tag untagPoint:self];
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+// With format: $[tag1, tag2, ...]$
+- (NSString *) combinedDescAndTagsInfo {
+
+    NSMutableString *tagsText = [NSMutableString stringWithString:@""];
+    BOOL first = TRUE;
+    for(MTag *tag in self.directNoAutoTags) {
+        if(first) {
+            [tagsText appendString:tag.name];
+        } else {
+            [tagsText appendFormat:@", %@", tag.name];
+        }
+        first = FALSE;
+    }
+
+    if(tagsText.length>0) {
+        NSString *combinedValue = [NSString stringWithFormat:@"$[%@]$%@",tagsText,self.descr];
+        return combinedValue;
+    } else {
+        return self.descr;
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) updateFromCombinedDescAndTagsInfo:(NSString *)descAndTags {
+
+    // Borra los tags actuales porque seran sustituidos por los indicados
+    // En cualquier caso los Tags se sustituiran por el contenido
+    [self removeAllNonAutoTags];
+
+    // Busca la informacion de tags en el punto GMap
+    NSUInteger p1 = [descAndTags indexOf:@"$["];
+    NSUInteger p2 = [descAndTags indexOf:@"]$"];
+    if(p1==NSNotFound || p2==NSNotFound || p1>=p2) {
+        
+        // Pone la descripcion tal cual esta en el GMTPoint
+        [self updateDesc:descAndTags];
+        
+    } else {
+        
+        NSString *txt1 = [descAndTags subStrFrom:0 to:p1];
+        NSString *txt2 = [descAndTags subStrFrom:2+p2];
+        
+        // Extrae la descripcion "limpia"
+        NSString *cleanDesc = [NSString stringWithFormat:@"%@%@",txt1, txt2];
+        [self updateDesc:cleanDesc];
+        
+        // Extrae la informacion de los tags
+        NSString *tagsStr = [descAndTags subStrFrom:2+p1 to:p2];
+        
+        // Divide el contenido por las comas y establece los tags
+        NSArray *tagNames = [tagsStr componentsSeparatedByString:@","];
+        for(NSString *tagName in tagNames) {
+            NSString *trimmedName = [tagName trim];
+            if(trimmedName.length>0) {
+                MTag *tag = [MTag tagWithFullName:trimmedName inContext:self.managedObjectContext];
+                [tag tagPoint:self];
+            }
+        }
+    }
+
+}
 
 
 

@@ -78,14 +78,28 @@
     
     MTag *tag;
     
+    // Divide el nombre en tramos para normalizarlo
+    NSArray *allShortTagNames = [fullName componentsSeparatedByString:TAG_NAME_SEPARATOR];
+    NSMutableString *cleanFullName = [NSMutableString string];
+    for(NSString *tagShortName in allShortTagNames) {
+
+        NSString *trimmedShortName = [tagShortName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        if(trimmedShortName==nil || trimmedShortName.length==0) continue;
+        
+        // Crea el nombre completo del tag
+        if(cleanFullName.length>0) {
+            [cleanFullName appendFormat:@" %@ ",TAG_NAME_SEPARATOR];
+        }
+        [cleanFullName appendString:trimmedShortName];
+    }
+
     // Comprueba el nombre
-    fullName = [fullName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if(!fullName || fullName.length==0) {
+    if(cleanFullName.length==0) {
         return nil;
     }
     
     // Busca el Tag requerido por si ya existe. En cuyo caso lo retorna
-    tag = [MTag _searchTagWithFullName:fullName inContext:moContext];
+    tag = [MTag _searchTagWithFullName:cleanFullName inContext:moContext];
     if(tag) {
         return tag;
     }
@@ -93,7 +107,6 @@
     // Como no existe, itera el path de categorias "padre" para crear la ultima
     MTag *parentTag = nil;
     NSMutableString *partialFullName = [NSMutableString string];
-    NSArray *allShortTagNames = [fullName componentsSeparatedByString:TAG_NAME_SEPARATOR];
     for(NSString *tagShortName in allShortTagNames) {
         
         NSString *trimmedShortName = [tagShortName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];

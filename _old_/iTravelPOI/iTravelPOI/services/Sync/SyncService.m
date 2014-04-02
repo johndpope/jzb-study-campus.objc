@@ -22,8 +22,8 @@
 //---------------------------------------------------------------------------------------------------------------------
 @interface SyncService ()
 
-- (NSMutableArray *) _compareMaps:(NSError **)error;
-- (void)             _syncMaps:(NSArray *)compItems error:(NSError **)error;
+- (NSMutableArray *) _compareMaps:(NSError * __autoreleasing *)error;
+- (void)             _syncMaps:(NSArray *)compItems error:(NSError * __autoreleasing *)error;
 
 @end
 
@@ -115,7 +115,7 @@
 #pragma mark -
 #pragma mark PRIVATE methods
 //---------------------------------------------------------------------------------------------------------------------
-- (NSMutableArray *) _compareMaps:(NSError **)error {
+- (NSMutableArray *) _compareMaps:(NSError * __autoreleasing *)error {
     
     NSLog(@"SyncService - _compareMapsInCtx");
     
@@ -151,7 +151,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) _syncMaps:(NSArray *)compItems error:(NSError **)error {
+- (void) _syncMaps:(NSArray *)compItems error:(NSError * __autoreleasing *)error {
     
     NSLog(@"SyncService - _syncMapsInCtx");
 

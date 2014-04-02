@@ -33,8 +33,8 @@
 @property (nonatomic, strong) GMapDataFetcher *fetcher;
 
 
-- (GMTMap *) parseDictMapData:(NSDictionary *)dictMapData error:(NSError **)err;
-- (GMTPoint *) parseDictPointData:(NSDictionary *)dictPointData error:(NSError **)err;
+- (GMTMap *) parseDictMapData:(NSDictionary *)dictMapData error:(NSError * __autoreleasing *)err;
+- (GMTPoint *) parseDictPointData:(NSDictionary *)dictPointData error:(NSError * __autoreleasing *)err;
 - (BOOL) parseDictBatchData:(NSArray *)arrayBatchData batchCmds:(NSArray *)batchCmds allErrors:(NSMutableArray *)allErrors;
 
 - (NSError *) anError:(NSString *)desc withError:(NSError *)prevErr data:(id)data;
@@ -58,7 +58,7 @@
 #pragma mark -
 #pragma mark CLASS methods
 // ---------------------------------------------------------------------------------------------------------------------
-+ (GMapService *) serviceWithEmail:(NSString *)email password:(NSString *)password error:(NSError **)err {
++ (GMapService *) serviceWithEmail:(NSString *)email password:(NSString *)password error:(NSError * __autoreleasing *)err {
 
     DDLogVerbose(@"GMapService - initWithEmailAndPassword");
 
@@ -79,7 +79,7 @@
 #pragma mark -
 #pragma mark General PUBLIC MAP methods
 // ---------------------------------------------------------------------------------------------------------------------
-- (NSArray *) getMapList:(NSError **)err {
+- (NSArray *) getMapList:(NSError * __autoreleasing *)err {
 
     // ------------------------------------------------------------------------------
     // URL con el formato:URL_FETCH_ALL_MAPS
@@ -136,7 +136,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (GMTMap *) getMapFromEditURL:(NSString *)mapEditURL error:(NSError **)err {
+- (GMTMap *) getMapFromEditURL:(NSString *)mapEditURL error:(NSError * __autoreleasing *)err {
 
     // ------------------------------------------------------------------------------
     // URL con el formato: http://maps.google.com/maps/feeds/maps/userID/full/mapID
@@ -165,7 +165,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (GMTMap *) addMap:(GMTMap *)map error:(NSError **)err {
+- (GMTMap *) addMap:(GMTMap *)map error:(NSError * __autoreleasing *)err {
 
     // --------------------------------------------------------------------------------
     // URL con el formato: http://maps.google.com/maps/feeds/maps/userID/full
@@ -213,7 +213,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (GMTMap *) updateMap:(GMTMap *)map error:(NSError **)err {
+- (GMTMap *) updateMap:(GMTMap *)map error:(NSError * __autoreleasing *)err {
 
     // --------------------------------------------------------------------------------
     // URL con el formato: http://maps.google.com/maps/feeds/maps/userID/full/mapID
@@ -259,7 +259,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) deleteMap:(GMTMap *)map error:(NSError **)err {
+- (BOOL) deleteMap:(GMTMap *)map error:(NSError * __autoreleasing *)err {
 
     // --------------------------------------------------------------------------------
     // URL con el formato: http://maps.google.com/maps/feeds/maps/userID/full/mapID
@@ -298,7 +298,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (NSArray *) getPointListFromMap:(GMTMap *)map error:(NSError **)err {
+- (NSArray *) getPointListFromMap:(GMTMap *)map error:(NSError * __autoreleasing *)err {
 
     // --------------------------------------------------------------------------------
     // URL con el formato: http://maps.google.com/maps/feeds/features/userID/mapID/full
@@ -376,7 +376,7 @@
 #pragma mark -
 #pragma mark General PUBLIC POINT methods
 // ---------------------------------------------------------------------------------------------------------------------
-- (GMTPoint *) addPoint:(GMTPoint *)point inMap:(GMTMap *)map error:(NSError **)err {
+- (GMTPoint *) addPoint:(GMTPoint *)point inMap:(GMTMap *)map error:(NSError * __autoreleasing *)err {
 
     // --------------------------------------------------------------------------------
     // URL con el formato: http://maps.google.com/maps/feeds/features/userID/mapID/full
@@ -430,7 +430,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (GMTPoint *) updatePoint:(GMTPoint *)point inMap:(GMTMap *)map error:(NSError **)err {
+- (GMTPoint *) updatePoint:(GMTPoint *)point inMap:(GMTMap *)map error:(NSError * __autoreleasing *)err {
 
     // --------------------------------------------------------------------------------
     // URL con el formato: http://maps.google.com/maps/feeds/features/userID/mapID/full/featureID
@@ -485,7 +485,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) deletePoint:(GMTPoint *)point inMap:(GMTMap *)map error:(NSError **)err {
+- (BOOL) deletePoint:(GMTPoint *)point inMap:(GMTMap *)map error:(NSError * __autoreleasing *)err {
 
     // --------------------------------------------------------------------------------
     // URL con el formato: http://maps.google.com/maps/feeds/features/userID/mapID/full/featureID
@@ -794,7 +794,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (GMTMap *) parseDictMapData:(NSDictionary *)dictMapData error:(NSError **)err {
+- (GMTMap *) parseDictMapData:(NSDictionary *)dictMapData error:(NSError * __autoreleasing *)err {
 
     GMTMap __block *map = [GMTMap emptyMap];
 
@@ -822,7 +822,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (GMTPoint *) parseDictPointData:(NSDictionary *)dictPointData error:(NSError **)err {
+- (GMTPoint *) parseDictPointData:(NSDictionary *)dictPointData error:(NSError * __autoreleasing *)err {
 
     GMTPoint __block *point = [GMTPoint emptyPoint];
 

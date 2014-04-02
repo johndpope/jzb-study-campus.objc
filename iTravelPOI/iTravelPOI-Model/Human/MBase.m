@@ -233,11 +233,6 @@ NSString *const InMemoryOrderByDistanceDes = @"InMemoryOrderByDistanceDes";  // 
 #pragma mark -
 #pragma mark Public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) deleteEntity {
-    @throw [NSException exceptionWithName:@"AbstractMethodException" reason:@"Abstract method 'deleteEntity' must be implemented by subclass" userInfo:nil];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
 - (BOOL) updateName:(NSString *)value {
     
     if((value || self.name) && ![self.name isEqualToString:value]) {
@@ -259,8 +254,17 @@ NSString *const InMemoryOrderByDistanceDes = @"InMemoryOrderByDistanceDes";  // 
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) markAsModified {
-    @throw [NSException exceptionWithName:@"AbstractMethodException" reason:@"Abstract method 'markAsModified' must be implemented by subclass" userInfo:nil];
+    self.tUpdate = [NSDate date];
 }
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) deleteEntity {
+    
+    self.name = nil;
+    self.icon = nil;
+    [self.managedObjectContext deleteObject:self];
+}
+
 
 
 
@@ -301,18 +305,6 @@ NSString *const InMemoryOrderByDistanceDes = @"InMemoryOrderByDistanceDes";  // 
     [self updateIcon:icon];
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _deleteEntity {
-    self.name = nil;
-    self.icon = nil;
-    [self.managedObjectContext deleteObject:self];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _markAsModified {
-    
-    self.tUpdate = [NSDate date];
-}
 
 
 

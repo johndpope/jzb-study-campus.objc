@@ -37,7 +37,7 @@ typedef BOOL (^CheckCancelBlock)(void);
 - (id) init __attribute__ ((unavailable ("init not available")));
 #endif
 
-+ (GMapService *) serviceWithEmail:(NSString *)email password:(NSString *)password error:(NSError **)err;
++ (GMapService *) serviceWithEmail:(NSString *)email password:(NSString *)password error:(NSError * __autoreleasing *)err;
 
 
 
@@ -45,20 +45,19 @@ typedef BOOL (^CheckCancelBlock)(void);
 #pragma mark -
 #pragma mark INSTANCE public methods
 // ---------------------------------------------------------------------------------------------------------------------
-- (NSArray *) getMapList:(NSError **)err;
-- (GMTMap *) getMapFromEditURL:(NSString *)mapEditURL error:(NSError **)err;
-- (GMTMap *) addMap:(GMTMap *)map error:(NSError **)err;
-- (GMTMap *) updateMap:(GMTMap *)map error:(NSError **)err;
-- (BOOL) deleteMap:(GMTMap *)map error:(NSError **)err;
+- (NSArray *) getMapList:(NSError * __autoreleasing *)err;
+- (GMTMap *)  getMapFromEditURL:(NSString *)mapEditURL error:(NSError * __autoreleasing *)err;
+- (GMTMap *)  addMap:(GMTMap *)map error:(NSError * __autoreleasing *)err;
+- (GMTMap *)  updateMap:(GMTMap *)map error:(NSError * __autoreleasing *)err;
+- (BOOL)      deleteMap:(GMTMap *)map error:(NSError * __autoreleasing *)err;
 
 
-- (NSArray *) getPointListFromMap:(GMTMap *)map error:(NSError **)err;
+- (NSArray *)  getPointListFromMap:(GMTMap *)map error:(NSError * __autoreleasing *)err;
+- (GMTPoint *) addPoint:(GMTPoint *)point inMap:(GMTMap *)map error:(NSError * __autoreleasing *)err;
+- (GMTPoint *) updatePoint:(GMTPoint *)point inMap:(GMTMap *)map error:(NSError * __autoreleasing *)err;
+- (BOOL)       deletePoint:(GMTPoint *)point inMap:(GMTMap *)map error:(NSError * __autoreleasing *)err;
+
 
 - (BOOL) processBatchCmds:(NSArray *)batchCmds inMap:(GMTMap *)map allErrors:(NSMutableArray *)allErrors checkCancelBlock:(CheckCancelBlock)checkCancelBlock;
-
-
-- (GMTPoint *) addPoint:(GMTPoint *)point inMap:(GMTMap *)map error:(NSError **)err;
-- (GMTPoint *) updatePoint:(GMTPoint *)point inMap:(GMTMap *)map error:(NSError **)err;
-- (BOOL) deletePoint:(GMTPoint *)point inMap:(GMTMap *)map error:(NSError **)err;
 
 @end

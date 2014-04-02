@@ -28,7 +28,7 @@
 @end
 
 @interface GTMNSJSONSerialization : NSObject
-+ (id)JSONObjectWithData:(NSData *)data options:(NSUInteger)opt error:(NSError **)error;
++ (id)JSONObjectWithData:(NSData *)data options:(NSUInteger)opt error:(NSError * __autoreleasing *)error;
 @end
 
 @implementation GTMHTTPFetcherTestServer

@@ -1,5 +1,5 @@
 //
-// GMapDataFetcher.h
+// GMapHttpDataFetcher.h
 // GMapService
 //
 // Created by Jose Zarzuela on 02/01/13.
@@ -21,7 +21,7 @@
 #pragma mark -
 #pragma mark Interface definition
 // ---------------------------------------------------------------------------------------------------------------------
-@interface GMapDataFetcher : NSObject
+@interface GMapHttpDataFetcher : NSObject
 
 
 
@@ -36,10 +36,10 @@
 #pragma mark -
 #pragma mark INSTANCE public methods
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) loginWithEmail:(NSString *)email password:(NSString *)password error:(NSError **)err;
-- (NSDictionary *) getServiceInfo:(NSString *)feedStrURL error:(NSError **)err;
-- (NSDictionary *) postServiceInfo:(NSString *)feedStrURL feedData:(NSString *)feedData error:(NSError **)err;
-- (NSDictionary *) updateServiceInfo:(NSString *)feedStrURL feedData:(NSString *)feedData error:(NSError **)err;
-- (BOOL) deleteServiceInfo:(NSString *)feedStrURL feedData:(NSString *)feedData error:(NSError **)err;
+- (BOOL) loginWithEmail:(NSString *)email password:(NSString *)password error:(NSError * __autoreleasing *)err;
+- (NSDictionary *) gmapGET:(NSString *)feedStrURL error:(NSError * __autoreleasing *)err;
+- (NSDictionary *) gmapPOST:(NSString *)feedStrURL feedData:(NSString *)feedData error:(NSError * __autoreleasing *)err;
+- (NSDictionary *) gmapUPDATE:(NSString *)feedStrURL feedData:(NSString *)feedData error:(NSError * __autoreleasing *)err;
+- (BOOL)           gmapDELETE:(NSString *)feedStrURL feedData:(NSString *)feedData error:(NSError * __autoreleasing *)err;
 
 @end

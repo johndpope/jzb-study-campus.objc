@@ -18,18 +18,18 @@ typedef enum {
     ST_Comp_Create_Local = 0, ST_Comp_Create_Remote = 1,
     ST_Comp_Delete_Local = 2, ST_Comp_Delete_Remote = 3,
     ST_Comp_Update_Local = 4, ST_Comp_Update_Remote = 5
-} TCompStatusType;
+} TCompStatus;
 
-extern const NSString *TCompStatusType_Names[];
+extern const NSString *TCompStatus_Names[];
 
 typedef enum {
     ST_Run_None = 0,
     ST_Run_Processing = 1,
     ST_Run_OK = 2,
     ST_Run_Failed = 3,
-} TRunStatusType;
+} TRunStatus;
 
-extern const NSString *TRunStatusType_Names[];
+extern const NSString *TRunStatus_Names[];
 
 
 
@@ -39,11 +39,11 @@ extern const NSString *TRunStatusType_Names[];
 // *********************************************************************************************************************
 @interface GMTCompTuple : NSObject
 
-@property (nonatomic, assign) TCompStatusType        compStatus;
-@property (nonatomic, assign) TRunStatusType         runStatus;
-@property (nonatomic, strong) id<GMPComparableLocal> localItem;
-@property (nonatomic, strong) id<GMPComparable>      remoteItem;
-@property (nonatomic, assign) BOOL                   conflicted;
+@property (assign, nonatomic) TCompStatus            compStatus;
+@property (assign, nonatomic) TRunStatus             runStatus;
+@property (strong, nonatomic) id<GMPComparableLocal> localItem;
+@property (strong, nonatomic) id<GMPComparable>      remoteItem;
+@property (assign, nonatomic) BOOL                   conflicted;
 
 
 // =====================================================================================================================
@@ -54,7 +54,7 @@ extern const NSString *TRunStatusType_Names[];
 - (id) init __attribute__ ((unavailable ("init not available")));
 #endif
 
-+ (GMTCompTuple *) tupleWithCompStatus:(TCompStatusType)compStatus
++ (GMTCompTuple *) tupleWithCompStatus:(TCompStatus)compStatus
                              localItem:(id<GMPComparableLocal>)localItem
                             remoteItem:(id<GMPComparable>)remoteItem
                             conflicted:(BOOL)conflicted;

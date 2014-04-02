@@ -56,12 +56,12 @@ typedef NS_ENUM(NSInteger, ActiveSection) {
 @property (strong, nonatomic)   NSMutableArray                          *assignedTags;
 @property (strong, nonatomic)   NSMutableSet                            *availableTags;
 
-@property (nonatomic, assign)   ActiveSection                           activeSection;
+@property (assign, nonatomic)   ActiveSection                           activeSection;
 @property (weak, nonatomic)     IBOutlet NSLayoutConstraint             *constraintSelectionLblLeft;
-@property (nonatomic, assign)   CGFloat                                 lblDistX;
+@property (assign, nonatomic)   CGFloat                                 lblDistX;
 
 @property (strong, nonatomic)   NSArray                                 *searchedTags;
-@property (nonatomic, assign)   BOOL                                    isEditingTagName;
+@property (assign, nonatomic)   BOOL                                    isEditingTagName;
 
 @end
 

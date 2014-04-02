@@ -34,8 +34,8 @@
                      error:(NSError**)error;
 
 + (id)objectWithString:(NSString *)jsonStr
-                 error:(NSError **)error;
+                 error:(NSError * __autoreleasing *)error;
 
 + (id)objectWithData:(NSData *)jsonData
-               error:(NSError **)error;
+               error:(NSError * __autoreleasing *)error;
 @end

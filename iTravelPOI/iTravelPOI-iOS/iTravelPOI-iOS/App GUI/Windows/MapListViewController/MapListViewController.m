@@ -13,6 +13,7 @@
 
 
 
+
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark Private Enumerations & definitions
@@ -26,10 +27,11 @@
 @interface MapListViewController () <UITableViewDelegate, UITableViewDataSource>
 
 
-@property (nonatomic) IBOutlet UIBarButtonItem* revealButtonItem;
-@property (weak, nonatomic) IBOutlet UITableView *tableViewItemList;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem    *revealButtonItem;
+@property (weak, nonatomic) IBOutlet UITableView        *tableViewItemList;
 
-@property (strong, nonatomic) NSArray *mapList;
+@property (strong, nonatomic) NSManagedObjectContext    *moContext;
+@property (strong, nonatomic) NSArray                   *mapList;
 
 @end
 
@@ -47,12 +49,6 @@
 #pragma mark -
 #pragma mark CLASS methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (MapListViewController *) mapListViewControllerWithContext:(NSManagedObjectContext *)moContext {
-    
-    MapListViewController *me = [[MapListViewController alloc] initWithNibName:@"MapListViewController" bundle:nil];
-    me.moContext = moContext;
-    return me;
-}
 
 
 //=====================================================================================================================
@@ -87,7 +83,8 @@
     }
     
     self.mapList = [MMap allMapsinContext:self.moContext includeMarkedAsDeleted:FALSE];
-        
+    [self.tableViewItemList reloadData];
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------

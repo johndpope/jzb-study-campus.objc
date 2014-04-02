@@ -26,8 +26,8 @@
 @interface MPointMapAnnotation : MKPointAnnotation
 
 
-@property (strong, nonatomic, readonly) MPoint *point;
-@property (strong, nonatomic, readonly) UIImage *image;
+@property (strong, readonly, nonatomic) MPoint *point;
+@property (strong, readonly, nonatomic) UIImage *image;
 
 
 //=====================================================================================================================

@@ -26,8 +26,8 @@
 @interface MComplexFilter ()
 
 // Redefine las propiedades como de escritura
-@property (nonatomic, strong)           NSArray                 *pointList;
-@property (nonatomic, strong)           NSSet                   *tagList;
+@property (strong, nonatomic)           NSArray                 *pointList;
+@property (strong, nonatomic)           NSSet                   *tagList;
 
 @end
 

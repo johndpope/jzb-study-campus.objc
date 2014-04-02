@@ -59,7 +59,7 @@
 #pragma mark -
 #pragma mark General PUBLIC methods
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) loginWithEmail:(NSString *)email password:(NSString *)password error:(NSError **)err {
+- (BOOL) loginWithEmail:(NSString *)email password:(NSString *)password error:(NSError * __autoreleasing *)err {
 
     // DDLogVerbose(@"GMapDataFetcher - loginWithEmail");
 
@@ -122,7 +122,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (NSDictionary *) getServiceInfo:(NSString *)feedStrURL error:(NSError **)err {
+- (NSDictionary *) getServiceInfo:(NSString *)feedStrURL error:(NSError * __autoreleasing *)err {
 
     // DDLogVerbose(@"GMapDataFetcher - getServiceInfo");
 
@@ -139,7 +139,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (NSDictionary *) postServiceInfo:(NSString *)feedStrURL feedData:(NSString *)feedData error:(NSError **)err {
+- (NSDictionary *) postServiceInfo:(NSString *)feedStrURL feedData:(NSString *)feedData error:(NSError * __autoreleasing *)err {
 
     // DDLogVerbose(@"GMapDataFetcher - putServiceInfo");
 
@@ -157,7 +157,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (NSDictionary *) updateServiceInfo:(NSString *)feedStrURL feedData:(NSString *)feedData error:(NSError **)err {
+- (NSDictionary *) updateServiceInfo:(NSString *)feedStrURL feedData:(NSString *)feedData error:(NSError * __autoreleasing *)err {
 
     // DDLogVerbose(@"GMapDataFetcher - putServiceInfo");
 
@@ -176,7 +176,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) deleteServiceInfo:(NSString *)feedStrURL feedData:(NSString *)feedData error:(NSError **)err {
+- (BOOL) deleteServiceInfo:(NSString *)feedStrURL feedData:(NSString *)feedData error:(NSError * __autoreleasing *)err {
 
     // DDLogVerbose(@"GMapDataFetcher - deleteServiceInfo");
 
@@ -230,7 +230,7 @@
 
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (NSDictionary *) _processNetworkRequest:(NSMutableURLRequest *)request error:(NSError **)err {
+- (NSDictionary *) _processNetworkRequest:(NSMutableURLRequest *)request error:(NSError * __autoreleasing *)err {
     
     [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
     [request setTimeoutInterval:GMAPDataFetcher_Timeout];

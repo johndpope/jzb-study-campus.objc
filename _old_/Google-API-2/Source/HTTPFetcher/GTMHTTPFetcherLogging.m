@@ -34,8 +34,8 @@
 
 // If GTMNSJSONSerialization is available, it is used for formatting JSON
 @interface GTMNSJSONSerialization : NSObject
-+ (NSData *)dataWithJSONObject:(id)obj options:(NSUInteger)opt error:(NSError **)error;
-+ (id)JSONObjectWithData:(NSData *)data options:(NSUInteger)opt error:(NSError **)error;
++ (NSData *)dataWithJSONObject:(id)obj options:(NSUInteger)opt error:(NSError * __autoreleasing *)error;
++ (id)JSONObjectWithData:(NSData *)data options:(NSUInteger)opt error:(NSError * __autoreleasing *)error;
 @end
 
 // Otherwise, if SBJSON is available, it is used for formatting JSON

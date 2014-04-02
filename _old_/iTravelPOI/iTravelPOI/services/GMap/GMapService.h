@@ -57,11 +57,11 @@ typedef void (^TBlock_UpdateMapDataFinished)(MEMap *map, NSError *error);
 - (SRVC_ASYNCHRONOUS) asyncUpdateGMap:(MEMap *)map callback:(TBlock_UpdateMapDataFinished)callbackBlock;
 
 // Synchrouns methods
-- (NSArray *)  fetchUserMapList: (NSError **)error;
-- (MEMap *)    fetchMapData:(MEMap *)map error:(NSError **)error;
-- (MEMap *)    createNewEmptyGMap: (MEMap *)map error:(NSError **)error;
-- (MEMap *)    deleteGMap: (MEMap *)map error:(NSError **)error;
-- (MEMap *)    updateGMap: (MEMap *)map error:(NSError **)error;
+- (NSArray *)  fetchUserMapList: (NSError * __autoreleasing *)error;
+- (MEMap *)    fetchMapData:(MEMap *)map error:(NSError * __autoreleasing *)error;
+- (MEMap *)    createNewEmptyGMap: (MEMap *)map error:(NSError * __autoreleasing *)error;
+- (MEMap *)    deleteGMap: (MEMap *)map error:(NSError * __autoreleasing *)error;
+- (MEMap *)    updateGMap: (MEMap *)map error:(NSError * __autoreleasing *)error;
 
 
 @end

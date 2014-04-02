@@ -149,13 +149,13 @@ typedef NSUInteger GDataXMLNodeKind;
 
 // This is the preferred entry point for nodesForXPath.  This takes an explicit
 // namespace dictionary (keys are prefixes, values are URIs).
-- (NSArray *)nodesForXPath:(NSString *)xpath namespaces:(NSDictionary *)namespaces error:(NSError **)error;
+- (NSArray *)nodesForXPath:(NSString *)xpath namespaces:(NSDictionary *)namespaces error:(NSError * __autoreleasing *)error;
 
 // This implementation of nodesForXPath registers namespaces only from the
 // document's root node.  _def_ns may be used as a prefix for the default
 // namespace, though there's no guarantee that the default namespace will
 // be consistenly the same namespace in server responses.
-- (NSArray *)nodesForXPath:(NSString *)xpath error:(NSError **)error;
+- (NSArray *)nodesForXPath:(NSString *)xpath error:(NSError * __autoreleasing *)error;
 
 // access to the underlying libxml node; be sure to release the cached values
 // if you change the underlying tree at all
@@ -167,7 +167,7 @@ typedef NSUInteger GDataXMLNodeKind;
 
 @interface GDataXMLElement : GDataXMLNode
 
-- (id)initWithXMLString:(NSString *)str error:(NSError **)error;
+- (id)initWithXMLString:(NSString *)str error:(NSError * __autoreleasing *)error;
 
 - (NSArray *)namespaces;
 - (void)setNamespaces:(NSArray *)namespaces;
@@ -194,8 +194,8 @@ typedef NSUInteger GDataXMLNodeKind;
   xmlDoc* xmlDoc_; // strong; always free'd in dealloc
 }
 
-- (id)initWithXMLString:(NSString *)str options:(unsigned int)mask error:(NSError **)error;
-- (id)initWithData:(NSData *)data options:(unsigned int)mask error:(NSError **)error;
+- (id)initWithXMLString:(NSString *)str options:(unsigned int)mask error:(NSError * __autoreleasing *)error;
+- (id)initWithData:(NSData *)data options:(unsigned int)mask error:(NSError * __autoreleasing *)error;
 
 // initWithRootElement uses a copy of the argument as the new document's root
 - (id)initWithRootElement:(GDataXMLElement *)element;
@@ -209,13 +209,13 @@ typedef NSUInteger GDataXMLNodeKind;
 
 // This is the preferred entry point for nodesForXPath.  This takes an explicit
 // namespace dictionary (keys are prefixes, values are URIs).
-- (NSArray *)nodesForXPath:(NSString *)xpath namespaces:(NSDictionary *)namespaces error:(NSError **)error;
+- (NSArray *)nodesForXPath:(NSString *)xpath namespaces:(NSDictionary *)namespaces error:(NSError * __autoreleasing *)error;
 
 // This implementation of nodesForXPath registers namespaces only from the
 // document's root node.  _def_ns may be used as a prefix for the default
 // namespace, though there's no guarantee that the default namespace will
 // be consistenly the same namespace in server responses.
-- (NSArray *)nodesForXPath:(NSString *)xpath error:(NSError **)error;
+- (NSArray *)nodesForXPath:(NSString *)xpath error:(NSError * __autoreleasing *)error;
 
 - (NSString *)description;
 @end

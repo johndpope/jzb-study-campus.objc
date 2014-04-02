@@ -23,8 +23,8 @@
 
 @property (weak, nonatomic)                 IBOutlet    NSLayoutConstraint  *kbContentVTrailing;
 
-@property (nonatomic, assign, readonly)     BOOL                            isKeyboardVisible;
-@property (nonatomic, assign, readonly)     CGRect                          keyboardRect;
+@property (assign, readonly, nonatomic)     BOOL                            isKeyboardVisible;
+@property (assign, readonly, nonatomic)     CGRect                          keyboardRect;
 
 
 - (void) keyboardWillShow;

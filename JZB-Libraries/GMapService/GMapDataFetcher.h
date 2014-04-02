@@ -36,10 +36,10 @@
 #pragma mark -
 #pragma mark INSTANCE public methods
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) loginWithEmail:(NSString *)email password:(NSString *)password error:(NSError **)err;
-- (NSDictionary *) getServiceInfo:(NSString *)feedStrURL error:(NSError **)err;
-- (NSDictionary *) postServiceInfo:(NSString *)feedStrURL feedData:(NSString *)feedData error:(NSError **)err;
-- (NSDictionary *) updateServiceInfo:(NSString *)feedStrURL feedData:(NSString *)feedData error:(NSError **)err;
-- (BOOL) deleteServiceInfo:(NSString *)feedStrURL feedData:(NSString *)feedData error:(NSError **)err;
+- (BOOL) loginWithEmail:(NSString *)email password:(NSString *)password error:(NSError * __autoreleasing *)err;
+- (NSDictionary *) getServiceInfo:(NSString *)feedStrURL error:(NSError * __autoreleasing *)err;
+- (NSDictionary *) postServiceInfo:(NSString *)feedStrURL feedData:(NSString *)feedData error:(NSError * __autoreleasing *)err;
+- (NSDictionary *) updateServiceInfo:(NSString *)feedStrURL feedData:(NSString *)feedData error:(NSError * __autoreleasing *)err;
+- (BOOL) deleteServiceInfo:(NSString *)feedStrURL feedData:(NSString *)feedData error:(NSError * __autoreleasing *)err;
 
 @end

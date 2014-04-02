@@ -464,7 +464,7 @@ typedef void *GTLServiceUploadProgressBlock;
 - (BOOL)waitForTicket:(GTLServiceTicket *)ticket
               timeout:(NSTimeInterval)timeoutInSeconds
         fetchedObject:(GTLObject **)outObjectOrNil
-                error:(NSError **)outErrorOrNil;
+                error:(NSError * __autoreleasing *)outErrorOrNil;
 @end
 
 #pragma mark -

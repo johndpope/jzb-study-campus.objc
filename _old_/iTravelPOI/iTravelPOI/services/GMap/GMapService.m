@@ -248,7 +248,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 // Consigue la lista de mapas de los que el usuario logado es dueño.
 // Los mapas estan vacios (sin puntos)
-- (NSArray *) fetchUserMapList:(NSError **)error {
+- (NSArray *) fetchUserMapList:(NSError * __autoreleasing *)error {
     
     NSLog(@"GMapService - fetchUserMapList");
     
@@ -290,7 +290,7 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 // Consigue la información, puntos y demas, del mapa pasado como parametro.
-- (MEMap *) fetchMapData:(MEMap *)map error:(NSError **)error {
+- (MEMap *) fetchMapData:(MEMap *)map error:(NSError * __autoreleasing *)error {
     
     NSLog(@"GMapService - fetchMapData (%@-%@)",map.name,map.GID);
     
@@ -336,7 +336,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 // OJO: El ID del mapa, puesto que es nuevo, se debe actualizar de la creación para que se pueda actualizar luego
 // Lo mismo pasa con los tiempos de creación y actualización
-- (MEMap *) createNewEmptyGMap:(MEMap *)map error:(NSError **)error {
+- (MEMap *) createNewEmptyGMap:(MEMap *)map error:(NSError * __autoreleasing *)error {
     
     NSLog(@"GMapService - _createNewGMap (%@-%@)", map.name, map.GID);
     
@@ -391,7 +391,7 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (MEMap *) deleteGMap: (MEMap *)map error:(NSError **)error {
+- (MEMap *) deleteGMap: (MEMap *)map error:(NSError * __autoreleasing *)error {
     
     NSLog(@"GMapService - deleteGMap (%@-%@)",map.name,map.GID);
     
@@ -435,7 +435,7 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (MEMap *) updateGMap: (MEMap *)map error:(NSError **)error {
+- (MEMap *) updateGMap: (MEMap *)map error:(NSError * __autoreleasing *)error {
     
     NSLog(@"GMapService - updateGMap (%@-%@)",map.name,map.GID);
     

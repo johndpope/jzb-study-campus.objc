@@ -1,12 +1,12 @@
 //
-// GMapDataFetcher.m
+// GMapHttpDataFetcher.m
 // GMapService
 //
 // Created by Jose Zarzuela on 02/01/13.
 // Copyright (c) 2013 Jose Zarzuela. All rights reserved.
 //
 
-#import "GMapDataFetcher.h"
+#import "GMapHttpDataFetcher.h"
 #import "DDLog.h"
 #import "SimpleXMLReader.h"
 #import "NetworkProgressWheelController.h"
@@ -18,7 +18,7 @@
 #pragma mark -
 #pragma mark PRIVATE CONSTANTS and C-Methods definitions
 // ---------------------------------------------------------------------------------------------------------------------
-#define GMAPDataFetcher_Timeout 10
+#define GMapHttpDataFetcher_Timeout 10
 
 
 
@@ -26,9 +26,9 @@
 #pragma mark -
 #pragma mark PRIVATE interface definition
 // *********************************************************************************************************************
-@interface GMapDataFetcher ()
+@interface GMapHttpDataFetcher ()
 
-@property (nonatomic, strong) NSString *authToken;
+@property (strong, nonatomic) NSString *authToken;
 
 @end
 
@@ -38,9 +38,10 @@
 #pragma mark -
 #pragma mark Implementation
 // *********************************************************************************************************************
-@implementation GMapDataFetcher
+@implementation GMapHttpDataFetcher
 
-@synthesize authToken = _authToken;
+
+
 
 
 // =====================================================================================================================
@@ -53,9 +54,9 @@
 #pragma mark -
 #pragma mark General PUBLIC methods
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) loginWithEmail:(NSString *)email password:(NSString *)password error:(NSError **)err {
+- (BOOL) loginWithEmail:(NSString *)email password:(NSString *)password error:(NSError * __autoreleasing *)err {
 
-    // DDLogVerbose(@"GMapDataFetcher - loginWithEmail");
+    // DDLogVerbose(@"GMapHttpDataFetcher - loginWithEmail");
 
 
     __autoreleasing NSError *localError = nil;
@@ -79,7 +80,7 @@
 
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:loginURL];
     [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
-    [request setTimeoutInterval:GMAPDataFetcher_Timeout];
+    [request setTimeoutInterval:GMapHttpDataFetcher_Timeout];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"content-type"];
     [request setHTTPBody:[self _encodeParamsInDictionary:paramsDict]];
@@ -100,7 +101,7 @@
         for(NSString *str in splittedStr) {
             if([str hasPrefix:@"Auth="]) {
                 self.authToken = [str substringWithRange:(NSRange){5, [str length] - 5}];
-                DDLogVerbose(@"GMapDataFetcher - AuthToken found: %@", self.authToken);
+                DDLogVerbose(@"GMapHttpDataFetcher - AuthToken found: %@", self.authToken);
             }
         }
 
@@ -116,9 +117,9 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (NSDictionary *) getServiceInfo:(NSString *)feedStrURL error:(NSError **)err {
+- (NSDictionary *) gmapGET:(NSString *)feedStrURL error:(NSError * __autoreleasing *)err {
 
-    // DDLogVerbose(@"GMapDataFetcher - getServiceInfo");
+    // DDLogVerbose(@"GMapHttpDataFetcher - getServiceInfo");
 
     __autoreleasing NSError *localError = nil;
     if(err == nil) err = &localError;
@@ -133,9 +134,9 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (NSDictionary *) postServiceInfo:(NSString *)feedStrURL feedData:(NSString *)feedData error:(NSError **)err {
+- (NSDictionary *) gmapPOST:(NSString *)feedStrURL feedData:(NSString *)feedData error:(NSError * __autoreleasing *)err {
 
-    // DDLogVerbose(@"GMapDataFetcher - putServiceInfo");
+    // DDLogVerbose(@"GMapHttpDataFetcher - putServiceInfo");
 
     __autoreleasing NSError *localError = nil;
     if(err == nil) err = &localError;
@@ -151,9 +152,9 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (NSDictionary *) updateServiceInfo:(NSString *)feedStrURL feedData:(NSString *)feedData error:(NSError **)err {
+- (NSDictionary *) gmapUPDATE:(NSString *)feedStrURL feedData:(NSString *)feedData error:(NSError * __autoreleasing *)err {
 
-    // DDLogVerbose(@"GMapDataFetcher - putServiceInfo");
+    // DDLogVerbose(@"GMapHttpDataFetcher - putServiceInfo");
 
     __autoreleasing NSError *localError = nil;
     if(err == nil) err = &localError;
@@ -170,9 +171,9 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) deleteServiceInfo:(NSString *)feedStrURL feedData:(NSString *)feedData error:(NSError **)err {
+- (BOOL) gmapDELETE:(NSString *)feedStrURL feedData:(NSString *)feedData error:(NSError * __autoreleasing *)err {
 
-    // DDLogVerbose(@"GMapDataFetcher - deleteServiceInfo");
+    // DDLogVerbose(@"GMapHttpDataFetcher - deleteServiceInfo");
 
     __autoreleasing NSError *localError = nil;
     if(err == nil) err = &localError;
@@ -224,10 +225,10 @@
 
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (NSDictionary *) _processNetworkRequest:(NSMutableURLRequest *)request error:(NSError **)err {
+- (NSDictionary *) _processNetworkRequest:(NSMutableURLRequest *)request error:(NSError * __autoreleasing *)err {
     
     [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
-    [request setTimeoutInterval:GMAPDataFetcher_Timeout];
+    [request setTimeoutInterval:GMapHttpDataFetcher_Timeout];
     [request setValue:@"application/atom+xml;charset=UTF-8" forHTTPHeaderField:@"Content-type"];
     [request setValue:@"myCompany-myAppName-v1.0(gzip)" forHTTPHeaderField:@"User-Agent"];
     [request setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];

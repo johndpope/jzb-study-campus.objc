@@ -10,167 +10,12 @@
 #import <MapKit/MapKit.h>
 #import "TestMapViewController.h"
 #import "MKMapView+ZoomLevel.h"
+#import "CustomOfflineTileOverlays.h"
 
 
 
 //*********************************************************************************************************************
-@interface TPointPath : NSObject
 
-@property (assign,nonatomic) NSInteger x;
-@property (assign,nonatomic) NSInteger y;
-@end
-
-@implementation TPointPath
-
-
-
-@end
-
-//*********************************************************************************************************************
-@interface CustomOfflineTileOverlayRenderer : MKTileOverlayRenderer
-//@interface CustomOfflineTileOverlayRenderer : MKOverlayRenderer
-
-@end
-
-@implementation CustomOfflineTileOverlayRenderer
-
-//---------------------------------------------------------------------------------------------------------------------
-- (BOOL)canDrawMapRect:(MKMapRect)mapRect zoomScale:(MKZoomScale)zoomScale {
-
-    //NSLog(@"canDrawMapRect  %f,%f - %f,%f - %f - %f,%f",mapRect.origin.x,mapRect.origin.y,mapRect.size.width,mapRect.size.height, 1/zoomScale, mapRect.size.width*zoomScale, mapRect.size.height*zoomScale);
-    return [super canDrawMapRect:mapRect zoomScale:zoomScale];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)drawMapRect:(MKMapRect)mapRect zoomScale:(MKZoomScale)zoomScale inContext:(CGContextRef)context {
-    
-    //NSLog(@"drawMapRect     %0.2f, %0.2f - %0.2f, %0.2f - %0.2f - %0.2f, %0.2f",mapRect.origin.x,mapRect.origin.y,mapRect.size.width,mapRect.size.height, 1/zoomScale, mapRect.size.width*zoomScale, mapRect.size.height*zoomScale);
-    [super drawMapRect:mapRect zoomScale:zoomScale inContext:context];
-}
-
-@end
-
-//*********************************************************************************************************************
-@interface CustomOfflineTileOverlay : MKTileOverlay
-
-@property (strong,nonatomic) NSMutableArray *pointPaths;
-
-@end
-
-@implementation CustomOfflineTileOverlay
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSURL *)URLForTilePath:(MKTileOverlayPath)path {
-    
-    NSURL *url = [super URLForTilePath:path];
-    
-    // http://mt0.google.com/vt/x=7&y=7&z=3
-    
-    //NSLog(@"-------------------------------------------------------------------------------------------------");
-    //    NSLog(@"x = %d",path.x);
-    //    NSLog(@"y = %d",path.y);
-    //    NSLog(@"z = %d",path.z);
-    //    NSLog(@"contentScaleFactor = %f",path.contentScaleFactor);
-    //    NSLog(@"url = %@",url);
-    //    NSLog(@"-------------------------------------------------------------------------------------------------");
-    
-    return url;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (BOOL) isNearAnnotation:(MKTileOverlayPath)path {
-
-    for(TPointPath *point in self.pointPaths) {
-        if(abs(path.x-point.x)<3 && abs(path.y-point.y)<3) {
-            return TRUE;
-        }
-    }
-    return FALSE;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)loadTileAtPath2X:(MKTileOverlayPath)path result:(void (^)(NSData *tileData, NSError *error))result {
-    
-    double zoomScale = 2;
-
-    MKTileOverlayPath scaledPath;
-    scaledPath.contentScaleFactor = path.contentScaleFactor;
-    scaledPath.z = path.z-1;
-    double spX = path.x/zoomScale;
-    double spY = path.y/zoomScale;
-    scaledPath.x=floor(spX);
-    scaledPath.y=floor(spY);
-    double offsetX =   256 * zoomScale * (spX-scaledPath.x);
-    double offsetY = 256 * zoomScale * (spY-scaledPath.y);
-    
-    NSURL *scaledUrl = [super URLForTilePath:scaledPath];
-    NSData * scaledData = [[NSData alloc] initWithContentsOfURL:scaledUrl];
-    if ( scaledData != nil ) {
-        UIImage *scaledImg = [UIImage imageWithData: scaledData];
-        UIGraphicsBeginImageContext(CGSizeMake(256, 256));
-        CGRect rect = CGRectMake(-offsetX,-offsetY,zoomScale * 256,zoomScale * 256);
-        [scaledImg drawInRect:rect];
-        UIImage* tileImage = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        NSData *tileData = UIImagePNGRepresentation(tileImage);
-        result(tileData, nil);
-    }
-
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)loadTileAtPathSmall:(MKTileOverlayPath)path result:(void (^)(NSData *tileData, NSError *error))result {
-    
-    MKTileOverlayPath scaledPath;
-    scaledPath.contentScaleFactor = path.contentScaleFactor;
-    scaledPath.z = 16;
-
-    double zoomScale = pow(2,16-path.z);
-    
-    UIGraphicsBeginImageContext(CGSizeMake(256, 256));
-
-    for(int y=0;y<zoomScale;y++) {
-        
-        scaledPath.y=y+path.y*zoomScale;
-        double offsetY = 256 * y / zoomScale;
-
-        for(int x=0;x<zoomScale;x++) {
-
-            scaledPath.x=x+path.x*zoomScale;
-            double offsetX = 256 * x / zoomScale;
-
-            if(![self isNearAnnotation:scaledPath]) continue;
-
-            NSURL *scaledUrl = [super URLForTilePath:scaledPath];
-            NSData * scaledData = [[NSData alloc] initWithContentsOfURL:scaledUrl];
-            if (scaledData != nil) {
-                UIImage *scaledImg = [UIImage imageWithData: scaledData];
-                CGRect rect = CGRectMake(offsetX,offsetY,256/zoomScale,256/zoomScale);
-                [scaledImg drawInRect:rect];
-            }
-        }
-    }
-    
-    UIImage* tileImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    NSData *tileData = UIImagePNGRepresentation(tileImage);
-    result(tileData, nil);
-    
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)loadTileAtPath:(MKTileOverlayPath)path result:(void (^)(NSData *tileData, NSError *error))result {
-    
-    if(path.z<=6) {
-        [self loadTileAtPath2X:path result:result];
-    } else if(path.z==17) {
-        [self loadTileAtPath2X:path result:result];
-    } else {
-        [self loadTileAtPathSmall:path result:result];
-    }
-}
-
-@end
 
 
 
@@ -290,33 +135,10 @@
 {
     [super viewDidLoad];
     
-    
-    //OpenCycleMap:     http://b.tile.opencyclemap.org/cycle/8/76/94.png
-    //MapQuest [19]:         http://otile3.mqcdn.com/tiles/1.0.0/osm/8/76/94.jpg
-    //OpenStreetMap:    http://tile.openstreetmap.org/8/76/94.png
-    //GMaps[22]:            http://mt0.google.com/vt/x=76&y=94&z=8
-    
-    
-    // Place this into your -viewDidLoad method
-    //OpenCycleMap:   NSString *template = @"http://b.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png";          // (1)
-    //MapQuest:
-    NSString *template = @"http://otile3.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpg";       // (1)
-                                                                                           //OpenStreetMap:  NSString *template = @"http://tile.openstreetmap.org/{z}/{x}/{y}.png";                 // (1)
-                                                                                           //GMaps:          NSString *template = @"http://mt0.google.com/vt/x={x}&y={y}&z={z}";                    // (1)
-    
-    // latDelta=97.292972, lngDelta=112.468432  |  latDelta=0.001038, lngDelta=0.000977
-    // latDelta=112.030317, lngDelta=112.358547  | latDelta=0.001147, lngDelta=0.001080
-    // latDelta=53.384587, lngDelta=180.000000
-    
+    self.overlay = [CustomOfflineTileOverlay overlay];
     self.mapZoom = 17;
-    
-    self.overlay = [[CustomOfflineTileOverlay alloc] initWithURLTemplate:template];          // (2)
-    self.overlay.canReplaceMapContent = YES;                                                     // (3)
-    self.overlay.minimumZ = 0;
-    self.overlay.maximumZ = 21;
-    self.overlay.minimumZ = self.overlay.maximumZ = self.mapZoom;
-    [self.mapView addOverlay:self.overlay level:MKOverlayLevelAboveLabels];                // (4)
-    
+    self.overlay.maximumZ = self.overlay.minimumZ = self.mapZoom;
+    [self.mapView addOverlay:self.overlay level:MKOverlayLevelAboveLabels];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -654,15 +476,6 @@
      [self.mapView addAnnotation:[self pointWithLng:-71.350510 lat:42.036568]];
      [self.mapView addAnnotation:[self pointWithLng:-71.351021 lat:42.459789]];
 
-    
-    self.overlay.pointPaths = [NSMutableArray array];
-    for(id<MKAnnotation> ann1 in self.mapView.annotations) {
-        MKMapPoint p1 = MKMapPointForCoordinate(ann1.coordinate);
-        TPointPath *path = [[TPointPath alloc] init];
-        path.x  = p1.x / 4096;
-        path.y  = p1.y / 4096;
-        [self.overlay.pointPaths addObject:path];
-    }
     
     NSLog(@"---");
     

@@ -9,9 +9,9 @@
 #define __GMapService_IMPL__
 #import "GMapService.h"
 
-#import "GMapDataFetcher.h"
-#import "NSString+JavaStr.h"
 #import "DDLog.h"
+#import "GMapHttpDataFetcher.h"
+#import "NSString+JavaStr.h"
 #import "NSString+HTML.h"
 
 
@@ -30,14 +30,7 @@
 // *********************************************************************************************************************
 @interface GMapService ()
 
-@property (nonatomic, strong) GMapDataFetcher *fetcher;
-
-
-- (GMTMap *) parseDictMapData:(NSDictionary *)dictMapData error:(NSError **)err;
-- (GMTPoint *) parseDictPointData:(NSDictionary *)dictPointData error:(NSError **)err;
-- (BOOL) parseDictBatchData:(NSArray *)arrayBatchData batchCmds:(NSArray *)batchCmds allErrors:(NSMutableArray *)allErrors;
-
-- (NSError *) anError:(NSString *)desc withError:(NSError *)prevErr data:(id)data;
+@property (strong, nonatomic) GMapHttpDataFetcher *httpDataFetcher;
 
 @end
 
@@ -50,7 +43,6 @@
 @implementation GMapService
 
 
-@synthesize fetcher = _fetcher;
 
 
 
@@ -58,13 +50,13 @@
 #pragma mark -
 #pragma mark CLASS methods
 // ---------------------------------------------------------------------------------------------------------------------
-+ (GMapService *) serviceWithEmail:(NSString *)email password:(NSString *)password error:(NSError **)err {
++ (GMapService *) serviceWithEmail:(NSString *)email password:(NSString *)password error:(NSError * __autoreleasing *)err {
 
     DDLogVerbose(@"GMapService - initWithEmailAndPassword");
 
     GMapService *me = [[GMapService alloc] init];
-    me.fetcher = [[GMapDataFetcher alloc] init];
-    BOOL rc = [me.fetcher loginWithEmail:email password:password error:err];
+    me.httpDataFetcher = [[GMapHttpDataFetcher alloc] init];
+    BOOL rc = [me.httpDataFetcher loginWithEmail:email password:password error:err];
 
     return rc == YES ? me : nil;
 }
@@ -79,7 +71,7 @@
 #pragma mark -
 #pragma mark General PUBLIC MAP methods
 // ---------------------------------------------------------------------------------------------------------------------
-- (NSArray *) getMapList:(NSError **)err {
+- (NSArray *) getMapList:(NSError * __autoreleasing *)err {
 
     // ------------------------------------------------------------------------------
     // URL con el formato:URL_FETCH_ALL_MAPS
@@ -95,10 +87,10 @@
 
 
 
-    NSDictionary *result = [self.fetcher getServiceInfo:URL_FETCH_ALL_MAPS error:err];
+    NSDictionary *result = [self.httpDataFetcher gmapGET:URL_FETCH_ALL_MAPS error:err];
 
     if(result == nil || ![result valueForKeyPath:@"feed"]) {
-        *err = [self anError:@"Invalid answer received for 'getMapList' " withError:*err data:result];
+        *err = [self _createError:@"Invalid answer received for 'getMapList' " withError:*err data:result];
         return nil;
     } else {
 
@@ -112,7 +104,7 @@
             }
 
             for(NSDictionary *entry in entries) {
-                GMTMap *map = [self parseDictMapData:entry error:err];
+                GMTMap *map = [self _parseDictMapData:entry error:err];
                 if(!map) {
                     return nil;
                 }
@@ -120,10 +112,10 @@
                 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 // ******* SEGURO ***************************
                 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                if(![map.name hasPrefix:@"@"] && ![map.name hasPrefix:@"T"]) {
-                    // Solo deja que "bajen" mapas remotos que empiecen con @ o T
-                    continue;
-                }
+                //if(![map.name hasPrefix:@"@"] && ![map.name hasPrefix:@"TMP"]) {
+                //    // Solo deja que "bajen" mapas remotos que empiecen con @ o TMP
+                //    continue;
+                //}
 
                 [maps addObject:map];
             }
@@ -136,7 +128,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (GMTMap *) getMapFromEditURL:(NSString *)mapEditURL error:(NSError **)err {
+- (GMTMap *) getMapFromEditURL:(NSString *)mapEditURL error:(NSError * __autoreleasing *)err {
 
     // ------------------------------------------------------------------------------
     // URL con el formato: http://maps.google.com/maps/feeds/maps/userID/full/mapID
@@ -152,20 +144,20 @@
 
 
 
-    NSDictionary *result = [self.fetcher getServiceInfo:mapEditURL error:err];
+    NSDictionary *result = [self.httpDataFetcher gmapGET:mapEditURL error:err];
 
     NSDictionary *mapDictData = [result objectForKey:@"entry"];
     if(mapDictData == nil) {
-        *err = [self anError:@"Invalid answer received for 'getMapFromEditURL' " withError:*err data:result];
+        *err = [self _createError:@"Invalid answer received for 'getMapFromEditURL' " withError:*err data:result];
         return nil;
     } else {
-        GMTMap *map = [self parseDictMapData:mapDictData error:err];
+        GMTMap *map = [self _parseDictMapData:mapDictData error:err];
         return map;
     }
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (GMTMap *) addMap:(GMTMap *)map error:(NSError **)err {
+- (GMTMap *) addMap:(GMTMap *)map error:(NSError * __autoreleasing *)err {
 
     // --------------------------------------------------------------------------------
     // URL con el formato: http://maps.google.com/maps/feeds/maps/userID/full
@@ -183,9 +175,9 @@
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // ******* SEGURO ***************************
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if(![map.name hasPrefix:@"@"]) {
+    if(![map.name hasPrefix:@"@"] && ![map.name hasPrefix:@"TMP"] ) {
         // Solo deja añadir mapas cuyo nombre empiece por @
-        *err = [self anError:@"Map name must start with @" withError:nil data:map];
+        *err = [self _createError:@"Map name must start with @" withError:nil data:map];
         return nil;
     }
 
@@ -193,27 +185,27 @@
     NSString *errMsg = [map verifyFieldsNotNil];
     if(errMsg) {
         NSString *errDesc = [NSString stringWithFormat:@"Validating input map: %@", errMsg];
-        *err = [self anError:errDesc withError:nil data:map];
+        *err = [self _createError:errDesc withError:nil data:map];
         return nil;
     }
 
 
-    NSString *atomData = [self itemAtomEntryData:map];
-    NSDictionary *result = [self.fetcher postServiceInfo:URL_ADD_NEW_MAP feedData:atomData error:err];
+    NSString *atomData = [self _itemAtomEntryData:map];
+    NSDictionary *result = [self.httpDataFetcher gmapPOST:URL_ADD_NEW_MAP feedData:atomData error:err];
 
     NSDictionary *mapDictData = [result objectForKey:@"entry"];
     if(mapDictData == nil) {
-        *err = [self anError:@"Invalid answer received for 'addMap' " withError:*err data:result];
+        *err = [self _createError:@"Invalid answer received for 'addMap' " withError:*err data:result];
         return nil;
     } else {
-        GMTMap *updMap = [self parseDictMapData:mapDictData error:err];
+        GMTMap *updMap = [self _parseDictMapData:mapDictData error:err];
         return updMap;
     }
 
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (GMTMap *) updateMap:(GMTMap *)map error:(NSError **)err {
+- (GMTMap *) updateMap:(GMTMap *)map error:(NSError * __autoreleasing *)err {
 
     // --------------------------------------------------------------------------------
     // URL con el formato: http://maps.google.com/maps/feeds/maps/userID/full/mapID
@@ -230,7 +222,7 @@
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // ******* SEGURO ***************************
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if(![map.name hasPrefix:@"@"]) {
+    if(![map.name hasPrefix:@"@"] && ![map.name hasPrefix:@"TMP"] ) {
         // Solo deja actualizar mapas cuyo nombre empiece por @
         return map;
     }
@@ -239,27 +231,27 @@
     NSString *errMsg = [map verifyFieldsNotNil];
     if(errMsg) {
         NSString *errDesc = [NSString stringWithFormat:@"Validating input map: %@", errMsg];
-        *err = [self anError:errDesc withError:nil data:map];
+        *err = [self _createError:errDesc withError:nil data:map];
         return nil;
     }
 
 
-    NSString *atomData = [self itemAtomEntryData:map];
-    NSDictionary *result = [self.fetcher updateServiceInfo:map.editLink feedData:atomData error:err];
+    NSString *atomData = [self _itemAtomEntryData:map];
+    NSDictionary *result = [self.httpDataFetcher gmapUPDATE:map.editLink feedData:atomData error:err];
 
     NSDictionary *mapDictData = [result objectForKey:@"entry"];
     if(mapDictData == nil) {
-        *err = [self anError:@"Invalid answer received for 'updateMap' " withError:*err data:result];
+        *err = [self _createError:@"Invalid answer received for 'updateMap' " withError:*err data:result];
         return nil;
     } else {
-        GMTMap *updMap = [self parseDictMapData:mapDictData error:err];
+        GMTMap *updMap = [self _parseDictMapData:mapDictData error:err];
         return updMap;
     }
 
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) deleteMap:(GMTMap *)map error:(NSError **)err {
+- (BOOL) deleteMap:(GMTMap *)map error:(NSError * __autoreleasing *)err {
 
     // --------------------------------------------------------------------------------
     // URL con el formato: http://maps.google.com/maps/feeds/maps/userID/full/mapID
@@ -277,9 +269,9 @@
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // ******* SEGURO ***************************
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if(![map.name hasPrefix:@"@"]) {
+    if(![map.name hasPrefix:@"@"] && ![map.name hasPrefix:@"TMP"] ) {
         // Solo deja borrar mapas cuyo nombre empiece por @
-        *err = [self anError:@"Map name must start with @" withError:nil data:map];
+        *err = [self _createError:@"Map name must start with @" withError:nil data:map];
         return false;
     }
 
@@ -287,18 +279,18 @@
     NSString *errMsg = [map verifyFieldsNotNil];
     if(errMsg) {
         NSString *errDesc = [NSString stringWithFormat:@"Validating input map: %@", errMsg];
-        *err = [self anError:errDesc withError:nil data:map];
+        *err = [self _createError:errDesc withError:nil data:map];
         return false;
     }
 
 
-    NSString *atomData = [self itemAtomEntryData:map];
-    BOOL result = [self.fetcher deleteServiceInfo:map.editLink feedData:atomData error:err];
+    NSString *atomData = [self _itemAtomEntryData:map];
+    BOOL result = [self.httpDataFetcher gmapDELETE:map.editLink feedData:atomData error:err];
     return result;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (NSArray *) getPointListFromMap:(GMTMap *)map error:(NSError **)err {
+- (NSArray *) getPointListFromMap:(GMTMap *)map error:(NSError * __autoreleasing *)err {
 
     // --------------------------------------------------------------------------------
     // URL con el formato: http://maps.google.com/maps/feeds/features/userID/mapID/full
@@ -313,29 +305,18 @@
     *err = nil;
 
 
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // ******* SEGURO ***************************
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if(![map.name hasPrefix:@"@"]) {
-        // Solo dejaría leer los puntos de mapas que comienzan por @
-        //*err = [self anError:@"Map name must start with @" withError:nil data:map];
-        //return nil;
-    }
-
-
-
     NSString *errMsg = [map verifyFieldsNotNil];
     if(errMsg) {
         NSString *errDesc = [NSString stringWithFormat:@"Validating input map: %@", errMsg];
-        *err = [self anError:errDesc withError:nil data:map];
+        *err = [self _createError:errDesc withError:nil data:map];
         return nil;
     }
 
 
-    NSDictionary *result = [self.fetcher getServiceInfo:[NSString stringWithFormat:@"%@?max-results=999999", map.featuresURL] error:err];
+    NSDictionary *result = [self.httpDataFetcher gmapGET:[NSString stringWithFormat:@"%@?max-results=999999", map.featuresURL] error:err];
 
     if(result == nil || ![result valueForKeyPath:@"atom:feed"]) {
-        *err = [self anError:@"Invalid answer received for 'getPointListFromMap' " withError:*err data:result];
+        *err = [self _createError:@"Invalid answer received for 'getPointListFromMap' " withError:*err data:result];
         return nil;
     } else {
 
@@ -357,7 +338,7 @@
                     continue;
                 }
 
-                GMTPoint *point = [self parseDictPointData:entry error:err];
+                GMTPoint *point = [self _parseDictPointData:entry error:err];
                 if(!point) {
                     return nil;
                 }
@@ -376,7 +357,7 @@
 #pragma mark -
 #pragma mark General PUBLIC POINT methods
 // ---------------------------------------------------------------------------------------------------------------------
-- (GMTPoint *) addPoint:(GMTPoint *)point inMap:(GMTMap *)map error:(NSError **)err {
+- (GMTPoint *) addPoint:(GMTPoint *)point inMap:(GMTMap *)map error:(NSError * __autoreleasing *)err {
 
     // --------------------------------------------------------------------------------
     // URL con el formato: http://maps.google.com/maps/feeds/features/userID/mapID/full
@@ -394,9 +375,9 @@
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // ******* SEGURO ***************************
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if(![map.name hasPrefix:@"@"]) {
+    if(![map.name hasPrefix:@"@"] && ![map.name hasPrefix:@"TMP"] ) {
         // Solo deja añadir puntos a mapas cuyo nombre empiece por @
-        *err = [self anError:@"Map name must start with @" withError:nil data:map];
+        *err = [self _createError:@"Map name must start with @" withError:nil data:map];
         return nil;
     }
 
@@ -404,33 +385,34 @@
     NSString *errMsg1 = [map verifyFieldsNotNil];
     if(errMsg1) {
         NSString *errDesc = [NSString stringWithFormat:@"Validating input map: %@", errMsg1];
-        *err = [self anError:errDesc withError:nil data:map];
+        *err = [self _createError:errDesc withError:nil data:map];
         return nil;
     }
+    
     NSString *errMsg2 = [point verifyFieldsNotNil];
     if(errMsg2) {
         NSString *errDesc = [NSString stringWithFormat:@"Validating input point: %@", errMsg2];
-        *err = [self anError:errDesc withError:nil data:point];
+        *err = [self _createError:errDesc withError:nil data:point];
         return nil;
     }
 
 
-    NSString *atomData = [self itemAtomEntryData:point];
-    NSDictionary *result = [self.fetcher postServiceInfo:map.featuresURL feedData:atomData error:err];
+    NSString *atomData = [self _itemAtomEntryData:point];
+    NSDictionary *result = [self.httpDataFetcher gmapPOST:map.featuresURL feedData:atomData error:err];
 
     NSDictionary *pointDictData = [result objectForKey:@"atom:entry"];
     if(pointDictData == nil) {
-        *err = [self anError:@"Invalid answer received for 'addPoint' " withError:*err data:result];
+        *err = [self _createError:@"Invalid answer received for 'addPoint' " withError:*err data:result];
         return nil;
     } else {
-        GMTPoint *updPoint = [self parseDictPointData:pointDictData error:err];
+        GMTPoint *updPoint = [self _parseDictPointData:pointDictData error:err];
         return updPoint;
     }
 
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (GMTPoint *) updatePoint:(GMTPoint *)point inMap:(GMTMap *)map error:(NSError **)err {
+- (GMTPoint *) updatePoint:(GMTPoint *)point inMap:(GMTMap *)map error:(NSError * __autoreleasing *)err {
 
     // --------------------------------------------------------------------------------
     // URL con el formato: http://maps.google.com/maps/feeds/features/userID/mapID/full/featureID
@@ -448,9 +430,9 @@
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // ******* SEGURO ***************************
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if(![map.name hasPrefix:@"@"]) {
+    if(![map.name hasPrefix:@"@"] && ![map.name hasPrefix:@"TMP"] ) {
         // Solo deja modificar puntos en mapas cuyo nombre empiece por @
-        *err = [self anError:@"Map name must start with @" withError:nil data:map];
+        *err = [self _createError:@"Map name must start with @" withError:nil data:map];
         return nil;
     }
 
@@ -458,34 +440,35 @@
     NSString *errMsg1 = [map verifyFieldsNotNil];
     if(errMsg1) {
         NSString *errDesc = [NSString stringWithFormat:@"Validating input map: %@", errMsg1];
-        *err = [self anError:errDesc withError:nil data:map];
+        *err = [self _createError:errDesc withError:nil data:map];
         return nil;
     }
+    
     NSString *errMsg2 = [point verifyFieldsNotNil];
     if(errMsg2) {
         NSString *errDesc = [NSString stringWithFormat:@"Validating input point: %@", errMsg2];
-        *err = [self anError:errDesc withError:nil data:point];
+        *err = [self _createError:errDesc withError:nil data:point];
         return nil;
     }
 
 
-    NSString *atomData = [self itemAtomEntryData:point];
-    NSDictionary *result = [self.fetcher updateServiceInfo:point.editLink feedData:atomData error:err];
+    NSString *atomData = [self _itemAtomEntryData:point];
+    NSDictionary *result = [self.httpDataFetcher gmapUPDATE:point.editLink feedData:atomData error:err];
 
 
     NSDictionary *pointDictData = [result objectForKey:@"atom:entry"];
     if(pointDictData == nil) {
-        *err = [self anError:@"Invalid answer received for 'updatePoint' " withError:*err data:result];
+        *err = [self _createError:@"Invalid answer received for 'updatePoint' " withError:*err data:result];
         return nil;
     } else {
-        GMTPoint *updPoint = [self parseDictPointData:pointDictData error:err];
+        GMTPoint *updPoint = [self _parseDictPointData:pointDictData error:err];
         return updPoint;
     }
 
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) deletePoint:(GMTPoint *)point inMap:(GMTMap *)map error:(NSError **)err {
+- (BOOL) deletePoint:(GMTPoint *)point inMap:(GMTMap *)map error:(NSError * __autoreleasing *)err {
 
     // --------------------------------------------------------------------------------
     // URL con el formato: http://maps.google.com/maps/feeds/features/userID/mapID/full/featureID
@@ -503,9 +486,9 @@
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // ******* SEGURO ***************************
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if(![map.name hasPrefix:@"@"]) {
+    if(![map.name hasPrefix:@"@"] && ![map.name hasPrefix:@"TMP"] ) {
         // Solo deja borrar puntos en mapas cuyo nombre empiece por @
-        *err = [self anError:@"Map name must start with @" withError:nil data:map];
+        *err = [self _createError:@"Map name must start with @" withError:nil data:map];
         return false;
     }
 
@@ -513,19 +496,20 @@
     NSString *errMsg1 = [map verifyFieldsNotNil];
     if(errMsg1) {
         NSString *errDesc = [NSString stringWithFormat:@"Validating input map: %@", errMsg1];
-        *err = [self anError:errDesc withError:nil data:map];
+        *err = [self _createError:errDesc withError:nil data:map];
         return false;
     }
+    
     NSString *errMsg2 = [point verifyFieldsNotNil];
     if(errMsg2) {
         NSString *errDesc = [NSString stringWithFormat:@"Validating input point: %@", errMsg2];
-        *err = [self anError:errDesc withError:nil data:point];
+        *err = [self _createError:errDesc withError:nil data:point];
         return false;
     }
 
 
-    NSString *atomData = [self itemAtomEntryData:point];
-    BOOL result = [self.fetcher deleteServiceInfo:point.editLink feedData:atomData error:err];
+    NSString *atomData = [self _itemAtomEntryData:point];
+    BOOL result = [self.httpDataFetcher gmapDELETE:point.editLink feedData:atomData error:err];
     return result;
 }
 
@@ -547,13 +531,13 @@
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // ******* SEGURO ***************************
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if(![map.name hasPrefix:@"@"]) {
+    if(![map.name hasPrefix:@"@"] && ![map.name hasPrefix:@"TMP"] ) {
         // Solo deja procesar puntos en bacth en mapas cuyo nombre empiece por @
         for(GMTBatchCmd *bcmd in batchCmds) {
             bcmd.resultItem = bcmd.item;
-            bcmd.resultCode = BATCH_RC_OK;
+            bcmd.resultCode = BATCH_RC_ERROR;
         }
-        return true;
+        return false;
     }
 
 
@@ -566,7 +550,7 @@
     NSString *errMsg = [map verifyFieldsNotNil];
     if(errMsg) {
         NSString *errDesc = [NSString stringWithFormat:@"Validating input map: %@", errMsg];
-        NSError *localError = [self anError:errDesc withError:nil data:map];
+        NSError *localError = [self _createError:errDesc withError:nil data:map];
         [allErrors addObject:localError];
         return false;
     }
@@ -575,7 +559,7 @@
         NSString *errMsg2 = [bCmd.item verifyFieldsNotNil];
         if(errMsg2) {
             NSString *errDesc = [NSString stringWithFormat:@"Validating input point: %@", errMsg2];
-            NSError *localError = [self anError:errDesc withError:nil data:bCmd.item];
+            NSError *localError = [self _createError:errDesc withError:nil data:bCmd.item];
             [allErrors addObject:localError];
         }
     }
@@ -613,14 +597,14 @@
     
     
     // LOS UPDATES NO FUNCIONAN. EN ESTE PUNTO GESTIONA LOS INSERT y DELETE
-    NSString *atomData = [self batchAtomFeedData:batchCmds];
+    NSString *atomData = [self _batchAtomFeedData:batchCmds];
     NSString *batchURL = [NSString stringWithFormat:@"%@/batch", map.featuresURL];
     NSError *localError = nil;
-    NSDictionary *result = [self.fetcher postServiceInfo:batchURL feedData:atomData error:&localError];
+    NSDictionary *result = [self.httpDataFetcher gmapPOST:batchURL feedData:atomData error:&localError];
 
 
     if(localError != nil || ![result valueForKeyPath:@"atom:feed"]) {
-        localError = [self anError:@"Invalid answer received for 'batch update' " withError:localError data:result];
+        localError = [self _createError:@"Invalid answer received for 'batch update' " withError:localError data:result];
         [allErrors addObject:localError];
     } else {
 
@@ -651,7 +635,7 @@
         }
 
         // Parsea todas las entradas encontradas actualizando el comando
-        [self parseDictBatchData:allEntries batchCmds:batchCmds allErrors:allErrors];
+        [self _parseDictBatchData:allEntries batchCmds:batchCmds allErrors:allErrors];
     }
 
     return allErrors.count == 0;
@@ -668,7 +652,7 @@
 #pragma mark -
 #pragma mark PRIVATE methods
 // ---------------------------------------------------------------------------------------------------------------------
-- (NSString *) itemAtomEntryData:(GMTItem *)item {
+- (NSString *) _itemAtomEntryData:(GMTItem *)item {
 
     NSMutableString *atomStr = [NSMutableString string];
 
@@ -684,7 +668,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (NSString *) batchAtomFeedData:(NSArray *)batchCmds {
+- (NSString *) _batchAtomFeedData:(NSArray *)batchCmds {
 
     NSMutableString *atomStr = [NSMutableString string];
 
@@ -718,7 +702,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) parseDictBatchData:(NSArray *)arrayBatchData batchCmds:(NSArray *)batchCmds allErrors:(NSMutableArray *)allErrors {
+- (BOOL) _parseDictBatchData:(NSArray *)arrayBatchData batchCmds:(NSArray *)batchCmds allErrors:(NSMutableArray *)allErrors {
 
     for(NSDictionary *pointData in arrayBatchData) {
 
@@ -732,14 +716,14 @@
 
         if(!batchIDStr || !batchCmdStr || !batchStatusCode || !batchStatusReason || cmdIndex < 0) {
             DDLogError(@"[parseDictBatchData] Batch info missing while parsing elemement: %@", pointData);
-            loopError = [self anError:@"Batch info missing while parsing elemement" withError:nil data:pointData];
+            loopError = [self _createError:@"Batch info missing while parsing elemement" withError:nil data:pointData];
             [allErrors addObject:loopError];
             continue;
         }
 
         if(cmdIndex >= batchCmds.count) {
             DDLogError(@"[parseDictBatchData] Batch info with erroneous index: %d", cmdIndex);
-            loopError = [self anError:@"Batch info with erroneous index" withError:nil data:pointData];
+            loopError = [self _createError:@"Batch info with erroneous index" withError:nil data:pointData];
             [allErrors addObject:loopError];
             continue;
         }
@@ -749,13 +733,13 @@
 
         case BATCH_CMD_INSERT:
             if([batchStatusCode isEqualToString:@"201"]) {
-                GMTPoint *point = [self parseDictPointData:pointData error:&loopError];
+                GMTPoint *point = [self _parseDictPointData:pointData error:&loopError];
                 bCmd.resultItem = point;
                 bCmd.resultCode = point != nil ? BATCH_RC_OK : BATCH_RC_ERROR;
             } else {
                 bCmd.resultItem = nil;
                 bCmd.resultCode = BATCH_RC_ERROR;
-                loopError = [self anError:@"Batch insert error" withError:nil data:pointData];
+                loopError = [self _createError:@"Batch insert error" withError:nil data:pointData];
                 [allErrors addObject:loopError];
             }
             break;
@@ -766,7 +750,7 @@
                 bCmd.resultCode = BATCH_RC_OK;
             } else {
                 bCmd.resultCode = BATCH_RC_ERROR;
-                loopError = [self anError:@"Batch delete error" withError:nil data:pointData];
+                loopError = [self _createError:@"Batch delete error" withError:nil data:pointData];
                 [allErrors addObject:loopError];
             }
             break;
@@ -784,7 +768,7 @@
     // Comprueba que se obtuvo respuesta para todos los comandos ejecutados
     for(GMTBatchCmd *bCmd in batchCmds) {
         if(bCmd.resultCode == BATCH_RC_PENDING) {
-            NSError *localError = [self anError:@"Batch command still pending of execution" withError:nil data:bCmd];
+            NSError *localError = [self _createError:@"Batch command still pending of execution" withError:nil data:bCmd];
             [allErrors addObject:localError];
         }
     }
@@ -794,7 +778,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (GMTMap *) parseDictMapData:(NSDictionary *)dictMapData error:(NSError **)err {
+- (GMTMap *) _parseDictMapData:(NSDictionary *)dictMapData error:(NSError * __autoreleasing *)err {
 
     GMTMap __block *map = [GMTMap emptyMap];
 
@@ -813,7 +797,7 @@
     if(errMsg) {
         if(err != nil) {
             NSString *errDesc = [NSString stringWithFormat:@"Parsing NSDictionary object. %@", errMsg];
-            *err = [self anError:errDesc withError:nil data:dictMapData];
+            *err = [self _createError:errDesc withError:nil data:dictMapData];
         }
         return nil;
     } else {
@@ -822,7 +806,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (GMTPoint *) parseDictPointData:(NSDictionary *)dictPointData error:(NSError **)err {
+- (GMTPoint *) _parseDictPointData:(NSDictionary *)dictPointData error:(NSError * __autoreleasing *)err {
 
     GMTPoint __block *point = [GMTPoint emptyPoint];
 
@@ -856,7 +840,7 @@
     if(errMsg) {
         if(err != nil) {
             NSString *errDesc = [NSString stringWithFormat:@"Parsing NSDictionary object. %@", errMsg];
-            *err = [self anError:errDesc withError:nil data:dictPointData];
+            *err = [self _createError:errDesc withError:nil data:dictPointData];
         }
         return nil;
     } else {
@@ -865,7 +849,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (NSError *) anError:(NSString *)desc withError:(NSError *)prevErr data:(id)data {
+- (NSError *) _createError:(NSString *)desc withError:(NSError *)prevErr data:(id)data {
 
     NSString *content = data == nil ? @"" : [data description];
     NSDictionary *errInfo = [NSDictionary dictionaryWithObjectsAndKeys:

@@ -25,7 +25,7 @@ typedef NSString * (^TBlock_prot_blockDefinition)(NSArray *p1, NSError *error);
 @interface __name__(Protected)
 
 
-@property (nonatomic, retain) NSString *protectedPropety;
+@property (retain, nonatomic) NSString *protectedPropety;
 
 //=====================================================================================================================
 #pragma mark -

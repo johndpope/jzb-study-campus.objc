@@ -19,8 +19,8 @@
 //*********************************************************************************************************************
 @interface __name__()
 
-@property (nonatomic, retain) NSString *protectedPropety;
-@property (nonatomic, retain) NSString *privateProperty;
+@property (retain, nonatomic) NSString *protectedPropety;
+@property (retain, nonatomic) NSString *privateProperty;
 
 + (void) privateClassMethod;
 - (void) privateMethod;

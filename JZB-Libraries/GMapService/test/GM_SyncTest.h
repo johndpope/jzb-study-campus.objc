@@ -32,7 +32,7 @@
 #ifndef __GM_SyncTest_IMPL_
 - (id) init __attribute__ ((unavailable ("init not available")));
 #endif
-+ (GM_SyncTest *) testWithEmail:(NSString *)email password:(NSString *)password exitOnError:(BOOL)exitOnError error:(NSError **)err;
++ (GM_SyncTest *) testWithEmail:(NSString *)email password:(NSString *)password exitOnError:(BOOL)exitOnError error:(NSError * __autoreleasing *)err;
 
 
 

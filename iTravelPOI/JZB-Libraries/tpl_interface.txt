@@ -30,7 +30,7 @@ typedef NSString * (^TBlock_blockDefinition)(NSArray *p1, NSError *error);
 }
 
 
-@property (nonatomic, retain) NSString *publicPropety;
+@property (retain, nonatomic) NSString *publicPropety;
 
 
 

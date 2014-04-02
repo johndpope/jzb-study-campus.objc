@@ -1424,7 +1424,7 @@ totalBytesExpectedToSend:(NSInteger)totalBytesExpected {
 - (BOOL)waitForTicket:(GTLServiceTicket *)ticket
               timeout:(NSTimeInterval)timeoutInSeconds
         fetchedObject:(GTLObject **)outObjectOrNil
-                error:(NSError **)outErrorOrNil {
+                error:(NSError * __autoreleasing *)outErrorOrNil {
 
   NSDate* giveUpDate = [NSDate dateWithTimeIntervalSinceNow:timeoutInSeconds];
 

@@ -24,9 +24,9 @@
 //*********************************************************************************************************************
 @interface BenchMark()
 
-@property (nonatomic, strong) NSString *logPrefix;
-@property (nonatomic, strong) NSDate *tStarTime;
-@property (nonatomic, strong) NSDate *tLastStepTime;
+@property (strong, nonatomic) NSString *logPrefix;
+@property (strong, nonatomic) NSDate *tStarTime;
+@property (strong, nonatomic) NSDate *tLastStepTime;
 
 @end
 

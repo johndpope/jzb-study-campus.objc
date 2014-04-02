@@ -103,7 +103,7 @@
 #pragma mark -
 #pragma mark <GMPSyncDelegate> PROTOCOL methods
 // ---------------------------------------------------------------------------------------------------------------------
-- (NSArray *) getAllLocalMapList:(NSError **)err {
+- (NSArray *) getAllLocalMapList:(NSError * __autoreleasing *)err {
 
     if(err != nil) *err = nil;
 
@@ -113,7 +113,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (GMTMap *) gmMapFromLocalMap:(MMap *)localMap error:(NSError **)err {
+- (GMTMap *) gmMapFromLocalMap:(MMap *)localMap error:(NSError * __autoreleasing *)err {
 
     if(err != nil) *err = nil;
 
@@ -131,7 +131,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (id) createLocalMapFrom:(GMTMap *)gmMap error:(NSError **)err {
+- (id) createLocalMapFrom:(GMTMap *)gmMap error:(NSError * __autoreleasing *)err {
 
     if(err != nil) *err = nil;
 
@@ -142,7 +142,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) updateLocalMap:(MMap *)localMap withRemoteMap:(GMTMap *)gmMap allPointsOK:(BOOL)allPointsOK error:(NSError **)err {
+- (BOOL) updateLocalMap:(MMap *)localMap withRemoteMap:(GMTMap *)gmMap allPointsOK:(BOOL)allPointsOK error:(NSError * __autoreleasing *)err {
 
     if(err != nil) *err = nil;
 
@@ -160,7 +160,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) deleteLocalMap:(MMap *)localMap error:(NSError **)err {
+- (BOOL) deleteLocalMap:(MMap *)localMap error:(NSError * __autoreleasing *)err {
 
     if(err != nil) *err = nil;
 
@@ -171,7 +171,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (NSArray *) localPointListForMap:(MMap *)localMap error:(NSError **)err {
+- (NSArray *) localPointListForMap:(MMap *)localMap error:(NSError * __autoreleasing *)err {
 
     if(err != nil) *err = nil;
 
@@ -180,7 +180,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (GMTPoint *) gmPointFromLocalPoint:(MPoint *)localPoint error:(NSError **)err {
+- (GMTPoint *) gmPointFromLocalPoint:(MPoint *)localPoint error:(NSError * __autoreleasing *)err {
 
     if(err != nil) *err = nil;
 
@@ -201,7 +201,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (id) createLocalPointFrom:(GMTPoint *)gmPoint inLocalMap:(MMap *)map error:(NSError **)err {
+- (id) createLocalPointFrom:(GMTPoint *)gmPoint inLocalMap:(MMap *)map error:(NSError * __autoreleasing *)err {
 
     if(err != nil) *err = nil;
 
@@ -213,7 +213,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) updateLocalPoint:(MPoint *)localPoint withRemotePoint:(GMTPoint *)gmPoint error:(NSError **)err {
+- (BOOL) updateLocalPoint:(MPoint *)localPoint withRemotePoint:(GMTPoint *)gmPoint error:(NSError * __autoreleasing *)err {
 
     if(err != nil) *err = nil;
 
@@ -233,7 +233,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) deleteLocalPoint:(MPoint *)localPoint inLocalMap:(id)map error:(NSError **)err {
+- (BOOL) deleteLocalPoint:(MPoint *)localPoint inLocalMap:(id)map error:(NSError * __autoreleasing *)err {
 
     if(err != nil) *err = nil;
 

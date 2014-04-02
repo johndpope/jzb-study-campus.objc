@@ -24,14 +24,14 @@
 @interface MComplexFilter : NSObject
 
 
-@property (nonatomic, strong)           NSManagedObjectContext  *moContext;
+@property (strong, nonatomic)           NSManagedObjectContext  *moContext;
 
-@property (nonatomic, strong)           MMap                    *filterMap;
-@property (nonatomic, strong)           NSSet                   *filterTags;
-@property (nonatomic, strong)           NSArray                 *pointOrder; // MBase.h -> MBaseOrderByNameAsc
+@property (strong, nonatomic)           MMap                    *filterMap;
+@property (strong, nonatomic)           NSSet                   *filterTags;
+@property (strong, nonatomic)           NSArray                 *pointOrder; // MBase.h -> MBaseOrderByNameAsc
 
-@property (nonatomic, strong, readonly) NSArray                 *pointList;
-@property (nonatomic, strong, readonly) NSSet                   *tagsForPointList;
+@property (strong, readonly, nonatomic) NSArray                 *pointList;
+@property (strong, readonly, nonatomic) NSSet                   *tagsForPointList;
 
 
 

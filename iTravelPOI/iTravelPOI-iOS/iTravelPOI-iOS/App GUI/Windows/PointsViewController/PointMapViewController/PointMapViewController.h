@@ -41,6 +41,10 @@
 #pragma mark -
 #pragma mark INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
+- (CLLocationCoordinate2D) mapCenter;
+- (void) zoomOnMyLocation;
+- (void) zoomAndShowAll;
+- (void) zoomOnSelected;
 
 
 

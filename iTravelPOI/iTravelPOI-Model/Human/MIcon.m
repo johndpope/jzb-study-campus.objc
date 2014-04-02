@@ -27,7 +27,7 @@
 //*********************************************************************************************************************
 @interface MIcon ()
 
-@property (nonatomic, readonly, strong) UIImage *image;
+@property (strong, readonly, nonatomic) UIImage *image;
 
 @end
 

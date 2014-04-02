@@ -50,11 +50,6 @@
 #pragma mark -
 #pragma mark Public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) markAsDeleted:(BOOL) value {
-    @throw [NSException exceptionWithName:@"AbstractMethodException" reason:@"Abstract method 'markAsDeleted' must be implemented by subclass" userInfo:nil];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
 - (BOOL) updateName:(NSString *)value {
     
     BOOL result = [super updateName:value];
@@ -70,26 +65,60 @@
     return result;
 }
 
-
-//=====================================================================================================================
-#pragma mark -
-#pragma mark Protected methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) _deleteEntity {
+- (BOOL) updateGID:(NSString *)gID andETag:(NSString *)etag {
+
+    // Cogemos siempre los valores. El uso fuera de una sincronizacion
+    self.gID = gID;
+    self.etag = etag;
+    [self markAsModified];
+    return TRUE;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) markAsModified {
+    [super markAsModified];
+    self.modifiedSinceLastSyncValue = TRUE;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) markAsDeleted:(BOOL) value {
+
+    if(self.markedAsDeletedValue != value) {
+        [self markAsModified];
+        self.markedAsDeletedValue = value;
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) markAsSynchronized {
+    self.modifiedSinceLastSyncValue = FALSE;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL) wasSynchronizedValue {
+    
+    BOOL value = ![self.etag isEqualToString:NO_SYNC_ETAG];
+    return value;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) deleteEntity {
     
     self.etag = nil;
     self.gID = nil;
     self.markedAsDeletedValue = TRUE;
-    self.modifiedSinceLastSyncValue = FALSE;
-
-    [super _deleteEntity];
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) _updateBasicInfoWithGID:(NSString *)gID etag:(NSString *)etag creationTime:(NSDate *)creationTime updateTime:(NSDate *)updateTime {
+    self.modifiedSinceLastSyncValue = TRUE;
     
+    [super deleteEntity];
 }
 
+
+
+
+//=====================================================================================================================
+#pragma mark -
+#pragma mark Protected methods
 //---------------------------------------------------------------------------------------------------------------------
 - (void) _resetEntityWithName:(NSString *)name icon:(MIcon *)icon {
     
@@ -105,26 +134,7 @@
     self.modifiedSinceLastSyncValue = TRUE;
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _markAsDeleted:(BOOL) value {
-    
-    if(self.markedAsDeletedValue != value) {
-        self.markedAsDeletedValue = value;
-        [self markAsModified];
-    }
-}
 
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _unmarkAsModified {
-    self.modifiedSinceLastSyncValue = FALSE;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _markAsModified {
-    
-    [super _markAsModified];
-    self.modifiedSinceLastSyncValue = TRUE;
-}
 
 
 //=====================================================================================================================

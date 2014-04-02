@@ -130,7 +130,7 @@ static NSString *kResponse = @"Response";
   localhostOnly_ = yesno;
 }
 
-- (BOOL)start:(NSError **)error {
+- (BOOL)start:(NSError * __autoreleasing *)error {
   NSAssert(listenHandle_ == nil,
            @"start called when we already have a listenHandle_");
 

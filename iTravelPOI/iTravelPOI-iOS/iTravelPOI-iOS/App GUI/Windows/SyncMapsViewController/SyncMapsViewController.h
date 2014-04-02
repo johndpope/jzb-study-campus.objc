@@ -1,17 +1,46 @@
 //
-//  MapSyncViewController.h
+//  SyncMapsViewController.h
 //  iTravelPOI-iOS
 //
-//  Created by Jose Zarzuela on 03/03/14.
-//  Copyright (c) 2014 Jose Zarzuela. All rights reserved.
+//  Created by Jose Zarzuela on 22/12/13.
+//  Copyright (c) 2013 Jose Zarzuela. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-#import "MMap.h"
 
 
-@interface MapSyncViewController : UIViewController
 
-@property (strong, nonatomic) MMap *map;
+
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark Public Enumerations & definitions
+//*********************************************************************************************************************
+
+
+
+
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark Public Interface definition
+//*********************************************************************************************************************
+@interface SyncMapsViewController : UIViewController
+
+
+
+
+//=====================================================================================================================
+#pragma mark -
+#pragma mark CLASS public methods
+//---------------------------------------------------------------------------------------------------------------------
++ (SyncMapsViewController *) SyncMapsViewControllerWithContext:(NSManagedObjectContext *)moContext;
+
+
+
+//=====================================================================================================================
+#pragma mark -
+#pragma mark INSTANCE public methods
+//---------------------------------------------------------------------------------------------------------------------
+
+
 
 @end

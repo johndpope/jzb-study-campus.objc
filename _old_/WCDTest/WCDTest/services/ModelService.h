@@ -29,6 +29,6 @@
 - (void) saveContext;
 
 
-- (NSArray *)getUserMapList:(NSError **)error;
+- (NSArray *)getUserMapList:(NSError * __autoreleasing *)error;
 
 @end

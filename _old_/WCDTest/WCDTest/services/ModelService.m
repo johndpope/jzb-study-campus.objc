@@ -99,7 +99,7 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (NSArray *)getUserMapList:(NSError **)error {
+- (NSArray *)getUserMapList:(NSError * __autoreleasing *)error {
     
     NSLog(@"ModelService - getUserMapList");
 

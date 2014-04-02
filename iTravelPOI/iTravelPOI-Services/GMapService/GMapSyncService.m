@@ -31,24 +31,11 @@
 @interface GMapSyncService ()
 
 
-@property (nonatomic, strong) id<GMPSyncDataSource> dataSource;
-@property (nonatomic, strong) id<GMPSyncDelegate> delegate;
-@property (nonatomic, strong) GMapService *gmService;
-@property (atomic, assign) BOOL mustCancelSync;
+@property (strong, nonatomic) id<GMPSyncDataSource> dataSource;
+@property (strong, nonatomic) id<GMPSyncDelegate>   delegate;
+@property (strong, nonatomic) GMapService           *gmService;
+@property (assign, atomic)    BOOL                  mustCancelSync;
 
-
-- (NSArray *) compareLocalItems:(NSArray *)localItems withRemoteItems:(NSArray *)remoteItems;
-- (id<GMPComparable>) searchItemBygID:(NSString *)gID inArray:(NSArray *)items;
-
-- (BOOL) createLocalMapWithTuple:(GMTCompTuple *)tuple allErrors:(NSMutableArray *)allErrors;
-- (BOOL) deleteLocalMapWithTuple:(GMTCompTuple *)tuple allErrors:(NSMutableArray *)allErrors;
-
-- (BOOL) createRemoteMapWithTuple:(GMTCompTuple *)tuple allErrors:(NSMutableArray *)allErrors;
-- (BOOL) deleteRemoteMapWithTuple:(GMTCompTuple *)tuple allErrors:(NSMutableArray *)allErrors;
-
-- (BOOL) updateLocalAndRemoteMapWithTuple:(GMTCompTuple *)mapTuple allErrors:(NSMutableArray *)allErrors;
-
-- (NSError *) anError:(NSString *)desc withError:(NSError *)prevErr data:(id)data;
 
 @end
 
@@ -61,8 +48,6 @@
 @implementation GMapSyncService
 
 
-@synthesize gmService = _gmService;
-@synthesize delegate = _delegate;
 
 
 
@@ -74,7 +59,7 @@
                               password:(NSString *)password
                             dataSource:(id<GMPSyncDataSource>)dataSource
                               delegate:(id<GMPSyncDelegate>)delegate
-                                 error:(NSError **)err {
+                                 error:(NSError * __autoreleasing *)err {
 
 
     DDLogVerbose(@"GMapSyncService - initWithEmailAndPassword");
@@ -115,7 +100,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) syncMaps:(NSError **)err {
+- (BOOL) syncMaps:(NSError * __autoreleasing *)err {
 
 
     DDLogVerbose(@"GMapSyncService - syncMaps");
@@ -176,7 +161,7 @@
     if([self.delegate respondsToSelector:@selector(willCompareLocalAndRemoteMaps)]) {
         [self.delegate willCompareLocalAndRemoteMaps];
     }
-    NSArray *compTuples = [self compareLocalItems:localMaps withRemoteItems:remoteMaps];
+    NSArray *compTuples = [self _compareLocalItems:localMaps withRemoteItems:remoteMaps];
 
     
     // Chequea periodicamente si debe cancelar
@@ -190,7 +175,9 @@
 
     
     // Itera los resultados de la comparacion
-    DDLogVerbose(@"GMapSyncService - Synchronizing map lists");
+    DDLogVerbose(@"GMapSyncService - ***************************************************************************");
+    DDLogVerbose(@"GMapSyncService - Synchronizing map lists (will make changes!)");
+    DDLogVerbose(@"GMapSyncService - ***************************************************************************");
     for(int index=0;index<compTuples.count;index++) {
 
         GMTCompTuple *tuple = compTuples[index];
@@ -198,6 +185,21 @@
         // Chequea periodicamente si debe cancelar
         if(self.mustCancelSync) return false;
 
+        // Pregunta si debe procesarlo
+        if([self.delegate respondsToSelector:@selector(shouldProcessTuple:error:)]) {
+            NSError *localError = nil;
+            BOOL processMap = [self.delegate shouldProcessTuple:tuple error:&localError];
+            
+            if(localError!=nil) {
+                [allErrors addObject:[self _createError:@"Map tuple processing skipped by delegate" withError:localError data:nil]];
+            }
+            
+            if(!processMap || localError!=nil) {
+                tuple.runStatus = ST_Run_Failed;
+                continue;
+            }
+        }
+        
         // Apunta que va a procesar este elemento
         tuple.runStatus = ST_Run_Processing;
 
@@ -212,24 +214,24 @@
         switch(tuple.compStatus) {
 
         case ST_Comp_Create_Local:
-            mapSyncOK = [self createLocalMapWithTuple:tuple allErrors:allErrors];
+            mapSyncOK = [self _createLocalMapWithTuple:tuple allErrors:allErrors];
             break;
 
         case ST_Comp_Create_Remote:
-            mapSyncOK = [self createRemoteMapWithTuple:tuple allErrors:allErrors];
+            mapSyncOK = [self _createRemoteMapWithTuple:tuple allErrors:allErrors];
             break;
 
         case ST_Comp_Delete_Local:
-            mapSyncOK = [self deleteLocalMapWithTuple:tuple allErrors:allErrors];
+            mapSyncOK = [self _deleteLocalMapWithTuple:tuple allErrors:allErrors];
             break;
 
         case ST_Comp_Delete_Remote:
-            mapSyncOK = [self deleteRemoteMapWithTuple:tuple allErrors:allErrors];
+            mapSyncOK = [self _deleteRemoteMapWithTuple:tuple allErrors:allErrors];
             break;
 
         case ST_Comp_Update_Local:
         case ST_Comp_Update_Remote:
-            mapSyncOK = [self updateLocalAndRemoteMapWithTuple:tuple allErrors:allErrors];
+            mapSyncOK = [self _updateLocalAndRemoteMapWithTuple:tuple allErrors:allErrors];
             break;
         }
         
@@ -257,23 +259,19 @@
     if(wasAllOK) {
         return true;
     } else {
-        *err = [self anError:@"There were errors during processing" withError:nil data:allErrors];
+        *err = [self _createError:@"There were errors during processing" withError:nil data:allErrors];
         return false;
     }
 
 }
 
-// =====================================================================================================================
-#pragma mark -
-#pragma mark Getter/Setter methods
-// ---------------------------------------------------------------------------------------------------------------------
 
 
 // =====================================================================================================================
 #pragma mark -
 #pragma mark PRIVATE methods
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) createLocalMapWithTuple:(GMTCompTuple *)tuple allErrors:(NSMutableArray *)allErrors {
+- (BOOL) _createLocalMapWithTuple:(GMTCompTuple *)tuple allErrors:(NSMutableArray *)allErrors {
 
     // Para controlar los errores locales
     NSError *localError = nil;
@@ -287,7 +285,7 @@
     localError = nil;
     NSArray *remotePoints = [self.gmService getPointListFromMap:tuple.remoteItem error:&localError];
     if(remotePoints == nil) {
-        [allErrors addObject:[self anError:@"remote point from local" withError:localError data:nil]];
+        [allErrors addObject:[self _createError:@"remote from map returned nil" withError:localError data:nil]];
         return false;
     }
 
@@ -298,7 +296,7 @@
     localError = nil;
     id localMap = [self.dataSource createLocalMapFrom:tuple.remoteItem error:&localError];
     if(localMap == nil) {
-        [allErrors addObject:[self anError:@"local map from remote" withError:localError data:nil]];
+        [allErrors addObject:[self _createError:@"local map from remote returned nil" withError:localError data:nil]];
         return false;
     }
 
@@ -309,45 +307,51 @@
         id localPoint = [self.dataSource createLocalPointFrom:gmPoint inLocalMap:localMap error:&localError];
         if(localPoint == nil) {
             allOK = false;
-            [allErrors addObject:[self anError:@"local point from remote" withError:localError data:nil]];
+            [allErrors addObject:[self _createError:@"local point from remote returned nil" withError:localError data:nil]];
         }
     }
     
-    return allOK;
+    // Actualiza de nuevo el mapa para que quede marcado como sincronizado si todos los puntos se crearon correctamente
+    localError = nil;
+    if(NO == [self.dataSource updateLocalMap:localMap withRemoteMap:tuple.remoteItem allPointsOK:allOK error:&localError]) {
+        [allErrors addObject:[self _createError:@"update local map from remote" withError:localError data:nil]];
+        return false;
+    }
 
+    return allOK;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) deleteLocalMapWithTuple:(GMTCompTuple *)tuple allErrors:(NSMutableArray *)allErrors {
+- (BOOL) _deleteLocalMapWithTuple:(GMTCompTuple *)tuple allErrors:(NSMutableArray *)allErrors {
 
     BOOL allOK = true;
     NSError *localError = nil;
     if(NO == [self.dataSource deleteLocalMap:tuple.localItem error:&localError]) {
         allOK = false;
-        [allErrors addObject:[self anError:@"delete local map" withError:localError data:nil]];
+        [allErrors addObject:[self _createError:@"delete local map" withError:localError data:nil]];
     }
     return allOK;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) createRemoteMapWithTuple:(GMTCompTuple *)tuple allErrors:(NSMutableArray *)allErrors {
+- (BOOL) _createRemoteMapWithTuple:(GMTCompTuple *)tuple allErrors:(NSMutableArray *)allErrors {
 
     // Para controlar los errores locales
     NSError *localError = nil;
     BOOL allOK = true;
 
     // Consigue la lista de puntos locales
-    NSArray *localPoints = [self.dataSource localPointListForMap:tuple.localItem error:&localError];
+    NSArray *localPoints = [self.dataSource getLocalPointListForMap:tuple.localItem error:&localError];
     if(localPoints == nil) {
-        [allErrors addObject:[self anError:@"get local point list from map" withError:localError data:nil]];
+        [allErrors addObject:[self _createError:@"get local point list from map" withError:localError data:nil]];
         return false;
     }
 
     // Consigue el mapa remoto a crear
     localError = nil;
-    GMTMap *gmMap = [self.dataSource gmMapFromLocalMap:tuple.localItem error:&localError];
+    GMTMap *gmMap = [self.dataSource createRemoteMapFrom:tuple.localItem error:&localError];
     if(gmMap == nil) {
-        [allErrors addObject:[self anError:@"remote map from local" withError:localError data:nil]];
+        [allErrors addObject:[self _createError:@"remote map from local" withError:localError data:nil]];
         return false;
     }
     
@@ -360,7 +364,7 @@
     localError = nil;
     GMTMap *createdMap = [self.gmService addMap:gmMap error:&localError];
     if(createdMap == nil) {
-        [allErrors addObject:[self anError:@"create remote map" withError:localError data:nil]];
+        [allErrors addObject:[self _createError:@"create remote map" withError:localError data:nil]];
         return false;
     }
     
@@ -372,7 +376,7 @@
     // La creacion del mapa remoto genera su gID y el ETAG inicial. Debe actualizar la info local
     localError = nil;
     if(NO == [self.dataSource updateLocalMap:tuple.localItem withRemoteMap:createdMap allPointsOK:true error:&localError]) {
-        [allErrors addObject:[self anError:@"update local map from remote" withError:localError data:nil]];
+        [allErrors addObject:[self _createError:@"update local map from remote" withError:localError data:nil]];
         return false;
     }
 
@@ -382,10 +386,10 @@
 
         // Consigue el punto remoto a crear
         localError = nil;
-        GMTPoint *remotePoint = [self.dataSource gmPointFromLocalPoint:localPoint error:&localError];
+        GMTPoint *remotePoint = [self.dataSource createRemotePointFrom:localPoint error:&localError];
         if(remotePoint == nil) {
             allOK = false;
-            [allErrors addObject:[self anError:@"remote point from local" withError:localError data:nil]];
+            [allErrors addObject:[self _createError:@"remote point from local" withError:localError data:nil]];
         }
 
 
@@ -411,7 +415,7 @@
         localError = nil;
         if(NO == [self.dataSource updateLocalPoint:bCmd.extraData withRemotePoint:(GMTPoint *)bCmd.resultItem error:&localError]) {
             allOK = false;
-            [allErrors addObject:[self anError:@"update local point from remote" withError:localError data:nil]];
+            [allErrors addObject:[self _createError:@"update local point from remote" withError:localError data:nil]];
         }
     }
 
@@ -421,7 +425,7 @@
         updatedMap = [self.gmService getMapFromEditURL:createdMap.editLink error:&localError];
         if(updatedMap == nil) {
             allOK = false;
-            [allErrors addObject:[self anError:@"update remote map" withError:localError data:nil]];
+            [allErrors addObject:[self _createError:@"update remote map" withError:localError data:nil]];
             updatedMap = createdMap;
         }
     } else {
@@ -433,7 +437,7 @@
     localError = nil;
     if(NO == [self.dataSource updateLocalMap:tuple.localItem withRemoteMap:updatedMap allPointsOK:allPointsOK error:&localError]) {
         allOK = false;
-        [allErrors addObject:[self anError:@"update local map from remote" withError:localError data:nil]];
+        [allErrors addObject:[self _createError:@"update local map from remote" withError:localError data:nil]];
     }
     
     return  allOK;
@@ -441,20 +445,20 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) deleteRemoteMapWithTuple:(GMTCompTuple *)tuple allErrors:(NSMutableArray *)allErrors {
+- (BOOL) _deleteRemoteMapWithTuple:(GMTCompTuple *)tuple allErrors:(NSMutableArray *)allErrors {
 
     BOOL allOK = true;
     NSError *localError = nil;
     [self.gmService deleteMap:tuple.remoteItem error:&localError];
     if(localError != nil) {
         allOK = false;
-        [allErrors addObject:[self anError:@"delete remote map" withError:localError data:nil]];
+        [allErrors addObject:[self _createError:@"delete remote map" withError:localError data:nil]];
     }
     return allOK;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) updateLocalAndRemoteMapWithTuple:(GMTCompTuple *)mapTuple allErrors:(NSMutableArray *)allErrors {
+- (BOOL) _updateLocalAndRemoteMapWithTuple:(GMTCompTuple *)mapTuple allErrors:(NSMutableArray *)allErrors {
 
     // Para controlar los errores locales
     NSError *localError = nil;
@@ -477,30 +481,15 @@
     // Actualiza primero la información del propio mapa
     if(mapTuple.compStatus == ST_Comp_Update_Local) {
         if(NO == [self.dataSource updateLocalMap:localMap withRemoteMap:remoteMap allPointsOK:true error:&localError]) {
-            [allErrors addObject:[self anError:@"update local map from remote" withError:localError data:nil]];
+            [allErrors addObject:[self _createError:@"update local map from remote" withError:localError data:nil]];
             return false;
         }
     } else {
         localError = nil;
-        GMTMap *mapToUpdate = [self.dataSource gmMapFromLocalMap:localMap error:&localError];
-        if(mapToUpdate == nil) {
-            [allErrors addObject:[self anError:@"remote map from local" withError:localError data:nil]];
+        if(![self.dataSource updateRemoteMap:remoteMap withLocalMap:localMap error:&localError]) {
+            [allErrors addObject:[self _createError:@"update remote map from local information" withError:localError data:nil]];
             return false;
         }
-
-        localError = nil;
-        remoteMap = [self.gmService updateMap:mapToUpdate error:&localError];
-        if(remoteMap == nil) {
-            [allErrors addObject:[self anError:@"update remote map" withError:localError data:nil]];
-            return false;
-        }
-
-        // Tiene que actualizar el ETAG del mapa local tras la actualizacion remota
-        if(NO == [self.dataSource updateLocalMap:localMap withRemoteMap:remoteMap allPointsOK:true error:&localError]) {
-            [allErrors addObject:[self anError:@"update local map from remote" withError:localError data:nil]];
-            return false;
-        }
-
     }
 
     
@@ -512,7 +501,7 @@
     localError = nil;
     NSArray *remotePoints = [self.gmService getPointListFromMap:remoteMap error:&localError];
     if(remotePoints == nil) {
-        [allErrors addObject:[self anError:@"get point list from remote map" withError:localError data:nil]];
+        [allErrors addObject:[self _createError:@"get point list from remote map" withError:localError data:nil]];
         return false;
     }
 
@@ -522,9 +511,9 @@
 
 
     // Consigue la lista de puntos locales
-    NSArray *localPoints = [self.dataSource localPointListForMap:localMap error:&localError];
+    NSArray *localPoints = [self.dataSource getLocalPointListForMap:localMap error:&localError];
     if(localPoints == nil) {
-        [allErrors addObject:[self anError:@"get point list from local map" withError:localError data:nil]];
+        [allErrors addObject:[self _createError:@"get point list from local map" withError:localError data:nil]];
         return false;
     }
 
@@ -537,13 +526,15 @@
     DDLogVerbose(@"GMapSyncService - Comparing point lists");
     NSArray *compTuples;
     if(localMapWasDeleted) {
-        compTuples = [self makeEqualLocalItems:localPoints toRemoteItems:remotePoints];
+        compTuples = [self _makeLocalItems:localPoints equalToRemoteItems:remotePoints];
     } else {
-        compTuples = [self compareLocalItems:localPoints withRemoteItems:remotePoints];
+        compTuples = [self _compareLocalItems:localPoints withRemoteItems:remotePoints];
     }
 
     // Itera los resultados de la comparacion creando comandos de actualizacion en batch
-    DDLogVerbose(@"GMapSyncService - Synchronizing point lists");
+    DDLogVerbose(@"GMapSyncService - ----------------------------------------------------------------");
+    DDLogVerbose(@"GMapSyncService - Synchronizing point lists in map (will make changes!)");
+    DDLogVerbose(@"GMapSyncService - ----------------------------------------------------------------");
     NSMutableArray *batchCmds = [NSMutableArray array];
     for(GMTCompTuple *tuple in compTuples) {
 
@@ -563,16 +554,16 @@
             if(localError != nil) {
                 tuple.runStatus = ST_Run_Failed;
                 allOK = false;
-                [allErrors addObject:[self anError:@"create local point" withError:localError data:nil]];
+                [allErrors addObject:[self _createError:@"create local point" withError:localError data:nil]];
             }
             break;
 
         case ST_Comp_Create_Remote:
-            remotePoint = [self.dataSource gmPointFromLocalPoint:tuple.localItem error:&localError];
+            remotePoint = [self.dataSource createRemotePointFrom:tuple.localItem error:&localError];
             if(remotePoint == nil) {
                 tuple.runStatus = ST_Run_Failed;
                 allOK = false;
-                [allErrors addObject:[self anError:@"remote point from local" withError:localError data:nil]];
+                [allErrors addObject:[self _createError:@"remote point from local" withError:localError data:nil]];
             } else {
                 bCmd = [GMTBatchCmd batchCmd:BATCH_CMD_INSERT withItem:remotePoint];
                 bCmd.extraData = tuple.localItem;
@@ -584,16 +575,16 @@
             if(NO == [self.dataSource deleteLocalPoint:tuple.localItem inLocalMap:localMap error:&localError]) {
                 tuple.runStatus = ST_Run_Failed;
                 allOK = false;
-                [allErrors addObject:[self anError:@"delete local point" withError:localError data:nil]];
+                [allErrors addObject:[self _createError:@"delete local point" withError:localError data:nil]];
             }
             break;
 
         case ST_Comp_Delete_Remote:
-            remotePoint = [self.dataSource gmPointFromLocalPoint:tuple.localItem error:&localError];
+            remotePoint = [self.dataSource createRemotePointFrom:tuple.localItem error:&localError];
             if(remotePoint == nil) {
                 tuple.runStatus = ST_Run_Failed;
                 allOK = false;
-                [allErrors addObject:[self anError:@"remote point from local" withError:localError data:nil]];
+                [allErrors addObject:[self _createError:@"remote point from local" withError:localError data:nil]];
             } else {
                 bCmd = [GMTBatchCmd batchCmd:BATCH_CMD_DELETE withItem:remotePoint];
                 bCmd.extraData = tuple.localItem;
@@ -605,16 +596,17 @@
             if(NO == [self.dataSource updateLocalPoint:tuple.localItem withRemotePoint:tuple.remoteItem error:&localError]) {
                 tuple.runStatus = ST_Run_Failed;
                 allOK = false;
-                [allErrors addObject:[self anError:@"update local point from remote" withError:localError data:nil]];
+                [allErrors addObject:[self _createError:@"update local point from remote" withError:localError data:nil]];
             }
             break;
 
         case ST_Comp_Update_Remote:
-            remotePoint = [self.dataSource gmPointFromLocalPoint:tuple.localItem error:&localError];
+                
+            remotePoint = [self.dataSource createRemotePointFrom:tuple.localItem error:&localError];
             if(remotePoint == nil) {
                 tuple.runStatus = ST_Run_Failed;
                 allOK = false;
-                [allErrors addObject:[self anError:@"remote point from local" withError:localError data:nil]];
+                [allErrors addObject:[self _createError:@"remote point from local" withError:localError data:nil]];
             } else {
                 bCmd = [GMTBatchCmd batchCmd:BATCH_CMD_UPDATE withItem:remotePoint];
                 bCmd.extraData = tuple.localItem;
@@ -627,7 +619,6 @@
         if(tuple.runStatus==ST_Run_Processing) tuple.runStatus = ST_Run_OK;
     }
 
-    
     
     // Chequea periodicamente si debe cancelar
     if(self.mustCancelSync) return false;
@@ -642,9 +633,16 @@
     // La creacion o actualizacion de los puntos remotos cambia su gID y el ETAG. Debe actualizar la info local
     for(GMTBatchCmd *bCmd in batchCmds) {
         localError = nil;
-        if(NO == [self.dataSource updateLocalPoint:bCmd.extraData withRemotePoint:(GMTPoint *)bCmd.resultItem error:&localError]) {
-            allOK = false;
-            [allErrors addObject:[self anError:@"update local point from remote" withError:localError data:nil]];
+        if(bCmd.cmd == BATCH_CMD_DELETE) {
+            if(NO == [self.dataSource deleteLocalPoint:bCmd.extraData inLocalMap:localMap error:&localError]) {
+                allOK = false;
+                [allErrors addObject:[self _createError:@"delete local point after deleting remote" withError:localError data:nil]];
+            }
+        } else {
+            if(NO == [self.dataSource updateLocalPoint:bCmd.extraData withRemotePoint:(GMTPoint *)bCmd.resultItem error:&localError]) {
+                allOK = false;
+                [allErrors addObject:[self _createError:@"update local point from remote" withError:localError data:nil]];
+            }
         }
     }
 
@@ -653,31 +651,25 @@
 
     
     // La creacion de alguno de los puntos hace que el ETAG del mapa remoto cambie
-    GMTMap *updatedMap;
-    if(batchCmds.count > 0) {
-        updatedMap = [self.gmService getMapFromEditURL:remoteMap.editLink error:&localError];
-        if(updatedMap == nil) {
-            allOK = false;
-            [allErrors addObject:[self anError:@"update remote map" withError:localError data:nil]];
-            updatedMap = remoteMap;
-        }
-    } else {
-        updatedMap = remoteMap;
-    }
-
     // Actualiza los datos del mapa local desde el remoto recien actualizado
     // (gID, ETAG, fechas, etc.)
-    localError = nil;
-    if(NO == [self.dataSource updateLocalMap:localMap withRemoteMap:updatedMap allPointsOK:allPointsOK error:&localError]) {
+    GMTMap *updatedMap = [self.gmService getMapFromEditURL:remoteMap.editLink error:&localError];
+    if(updatedMap == nil) {
         allOK = false;
-        [allErrors addObject:[self anError:@"update local map" withError:localError data:nil]];
+        [allErrors addObject:[self _createError:@"update remote map" withError:localError data:nil]];
+    } else {
+        localError = nil;
+        if(NO == [self.dataSource updateLocalMap:localMap withRemoteMap:updatedMap allPointsOK:allPointsOK error:&localError]) {
+            allOK = false;
+            [allErrors addObject:[self _createError:@"update local map" withError:localError data:nil]];
+        }
     }
 
     return allOK;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (NSArray *) makeEqualLocalItems:(NSArray *)localItems toRemoteItems:(NSArray *)remoteItems {
+- (NSArray *) _makeLocalItems:(NSArray *)localItems equalToRemoteItems:(NSArray *)remoteItems {
 
     // Aqui se almacenara el resultado de la comparacion
     NSMutableArray *tuples = [NSMutableArray array];
@@ -689,7 +681,7 @@
     // ----------------------------------------------------------------------------------------------------
     for(id<GMPComparable> remoteItem in remoteItems) {
 
-        id<GMPComparableLocal> localItem = (id<GMPComparableLocal>)[self searchItemBygID : remoteItem.gID inArray : localItems];
+        id<GMPComparableLocal> localItem = (id<GMPComparableLocal>)[self _searchItemBygID : remoteItem.gID inArray : localItems];
 
         if(localItems != nil) {
             [tuples addObject:[GMTCompTuple tupleWithCompStatus:ST_Comp_Update_Local localItem:localItem remoteItem:remoteItem conflicted:false]];
@@ -706,7 +698,7 @@
     // ----------------------------------------------------------------------------------------------------
     for(id<GMPComparableLocal> localItem in localItems) {
 
-        id<GMPComparable> remoteItem = [self searchItemBygID:localItem.gID inArray:remoteItems];
+        id<GMPComparable> remoteItem = [self _searchItemBygID:localItem.gID inArray:remoteItems];
         if(remoteItem == nil) {
             [tuples addObject:[GMTCompTuple tupleWithCompStatus:ST_Comp_Delete_Local localItem:localItem remoteItem:remoteItem conflicted:false]];
         }
@@ -717,7 +709,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (NSArray *) compareLocalItems:(NSArray *)localItems withRemoteItems:(NSArray *)remoteItems {
+- (NSArray *) _compareLocalItems:(NSArray *)localItems withRemoteItems:(NSArray *)remoteItems {
 
     // Aqui se almacenara el resultado de la comparacion
     NSMutableArray *tuples = [NSMutableArray array];
@@ -730,7 +722,7 @@
     // ----------------------------------------------------------------------------------------------------
     for(id<GMPComparable> remoteItem in remoteItems) {
 
-        id<GMPComparableLocal> localItem = (id<GMPComparableLocal>)[self searchItemBygID : remoteItem.gID inArray : localItems];
+        id<GMPComparableLocal> localItem = (id<GMPComparableLocal>)[self _searchItemBygID : remoteItem.gID inArray : localItems];
 
         // Si existe el elemento local y no esta marcado como borrado continua
         // (Se actualizara luego al iterar los items locales)
@@ -741,19 +733,19 @@
         // El que se hace dependera de si existio previamente en local y fue borrada
         if(localItem == nil) {
             // Se crea una nueva entidad local desde la remota
-            DDLogVerbose(@"GMapSyncService - Comp: Create new local entity from remote: %@", remoteItem.name);
+            DDLogVerbose(@"GMapSyncService - Comp: Will create new local entity from remote: %@", remoteItem.name);
             [tuples addObject:[GMTCompTuple tupleWithCompStatus:ST_Comp_Create_Local localItem:localItem remoteItem:remoteItem conflicted:false]];
         } else {
             // Aqui se sabe que la entidad local fue borrada
             if([localItem.etag isEqualToString:remoteItem.etag]) {
                 // Puesto que tienen el mismo ETAG se borra la entidad remota
-                DDLogVerbose(@"GMapSyncService - Comp: Delete remote as it wasn't modified and local was deleted: %@", remoteItem.name);
+                DDLogVerbose(@"GMapSyncService - Comp: Will delete remote as it wasn't modified and local was deleted: %@", remoteItem.name);
                 [tuples addObject:[GMTCompTuple tupleWithCompStatus:ST_Comp_Delete_Remote localItem:localItem remoteItem:remoteItem conflicted:false]];
             } else {
                 // CONFLICTO: Se borro la entidad local y se modifico la remota
                 // RESOLUCION: Se regenera la entidad local desde la remota actualizandola.
                 // Se manda actualizar la entidad remota ¿por qué?
-                DDLogVerbose(@"GMapSyncService - Comp[!]: Update local entity because it was deleted but remote was modified: %@", remoteItem.name);
+                DDLogVerbose(@"GMapSyncService - Comp[WARNING!]: Will update local entity because it was deleted but remote was modified: %@", remoteItem.name);
                 [tuples addObject:[GMTCompTuple tupleWithCompStatus:ST_Comp_Update_Local localItem:localItem remoteItem:remoteItem conflicted:true]];
             }
         }
@@ -772,7 +764,7 @@
             continue;
         }
 
-        id<GMPComparable> remoteItem = [self searchItemBygID:localItem.gID inArray:remoteItems];
+        id<GMPComparable> remoteItem = [self _searchItemBygID:localItem.gID inArray:remoteItems];
 
         // Si la entidad remota existe continua
         // (la gestion de actualizacion se hara despues)
@@ -783,17 +775,17 @@
         // Que se hace dependera de si se sincronizo previamente o es nueva
         if(!localItem.wasSynchronizedValue) {
             // Crea la entidad remota desde la local
-            DDLogVerbose(@"GMapSyncService - Comp: Create new remote from local: %@", localItem.name);
+            DDLogVerbose(@"GMapSyncService - Comp: Will create new remote from local: %@", localItem.name);
             [tuples addObject:[GMTCompTuple tupleWithCompStatus:ST_Comp_Create_Remote localItem:localItem remoteItem:remoteItem conflicted:false]];
         } else {
             if(!localItem.modifiedSinceLastSyncValue) {
                 // Borra la entidad local puesto que no fue modificada y la remota ya no existe
-                DDLogVerbose(@"GMapSyncService - Comp: Delete Local entity as it wasn't modified and remote was deleted previously: %@", localItem.name);
+                DDLogVerbose(@"GMapSyncService - Comp: Will delete Local entity as it wasn't modified and remote was deleted previously: %@", localItem.name);
                 [tuples addObject:[GMTCompTuple tupleWithCompStatus:ST_Comp_Delete_Local localItem:localItem remoteItem:remoteItem conflicted:false]];
             } else {
                 // CONFLICTO: La entidad remota fue borrada pero la local se modificó
                 // RESOLUCION: Recrear la entidad remota desde la local de nuevo
-                DDLogVerbose(@"GMapSyncService - Comp[!]: Remote entity created again from local because the later was changed: %@", localItem.name);
+                DDLogVerbose(@"GMapSyncService - Comp[WARNING!]: Will create remote entity again from local because the later was changed: %@", localItem.name);
                 [tuples addObject:[GMTCompTuple tupleWithCompStatus:ST_Comp_Create_Remote localItem:localItem remoteItem:remoteItem conflicted:true]];
             }
         }
@@ -813,7 +805,7 @@
             continue;
         }
 
-        id<GMPComparable> remoteItem = [self searchItemBygID:localItem.gID inArray:remoteItems];
+        id<GMPComparable> remoteItem = [self _searchItemBygID:localItem.gID inArray:remoteItems];
 
         // Solo procesa si ambas entidades existen
         if(remoteItem == nil) {
@@ -824,21 +816,21 @@
         if(localItem.modifiedSinceLastSyncValue == NO) {
             if([localItem.etag isEqualToString:remoteItem.etag]) {
                 // No hay que hacer nada porque los dos son iguales
-                DDLogVerbose(@"GMapSyncService - Comp: Nothing to be done as both are equals: %@", localItem.name);
+                DDLogVerbose(@"GMapSyncService - Comp: Nothing will be done as both are equals: %@", localItem.name);
             } else {
                 // Actualizamos la entidad local desde la remota
-                DDLogVerbose(@"GMapSyncService - Comp: Update local entity from remote: %@", localItem.name);
+                DDLogVerbose(@"GMapSyncService - Comp: Will update local entity from remote: %@", localItem.name);
                 [tuples addObject:[GMTCompTuple tupleWithCompStatus:ST_Comp_Update_Local localItem:localItem remoteItem:remoteItem conflicted:false]];
             }
         } else {
             if([localItem.etag isEqualToString:remoteItem.etag]) {
                 // Actualiza la entidad remota desde la local
-                DDLogVerbose(@"GMapSyncService - Comp: Update remote entity from local: %@", localItem.name);
+                DDLogVerbose(@"GMapSyncService - Comp: Will update remote entity from local: %@", localItem.name);
                 [tuples addObject:[GMTCompTuple tupleWithCompStatus:ST_Comp_Update_Remote localItem:localItem remoteItem:remoteItem conflicted:false]];
             } else {
                 // CONFLICTO: Las dos entidades tienen actualizaciones
                 // RESOLUCION: Prevalecen los cambios remotos y la entidad local se actualiza
-                DDLogVerbose(@"GMapSyncService - Comp[!]: Local entity updated again from remote because both were changed: %@", localItem.name);
+                DDLogVerbose(@"GMapSyncService - Comp[WARNING!]: Will update local entity again from remote because both were changed: %@", localItem.name);
                 [tuples addObject:[GMTCompTuple tupleWithCompStatus:ST_Comp_Update_Local localItem:localItem remoteItem:remoteItem conflicted:true]];
             }
         }
@@ -851,7 +843,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (id<GMPComparable>) searchItemBygID:(NSString *)gID inArray:(NSArray *)items {
+- (id<GMPComparable>) _searchItemBygID:(NSString *)gID inArray:(NSArray *)items {
 
 
     for(id<GMPComparable> item in items) {
@@ -863,7 +855,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (NSError *) anError:(NSString *)desc withError:(NSError *)prevErr data:(id)data {
+- (NSError *) _createError:(NSString *)desc withError:(NSError *)prevErr data:(id)data {
 
     NSString *content = data == nil ? @"" : [data description];
     NSDictionary *errInfo = [NSDictionary dictionaryWithObjectsAndKeys:

@@ -24,6 +24,7 @@
 
 #import "BlockActionSheet.h"
 #import "KxMenu.h"
+#import "UIImage+Tint.h"
 #import "Util_Macros.h"
 
 
@@ -35,9 +36,15 @@
 #pragma mark Private Enumerations & definitions
 //*********************************************************************************************************************
 typedef NS_ENUM(NSUInteger, MENU_MORE_CMDS) {
-    MENU_MORE_MOVE=1,
-    MENU_MORE_TAGGING=2,
-    MENU_MORE_DELETE=3
+    MENU_MORE_MOVE    = 1,
+    MENU_MORE_TAGGING = 2,
+    MENU_MORE_DELETE  = 3
+};
+
+typedef NS_ENUM(NSUInteger, MENU_MAP_LOCATION) {
+    MENU_ZOOM_ON_MY_LOCATION = 1,
+    MENU_ZOOM_SHOW_ALL       = 2,
+    MENU_ZOOM_ON_SELECTED    = 3
 };
 
 
@@ -52,6 +59,7 @@ typedef NS_ENUM(NSUInteger, MENU_MORE_CMDS) {
 @property (weak, nonatomic) IBOutlet UIToolbar                          *doneToolbar;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem                    *changeControllerTbItem;
 @property (weak, nonatomic) IBOutlet UIView                             *contentView;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *sortAndLocateMenuItem;
 
 @property (strong, nonatomic) TagFilterViewController                   *tagsFilterVC;
 
@@ -291,9 +299,11 @@ typedef NS_ENUM(NSUInteger, MENU_MORE_CMDS) {
     if(self.activeVC == self.pointListVC) {
         [self _transitionFromViewController:self.pointListVC toViewController:self.pointMapVC];
         self.changeControllerTbItem.image = [UIImage imageNamed:@"tbar-viewList"];
+        self.sortAndLocateMenuItem.image = [UIImage imageNamed:@"tbar-mapMenu"];
     } else {
         [self _transitionFromViewController:self.pointMapVC toViewController:self.pointListVC];
         self.changeControllerTbItem.image = [UIImage imageNamed:@"tbar-viewMap"];
+        self.sortAndLocateMenuItem.image = [UIImage imageNamed:@"tbar-sort"];
     }
     
     // Le "refresca" al ViewController que acaba de entrar que punto es el que estaria seleccionado/con foco
@@ -317,6 +327,22 @@ typedef NS_ENUM(NSUInteger, MENU_MORE_CMDS) {
     MMap *copiedMap = (MMap *)[childContext objectWithID:self.map.objectID];
     MPoint *pointToAdd = [MPoint emptyPointWithName:@"" inMap:copiedMap];
     
+    
+    // Calcula una posicion de origen
+    __block CLLocationCoordinate2D centre;
+    if(self.activeVC==self.pointMapVC) {
+         centre = self.pointMapVC.mapCenter;
+    } else {
+        centre = CLLocationCoordinate2DMake(0, 0);
+        [self.filter.pointList enumerateObjectsUsingBlock:^(MPoint *point, NSUInteger idx, BOOL *stop) {
+            centre.latitude += point.coordinate.latitude;
+            centre.longitude += point.coordinate.longitude;
+        }];
+        centre.latitude /= self.filter.pointList.count;
+        centre.longitude /= self.filter.pointList.count;
+    }
+    [pointToAdd updateLatitude:centre.latitude longitude:centre.longitude];
+    
     // Si hay un filtro activo de Tags se los establece por defecto
     NSSet *filterTags = self.filter.filterTags;
     for(MTag *tag in filterTags) {
@@ -339,31 +365,54 @@ typedef NS_ENUM(NSUInteger, MENU_MORE_CMDS) {
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (IBAction)tbarItemSortMenu:(UIBarButtonItem *)sender {
+- (IBAction)tbarItemSortAndLocateMenu:(UIBarButtonItem *)sender {
     
-    NSArray *menuItems =
-    @[
-      [KxMenuItem menuItem:@"Sort by icon"
-                     image:[UIImage imageNamed:@"tbar-sort"]
-                    target:self
-                    action:@selector(sortMenuItem:)
-                   cmdData:@[MBaseOrderByIconAsc, MBaseOrderByNameAsc]],
-      [KxMenuItem menuItem:@"Sort by name"
-                     image:[UIImage imageNamed:@"tbar-sort"]
-                    target:self
-                    action:@selector(sortMenuItem:)
-                   cmdData:@[MBaseOrderByNameAsc]],
-      [KxMenuItem menuItem:@"Sort by distance"
-                     image:[UIImage imageNamed:@"tbar-sort"]
-                    target:self
-                    action:@selector(sortMenuItem:)
-                   cmdData:@[InMemoryOrderByDistanceAsc, MBaseOrderByNameAsc]]
-      ];
+    NSArray *menuItems;
     
+    // El menu depende del VC activo
+    if(self.activeVC==self.pointListVC) {
+        menuItems = @[
+                      [KxMenuItem menuItem:@"Sort by icon"
+                                     image:[UIImage imageNamed:@"tbar-sort"]
+                                    target:self
+                                    action:@selector(sortMenuItem:)
+                                   cmdData:@[MBaseOrderByIconAsc, MBaseOrderByNameAsc]],
+                      [KxMenuItem menuItem:@"Sort by name"
+                                     image:[UIImage imageNamed:@"tbar-sort"]
+                                    target:self
+                                    action:@selector(sortMenuItem:)
+                                   cmdData:@[MBaseOrderByNameAsc]],
+                      [KxMenuItem menuItem:@"Sort by distance"
+                                     image:[UIImage imageNamed:@"tbar-sort"]
+                                    target:self
+                                    action:@selector(sortMenuItem:)
+                                   cmdData:@[InMemoryOrderByDistanceAsc, MBaseOrderByNameAsc]]
+                      ];
+    } else {
+        menuItems = @[
+                      [KxMenuItem menuItem:@"My Location"
+                                     image:[UIImage imageNamed:@"tbar-gps"]
+                                    target:self
+                                    action:@selector(locationMenuItem:)
+                                   cmdData:[NSNumber numberWithInt:MENU_ZOOM_ON_MY_LOCATION]],
+                      [KxMenuItem menuItem:@"All points"
+                                     image:[UIImage imageNamed:@"tbar-expand"]
+                                    target:self
+                                    action:@selector(locationMenuItem:)
+                                   cmdData:[NSNumber numberWithInt:MENU_ZOOM_SHOW_ALL]],
+                      [KxMenuItem menuItem:@"Selected"
+                                     image:[UIImage imageNamed:@"tbar-mapMarker"]
+                                    target:self
+                                    action:@selector(locationMenuItem:)
+                                   cmdData:[NSNumber numberWithInt:MENU_ZOOM_ON_SELECTED]],
+                      ];
+    }
+
+/*
     KxMenuItem *first = menuItems[0];
     first.foreColor = [UIColor colorWithRed:47/255.0f green:112/255.0f blue:225/255.0f alpha:1.0];
     first.alignment = NSTextAlignmentCenter;
-    
+*/
     [KxMenu setTitleFont: [UIFont systemFontOfSize:12]];
     [KxMenu showMenuInView:self.view
                   fromRect:[self _findBarButtonItemRect:sender inToolBar:self.navigationController.toolbar]
@@ -605,6 +654,23 @@ typedef NS_ENUM(NSUInteger, MENU_MORE_CMDS) {
     }
 }
 
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) locationMenuItem:(KxMenuItem *)sender
+{
+    NSNumber *option = (NSNumber *)sender.cmdData;
+    switch (option.intValue) {
+        case MENU_ZOOM_ON_MY_LOCATION:
+            [self.pointMapVC zoomOnMyLocation];
+            break;
+        case MENU_ZOOM_ON_SELECTED:
+            [self.pointMapVC zoomOnSelected];
+            break;
+        case MENU_ZOOM_SHOW_ALL:
+            [self.pointMapVC zoomAndShowAll];
+            break;
+    }
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 - (void) sortMenuItem:(KxMenuItem *)sender

@@ -15,13 +15,13 @@
 #pragma mark -
 #pragma mark PRIVATE CONSTANTS and C-Methods definitions
 // ---------------------------------------------------------------------------------------------------------------------
-const NSString *TCompStatusType_Names[] = {
+const NSString *TCompStatus_Names[] = {
     @"ST_Comp_Create_Local", @"ST_Comp_Create_Remote",
     @"ST_Comp_Delete_Local", @"ST_Comp_Delete_Remote",
     @"ST_Comp_Update_Local", @"ST_Comp_Update_Remote"
 };
 
-const NSString *TRunStatusType_Names[] = {
+const NSString *TRunStatus_Names[] = {
     @"ST_Run_None",
     @"ST_Run_Processing",
     @"ST_Run_OK",
@@ -52,7 +52,7 @@ const NSString *TRunStatusType_Names[] = {
 #pragma mark -
 #pragma mark CLASS methods
 // ---------------------------------------------------------------------------------------------------------------------
-+ (GMTCompTuple *) tupleWithCompStatus:(TCompStatusType)compStatus
++ (GMTCompTuple *) tupleWithCompStatus:(TCompStatus)compStatus
                              localItem:(id<GMPComparableLocal>)localItem
                             remoteItem:(id<GMPComparable>)remoteItem
                             conflicted:(BOOL)conflicted {
@@ -78,7 +78,7 @@ const NSString *TRunStatusType_Names[] = {
 #pragma mark General PUBLIC methods
 // ---------------------------------------------------------------------------------------------------------------------
 - (NSString *)description {
-    return [NSString stringWithFormat:@"local = %@, remote = %@, compStatus = %@, runStatus = %@", self.localItem.name, self.remoteItem.name, TCompStatusType_Names[self.compStatus], TRunStatusType_Names[self.runStatus]];
+    return [NSString stringWithFormat:@"local = %@, remote = %@, compStatus = %@, runStatus = %@", self.localItem.name, self.remoteItem.name, TCompStatus_Names[self.compStatus], TRunStatus_Names[self.runStatus]];
 }
 
 @end

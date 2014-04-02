@@ -8,9 +8,9 @@
 
 #define __GMTMap__IMPL__
 #define __GMTItem__IMPL__
+#define __GMTItem__SUBCLASSES__PROTECTED__
 #import "GMTMap.h"
 
-#import "GMPItemSubclassing.h"
 #import "NSString+JavaStr.h"
 
 
@@ -19,7 +19,7 @@
 #pragma mark -
 #pragma mark PRIVATE interface definition
 // *********************************************************************************************************************
-@interface GMTMap () <GMPItemSubclassing>
+@interface GMTMap ()
 
 
 @end

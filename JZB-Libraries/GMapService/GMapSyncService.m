@@ -74,7 +74,7 @@
                               password:(NSString *)password
                             dataSource:(id<GMPSyncDataSource>)dataSource
                               delegate:(id<GMPSyncDelegate>)delegate
-                                 error:(NSError **)err {
+                                 error:(NSError * __autoreleasing *)err {
 
 
     DDLogVerbose(@"GMapSyncService - initWithEmailAndPassword");
@@ -115,7 +115,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) syncMaps:(NSError **)err {
+- (BOOL) syncMaps:(NSError * __autoreleasing *)err {
 
 
     DDLogVerbose(@"GMapSyncService - syncMaps");

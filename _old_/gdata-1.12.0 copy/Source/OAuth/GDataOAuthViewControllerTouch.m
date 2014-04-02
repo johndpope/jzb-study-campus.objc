@@ -637,7 +637,7 @@ finishedWithAuth:(GDataOAuthAuthentication *)auth
 #pragma mark Simulator
 
 // Simulator - just simulated, not secure.
-- (NSString *)passwordForService:(NSString *)service account:(NSString *)account error:(NSError **)error {
+- (NSString *)passwordForService:(NSString *)service account:(NSString *)account error:(NSError * __autoreleasing *)error {
   NSString *result = nil;
   if (0 < [service length] && 0 < [account length]) {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -659,7 +659,7 @@ finishedWithAuth:(GDataOAuthAuthentication *)auth
 
 
 // Simulator - just simulated, not secure.
-- (BOOL)removePasswordForService:(NSString *)service account:(NSString *)account error:(NSError **)error {
+- (BOOL)removePasswordForService:(NSString *)service account:(NSString *)account error:(NSError * __autoreleasing *)error {
   BOOL didSucceed = NO;
   if (0 < [service length] && 0 < [account length]) {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -678,7 +678,7 @@ finishedWithAuth:(GDataOAuthAuthentication *)auth
 - (BOOL)setPassword:(NSString *)password
          forService:(NSString *)service
             account:(NSString *)account
-              error:(NSError **)error {
+              error:(NSError * __autoreleasing *)error {
   BOOL didSucceed = NO;
   if (0 < [password length] && 0 < [service length] && 0 < [account length]) {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -714,7 +714,7 @@ finishedWithAuth:(GDataOAuthAuthentication *)auth
 
 
 // iPhone
-- (NSString *)passwordForService:(NSString *)service account:(NSString *)account error:(NSError **)error {
+- (NSString *)passwordForService:(NSString *)service account:(NSString *)account error:(NSError * __autoreleasing *)error {
   OSStatus status = kGDataOAuthKeychainErrorBadArguments;
   NSString *result = nil;
   if (0 < [service length] && 0 < [account length]) {
@@ -743,7 +743,7 @@ finishedWithAuth:(GDataOAuthAuthentication *)auth
 
 
 // iPhone
-- (BOOL)removePasswordForService:(NSString *)service account:(NSString *)account error:(NSError **)error {
+- (BOOL)removePasswordForService:(NSString *)service account:(NSString *)account error:(NSError * __autoreleasing *)error {
   OSStatus status = kGDataOAuthKeychainErrorBadArguments;
   if (0 < [service length] && 0 < [account length]) {
     NSMutableDictionary *keychainQuery = [self keychainQueryForService:service account:account];
@@ -761,7 +761,7 @@ finishedWithAuth:(GDataOAuthAuthentication *)auth
 - (BOOL)setPassword:(NSString *)password
          forService:(NSString *)service
             account:(NSString *)account
-              error:(NSError **)error {
+              error:(NSError * __autoreleasing *)error {
   OSStatus status = kGDataOAuthKeychainErrorBadArguments;
   if (0 < [service length] && 0 < [account length]) {
     [self removePasswordForService:service account:account error:nil];

@@ -8,11 +8,12 @@
 
 #define __KmlBackup__IMPL__
 #import "KmlBackup.h"
-#import "MMap.h"
 #import "MPoint.h"
 #import "MIcon.h"
 #import "MTag.h"
 #import "NSString+JavaStr.h"
+#import "NetworkProgressWheelController.h"
+
 
 
 
@@ -58,198 +59,212 @@
 #pragma mark -
 #pragma mark Public methods
 //---------------------------------------------------------------------------------------------------------------------
-
-
-
-
-//=====================================================================================================================
-#pragma mark -
-#pragma mark <GMPKmlBackup> protocol methods
-//---------------------------------------------------------------------------------------------------------------------
-// Map methods
-- (NSArray *) getAllLocalMapList:(NSError **)err {
++ (NSString *) backupFolderWithDate:(NSDate *)date error:(NSError * __autoreleasing *)error {
     
-    NSArray *allMapsList = [MMap allMapsinContext:self.moContext includeMarkedAsDeleted:TRUE];
-    return  allMapsList;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (GMTMap *) createRemoteMapFrom:(MMap *)localMap error:(NSError **)err {
+    // Calcula el nombre del fichero con el mapa, que es local y la hora
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd_hh-mm-ss_z"];
+    NSString *dateString = [dateFormatter stringFromDate:date];
     
-    GMTMap *remoteMap = [GMTMap emptyMapWithName:localMap.name];
-    [self updateRemoteMap:remoteMap withLocalMap:localMap error:err];
-    return  remoteMap;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (BOOL) updateRemoteMap:(GMTMap *)remoteMap withLocalMap:(MMap *)localMap error:(NSError **)err {
+    // Añade la subcarpeta "backup"
+    NSString *backupPathStr = [NSString stringWithFormat:@"/backup/%@/",dateString];
     
-    remoteMap.gID = localMap.gID;
-    remoteMap.etag = localMap.etag;
-    remoteMap.name = localMap.name;
-    remoteMap.summary = localMap.summary;
-    return TRUE;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (MMap *) createLocalMapFrom:(GMTMap *)gmMap error:(NSError **)err {
+    //Get the get the path to the Documents directory
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
     
-    MMap *localMap = [MMap emptyMapWithName:gmMap.name inContext:self.moContext];
-    BOOL ok = [self updateLocalMap:localMap withRemoteMap:gmMap allPointsOK:TRUE error:err];
-    return  ok?localMap:nil;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (BOOL) updateLocalMap:(MMap *)localMap withRemoteMap:(GMTMap *)remoteMap allPointsOK:(BOOL)allPointsOK error:(NSError **)err {
+    //Combine Documents directory path with your file name to get the full path
+    NSString *fullBackupPath = [documentsDirectory stringByAppendingPathComponent:backupPathStr];
     
-    [localMap updateName:remoteMap.name];
-    [localMap updateSummary:remoteMap.summary];
-    [localMap updateGID:remoteMap.gID andETag:remoteMap.etag];
-    
-    // Si NO hubo NINGUN problema con los puntos lo deja marcado como "sincronizado".
-    // En otro caso como "modificado" para forzar que se vuelva a sincronizar
-    if(allPointsOK) {
-        [localMap markAsSynchronized];
-    } else {
-        [localMap markAsModified];
+    // Asegura que existira
+    *error = nil;
+    BOOL result = [[NSFileManager defaultManager] createDirectoryAtPath:fullBackupPath withIntermediateDirectories:YES attributes:nil error:error];
+    if(!result && *error==nil) {
+        *error = [self _createError:@"Error creating backup folder" withError:nil data:nil];
+        return nil;
     }
     
-    return  TRUE;
+    // Retorna el resultado
+    return fullBackupPath;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (BOOL) deleteLocalMap:(MMap *)localMap error:(NSError **)err {
++ (BOOL) backupLocalMap:(MMap *)map inFolder:(NSString *)folder error:(NSError * __autoreleasing *)error {
     
-    // El borrado en la sincronizacion es definitivo y lo elimina del almacen
-    [localMap deleteEntity];
-    return  TRUE;
-}
+    // Calcula el texto KML del mapa
+    NSString *kmlContent = [self _mapToKml:map];
 
-
-//---------------------------------------------------------------------------------------------------------------------
-// Point methods
-- (NSArray *) getLocalPointListForMap:(MMap *)localMap error:(NSError **)err {
+    // Calcula el nombre del fichero con el mapa
+    NSString *mapFilePath = [folder stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-local.kml",map.name]];
     
-    // Retorna todos los puntos del mapa. Incluidos los marcados para borrar
-    return localMap.points.allObjects;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (GMTPoint *) createRemotePointFrom:(MPoint *)localPoint error:(NSError **)err {
-    
-    GMTPoint *remotePoint = [GMTPoint emptyPointWithName:localPoint.name];
-    [self updateRemotePoint:remotePoint withLocalPoint:localPoint error:err];
-    return  remotePoint;
+    // Graba el resultado al fichero de salida
+    *error = nil;
+    BOOL result = [kmlContent writeToFile:mapFilePath atomically:YES encoding:NSUTF8StringEncoding error:error];
+    return result;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (BOOL) updateRemotePoint:(GMTPoint *)remotePoint withLocalPoint:(MPoint *)localPoint error:(NSError **)err {
++ (BOOL) backupRemoteMap:(GMTMap *)map inFolder:(NSString *)folder error:(NSError *__autoreleasing *)error {
     
-    remotePoint.gID = localPoint.gID;
-    remotePoint.etag = localPoint.etag;
-    remotePoint.name = localPoint.name;
-    [self _updateTagsAndDescInGMapPoint:remotePoint fromPoint:localPoint];
-    remotePoint.latitude = localPoint.latitudeValue;
-    remotePoint.longitude = localPoint.longitudeValue;
-    remotePoint.iconHREF = localPoint.icon.iconHREF;
-    return TRUE;
+#define MAP_GID_MARKED      @"/feeds/maps/"
+#define DOWNLOAD_TIMEOUT    10
+    
+    
+    // No se puede hacer backup si no hay mapa
+    NSUInteger p1 = [map.gID indexOf:MAP_GID_MARKED];
+    if(!map || p1==NSNotFound) {
+        return TRUE;
+    }
+    
+    // Separa ambas partes del ID
+    NSArray *mapIDs = [[map.gID substringFromIndex:p1+MAP_GID_MARKED.length] componentsSeparatedByString:@"/"];
+    if(mapIDs.count != 2) {
+        *error = [self _createError:@"Remote map doesn't have a proper gID to download from Google Maps" withError:nil data:map];
+        return FALSE;
+    }
+
+    // Compone la URL de peticion del mapa
+    NSString *urlStr = [NSString stringWithFormat:@"https://maps.google.es/maps/ms?hl=en&ie=UTF8&vps=3&jsv=304e&oe=UTF8&msa=0&msid=%@.%@&output=kml",mapIDs[0],mapIDs[1]];
+    
+    // Hace la peticion para bajarse el contenido
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlStr]];
+    [request setHTTPMethod:@"GET"];
+    [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
+    [request setTimeoutInterval:DOWNLOAD_TIMEOUT];
+    [request setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
+    [request setValue:@"no-cache" forHTTPHeaderField:@"Cache-Control"];
+    [request setValue:@"no-cache" forHTTPHeaderField:@"Pragma"];
+    
+    NSHTTPURLResponse *response = nil;
+    [NetworkProgressWheelController start];
+    NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:error];
+    [NetworkProgressWheelController stop];
+
+    NSString *kmlContent = [[NSString alloc] initWithData:returnData encoding:NSUTF8StringEncoding];
+    
+    // Comprueba si fue bien
+    if(*error!=nil) return FALSE;
+    if(response.statusCode!=200 && response.statusCode!=201) {
+        *error = [self _createError:[NSString stringWithFormat:@"Error downloading remote map '%@' from Google Maps (%@)", map.name, [NSHTTPURLResponse localizedStringForStatusCode:response.statusCode]] withError:*error data:kmlContent];
+        return FALSE;
+    }
+    if(kmlContent.length==0) {
+        *error = [self _createError:[NSString stringWithFormat:@"Error downloading remote map '%@' from Google Maps (Zero bytes received)", map.name] withError:*error data:kmlContent];
+        return FALSE;
+    }
+    
+    // Calcula el nombre del fichero con el mapa
+    NSString *mapFilePath = [folder stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-remote.kml",map.name]];
+    
+    // Graba el resultado al fichero de salida
+    *error = nil;
+    BOOL result = [kmlContent writeToFile:mapFilePath atomically:YES encoding:NSUTF8StringEncoding error:error];
+    return result;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (MPoint *) createLocalPointFrom:(GMTPoint *)gmPoint inLocalMap:(MMap *)localMap error:(NSError **)err {
++ (NSString *) _mapToKml:(MMap *)map {
+
     
-    MPoint *point = [MPoint emptyPointWithName:gmPoint.name inMap:localMap];
-    BOOL ok = [self updateLocalPoint:point withRemotePoint:gmPoint error:err];
-    return ok?point:nil;
+    NSMutableString *kmlStr = [NSMutableString stringWithString:@""];
+    
+    [kmlStr appendString:@"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"];
+    [kmlStr appendString:@"<kml xmlns=\"http://earth.google.com/kml/2.2\">\n"];
+    [kmlStr appendString:@"<Document>\n"];
+    [kmlStr appendFormat:@"  <name>%@</name>\n", map.name];
+    [kmlStr appendFormat:@"  <description><![CDATA[%@]]></description>\n", map.summary];
+    
+    NSDictionary *styleIndexes = [self _calcStyleIndexes:map];
+    [styleIndexes enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSNumber *value, BOOL *stop) {
+        [kmlStr appendFormat:@"  <Style id=\"style-%d\">\n", value.integerValue];
+        [kmlStr appendString:@"    <IconStyle>\n"];
+        [kmlStr appendString:@"      <Icon>\n"];
+        [kmlStr appendFormat:@"        <href>%@</href>\n", key];
+        [kmlStr appendString:@"      </Icon>\n"];
+        [kmlStr appendString:@"    </IconStyle>\n"];
+        [kmlStr appendString:@"  </Style>\n"];
+    }];
+    
+    for(MPoint *point in map.points) {
+        if(!point.markedAsDeletedValue) {
+            NSString *kmlPoint = [self _pointToKml:point withStyleIndexes:styleIndexes];
+            [kmlStr appendString:kmlPoint];
+        }
+    }
+    
+    [kmlStr appendString:@"</Document>\n"];
+    [kmlStr appendString:@"</kml>\n"];
+    
+    return  kmlStr;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (BOOL) updateLocalPoint:(MPoint *)localPoint withRemotePoint:(GMTPoint *)remotePoint error:(NSError **)err {
++ (NSString *) _pointToKml:(MPoint *)point withStyleIndexes:(NSDictionary *)styleIndexes {
     
-    [localPoint updateGID:remotePoint.gID andETag:remotePoint.etag];
-    [localPoint updateName:remotePoint.name];
-
-    [self _updateTagsAndDescInPoint:localPoint fromGMapPoint:remotePoint];
-    [localPoint updateLatitude:remotePoint.latitude longitude:remotePoint.longitude];
+    NSNumber *index = [styleIndexes objectForKey:point.icon.iconHREF];
+    if(index==nil) {
+        index = [NSNumber numberWithUnsignedInteger:0];
+    }
     
-    MIcon *icon = [MIcon iconForHref:remotePoint.iconHREF inContext:localPoint.managedObjectContext];
-    [localPoint updateIcon:icon];
+    NSMutableString *kmlStr = [NSMutableString stringWithString:@""];
+    [kmlStr appendString:@"  <Placemark>\n"];
+    [kmlStr appendFormat:@"    <name>%@</name>\n", [self _escapeStr:point.name]];
+    [kmlStr appendFormat:@"    <description><![CDATA[%@]]></description>\n",[point combinedDescAndTagsInfo]];
+    [kmlStr appendFormat:@"    <styleUrl>#style-%d</styleUrl>\n", index.integerValue];
+    [kmlStr appendString:@"    <Point>\n"];
+    [kmlStr appendFormat:@"      <coordinates>%06f,%06f,0.000000</coordinates>\n", point.coordinate.longitude, point.coordinate.latitude];
+    [kmlStr appendString:@"    </Point>\n"];
+    [kmlStr appendString:@"  </Placemark>\n"];
     
-    [localPoint markAsSynchronized];
-
-    return  TRUE;
+    return kmlStr;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (BOOL) deleteLocalPoint:(MPoint *)localPoint inLocalMap:(id)map error:(NSError **)err {
-    
-    // El borrado en la sincronizacion es definitivo y lo elimina del almacen
-    [localPoint deleteEntity];
-    return TRUE;
++ (NSString *) _escapeStr:(NSString *)value {
+
+    value = [value replaceStr:@"&" with:@"&amp;"];
+    value = [value replaceStr:@"|" with:@"&quot;"];
+    value = [value replaceStr:@"<" with:@"&lt;"];
+    value = [value replaceStr:@">" with:@"&gt;"];
+    return value;
 }
+
+//---------------------------------------------------------------------------------------------------------------------
++ (NSDictionary *) _calcStyleIndexes:(MMap *)map {
+    
+    NSUInteger index = 100;
+
+    NSMutableDictionary *styleIndexes = [NSMutableDictionary dictionary];
+    [styleIndexes setObject:[NSNumber numberWithUnsignedInt:0] forKey:@"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png"];
+    
+    for(MPoint *point in map.points) {
+        
+        if([styleIndexes objectForKey:point.icon.iconHREF]==nil) {
+            [styleIndexes setObject:[NSNumber numberWithUnsignedInt:index] forKey:point.icon.iconHREF];
+            index++;
+        }
+    }
+    return styleIndexes;
+}
+
 
 
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark Private methods
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _updateTagsAndDescInGMapPoint:(GMTPoint *)gmPoint fromPoint:(MPoint *)point {
-
-    NSMutableString *tagsText = [NSMutableString stringWithString:@""];
-    BOOL first = TRUE;
-    for(MTag *tag in point.directNoAutoTags) {
-        if(first) {
-            [tagsText appendString:tag.name];
-        } else {
-            [tagsText appendFormat:@", %@", tag.name];
-        }
-        first = FALSE;
-    }
-
-    gmPoint.descr = [NSString stringWithFormat:@"$[%@]$%@",tagsText,point.descr];
+// ---------------------------------------------------------------------------------------------------------------------
++ (NSError *) _createError:(NSString *)desc withError:(NSError *)prevErr data:(id)data {
     
-    
+    NSString *content = data == nil ? @"" : [data description];
+    NSDictionary *errInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                             desc, NSLocalizedDescriptionKey,
+                             [NSString stringWithFormat:@"Data: %@", content], @"ErrorData",
+                             [NSString stringWithFormat:@"%@", prevErr], @"PreviousErrorInfo", nil];
+    NSError *err = [NSError errorWithDomain:@"KmlBackup" code:200 userInfo:errInfo];
+    return err;
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _updateTagsAndDescInPoint:(MPoint *)point fromGMapPoint:(GMTPoint *)gmPoint {
-    
-    NSString *text=gmPoint.descr;
-    
-    // Borra los tags actuales porque, en cualquier caso, los tags vendran del punto remoto
-    for(MTag *tag in [point.directNoAutoTags copy]) {
-        [tag untagPoint:point];
-    }
-    
-    // Primero elimina la informacion previa
-    NSUInteger p1 = [text indexOf:@"$["];
-    NSUInteger p2 = [text indexOf:@"]$"];
-    if(p1==NSNotFound || p2==NSNotFound || p1>=p2) {
-        
-        // Pone la descripcion tal cual esta en el GMTPoint
-        [point updateDesc:text];
-        
-    } else {
-        
-        NSString *txt1 = [text subStrFrom:0 to:p1];
-        NSString *txt2 = [text subStrFrom:2+p2];
-        
-        // Extrae la descripcion "limpia"
-        NSString *cleanDesc = [NSString stringWithFormat:@"%@%@",txt1, txt2];
-        [point updateDesc:cleanDesc];
-
-        // Extrae la informacion de los tags
-        NSString *tagsStr = [text subStrFrom:2+p1 to:p2];
-        NSArray *tagNames = [tagsStr componentsSeparatedByString:@","];
-        for(NSString *tagName in tagNames) {
-            MTag *tag = [MTag tagWithFullName:tagName inContext:self.moContext];
-            [tag tagPoint:point];
-        }
-    }
-    
-    
-}
 
 @end
 

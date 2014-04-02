@@ -25,11 +25,11 @@
 //*********************************************************************************************************************
 @interface BaseKeyboardViewController () <UIScrollViewDelegate>
 
-@property (nonatomic, assign) BOOL      notifiedWillShow;
-@property (nonatomic, assign) BOOL      notifiedDidShow;
-@property (nonatomic, assign) CGSize    prevSize;
+@property (assign, nonatomic) BOOL      notifiedWillShow;
+@property (assign, nonatomic) BOOL      notifiedDidShow;
+@property (assign, nonatomic) CGSize    prevSize;
 
-@property (nonatomic, assign) CGRect    keyboardRect;
+@property (assign, nonatomic) CGRect    keyboardRect;
 
 @end
 

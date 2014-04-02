@@ -8,9 +8,9 @@
 
 #define __GMTPoint__IMPL__
 #define __GMTItem__IMPL__
+#define __GMTItem__SUBCLASSES__PROTECTED__
 #import "GMTPoint.h"
 
-#import "GMPItemSubclassing.h"
 
 
 
@@ -18,7 +18,7 @@
 #pragma mark -
 #pragma mark PRIVATE interface definition
 // *********************************************************************************************************************
-@interface GMTPoint () <GMPItemSubclassing>
+@interface GMTPoint ()
 
 
 @end

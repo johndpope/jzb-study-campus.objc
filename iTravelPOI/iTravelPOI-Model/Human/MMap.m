@@ -90,11 +90,10 @@
 #pragma mark -
 #pragma mark Public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) _deleteEntity {
+- (void) deleteEntity {
     
     self.summary = nil;
-    
-    [super _deleteEntity];
+    [super deleteEntity];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -109,19 +108,12 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) markAsModified {
-    
-    [super _markAsModified];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
 - (void) markAsDeleted:(BOOL) value {
 
-    if(self.markedAsDeletedValue != value) {
+    [super markAsDeleted:value];
 
-        [super _markAsDeleted:value];
-        
-        // Marca todos sus puntos como borrados tambien
+    // Marca todos sus puntos como borrados tambien
+    if(value==TRUE) {
         for(MPoint *point in self.points) {
             [point markAsDeleted:value];
         }

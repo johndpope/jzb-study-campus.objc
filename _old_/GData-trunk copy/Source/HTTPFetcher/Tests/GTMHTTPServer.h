@@ -95,7 +95,7 @@ enum {
 // above for the error domain and error codes).  If the server is started, |YES|
 // is returned and the server's delegate is called for any requests that come
 // in.
-- (BOOL)start:(NSError **)error;
+- (BOOL)start:(NSError * __autoreleasing *)error;
 - (void)stop;
 
 // returns the number of requests currently active in the server (i.e.-being

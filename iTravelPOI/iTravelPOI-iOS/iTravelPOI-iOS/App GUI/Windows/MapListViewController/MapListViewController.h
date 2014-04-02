@@ -27,7 +27,6 @@
 @interface MapListViewController : UIViewController
 
 
-@property (strong, nonatomic) NSManagedObjectContext *moContext;
 
 
 
@@ -35,7 +34,6 @@
 #pragma mark -
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (MapListViewController *) mapListViewControllerWithContext:(NSManagedObjectContext *)moContext;
 
 
 

@@ -29,7 +29,7 @@ UIKIT_EXTERN NSString *const InMemoryOrderByDistanceDes;  // se puede hacer en m
 #pragma mark -
 #pragma mark Public Interface definition
 //*********************************************************************************************************************
-@interface MBase : _MBase {}
+@interface MBase : _MBase
 
 
 //=====================================================================================================================
@@ -51,10 +51,11 @@ UIKIT_EXTERN NSString *const InMemoryOrderByDistanceDes;  // se puede hacer en m
 #pragma mark -
 #pragma mark INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) deleteEntity;
 - (BOOL) updateIcon:(MIcon *)icon;
 - (BOOL) updateName:(NSString *)value;
+
 - (void) markAsModified;
+- (void) deleteEntity;
 
 
 //=====================================================================================================================
@@ -64,17 +65,14 @@ UIKIT_EXTERN NSString *const InMemoryOrderByDistanceDes;  // se puede hacer en m
 #ifdef __MBase__SUBCLASSES__PROTECTED__
 + (int64_t) _generateInternalID;
 - (void) _resetEntityWithName:(NSString *)name icon:(MIcon *)icon;
-- (void) _deleteEntity;
-- (void) _markAsModified;
-
-
-+ (NSArray *) _allWithPredicate:(NSPredicate *)predicate  sortOrder:(NSArray *)sortOrder inContext:(NSManagedObjectContext *)moContext;
 
 + (NSString *)    _myEntityName;
 + (NSPredicate *) _predicateAllInContextIncludeMarkedAsDeleted:(BOOL)withDeleted;
 + (NSPredicate *) _predicateAllWithName:(NSString *)name;
 + (NSPredicate *) _predicateAllWithNameLike:(NSString *)name;
 + (NSPredicate *) _predicateAllWithIcon:(MIcon *)icon;
+
++ (NSArray *)     _allWithPredicate:(NSPredicate *)predicate  sortOrder:(NSArray *)sortOrder inContext:(NSManagedObjectContext *)moContext;
 #endif
 
 

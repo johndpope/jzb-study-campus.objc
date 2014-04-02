@@ -846,7 +846,7 @@ static Class gSignInClass = Nil;
 #pragma mark Simulator
 
 // Simulator - just simulated, not secure.
-- (NSString *)passwordForService:(NSString *)service account:(NSString *)account error:(NSError **)error {
+- (NSString *)passwordForService:(NSString *)service account:(NSString *)account error:(NSError * __autoreleasing *)error {
   NSString *result = nil;
   if (0 < [service length] && 0 < [account length]) {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -868,7 +868,7 @@ static Class gSignInClass = Nil;
 
 
 // Simulator - just simulated, not secure.
-- (BOOL)removePasswordForService:(NSString *)service account:(NSString *)account error:(NSError **)error {
+- (BOOL)removePasswordForService:(NSString *)service account:(NSString *)account error:(NSError * __autoreleasing *)error {
   BOOL didSucceed = NO;
   if (0 < [service length] && 0 < [account length]) {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -888,7 +888,7 @@ static Class gSignInClass = Nil;
          forService:(NSString *)service
       accessibility:(CFTypeRef)accessibility
             account:(NSString *)account
-              error:(NSError **)error {
+              error:(NSError * __autoreleasing *)error {
   BOOL didSucceed = NO;
   if (0 < [password length] && 0 < [service length] && 0 < [account length]) {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -924,7 +924,7 @@ static Class gSignInClass = Nil;
 
 
 // iPhone
-- (NSString *)passwordForService:(NSString *)service account:(NSString *)account error:(NSError **)error {
+- (NSString *)passwordForService:(NSString *)service account:(NSString *)account error:(NSError * __autoreleasing *)error {
   OSStatus status = kGTMOAuth2KeychainErrorBadArguments;
   NSString *result = nil;
   if (0 < [service length] && 0 < [account length]) {
@@ -953,7 +953,7 @@ static Class gSignInClass = Nil;
 
 
 // iPhone
-- (BOOL)removePasswordForService:(NSString *)service account:(NSString *)account error:(NSError **)error {
+- (BOOL)removePasswordForService:(NSString *)service account:(NSString *)account error:(NSError * __autoreleasing *)error {
   OSStatus status = kGTMOAuth2KeychainErrorBadArguments;
   if (0 < [service length] && 0 < [account length]) {
     NSMutableDictionary *keychainQuery = [self keychainQueryForService:service account:account];
@@ -972,7 +972,7 @@ static Class gSignInClass = Nil;
          forService:(NSString *)service
       accessibility:(CFTypeRef)accessibility
             account:(NSString *)account
-              error:(NSError **)error {
+              error:(NSError * __autoreleasing *)error {
   OSStatus status = kGTMOAuth2KeychainErrorBadArguments;
   if (0 < [service length] && 0 < [account length]) {
     [self removePasswordForService:service account:account error:nil];

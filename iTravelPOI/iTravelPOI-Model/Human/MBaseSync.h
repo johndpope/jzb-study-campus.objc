@@ -4,6 +4,8 @@
 
 
 #import "_MBaseSync.h"
+#import "GMPComparable.h"
+
 
 
 //*********************************************************************************************************************
@@ -18,7 +20,7 @@
 #pragma mark -
 #pragma mark Public Interface definition
 //*********************************************************************************************************************
-@interface MBaseSync : _MBaseSync {}
+@interface MBaseSync : _MBaseSync <GMPComparableLocal>
 
 
 //=====================================================================================================================
@@ -31,16 +33,15 @@
 #pragma mark -
 #pragma mark INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
+- (BOOL) updateGID:(NSString *)gID andETag:(NSString *)etag;
 - (void) markAsDeleted:(BOOL) value;
+- (void) markAsSynchronized;
 
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark SUBCLASSES PROTECTED methods
 //---------------------------------------------------------------------------------------------------------------------
-#ifdef __MBaseSync__SUBCLASSES__PROTECTED__
-- (void) _markAsDeleted:(BOOL) value;
-#endif
 
 
 @end

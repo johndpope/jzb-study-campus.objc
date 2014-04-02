@@ -17,6 +17,6 @@
 //---------------------------------------------------------------------------------------------------------------------
 @interface UIView (SafeTint)
 
-@property (nonatomic, retain) UIColor *iOS6TintColor;
+@property (retain, nonatomic) UIColor *iOS6TintColor;
 
 @end

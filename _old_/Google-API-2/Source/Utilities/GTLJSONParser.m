@@ -31,8 +31,8 @@
 // formatting JSON
 #if !GTL_REQUIRES_NSJSONSERIALIZATION
 @interface GTMNSJSONSerialization : NSObject
-+ (NSData *)dataWithJSONObject:(id)obj options:(NSUInteger)opt error:(NSError **)error;
-+ (id)JSONObjectWithData:(NSData *)data options:(NSUInteger)opt error:(NSError **)error;
++ (NSData *)dataWithJSONObject:(id)obj options:(NSUInteger)opt error:(NSError * __autoreleasing *)error;
++ (id)JSONObjectWithData:(NSData *)data options:(NSUInteger)opt error:(NSError * __autoreleasing *)error;
 @end
 
 // As a fallback, SBJSON is used for parsing and formatting JSON
@@ -107,14 +107,14 @@
 }
 
 + (id)objectWithString:(NSString *)jsonStr
-                 error:(NSError **)error {
+                 error:(NSError * __autoreleasing *)error {
   NSData *data = [jsonStr dataUsingEncoding:NSUTF8StringEncoding];
   return [self objectWithData:data
                         error:error];
 }
 
 + (id)objectWithData:(NSData *)jsonData
-               error:(NSError **)error {
+               error:(NSError * __autoreleasing *)error {
 #if GTL_REQUIRES_NSJSONSERIALIZATION
   NSMutableDictionary *obj = [NSJSONSerialization JSONObjectWithData:jsonData
                                                              options:NSJSONReadingMutableContainers

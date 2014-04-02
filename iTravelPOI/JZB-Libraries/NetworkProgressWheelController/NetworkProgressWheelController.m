@@ -26,7 +26,7 @@
 @interface NetworkProgressWheelController ()
 
 
-@property (atomic, assign) NSInteger usageCount;
+@property (assign, atomic) NSInteger usageCount;
 
 
 + (NetworkProgressWheelController *) sharedInstance;
@@ -83,25 +83,35 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) start {
     
-    // Incrementa el indicador de uso e indica que se muestre un "spinner" en la barra de estado para indicar el acceso a la red
-    self.usageCount++;
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    // Lo sincroniza con el thread main por si viene de otro hilo
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        
+        // Incrementa el indicador de uso e indica que se muestre un "spinner" en la barra de estado para indicar el acceso a la red
+        self.usageCount++;
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+        
+    });
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) stop {
     
-    // Decrementa el indicador de uso. Si ha llegado a cero para el "spinner".
-    self.usageCount--;
-    if(self.usageCount<=0) {
-        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-    }
+    // Lo sincroniza con el thread main por si viene de otro hilo
+    dispatch_sync(dispatch_get_main_queue(), ^{
+
+        // Decrementa el indicador de uso. Si ha llegado a cero para el "spinner".
+        self.usageCount--;
+        if(self.usageCount<=0) {
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+        }
+        
+        // Si es negativo saca una traza de error para avisar de que hay algo raro en la aplicacion
+        if(self.usageCount<0) {
+            self.usageCount=0;
+            DDLogWarn(@"NetworkProgressWheelController usage count went belong zero. You should review the app's code.");
+        }
+    });
     
-    // Si es negativo saca una traza de error para avisar de que hay algo raro en la aplicacion
-    if(self.usageCount<0) {
-        self.usageCount=0;
-        DDLogWarn(@"NetworkProgressWheelController usage count went belong zero. You should review the app's code.");
-    }
 }
 
 

@@ -277,18 +277,18 @@ enum {
 // OK to pass nil for the error parameter.
 - (NSString *)passwordForService:(NSString *)service
                          account:(NSString *)account
-                           error:(NSError **)error;
+                           error:(NSError * __autoreleasing *)error;
 
 // OK to pass nil for the error parameter.
 - (BOOL)removePasswordForService:(NSString *)service
                          account:(NSString *)account
-                           error:(NSError **)error;
+                           error:(NSError * __autoreleasing *)error;
 
 // OK to pass nil for the error parameter.
 - (BOOL)setPassword:(NSString *)password
          forService:(NSString *)service
             account:(NSString *)account
-              error:(NSError **)error;
+              error:(NSError * __autoreleasing *)error;
 
 // For unit tests: allow setting a mock object
 + (void)setDefaultKeychain:(GDataOAuthKeychain *)keychain;

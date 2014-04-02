@@ -28,7 +28,7 @@
 @interface TagTree : NSObject
 
 
-@property (strong, nonatomic, readonly) NSArray *children;
+@property (strong, readonly, nonatomic) NSArray *children;
 
 
 
@@ -66,11 +66,11 @@
 
 @property (weak, nonatomic, readonly)   TagTree *tree;
 @property (weak, nonatomic, readonly)   TagTreeNode *parent;
-@property (strong, nonatomic, readonly) NSArray *children;
-@property (nonatomic, assign, readonly) int deepLevel;
-@property (nonatomic, assign, readonly) int treeIndex;
-@property (nonatomic, assign)           BOOL isExpanded;
-@property (nonatomic, assign)           BOOL isSelected;
+@property (strong, readonly, nonatomic) NSArray *children;
+@property (assign, readonly, nonatomic) int deepLevel;
+@property (assign, readonly, nonatomic) int treeIndex;
+@property (assign, nonatomic)           BOOL isExpanded;
+@property (assign, nonatomic)           BOOL isSelected;
 
 
 @property (strong, nonatomic) MTag *tag;

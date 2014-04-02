@@ -7,9 +7,9 @@
 //
 
 #define __GMTItem__IMPL__
+#define __GMTItem__SUBCLASSES__PROTECTED__
 #import "GMTItem.h"
 
-#import "GMPItemSubclassing.h"
 #import "NSString+JavaStr.h"
 #import "NSString+HTML.h"
 
@@ -27,7 +27,7 @@
 #pragma mark -
 #pragma mark PRIVATE interface definition
 // *********************************************************************************************************************
-@interface GMTItem () <GMPItemSubclassing>
+@interface GMTItem ()
 
 
 @end
@@ -167,5 +167,27 @@
     return [text gtm_stringByEscapingForHTML];
 }
 
+// =====================================================================================================================
+#pragma mark -
+#pragma mark PROTECTED methods
+// ---------------------------------------------------------------------------------------------------------------------
+- (NSString *) __itemTypeName {
+    return nil;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) __atomEntryDataContent:(NSMutableString *)atomStr {
+    
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) __verifyFieldsNotNil:(NSMutableArray *)result {
+    
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) __descriptionPutExtraFields:(NSMutableString *)mutStr {
+    
+}
 
 @end

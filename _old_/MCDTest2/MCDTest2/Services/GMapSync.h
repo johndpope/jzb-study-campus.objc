@@ -21,6 +21,6 @@
 #pragma mark Public CLASS methods
 //---------------------------------------------------------------------------------------------------------------------
 - (void) loginWithUser:(NSString *)email password:(NSString *)password;
-- (GDataFeedBase *)  fetchUserMapList:(NSError **)err;
+- (GDataFeedBase *)  fetchUserMapList:(NSError * __autoreleasing *)err;
 
 @end

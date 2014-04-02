@@ -1,176 +1,20 @@
 //
-//  PointMapViewController.m
-//  iTravelPoint-iOS
+//  SyncMapsViewController.m
+//  iTravelPOI-iOS
 //
 //  Created by Jose Zarzuela on 22/12/13.
 //  Copyright (c) 2013 Jose Zarzuela. All rights reserved.
 //
 
 #define __SyncMapsViewController__IMPL__
-#import <MapKit/MapKit.h>
 #import "SyncMapsViewController.h"
-#import "MKMapView+ZoomLevel.h"
-
-
-
-//*********************************************************************************************************************
-@interface TPointPath : NSObject
-
-@property (assign,nonatomic) NSInteger x;
-@property (assign,nonatomic) NSInteger y;
-@end
-
-@implementation TPointPath
-
-
-
-@end
-
-//*********************************************************************************************************************
-@interface CustomOfflineTileOverlayRenderer : MKTileOverlayRenderer
-//@interface CustomOfflineTileOverlayRenderer : MKOverlayRenderer
-
-@end
-
-@implementation CustomOfflineTileOverlayRenderer
-
-//---------------------------------------------------------------------------------------------------------------------
-- (BOOL)canDrawMapRect:(MKMapRect)mapRect zoomScale:(MKZoomScale)zoomScale {
-
-    //NSLog(@"canDrawMapRect  %f,%f - %f,%f - %f - %f,%f",mapRect.origin.x,mapRect.origin.y,mapRect.size.width,mapRect.size.height, 1/zoomScale, mapRect.size.width*zoomScale, mapRect.size.height*zoomScale);
-    return [super canDrawMapRect:mapRect zoomScale:zoomScale];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)drawMapRect:(MKMapRect)mapRect zoomScale:(MKZoomScale)zoomScale inContext:(CGContextRef)context {
-    
-    //NSLog(@"drawMapRect     %0.2f, %0.2f - %0.2f, %0.2f - %0.2f - %0.2f, %0.2f",mapRect.origin.x,mapRect.origin.y,mapRect.size.width,mapRect.size.height, 1/zoomScale, mapRect.size.width*zoomScale, mapRect.size.height*zoomScale);
-    [super drawMapRect:mapRect zoomScale:zoomScale inContext:context];
-}
-
-@end
-
-//*********************************************************************************************************************
-@interface CustomOfflineTileOverlay : MKTileOverlay
-
-@property (strong,nonatomic) NSMutableArray *pointPaths;
-
-@end
-
-@implementation CustomOfflineTileOverlay
-
-//---------------------------------------------------------------------------------------------------------------------
-- (NSURL *)URLForTilePath:(MKTileOverlayPath)path {
-    
-    NSURL *url = [super URLForTilePath:path];
-    
-    // http://mt0.google.com/vt/x=7&y=7&z=3
-    
-    //NSLog(@"-------------------------------------------------------------------------------------------------");
-    //    NSLog(@"x = %d",path.x);
-    //    NSLog(@"y = %d",path.y);
-    //    NSLog(@"z = %d",path.z);
-    //    NSLog(@"contentScaleFactor = %f",path.contentScaleFactor);
-    //    NSLog(@"url = %@",url);
-    //    NSLog(@"-------------------------------------------------------------------------------------------------");
-    
-    return url;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (BOOL) isNearAnnotation:(MKTileOverlayPath)path {
-
-    for(TPointPath *point in self.pointPaths) {
-        if(abs(path.x-point.x)<3 && abs(path.y-point.y)<3) {
-            return TRUE;
-        }
-    }
-    return FALSE;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)loadTileAtPath2X:(MKTileOverlayPath)path result:(void (^)(NSData *tileData, NSError *error))result {
-    
-    double zoomScale = 2;
-
-    MKTileOverlayPath scaledPath;
-    scaledPath.contentScaleFactor = path.contentScaleFactor;
-    scaledPath.z = path.z-1;
-    double spX = path.x/zoomScale;
-    double spY = path.y/zoomScale;
-    scaledPath.x=floor(spX);
-    scaledPath.y=floor(spY);
-    double offsetX =   256 * zoomScale * (spX-scaledPath.x);
-    double offsetY = 256 * zoomScale * (spY-scaledPath.y);
-    
-    NSURL *scaledUrl = [super URLForTilePath:scaledPath];
-    NSData * scaledData = [[NSData alloc] initWithContentsOfURL:scaledUrl];
-    if ( scaledData != nil ) {
-        UIImage *scaledImg = [UIImage imageWithData: scaledData];
-        UIGraphicsBeginImageContext(CGSizeMake(256, 256));
-        CGRect rect = CGRectMake(-offsetX,-offsetY,zoomScale * 256,zoomScale * 256);
-        [scaledImg drawInRect:rect];
-        UIImage* tileImage = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        NSData *tileData = UIImagePNGRepresentation(tileImage);
-        result(tileData, nil);
-    }
-
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)loadTileAtPathSmall:(MKTileOverlayPath)path result:(void (^)(NSData *tileData, NSError *error))result {
-    
-    MKTileOverlayPath scaledPath;
-    scaledPath.contentScaleFactor = path.contentScaleFactor;
-    scaledPath.z = 16;
-
-    double zoomScale = pow(2,16-path.z);
-    
-    UIGraphicsBeginImageContext(CGSizeMake(256, 256));
-
-    for(int y=0;y<zoomScale;y++) {
-        
-        scaledPath.y=y+path.y*zoomScale;
-        double offsetY = 256 * y / zoomScale;
-
-        for(int x=0;x<zoomScale;x++) {
-
-            scaledPath.x=x+path.x*zoomScale;
-            double offsetX = 256 * x / zoomScale;
-
-            if(![self isNearAnnotation:scaledPath]) continue;
-
-            NSURL *scaledUrl = [super URLForTilePath:scaledPath];
-            NSData * scaledData = [[NSData alloc] initWithContentsOfURL:scaledUrl];
-            if (scaledData != nil) {
-                UIImage *scaledImg = [UIImage imageWithData: scaledData];
-                CGRect rect = CGRectMake(offsetX,offsetY,256/zoomScale,256/zoomScale);
-                [scaledImg drawInRect:rect];
-            }
-        }
-    }
-    
-    UIImage* tileImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    NSData *tileData = UIImagePNGRepresentation(tileImage);
-    result(tileData, nil);
-    
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)loadTileAtPath:(MKTileOverlayPath)path result:(void (^)(NSData *tileData, NSError *error))result {
-    
-    if(path.z<=6) {
-        [self loadTileAtPath2X:path result:result];
-    } else if(path.z==17) {
-        [self loadTileAtPath2X:path result:result];
-    } else {
-        [self loadTileAtPathSmall:path result:result];
-    }
-}
-
-@end
+#import "BaseCoreDataService.h"
+#import "GMapSyncService.h"
+#import "SyncDataSource.h"
+#import "KmlBackup.h"
+#import "UIImage+Tint.h"
+#import "NSString+JavaStr.h"
+#import "NSString+HTML.h"
 
 
 
@@ -181,20 +25,22 @@
 //*********************************************************************************************************************
 
 
-
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark PRIVATE interface definition
 //*********************************************************************************************************************
-@interface SyncMapsViewController () <MKMapViewDelegate>
+@interface SyncMapsViewController () <UITableViewDelegate, UITableViewDataSource, GMPSyncDelegate>
+
+@property (weak, nonatomic) IBOutlet UILabel                *status;
+@property (weak, nonatomic) IBOutlet UITableView            *syncTable;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem        *syncButton;
 
 
-@property (weak, nonatomic) IBOutlet MKMapView          *mapView;
 
-@property (assign, nonatomic) NSInteger mapZoom;
-@property (weak, nonatomic) IBOutlet UILabel *zoomLabel;
-@property (weak, nonatomic) IBOutlet UISlider *zoomSlider;
-@property (strong, nonatomic) CustomOfflineTileOverlay *overlay;
+@property (strong, nonatomic)   NSManagedObjectContext        *moContext;
+@property (strong, atomic)      GMapSyncService               *syncService;
+@property (strong, atomic)      NSArray                       *compTuples;
+@property (strong, atomic)      NSString                      *backupFolder;
 
 @end
 
@@ -208,66 +54,21 @@
 
 
 
-
-
 //=====================================================================================================================
 #pragma mark -
 #pragma mark CLASS methods
 //---------------------------------------------------------------------------------------------------------------------
-
++ (SyncMapsViewController *) SyncMapsViewControllerWithContext:(NSManagedObjectContext *)moContext {
+    
+    SyncMapsViewController *me = nil;
+    me.moContext = moContext;
+    return me;
+}
 
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark Public methods
-//---------------------------------------------------------------------------------------------------------------------
-- (IBAction)zoomChanged:(UISlider *)sender {
-    
-    self.mapZoom = floor(sender.value);
-
-    self.zoomLabel.text = [NSString stringWithFormat:@"Zoom: %u", self.mapZoom];
-    self.overlay.minimumZ = self.overlay.maximumZ = self.mapZoom;
-    [self.mapView setCenterCoordinate:self.mapView.centerCoordinate zoomLevel:self.mapZoom animated:FALSE];
-
-    NSUInteger z = [self.mapView zoomLevel];
-    if(self.mapZoom!=z) {
-        NSLog(@"%lu # %lu", (unsigned long)self.mapZoom, (unsigned long)z);
-    }
-}
-
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) downloadWorld {
-    
-    NSUInteger totalSize = 0;
-    
-    for(int zoom=6;zoom<11;zoom++) {
-        
-        NSUInteger tiles = pow(2, zoom);
-        NSUInteger zoomTotalSize = 0;
-        NSLog(@"** Downloading zoom %d",zoom);
-        
-        for(NSUInteger y=0;y<tiles;y++) {
-            for(NSUInteger x=0;x<tiles;x++) {
-                NSString *urlStr = [NSString stringWithFormat:@"http://otile3.mqcdn.com/tiles/1.0.0/osm/%d/%d/%d.jpg",zoom,x,y];
-                //NSLog(@"Downloading %@",urlStr);
-                NSData * imgData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:urlStr]];
-                if (imgData!= nil) {
-                    //NSLog(@"Done!");
-                    zoomTotalSize+=imgData.length;
-                    NSString *filePath = [NSString stringWithFormat:@"/Users/jzarzuela/Desktop/imgs/z%d/mapTile_%d_%d_%d.jpg",zoom,zoom,x,y];
-                    [imgData writeToFile:filePath atomically:YES];
-                } else {
-                    NSLog(@"--- ERROR ---");
-                }
-            }
-        }
-        NSLog(@"    Zoom %d --> %d bytes",zoom, zoomTotalSize);
-        totalSize += zoomTotalSize;
-    }
-    NSLog(@"Total size %d bytes",totalSize);
-
-}
 //---------------------------------------------------------------------------------------------------------------------
 
 
@@ -286,73 +87,16 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void)viewDidLoad
+- (void) viewWillAppear:(BOOL)animated
 {
-    [super viewDidLoad];
-    
-    
-    //OpenCycleMap:     http://b.tile.opencyclemap.org/cycle/8/76/94.png
-    //MapQuest [19]:         http://otile3.mqcdn.com/tiles/1.0.0/osm/8/76/94.jpg
-    //OpenStreetMap:    http://tile.openstreetmap.org/8/76/94.png
-    //GMaps[22]:            http://mt0.google.com/vt/x=76&y=94&z=8
-    
-    
-    // Place this into your -viewDidLoad method
-    //OpenCycleMap:   NSString *template = @"http://b.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png";          // (1)
-    //MapQuest:
-    NSString *template = @"http://otile3.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpg";       // (1)
-                                                                                           //OpenStreetMap:  NSString *template = @"http://tile.openstreetmap.org/{z}/{x}/{y}.png";                 // (1)
-                                                                                           //GMaps:          NSString *template = @"http://mt0.google.com/vt/x={x}&y={y}&z={z}";                    // (1)
-    
-    // latDelta=97.292972, lngDelta=112.468432  |  latDelta=0.001038, lngDelta=0.000977
-    // latDelta=112.030317, lngDelta=112.358547  | latDelta=0.001147, lngDelta=0.001080
-    // latDelta=53.384587, lngDelta=180.000000
-    
-    self.mapZoom = 17;
-    
-    self.overlay = [[CustomOfflineTileOverlay alloc] initWithURLTemplate:template];          // (2)
-    self.overlay.canReplaceMapContent = YES;                                                     // (3)
-    self.overlay.minimumZ = 0;
-    self.overlay.maximumZ = 21;
-    self.overlay.minimumZ = self.overlay.maximumZ = self.mapZoom;
-    [self.mapView addOverlay:self.overlay level:MKOverlayLevelAboveLabels];                // (4)
-    
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) viewDidAppear:(BOOL)animated {
-    
-    [super viewDidAppear:animated];
-    //[self downloadWorld];
-    
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) viewWillAppear:(BOOL)animated {
-    
-    
     [super viewWillAppear:animated];
     
-    [self _setMapAnnotations];
     
-    self.zoomSlider.value = self.mapZoom;
-    self.zoomLabel.text = [NSString stringWithFormat:@"Zoom: %u", self.mapZoom];
-    
-    CLLocationCoordinate2D centre = [self _calcAllPointsCentre];
-    
-    centre = CLLocationCoordinate2DMake(40.42369,-3.600361); // Casa Madrid
-    centre = CLLocationCoordinate2DMake(42.360093, -71.055831); // Boston
-    centre = CLLocationCoordinate2DMake(42.298801, -70.952254); // Mapa 1
-
-    centre = CLLocationCoordinate2DMake(42.36324150000002, -71.05624399999999); // Mapa 2
-    
-    [self.mapView setCenterCoordinate:centre zoomLevel:self.mapZoom animated:FALSE];
-
-    NSUInteger z = [self.mapView zoomLevel];
-    if(self.mapZoom!=z) {
-        NSLog(@"%lu # %lu", (unsigned long)self.mapZoom, (unsigned long)z);
+    // Do any additional setup after loading the view from its nib.
+    if(self.moContext==nil) {
+        self.moContext = BaseCoreDataService.moContext;
     }
-
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -361,470 +105,388 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
+    
+    // Make sure your segue name in storyboard is the same as this line
+    if ([[segue identifier] isEqualToString:@"MapList_to_PointsList"]) {
+        
+    }
+    
+}
 
 
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark <IBAction> outlet methods
-//---------------------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------
+- (IBAction)syncMapsAction:(UIBarButtonItem *)sender {
+    if(!self.syncService)
+        [self _startSyncMaps];
+    else
+        [self _cancelSyncMaps];
+}
+
 
 
 
 //=====================================================================================================================
 #pragma mark -
-#pragma mark <MKMapViewDelegate> protocol methods
+#pragma mark <GMPSyncDelegate> protocol methods
 //---------------------------------------------------------------------------------------------------------------------
-- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
+- (BOOL) shouldProcessTuple:(GMTCompTuple *)tuple error:(NSError * __autoreleasing *)err {
+
+    BOOL wasOK;
     
-    static NSString *myMapAnnotationID = @"myMapAnnotationID";
+    // De momento no hay error
+    *err = nil;
+
     
+    MMap *localMap = (MMap *)tuple.localItem;
+    GMTMap *remoteMap = (GMTMap *)tuple.remoteItem;
+
     
-    // Solo gestionamos el tipo de anotaciones indicado
-    if(![annotation isKindOfClass:[MKPointAnnotation class]]) {
-        // Parece que es el UserLocation
-        return nil;
+    // Si no tenemos un folder de backup lo prepara
+    if(!self.backupFolder) {
+        [self _setStatus:@"Creating backup folder"];
+        self.backupFolder = [KmlBackup backupFolderWithDate:[NSDate date] error:err];
+        if(!self.backupFolder || *err!=nil) {
+            [self _setStatus:@"Error creating backup folder!"];
+            return FALSE;
+        }
+    }
+
+    // Antes de procesar un mapa hacemos un backup
+    switch(tuple.compStatus) {
+
+        case ST_Comp_Delete_Local:
+            [self _setStatus:@"Backing up local map"];
+            wasOK = [KmlBackup backupLocalMap:localMap inFolder:self.backupFolder error:err];
+            [self _setStatus:[NSString stringWithFormat:@"Local map backed up %@", (wasOK?@"OK":@"with ERROR")]];
+            break;
+            
+        case ST_Comp_Delete_Remote:
+            [self _setStatus:@"Backing up remote map"];
+            wasOK = [KmlBackup backupRemoteMap:remoteMap inFolder:self.backupFolder error:err];
+            [self _setStatus:[NSString stringWithFormat:@"Remote map backed up %@", (wasOK?@"OK":@"with ERROR")]];
+            break;
+            
+        case ST_Comp_Update_Local:
+        case ST_Comp_Update_Remote:
+            [self _setStatus:@"Backing up remote map"];
+            wasOK = [KmlBackup backupRemoteMap:remoteMap inFolder:self.backupFolder error:err];
+            if(wasOK && !*err) {
+                [self _setStatus:@"Backing up local map"];
+                wasOK = [KmlBackup backupLocalMap:localMap inFolder:self.backupFolder error:err];
+                [self _setStatus:[NSString stringWithFormat:@"Local map backed up %@", (wasOK?@"OK":@"with ERROR")]];
+            } else {
+                [self _setStatus:[NSString stringWithFormat:@"Remote map backed up %@", (wasOK?@"OK":@"with ERROR")]];
+            }
+            break;
+            
+        default:
+            wasOK = TRUE;
+            break;
     }
     
-    MKAnnotationView *view = [mapView dequeueReusableAnnotationViewWithIdentifier:myMapAnnotationID];
-    if(!view) {
-        view = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:myMapAnnotationID];
-        view.draggable = NO;
-        view.canShowCallout = NO;
+    return wasOK;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) syncFinished:(BOOL)wasAllOK {
+    
+    if(wasAllOK) {
+        [self _setStatus:@"Synchronization is done!"];
+    } else {
+        [self _setStatus:@"Synchronization finished with ERROR!"];
     }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) willGetRemoteMapList {
+    [self _setStatus:@"Requesing remote map list"];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) didGetRemoteMapList {
+    [self _setStatus:@"Remote map list received"];
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) willCompareLocalAndRemoteMaps {
+    [self _setStatus:@"Comparing local and remote maps"];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) didCompareLocalAndRemoteMaps:(NSArray *)compTuples {
+    [self _setStatus:@"Local and remote maps were compared"];
+    self.compTuples = compTuples;
+    [self _reloadTableData];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) willSyncMapTuple:(GMTCompTuple *)tuple withIndex:(int)index {
     
-    view.annotation = annotation;
-    view.enabled = YES;
-    //view.centerOffset = CGPointMake(0, -point.icon.image.size.height/2);
+    NSString *text = [NSString stringWithFormat:@"Synchronizing map: '%@'", [self _mapNameFromTuple:tuple]];
+    [self _setStatus:text];
+    [self _reloadTableRow:index done:FALSE];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) didSyncMapTuple:(GMTCompTuple *)tuple withIndex:(int)index syncOK:(BOOL)syncOK {
     
-    return view;
+    NSString *text = [NSString stringWithFormat:@"Map '%@' synchronized %@", [self _mapNameFromTuple:tuple], (syncOK?@"":@"with ERRORS")];
+    [self _setStatus:text];
+    [self _reloadTableRow:index done:TRUE];
 }
 
+
+
+
+//=====================================================================================================================
+#pragma mark -
+#pragma mark <UITableViewDelegate> protocol methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    // Inhibe que las filas se puedan borrar pasando el dedo
+    return UITableViewCellEditingStyleNone;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    /*
-    MKCoordinateRegion region = self.mapView.region;
-    CGRect bounds = self.mapView.bounds;
-    MKMapRect vrect = self.mapView.visibleMapRect;
-    
-    NSLog(@"------------------");
-    NSLog(@"bounds  => x=%f, y=%f, w=%f, h=%f",bounds.origin.x,bounds.origin.y,bounds.size.width,bounds.size.height);
-    NSLog(@"region  => lat=%f, lng=%f, latDelta=%f, lngDelta=%f",region.center.latitude,region.center.longitude,region.span.latitudeDelta,region.span.longitudeDelta);
-    NSLog(@"vrect   => x=%f, y=%f, w=%f, h=%f",vrect.origin.x,vrect.origin.y,vrect.size.width,vrect.size.height);
-    NSLog(@"vrectCC => Cx=%f, Cy=%f",vrect.origin.x+vrect.size.width/2,vrect.origin.y+vrect.size.height/2);
-    NSLog(@"------------------");
-     */
-    
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
-    
-    
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view {
-    
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)mapViewDidFailLoadingMap:(MKMapView *)mapView withError:(NSError *)error {
-    NSLog(@"===================================================================================================");
-    NSLog(@"- (void)mapViewDidFailLoadingMap:(MKMapView *)mapView withError:(NSError *)error -> %@", error);
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)mapView:(MKMapView *)mapView didFailToLocateUserWithError:(NSError *)error {
-    NSLog(@"===================================================================================================");
-    NSLog(@"- (void)mapView:(MKMapView *)mapView didFailToLocateUserWithError:(NSError *)error -> %@ ",error);
-}
-
-
-
-
-
-
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated {
-    //    NSLog(@"===================================================================================================");
-    //    NSLog(@"- (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated");
-}
-
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)mapViewWillStartLoadingMap:(MKMapView *)mapView {
-    //    NSLog(@"===================================================================================================");
-    //    NSLog(@"- (void)mapViewWillStartLoadingMap:(MKMapView *)mapView");
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)mapViewDidFinishLoadingMap:(MKMapView *)mapView {
-    //    NSLog(@"===================================================================================================");
-    //    NSLog(@"- (void)mapViewDidFinishLoadingMap:(MKMapView *)mapView");
-}
-
-
-
-//---------------------------------------------------------------------------------------------------------------------
-// mapView:didAddAnnotationViews: is called after the annotation views have been added and positioned in the map.
-// The delegate can implement this method to animate the adding of the annotations views.
-// Use the current positions of the annotation views as the destinations of the animation.
-- (void)mapView:(MKMapView *)mapView didAddAnnotationViews:(NSArray *)views {
-    //    NSLog(@"===================================================================================================");
-    //    NSLog(@"- (void)mapView:(MKMapView *)mapView didAddAnnotationViews:(NSArray *)views ");
-}
-
-
-//---------------------------------------------------------------------------------------------------------------------
-// Overlays
-- (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay {
-    //    NSLog(@"===================================================================================================");
-    //    NSLog(@"- (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay ");
+    // No dejamos nada seleccionado
     return nil;
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-- (void)mapView:(MKMapView *)mapView didAddOverlayViews:(NSArray *)overlayViews {
-    //    NSLog(@"===================================================================================================");
-    //    NSLog(@"- (void)mapView:(MKMapView *)mapView didAddOverlayViews:(NSArray *)overlayViews ");
-}
 
 
+//=====================================================================================================================
+#pragma mark -
+#pragma mark <UITableViewDataSource> protocol methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
-    //    NSLog(@"===================================================================================================");
-    //    NSLog(@"- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation ");
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.compTuples.count;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void)mapViewWillStartLocatingUser:(MKMapView *)mapView {
-    //    NSLog(@"===================================================================================================");
-    //    NSLog(@"- (void)mapViewWillStartLocatingUser:(MKMapView *)mapView ");
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)mapViewDidStopLocatingUser:(MKMapView *)mapView {
-    //    NSLog(@"===================================================================================================");
-    //    NSLog(@"- (void)mapViewDidStopLocatingUser:(MKMapView *)mapView ");
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)annotationView didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState {
-    //    NSLog(@"===================================================================================================");
-    //    NSLog(@"- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)annotationView didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState ");
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay {
+    static NSString *myViewCellID = @"myViewCellID";
     
-    
-    if ([overlay isKindOfClass:[CustomOfflineTileOverlay class]]) {
-        MKTileOverlay *to = overlay;
-        NSLog(@"-------------------------------------------------------------------------------------------------");
-        NSLog(@"coordinate lat=%f, lng=%f",to.coordinate.latitude, to.coordinate.longitude);
-        NSLog(@"boundingMapRect = %f,%f - %f,%f",to.boundingMapRect.origin.x,to.boundingMapRect.origin.y,to.boundingMapRect.size.width,to.boundingMapRect.size.height);
-        NSLog(@"tileSize = %f,%f",to.tileSize.width,to.tileSize.height);
-        NSLog(@"geometryFlipped = %d",to.geometryFlipped);
-        NSLog(@"minimumZ = %d",to.minimumZ);
-        NSLog(@"maximumZ = %d",to.maximumZ);
-        NSLog(@"canReplaceMapContent = %d",to.canReplaceMapContent);
-        NSLog(@"URLTemplate = %@",to.URLTemplate);
-        NSLog(@"-------------------------------------------------------------------------------------------------");
-        return [[CustomOfflineTileOverlayRenderer alloc] initWithOverlay:overlay];
+    UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:myViewCellID];
+    if (cell == nil) {
+        cell = [[UITableViewCell  alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:myViewCellID];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.accessoryType = UITableViewCellAccessoryNone;
     }
-    return nil;
+
+    static UIColor *runningBkgnd = nil;
+    if(!runningBkgnd) runningBkgnd = [UIColor colorWithIntRed:230 intGreen:245 intBlue:255 alpha:1.0];
+    
+    GMTCompTuple *tuple = self.compTuples[[indexPath indexAtPosition:1]];
+    cell.textLabel.text = [self _mapNameFromTuple:tuple];
+    cell.textLabel.textColor = [self _runningStatusColorFromTuple:tuple];
+    cell.imageView.image = [self _compStatusIconFromTuple:tuple];
+    cell.backgroundColor = tuple.runStatus==ST_Run_Processing ? runningBkgnd : [UIColor whiteColor];
+    
+    return cell;
 }
+
 
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark Private methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) _setMapAnnotations {
+- (NSString *) _mapNameFromTuple:(GMTCompTuple *)tuple {
+    if(tuple.remoteItem.name) return tuple.remoteItem.name;
+    if(tuple.localItem.name) return tuple.localItem.name;
+    return @"<unknown>";
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (UIImage *) _compStatusIconFromTuple:(GMTCompTuple *)tuple {
     
-    id userLocation = self.mapView.userLocation;
+    static __strong UIImage *imgSynAdd = nil;
+    static __strong UIImage *imgSynRemove = nil;
+    static __strong UIImage *imgSynUpdate = nil;
+    static dispatch_once_t _predicate;
+    dispatch_once(&_predicate, ^{
+        imgSynAdd = [UIImage imageNamed:@"sync-add" burnTintRed:108 green:162 blue:9 alpha:1.0];
+        imgSynRemove = [UIImage imageNamed:@"sync-delete" burnTintRed:178 green:60 blue:63 alpha:1.0];
+        imgSynUpdate = [UIImage imageNamed:@"sync-update" burnTintRed:70 green:134 blue:174 alpha:1.0];
+    });
     
-    // Avoid removing user location off the map
-    if ( userLocation != nil ) {
-        
-        NSMutableArray *pins = [[NSMutableArray alloc] initWithArray:[self.mapView annotations]];
-        [pins removeObject:userLocation];
-        [self.mapView removeAnnotations:pins];
-        
-    } else {
-        
-        [self.mapView removeAnnotations:self.mapView.annotations];
+    switch(tuple.compStatus) {
+        case ST_Comp_Create_Local:
+        case ST_Comp_Create_Remote:
+            return imgSynAdd;
+        case ST_Comp_Delete_Local:
+        case ST_Comp_Delete_Remote:
+            return imgSynRemove;
+        case ST_Comp_Update_Local:
+        case ST_Comp_Update_Remote:
+            return imgSynUpdate;
     }
     
-    // Add new annotations from points
-    
-     [self.mapView addAnnotation:[self pointWithLng:-69.950356 lat:41.671513]];
-     [self.mapView addAnnotation:[self pointWithLng:-69.957260 lat:41.680035]];
-     [self.mapView addAnnotation:[self pointWithLng:-70.101318 lat:41.282074]];
-     [self.mapView addAnnotation:[self pointWithLng:-70.185417 lat:42.051407]];
-     [self.mapView addAnnotation:[self pointWithLng:-70.188637 lat:42.052288]];
-     [self.mapView addAnnotation:[self pointWithLng:-70.277054 lat:41.651031]];
-     [self.mapView addAnnotation:[self pointWithLng:-70.477661 lat:43.361835]];
-     [self.mapView addAnnotation:[self pointWithLng:-70.496544 lat:41.757843]];
-     [self.mapView addAnnotation:[self pointWithLng:-70.560204 lat:41.455608]];
-     [self.mapView addAnnotation:[self pointWithLng:-70.616920 lat:42.658627]];
-     [self.mapView addAnnotation:[self pointWithLng:-70.626190 lat:41.937851]];
-     [self.mapView addAnnotation:[self pointWithLng:-70.657707 lat:42.606136]];
-     [self.mapView addAnnotation:[self pointWithLng:-70.662132 lat:41.958076]];
-     [self.mapView addAnnotation:[self pointWithLng:-70.662209 lat:41.959778]];
-     [self.mapView addAnnotation:[self pointWithLng:-70.665390 lat:41.959923]];
-     [self.mapView addAnnotation:[self pointWithLng:-70.670273 lat:41.522282]];
-     [self.mapView addAnnotation:[self pointWithLng:-70.850548 lat:42.502922]];
-     [self.mapView addAnnotation:[self pointWithLng:-70.883453 lat:42.521915]];
-     [self.mapView addAnnotation:[self pointWithLng:-70.888260 lat:42.519924]];
-     [self.mapView addAnnotation:[self pointWithLng:-70.891655 lat:42.523113]];
-     [self.mapView addAnnotation:[self pointWithLng:-70.891983 lat:42.522057]];
-     [self.mapView addAnnotation:[self pointWithLng:-70.892609 lat:42.520699]];
-     [self.mapView addAnnotation:[self pointWithLng:-70.895653 lat:42.521442]];
-     [self.mapView addAnnotation:[self pointWithLng:-70.897202 lat:42.522469]];
-     [self.mapView addAnnotation:[self pointWithLng:-70.898834 lat:42.521378]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.049530 lat:42.319176]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.051300 lat:42.357880]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.051628 lat:42.359581]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.053017 lat:42.365448]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.053200 lat:42.357300]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.053299 lat:42.332100]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.053467 lat:42.364029]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.053535 lat:42.364632]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.054642 lat:42.366402]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.055519 lat:42.366707]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.055832 lat:42.359951]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.055862 lat:42.360203]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.056549 lat:42.359776]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.056969 lat:42.361221]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.057213 lat:42.358620]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.057327 lat:42.358383]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.057426 lat:42.356274]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.057678 lat:42.358685]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.058151 lat:42.372669]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.058472 lat:42.357407]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.058830 lat:42.356899]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.059280 lat:42.356525]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.059494 lat:42.357742]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.059868 lat:42.351265]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.060158 lat:42.354816]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.060417 lat:42.358040]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.061012 lat:42.375980]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.061577 lat:42.356892]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.061996 lat:42.356529]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.062798 lat:42.371532]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.063171 lat:42.357746]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.067749 lat:42.350948]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.068260 lat:42.351185]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.068466 lat:42.354488]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.068810 lat:42.358360]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.069290 lat:42.357517]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.071121 lat:42.355968]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.072121 lat:42.349369]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.075249 lat:42.350132]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.075706 lat:42.361507]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.078583 lat:42.347786]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.082405 lat:42.348904]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.082466 lat:42.348530]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.082588 lat:42.348476]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.083649 lat:42.349300]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.087601 lat:42.348221]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.095329 lat:42.348789]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.095833 lat:42.359932]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.100723 lat:42.350349]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.115746 lat:42.376156]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.117195 lat:42.374500]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.118790 lat:42.373360]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.137199 lat:42.339027]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.191406 lat:42.666283]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.229942 lat:42.448765]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.312553 lat:41.489952]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.332962 lat:42.458839]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.346886 lat:42.461842]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.349022 lat:42.461010]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.350510 lat:42.036568]];
-     [self.mapView addAnnotation:[self pointWithLng:-71.351021 lat:42.459789]];
+    // NO debería llegar aqui
+    return nil;
+}
 
+//---------------------------------------------------------------------------------------------------------------------
+- (UIColor *) _runningStatusColorFromTuple:(GMTCompTuple *)tuple {
     
-    self.overlay.pointPaths = [NSMutableArray array];
-    for(id<MKAnnotation> ann1 in self.mapView.annotations) {
-        MKMapPoint p1 = MKMapPointForCoordinate(ann1.coordinate);
-        TPointPath *path = [[TPointPath alloc] init];
-        path.x  = p1.x / 4096;
-        path.y  = p1.y / 4096;
-        [self.overlay.pointPaths addObject:path];
+    static __strong UIColor *colorStatusNone = nil;
+    static __strong UIColor *colorStatusRunning = nil;
+    static __strong UIColor *colorStatusOK = nil;
+    static __strong UIColor *colorStatusError = nil;
+    static dispatch_once_t _predicate;
+    dispatch_once(&_predicate, ^{
+        colorStatusNone = [UIColor colorWithIntRed:180 intGreen:180 intBlue:180 alpha:1.0];
+        colorStatusRunning = [UIColor colorWithIntRed:70 intGreen:134 intBlue:174 alpha:1.0];
+        colorStatusOK = [UIColor colorWithIntRed:108 intGreen:162 intBlue:9 alpha:1.0];
+        colorStatusError = [UIColor colorWithIntRed:178 intGreen:60 intBlue:63 alpha:1.0];
+    });
+
+    switch(tuple.runStatus) {
+        case ST_Run_None:
+            return colorStatusNone;
+        case ST_Run_Processing:
+            return colorStatusRunning;
+        case ST_Run_OK:
+            return colorStatusOK;
+        case ST_Run_Failed:
+            return colorStatusError;
     }
     
-    NSLog(@"---");
-    
+    // NO debería llegar aqui
+    return nil;
+
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (MKPointAnnotation *) pointWithLng:(CLLocationDegrees)lng lat:(CLLocationDegrees)lat {
-    return [self pointWithLat:lat lng:lng title:@""];
+- (UIImage *) _runningStatusIconFromTuple:(GMTCompTuple *)tuple {
+    
+    static __strong UIImage *imgStatusRunning = nil;
+    static __strong UIImage *imgStatusOK = nil;
+    static __strong UIImage *imgStatusError = nil;
+    static dispatch_once_t _predicate;
+    dispatch_once(&_predicate, ^{
+        imgStatusRunning = [UIImage imageNamed:@"sync-add" burnTintRed:185 green:239 blue:86 alpha:1.0];
+        imgStatusOK = [UIImage imageNamed:@"sync-remove" burnTintRed:255 green:137 blue:140 alpha:1.0];
+        imgStatusError = [UIImage imageNamed:@"sync-update" burnTintRed:147 green:211 blue:251 alpha:1.0];
+    });
+    
+    switch(tuple.runStatus) {
+        case ST_Run_None:
+            return nil;
+        case ST_Run_Processing:
+            return imgStatusRunning;
+        case ST_Run_OK:
+            return imgStatusOK;
+        case ST_Run_Failed:
+            return imgStatusError;
+    }
+    
+    // NO debería llegar aqui
+    return nil;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (MKPointAnnotation *) pointWithLat:(CLLocationDegrees)lat lng:(CLLocationDegrees)lng title:(NSString *)title {
-    
-    MKPointAnnotation *p = [[MKPointAnnotation alloc] init];
-    p.coordinate = CLLocationCoordinate2DMake(lat, lng);
-    p.title = title;
-    return p;
+- (void) _setStatus:(NSString *)text {
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.status.text = [NSString stringWithFormat:@"  %@", text];
+    });
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) _centerMapToShowAllPoints {
+- (void) _reloadTableData {
     
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.syncTable reloadData];
+    });
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _reloadTableRow:(NSUInteger)index done:(BOOL)done{
     
-    CLLocationDegrees regMinLat=1000, regMaxLat=-1000, regMinLng=1000, regMaxLng=-1000;
-    CLLocationCoordinate2D regCenter = CLLocationCoordinate2DMake(0, 0);
-    MKCoordinateSpan regSpan = MKCoordinateSpanMake(0, 0);
+    // Lo hacemos sincrono para que no se continue hasta que la tabla refleje bien el estado de sincronizacion
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+        if(done) {
+            [self.syncTable scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:TRUE];
+        }
+        [self.syncTable reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        
+        self.syncButton.title = [NSString stringWithFormat:@"Cancel [%d/%d]",index, self.compTuples.count];
+    });
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) _cancelSyncMaps {
     
-    if(self.mapView.annotations.count==0) {
+    [self.syncService cancelSync];
+    self.syncButton.enabled = NO;
+    self.syncButton.title = @"Canceling";
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) _startSyncMaps {
+    
+    self.compTuples = nil;
+    [self.syncTable reloadData];
+    self.status.text = @"";
+    self.syncButton.title = @"Cancel";
+    self.syncButton.tintColor = [UIColor redColor];
+    
+    // Cada sincronizacio debe contar con su propia carpeta de backup
+    self.backupFolder = nil;
+    
+    NSManagedObjectContext *moAsyncChildContext = [BaseCoreDataService childContextASyncFor:self.moContext];
+    [moAsyncChildContext performBlock:^{
         
-        MKUserLocation *uloc=self.mapView.userLocation;
-        regCenter.latitude = uloc.coordinate.latitude;
-        regCenter.longitude = uloc.coordinate.longitude;
-        regSpan.latitudeDelta = 0.05;
-        regSpan.longitudeDelta = 0.05;
+        SyncDataSource *syncDataSource = [[SyncDataSource alloc] init];
+        syncDataSource.moContext = moAsyncChildContext;
         
-    } else if(self.mapView.annotations.count==1) {
+        [self _setStatus:@"Connecting and login into Google Maps service"];
         
-        id<MKAnnotation> pin = self.mapView.annotations[0];
-        regCenter.latitude = pin.coordinate.latitude;
-        regCenter.longitude = pin.coordinate.longitude;
-        regSpan.latitudeDelta = 0.05;
-        regSpan.longitudeDelta = 0.05;
+        NSString *email = @"jzarzuela@gmail.com";
+        NSString *pwd = @"#webweb1971";
+        NSError *error = nil;
+        BOOL wasAllOK = TRUE;
         
-    } else {
-        
-        // Calcula los extremos
-        for(id<MKAnnotation> pin in self.mapView.annotations) {
-            
-            // Se salta la posicion del usuario y se centra en los puntos
-            if([pin isKindOfClass:MKUserLocation.class]) continue;
-            
-            regMinLat = MIN(regMinLat, pin.coordinate.latitude);
-            regMaxLat = MAX(regMaxLat, pin.coordinate.latitude);
-            regMinLng = MIN(regMinLng, pin.coordinate.longitude);
-            regMaxLng = MAX(regMaxLng, pin.coordinate.longitude);
+        self.syncService = [GMapSyncService serviceWithEmail:email password:pwd dataSource:syncDataSource delegate:self error:&error];
+        if(self.syncService!=nil && error==nil) {
+            [self _setStatus:@"Starting map list synchronization"];
+            wasAllOK = [self.syncService syncMaps:&error];
         }
         
-        // Establece el centro
-        regCenter.latitude = regMinLat+(regMaxLat-regMinLat)/2;
-        regCenter.longitude = regMinLng+(regMaxLng-regMinLng)/2;
+        // Graba lo que se haya podido sincronizar sin problemas
+        [BaseCoreDataService saveChangesInContext:moAsyncChildContext];
+        [BaseCoreDataService saveChangesInContext:moAsyncChildContext.parentContext];
         
-        // Establece el span
-        regSpan.latitudeDelta = regMaxLat-regMinLat;
-        regSpan.longitudeDelta = regMaxLng-regMinLng;
+        // Deja el mensaje final de estado
+        [self syncFinished:(self.syncService!=nil && error==nil && wasAllOK==TRUE)];
         
-        // Deja espacio para que se vean los iconos
-        double degreesByPoint1 = regSpan.longitudeDelta / self.mapView.frame.size.height;
-        double iconSizeInDegrees1 = 64.0 * degreesByPoint1;
-        regSpan.longitudeDelta  += iconSizeInDegrees1;
-        
-        double degreesByPoint2 = regSpan.latitudeDelta / self.mapView.frame.size.width;
-        double iconSizeInDegrees2 = 64.0 * degreesByPoint2;
-        regSpan.latitudeDelta  += iconSizeInDegrees2;
-        
-        // Ajusta por si nos hemos pasado
-        regSpan.latitudeDelta = MIN(89, regSpan.latitudeDelta);
-        regSpan.longitudeDelta = MIN(179, regSpan.longitudeDelta);
-    }
+        // Da por finalizada la sincronizacion
+        self.syncService = nil;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.syncButton.title = @"Start";
+            self.syncButton.tintColor = self.view.tintColor;
+            self.syncButton.enabled = YES;
+        });
 
-    // Ajusta la vista del mapa a la region, centrandolo
-    MKCoordinateRegion region1 = MKCoordinateRegionMake(regCenter, regSpan);
-    NSLog(@"region1 lat=%f, lng=%f - spanLat=%f, spanLng=%f",region1.center.latitude, region1.center.longitude,region1.span.latitudeDelta,region1.span.longitudeDelta);
-    MKCoordinateRegion region2 =[self.mapView regionThatFits:region1];
-    NSLog(@"region2 lat=%f, lng=%f - spanLat=%f, spanLng=%f",region2.center.latitude, region2.center.longitude,region2.span.latitudeDelta,region2.span.longitudeDelta);
-    //self.mapView.centerCoordinate = region2.center;
-    [self.mapView setRegion:region1 animated:FALSE]; //TRUE
-
-    [self.mapView setRegion:MKCoordinateRegionMake(regCenter, MKCoordinateSpanMake(12, 12)) animated:FALSE]; //TRUE
-
-    //    [self.mapView setVisibleMapRect:MKMapRectMake(100139008.497242, 108003327.420955, 68157439.005516, 52428801.158090) animated:FALSE];
-    //[self.mapView setVisibleMapRect:MKMapRectMake(67108864, 100663296, 134217728, 67108864) animated:FALSE];
-
-    // Zoom = 4????
-    [self.mapView setVisibleMapRect:MKMapRectMake(117178368, 121110528, 34078720, 26214400) animated:FALSE];
+    }];
     
     
-    region2 = self.mapView.region;
-    NSLog(@"region2 lat=%f, lng=%f - spanLat=%f, spanLng=%f",region2.center.latitude, region2.center.longitude,region2.span.latitudeDelta,region2.span.longitudeDelta);
-
-    
-    
-    CGSize size = self.mapView.bounds.size;
-    CLLocationCoordinate2D coord;
-    
-    coord = [self.mapView convertPoint:CGPointMake(0, 0) toCoordinateFromView:self.mapView];
-    NSLog(@"TL lat=%f, lng=%f",coord.latitude, coord.longitude);
-    coord = [self.mapView convertPoint:CGPointMake(size.width,0) toCoordinateFromView:self.mapView];
-    NSLog(@"TR lat=%f, lng=%f",coord.latitude, coord.longitude);
-    coord = [self.mapView convertPoint:CGPointMake(0, size.height) toCoordinateFromView:self.mapView];
-    NSLog(@"BL lat=%f, lng=%f",coord.latitude, coord.longitude);
-    coord = [self.mapView convertPoint:CGPointMake(size.width, size.height) toCoordinateFromView:self.mapView];
-    NSLog(@"BR lat=%f, lng=%f",coord.latitude, coord.longitude);
-    coord = [self.mapView convertPoint:CGPointMake(size.width/2, size.height/2) toCoordinateFromView:self.mapView];
-    NSLog(@"CC lat=%f, lng=%f",coord.latitude, coord.longitude);
-
-    coord = [self.mapView convertPoint:CGPointMake(size.width,0) toCoordinateFromView:self.mapView];
-    NSLog(@"SPAN lat=%f, lng=%f",coord.latitude*2, coord.longitude*2);
-    NSLog(@"");
 }
-
-
-//---------------------------------------------------------------------------------------------------------------------
-- (CLLocationCoordinate2D) _calcAllPointsCentre {
-    
-    
-    CLLocationDegrees regMinLat=1000, regMaxLat=-1000, regMinLng=1000, regMaxLng=-1000;
-    CLLocationCoordinate2D regCenter = CLLocationCoordinate2DMake(0, 0);
-    
-    if(self.mapView.annotations.count==0) {
-        
-        MKUserLocation *uloc=self.mapView.userLocation;
-        regCenter.latitude = uloc.coordinate.latitude;
-        regCenter.longitude = uloc.coordinate.longitude;
-        
-    } else if(self.mapView.annotations.count==1) {
-        
-        id<MKAnnotation> pin = self.mapView.annotations[0];
-        regCenter.latitude = pin.coordinate.latitude;
-        regCenter.longitude = pin.coordinate.longitude;
-        
-    } else {
-        
-        // Calcula los extremos
-        for(id<MKAnnotation> pin in self.mapView.annotations) {
-            
-            // Se salta la posicion del usuario y se centra en los puntos
-            if([pin isKindOfClass:MKUserLocation.class]) continue;
-            
-            regMinLat = MIN(regMinLat, pin.coordinate.latitude);
-            regMaxLat = MAX(regMaxLat, pin.coordinate.latitude);
-            regMinLng = MIN(regMinLng, pin.coordinate.longitude);
-            regMaxLng = MAX(regMaxLng, pin.coordinate.longitude);
-        }
-        
-        // Establece el centro
-        regCenter.latitude = regMinLat+(regMaxLat-regMinLat)/2;
-        regCenter.longitude = regMinLng+(regMaxLng-regMinLng)/2;
-    }
-
-    return regCenter;
-}
-
 
 
 @end

@@ -60,9 +60,9 @@ typedef void (^TBlock_getElementListInMapFinished)(NSArray *elements, NSError *e
 - (SRVC_ASYNCHRONOUS) asyncGetCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories callback:(TBlock_getElementListInMapFinished) callbackBlock;
 
 // Synchrouns methods
-- (NSArray *) getUserMapList:(NSError **)error;
-- (NSArray *) getFlatElemensInMap:(MEMap *)map forCategories:(NSArray *)categories error:(NSError **)error ;
-- (NSArray *) getCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories error:(NSError **)error;
+- (NSArray *) getUserMapList:(NSError * __autoreleasing *)error;
+- (NSArray *) getFlatElemensInMap:(MEMap *)map forCategories:(NSArray *)categories error:(NSError * __autoreleasing *)error ;
+- (NSArray *) getCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories error:(NSError * __autoreleasing *)error;
 
 
 @end

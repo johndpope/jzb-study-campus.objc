@@ -46,8 +46,8 @@
 @property (weak, nonatomic)   TagTree *tree;
 @property (strong, nonatomic) NSMutableArray *wChildren;
 @property (weak, nonatomic)   TagTreeNode *parent;
-@property (nonatomic, assign) int deepLevel;
-@property (nonatomic, assign) int treeIndex;
+@property (assign, nonatomic) int deepLevel;
+@property (assign, nonatomic) int treeIndex;
 
 
 - (void) addChildNode:(TagTreeNode *)childNode;

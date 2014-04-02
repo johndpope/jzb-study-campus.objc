@@ -38,11 +38,11 @@ extern const NSString *BATCH_RC_TEXTS[];
 // *********************************************************************************************************************
 @interface GMTBatchCmd : NSObject
 
-@property (nonatomic, assign) BATCH_CMD cmd;
-@property (nonatomic, strong) GMTItem *item;
-@property (nonatomic, assign) BATCH_RC resultCode;
-@property (nonatomic, strong) GMTItem *resultItem;
-@property (nonatomic, strong) id extraData;
+@property (assign, nonatomic) BATCH_CMD cmd;
+@property (strong, nonatomic) GMTItem *item;
+@property (assign, nonatomic) BATCH_RC resultCode;
+@property (strong, nonatomic) GMTItem *resultItem;
+@property (strong, nonatomic) id extraData;
 
 
 // =====================================================================================================================

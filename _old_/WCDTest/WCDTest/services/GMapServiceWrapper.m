@@ -58,7 +58,7 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (GDataFeedBase *) fetchUserMapList:(NSError **)err {
+- (GDataFeedBase *) fetchUserMapList:(NSError * __autoreleasing *)err {
     
     // Variable de salida del block
     __block BOOL endLoop = false;
@@ -90,7 +90,7 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (GDataFeedBase *) fetchMapDataWithGID:(NSString *)mapGID error:(NSError **)err {
+- (GDataFeedBase *) fetchMapDataWithGID:(NSString *)mapGID error:(NSError * __autoreleasing *)err {
     
     // Variable de salida del block
     __block BOOL endLoop = false;
@@ -114,7 +114,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (GDataEntryMap *) insertMapEntry:(GDataEntryMap *)gmapEntry userID:(NSString *)loggedID error:(NSError **)err {
+- (GDataEntryMap *) insertMapEntry:(GDataEntryMap *)gmapEntry userID:(NSString *)loggedID error:(NSError * __autoreleasing *)err {
     
     // Variable de salida del block
     __block BOOL endLoop = false;
@@ -137,7 +137,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (GDataEntryMap *)  deleteMapDataWithGID:(NSString *)mapGID error:(NSError **)err {
+- (GDataEntryMap *)  deleteMapDataWithGID:(NSString *)mapGID error:(NSError * __autoreleasing *)err {
     
     // Variable de salida del block
     __block BOOL endLoop = false;
@@ -160,7 +160,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (GDataEntryMap *) fetchUpdatedMapDataWithGID:(NSString *)mapGID error:(NSError **)err {
+- (GDataEntryMap *) fetchUpdatedMapDataWithGID:(NSString *)mapGID error:(NSError * __autoreleasing *)err {
     
     // Variable de salida del block
     __block BOOL endLoop = false;
@@ -186,7 +186,7 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (GDataEntryMapFeature *) insertMapFeatureEntry:(GDataEntryMapFeature *)featureEntry  inMapWithGID:(NSString *)mapGID error:(NSError **)err {
+- (GDataEntryMapFeature *) insertMapFeatureEntry:(GDataEntryMapFeature *)featureEntry  inMapWithGID:(NSString *)mapGID error:(NSError * __autoreleasing *)err {
     
     // Variable de salida del block
     __block BOOL endLoop = false;
@@ -209,7 +209,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (GDataEntryMapFeature *) deleteMapFeatureEntryWithGID:(NSString *)featureGID  inMapWithGID:(NSString *)mapGID error:(NSError **)err {
+- (GDataEntryMapFeature *) deleteMapFeatureEntryWithGID:(NSString *)featureGID  inMapWithGID:(NSString *)mapGID error:(NSError * __autoreleasing *)err {
     
     // Variable de salida del block
     __block BOOL endLoop = false;
@@ -232,7 +232,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (GDataEntryMapFeature *) updateMapFeatureEntry:(GDataEntryMapFeature *)featureEntry  withGID:(NSString *)featureGID inMapWithGID:(NSString *)mapGID error:(NSError **)err {
+- (GDataEntryMapFeature *) updateMapFeatureEntry:(GDataEntryMapFeature *)featureEntry  withGID:(NSString *)featureGID inMapWithGID:(NSString *)mapGID error:(NSError * __autoreleasing *)err {
     
     // Variable de salida del block
     __block BOOL endLoop = false;

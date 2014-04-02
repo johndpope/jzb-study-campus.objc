@@ -24,11 +24,11 @@
 @interface MPoint : _MPoint <MKAnnotation> {}
 
 
-@property (nonatomic, readonly) NSSet *directTags; 
-@property (nonatomic, readonly) NSSet *directNoAutoTags;
+@property (readonly, nonatomic) NSSet               *directTags;
+@property (readonly, nonatomic) NSSet               *directNoAutoTags;
 
-@property (nonatomic, assign)   CLLocationDistance   viewDistance;
-@property (nonatomic, strong)   NSString            *viewStringDistance;
+@property (assign, nonatomic)   CLLocationDistance  viewDistance;
+@property (strong, nonatomic)   NSString            *viewStringDistance;
 
 
 //=====================================================================================================================
@@ -36,7 +36,6 @@
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
 + (MPoint *)  emptyPointWithName:(NSString *)name inMap:(MMap *)map;
-
 + (NSArray *) allWithMap:(MMap *)map sortOrder:(NSArray *)sortOrder;
 
 + (NSMutableSet *) allTagsFromPoints:(NSArray *)points;
@@ -49,5 +48,11 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL) updateLatitude:(double)lat longitude:(double)lng;
 - (BOOL) updateDesc:(NSString *)value;
+
+- (void) removeAllNonAutoTags;
+
+// With format: $[tag1, tag2, ...]$
+- (NSString *) combinedDescAndTagsInfo;
+- (void) updateFromCombinedDescAndTagsInfo:(NSString *)descAndTags;
 
 @end

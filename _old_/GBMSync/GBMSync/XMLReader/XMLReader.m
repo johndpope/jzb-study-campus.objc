@@ -8,7 +8,7 @@ NSString *const kXMLReaderTextNodeKey = @"text";
 
 @interface XMLReader (Internal)
 
-- (id)initWithError:(NSError **)error;
+- (id)initWithError:(NSError * __autoreleasing *)error;
 - (NSDictionary *)objectWithData:(NSData *)data;
 
 @end
@@ -68,7 +68,7 @@ NSString *const kXMLReaderTextNodeKey = @"text";
 #pragma mark -
 #pragma mark Public methods
 
-+ (NSDictionary *)dictionaryForFullPath:(NSString *)fullpath error:(NSError **)errorPointer
++ (NSDictionary *)dictionaryForFullPath:(NSString *)fullpath error:(NSError * __autoreleasing *)errorPointer
 {
 	NSData *data = [[NSFileManager defaultManager] contentsAtPath:fullpath];
     NSDictionary *rootDictionary = [XMLReader dictionaryForXMLData:data error:errorPointer];
@@ -76,13 +76,13 @@ NSString *const kXMLReaderTextNodeKey = @"text";
 	return rootDictionary;
 }
 
-+ (NSDictionary *)dictionaryForPath:(NSString *)path error:(NSError **)errorPointer
++ (NSDictionary *)dictionaryForPath:(NSString *)path error:(NSError * __autoreleasing *)errorPointer
 {
     NSString *fullpath = [[NSBundle bundleForClass:self] pathForResource:path ofType:@"xml"];
 	return [XMLReader dictionaryForFullPath:fullpath error:errorPointer];
 }
 
-+ (NSDictionary *)dictionaryForXMLData:(NSData *)data error:(NSError **)error
++ (NSDictionary *)dictionaryForXMLData:(NSData *)data error:(NSError * __autoreleasing *)error
 {
     XMLReader *reader = [[XMLReader alloc] initWithError:error];
     NSDictionary *rootDictionary = [reader objectWithData:data];
@@ -90,7 +90,7 @@ NSString *const kXMLReaderTextNodeKey = @"text";
     return rootDictionary;
 }
 
-+ (NSDictionary *)dictionaryForXMLString:(NSString *)string error:(NSError **)error
++ (NSDictionary *)dictionaryForXMLString:(NSString *)string error:(NSError * __autoreleasing *)error
 {
     NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
     
@@ -100,7 +100,7 @@ NSString *const kXMLReaderTextNodeKey = @"text";
 #pragma mark -
 #pragma mark Parsing
 
-- (id)initWithError:(NSError **)error
+- (id)initWithError:(NSError * __autoreleasing *)error
 {
     if ((self = [super init]))
     {

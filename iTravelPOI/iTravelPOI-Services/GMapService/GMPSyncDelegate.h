@@ -19,6 +19,7 @@
 // *********************************************************************************************************************
 @protocol GMPSyncDelegate <NSObject>
 
+
 @optional
 - (void) syncFinished:(BOOL)wasAllOK;
 
@@ -27,6 +28,8 @@
 
 - (void) willCompareLocalAndRemoteMaps;
 - (void) didCompareLocalAndRemoteMaps:(NSArray *)compTuples;
+
+- (BOOL) shouldProcessTuple:(GMTCompTuple *)tuple error:(NSError * __autoreleasing *)err;
 
 - (void) willSyncMapTuple:(GMTCompTuple *)tuple withIndex:(int)index;
 - (void) didSyncMapTuple:(GMTCompTuple *)tuple withIndex:(int)index syncOK:(BOOL)syncOK;

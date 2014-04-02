@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "GMPSyncDataSource.h"
 
 
 
@@ -15,14 +15,6 @@
 #pragma mark -
 #pragma mark Public Enumerations & definitions
 //*********************************************************************************************************************
-#define MY_CONSTANT @"a constant"
-
-typedef enum {
-    SORT_ASCENDING = YES,
-    SORT_DESCENDING = NO
-} SORTING_ORDER;
-
-typedef NSString * (^TBlock_blockDefinition)(NSArray *p1, NSError *error);
 
 
 
@@ -31,29 +23,22 @@ typedef NSString * (^TBlock_blockDefinition)(NSArray *p1, NSError *error);
 #pragma mark -
 #pragma mark Public Interface definition
 //*********************************************************************************************************************
-@interface SyncDataSource : NSObject
+@interface SyncDataSource : NSObject <GMPSyncDataSource>
 
 
-@property (nonatomic, strong) NSString *publicProperty;
-
+@property (strong, nonatomic) NSManagedObjectContext *moContext;
 
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-#ifndef __SyncDataSource__IMPL__
-- (id) init __attribute__ ((unavailable ("init not available")));
-#endif
-
-+ (void) publicClassMethod;
 
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) publicMethod;
 
 
 

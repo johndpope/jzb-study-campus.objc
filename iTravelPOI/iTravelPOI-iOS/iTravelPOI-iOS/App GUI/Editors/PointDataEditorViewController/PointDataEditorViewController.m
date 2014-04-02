@@ -71,8 +71,8 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
 @property (weak, nonatomic)   IBOutlet UILabel              *iavLabel;
 @property (strong, nonatomic) IBOutlet UITextField          *iavTextField;
 
-@property (nonatomic, assign) LocationEditingState          locationEditingState;
-@property (nonatomic, assign) CLLocationAccuracy            gpsAccuracyValue;
+@property (assign, nonatomic) LocationEditingState          locationEditingState;
+@property (assign, nonatomic) CLLocationAccuracy            gpsAccuracyValue;
 @property (strong, nonatomic) CLLocationManager             *locationManager;
 
 @property (strong, nonatomic) NSManagedObjectContext        *moContext;

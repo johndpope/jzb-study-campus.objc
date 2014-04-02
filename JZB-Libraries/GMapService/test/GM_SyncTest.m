@@ -112,7 +112,7 @@
 #pragma mark -
 #pragma mark CLASS methods
 // ---------------------------------------------------------------------------------------------------------------------
-+ (GM_SyncTest *) testWithEmail:(NSString *)email password:(NSString *)password exitOnError:(BOOL)exitOnError error:(NSError **)err {
++ (GM_SyncTest *) testWithEmail:(NSString *)email password:(NSString *)password exitOnError:(BOOL)exitOnError error:(NSError * __autoreleasing *)err {
 
     __autoreleasing NSError *localError = nil;
     if(err == nil) err = &localError;
@@ -182,7 +182,7 @@
 #pragma mark -
 #pragma mark Protocol GMPSyncDelegate methods
 // ---------------------------------------------------------------------------------------------------------------------
-- (NSArray *) getAllLocalMapList:(NSError **)err {
+- (NSArray *) getAllLocalMapList:(NSError * __autoreleasing *)err {
 
     DDLogVerbose(@"+ GM_SyncTest **** getAllLocalMapList ****");
 
@@ -201,7 +201,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (NSArray *) localPointListForMap:(id)localMap error:(NSError **)err {
+- (NSArray *) localPointListForMap:(id)localMap error:(NSError * __autoreleasing *)err {
 
     DDLogVerbose(@"+ GM_SyncTest **** localPointListForMap ****");
 
@@ -220,7 +220,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (GMTMap *) gmMapFromLocalMap:(id)localMap error:(NSError **)err {
+- (GMTMap *) gmMapFromLocalMap:(id)localMap error:(NSError * __autoreleasing *)err {
 
 
     FakeItem *fakeMap = (FakeItem *)localMap;
@@ -237,7 +237,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (GMTPoint *) gmPointFromLocalPoint:(id)localPoint error:(NSError **)err {
+- (GMTPoint *) gmPointFromLocalPoint:(id)localPoint error:(NSError * __autoreleasing *)err {
 
     FakeItem *fakePoint = (FakeItem *)localPoint;
     DDLogVerbose(@"+ GM_SyncTest **** gmPointFromLocalPoint [%@] ****", fakePoint.name);
@@ -255,7 +255,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (id) createLocalMapFrom:(GMTMap *)remoteMap error:(NSError **)err {
+- (id) createLocalMapFrom:(GMTMap *)remoteMap error:(NSError * __autoreleasing *)err {
 
     DDLogVerbose(@"+ GM_SyncTest **** createLocalMapFrom [%@] ****", remoteMap.name);
     DDLogVerbose(@"Map mgID=%@", remoteMap.gID);
@@ -264,14 +264,14 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) deleteLocalMap:(id)localMap error:(NSError **)err {
+- (BOOL) deleteLocalMap:(id)localMap error:(NSError * __autoreleasing *)err {
 
     DDLogVerbose(@"+ GM_SyncTest **** deleteLocalMap [%@] ****", ((FakeItem *)localMap).name);
     return true;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (id) createLocalPointFrom:(GMTPoint *)remotePoint inLocalMap:(id)map error:(NSError **)err {
+- (id) createLocalPointFrom:(GMTPoint *)remotePoint inLocalMap:(id)map error:(NSError * __autoreleasing *)err {
 
     DDLogVerbose(@"+ GM_SyncTest **** createLocalPointFrom [%@] ****", remotePoint.name);
     DDLogVerbose(@"Point mgID=%@", remotePoint.gID);
@@ -280,14 +280,14 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) deleteLocalPoint:(id)localPoint inLocalMap:(id)map error:(NSError **)err {
+- (BOOL) deleteLocalPoint:(id)localPoint inLocalMap:(id)map error:(NSError * __autoreleasing *)err {
 
     DDLogVerbose(@"+ GM_SyncTest **** deleteLocalPoint [%@] ****", ((FakeItem *)localPoint).name);
     return true;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) updateLocalMap:(id)localMap withRemoteMap:(GMTMap *)remoteMap allPointsOK:(BOOL)allPointsOK error:(NSError **)err {
+- (BOOL) updateLocalMap:(id)localMap withRemoteMap:(GMTMap *)remoteMap allPointsOK:(BOOL)allPointsOK error:(NSError * __autoreleasing *)err {
 
     DDLogVerbose(@"+ GM_SyncTest **** updateLocalMap [%@] ****", ((FakeItem *)localMap).name);
     DDLogVerbose(@"Map mgID=%@", remoteMap.gID);
@@ -296,7 +296,7 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (BOOL) updateLocalPoint:(id)localPoint withRemotePoint:(GMTPoint *)remotePoint error:(NSError **)err {
+- (BOOL) updateLocalPoint:(id)localPoint withRemotePoint:(GMTPoint *)remotePoint error:(NSError * __autoreleasing *)err {
 
     DDLogVerbose(@"+ GM_SyncTest **** updateLocalPoint [%@] ****", ((FakeItem *)localPoint).name);
     DDLogVerbose(@"Point mgID=%@", remotePoint.gID);

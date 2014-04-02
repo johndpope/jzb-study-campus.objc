@@ -14,7 +14,7 @@
 //*********************************************************************************************************************
 @interface UIPlaceHolderTextView : UITextView
 
-@property (nonatomic, copy) NSString *placeholderText;
-@property (nonatomic, retain) UIColor *placeholderColor;
+@property (copy, nonatomic) NSString *placeholderText;
+@property (retain, nonatomic) UIColor *placeholderColor;
 
 @end

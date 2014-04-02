@@ -9,20 +9,19 @@
 #import <MapKit/MapKit.h>
 
 
+@interface TPointPath : NSObject
+
+@property (assign,nonatomic) NSInteger x;
+@property (assign,nonatomic) NSInteger y;
+
+@end
+
 
 
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark Public Enumerations & definitions
 //*********************************************************************************************************************
-#define MY_CONSTANT @"a constant"
-
-typedef enum {
-    SORT_ASCENDING = YES,
-    SORT_DESCENDING = NO
-} SORTING_ORDER;
-
-typedef NSString * (^TBlock_blockDefinition)(NSArray *p1, NSError *error);
 
 
 
@@ -31,30 +30,45 @@ typedef NSString * (^TBlock_blockDefinition)(NSArray *p1, NSError *error);
 #pragma mark -
 #pragma mark Public Interface definition
 //*********************************************************************************************************************
-@interface CustomOfflineTileOverlays : MKTileOverlayRenderer
-
-
-@property (nonatomic, strong) NSString *publicProperty;
-
+@interface CustomOfflineTileOverlayRenderer : MKTileOverlayRenderer
 
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-#ifndef __CustomOfflineTileOverlays__IMPL__
-- (id) init __attribute__ ((unavailable ("init not available")));
-#endif
-
-+ (void) publicClassMethod;
 
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (void) publicMethod;
 
+
+@end
+
+
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark Public Interface definition
+//*********************************************************************************************************************
+@interface CustomOfflineTileOverlay : MKTileOverlay
+
+
+@property (strong,nonatomic) NSMutableArray     *pointPaths;
+
+
+//=====================================================================================================================
+#pragma mark -
+#pragma mark CLASS public methods
+//---------------------------------------------------------------------------------------------------------------------
++ (CustomOfflineTileOverlay *) overlay;
+
+
+//=====================================================================================================================
+#pragma mark -
+#pragma mark INSTANCE public methods
+//---------------------------------------------------------------------------------------------------------------------
 
 
 @end

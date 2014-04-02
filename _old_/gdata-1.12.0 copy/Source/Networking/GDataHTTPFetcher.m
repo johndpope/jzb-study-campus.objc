@@ -128,7 +128,7 @@ static const NSTimeInterval kCachedURLReservationInterval = 60.; // 1 minute
 - (void)retryFetch;
 
 + (NSString *)createTempDownloadFilePathForPath:targetPath;
-- (BOOL)finishDownloadToPathWithError:(NSError **)error;
+- (BOOL)finishDownloadToPathWithError:(NSError * __autoreleasing *)error;
 
 - (NSString *)temporaryDownloadPath;
 - (void)setTemporaryDownloadPath:(NSString *)str;
@@ -1103,7 +1103,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
   }
 }
 
-- (BOOL)finishDownloadToPathWithError:(NSError **)error {
+- (BOOL)finishDownloadToPathWithError:(NSError * __autoreleasing *)error {
   if (!downloadPath_) return YES;
 
   [downloadFileHandle_ closeFile];

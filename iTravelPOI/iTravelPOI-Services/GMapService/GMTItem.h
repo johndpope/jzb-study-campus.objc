@@ -22,12 +22,12 @@
 // *********************************************************************************************************************
 @interface GMTItem : NSObject
 
-@property (nonatomic, strong)   NSString *name;
-@property (nonatomic, strong)   NSString *gID;
-@property (nonatomic, strong)   NSString *etag;
-@property (nonatomic, readonly) NSString *editLink;
-@property (nonatomic, strong)   NSDate *published_Date;
-@property (nonatomic, strong)   NSDate *updated_Date;
+@property (strong, nonatomic)   NSString *name;
+@property (strong, nonatomic)   NSString *gID;
+@property (strong, nonatomic)   NSString *etag;
+@property (readonly, nonatomic) NSString *editLink;
+@property (strong, nonatomic)   NSDate *published_Date;
+@property (strong, nonatomic)   NSDate *updated_Date;
 
 
 // =====================================================================================================================
@@ -53,5 +53,20 @@
 - (NSString *) description;
 
 - (NSString *) cleanXMLText:(NSString *)text;
+
+
+
+
+// =====================================================================================================================
+#pragma mark -
+#pragma mark INSTANCE protected methods
+// ---------------------------------------------------------------------------------------------------------------------
+#ifdef __GMTItem__SUBCLASSES__PROTECTED__
+- (NSString *) __itemTypeName;
+- (void) __atomEntryDataContent:(NSMutableString *)atomStr;
+- (void) __verifyFieldsNotNil:(NSMutableArray *)result;
+- (void) __descriptionPutExtraFields:(NSMutableString *)mutStr;
+#endif
+
 
 @end

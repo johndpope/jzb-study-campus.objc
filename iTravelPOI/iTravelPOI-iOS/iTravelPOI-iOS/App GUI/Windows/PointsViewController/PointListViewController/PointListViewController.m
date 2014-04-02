@@ -133,6 +133,8 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void) refreshSelectedPoint {
     
+    [self.pointsTable reloadData];
+    
     NSUInteger index = [self.dataSource.pointList indexOfObject:self.dataSource.selectedPoint];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
     if(![self.prevSelIndexPath isEqual:indexPath] && (self.prevSelIndexPath!=nil || index!=NSNotFound)) {

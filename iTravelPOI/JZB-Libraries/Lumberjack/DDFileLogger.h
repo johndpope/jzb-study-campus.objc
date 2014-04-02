@@ -224,7 +224,7 @@
  *
  * @see DDLogFileManager.maximumNumberOfLogFiles
 **/
-@property (strong, nonatomic, readonly) id <DDLogFileManager> logFileManager;
+@property (strong, readonly, nonatomic) id <DDLogFileManager> logFileManager;
 
 
 // You can optionally force the current log file to be rolled with this method.
@@ -269,19 +269,19 @@
     unsigned long long fileSize;
 }
 
-@property (strong, nonatomic, readonly) NSString *filePath;
-@property (strong, nonatomic, readonly) NSString *fileName;
+@property (strong, readonly, nonatomic) NSString *filePath;
+@property (strong, readonly, nonatomic) NSString *fileName;
 
-@property (strong, nonatomic, readonly) NSDictionary *fileAttributes;
+@property (strong, readonly, nonatomic) NSDictionary *fileAttributes;
 
-@property (strong, nonatomic, readonly) NSDate *creationDate;
-@property (strong, nonatomic, readonly) NSDate *modificationDate;
+@property (strong, readonly, nonatomic) NSDate *creationDate;
+@property (strong, readonly, nonatomic) NSDate *modificationDate;
 
-@property (nonatomic, readonly) unsigned long long fileSize;
+@property (readonly, nonatomic) unsigned long long fileSize;
 
-@property (nonatomic, readonly) NSTimeInterval age;
+@property (readonly, nonatomic) NSTimeInterval age;
 
-@property (nonatomic, readwrite) BOOL isArchived;
+@property (readwrite, nonatomic) BOOL isArchived;
 
 + (id) logFileWithPath:(NSString *)filePath;
 

@@ -682,7 +682,7 @@ static xmlChar *SplitQNameReverse(const xmlChar *qname, xmlChar **prefix) {
   return GDataXMLInvalidKind;
 }
 
-- (NSArray *)nodesForXPath:(NSString *)xpath error:(NSError **)error {
+- (NSArray *)nodesForXPath:(NSString *)xpath error:(NSError * __autoreleasing *)error {
   // call through with no explicit namespace dictionary; that will register the
   // root node's namespaces
   return [self nodesForXPath:xpath namespaces:nil error:error];
@@ -690,7 +690,7 @@ static xmlChar *SplitQNameReverse(const xmlChar *qname, xmlChar **prefix) {
 
 - (NSArray *)nodesForXPath:(NSString *)xpath
                 namespaces:(NSDictionary *)namespaces
-                     error:(NSError **)error {
+                     error:(NSError * __autoreleasing *)error {
 
   NSMutableArray *array = nil;
   NSInteger errorCode = -1;
@@ -901,7 +901,7 @@ static xmlChar *SplitQNameReverse(const xmlChar *qname, xmlChar **prefix) {
 
 @implementation GDataXMLElement
 
-- (id)initWithXMLString:(NSString *)str error:(NSError **)error {
+- (id)initWithXMLString:(NSString *)str error:(NSError * __autoreleasing *)error {
   self = [super init];
   if (self) {
 
@@ -1602,14 +1602,14 @@ static xmlChar *SplitQNameReverse(const xmlChar *qname, xmlChar **prefix) {
 
 @implementation GDataXMLDocument
 
-- (id)initWithXMLString:(NSString *)str options:(unsigned int)mask error:(NSError **)error {
+- (id)initWithXMLString:(NSString *)str options:(unsigned int)mask error:(NSError * __autoreleasing *)error {
 
   NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding];
   GDataXMLDocument *doc = [self initWithData:data options:mask error:error];
   return doc;
 }
 
-- (id)initWithData:(NSData *)data options:(unsigned int)mask error:(NSError **)error {
+- (id)initWithData:(NSData *)data options:(unsigned int)mask error:(NSError * __autoreleasing *)error {
 
   self = [super init];
   if (self) {
@@ -1766,13 +1766,13 @@ static xmlChar *SplitQNameReverse(const xmlChar *qname, xmlChar **prefix) {
   }
 }
 
-- (NSArray *)nodesForXPath:(NSString *)xpath error:(NSError **)error {
+- (NSArray *)nodesForXPath:(NSString *)xpath error:(NSError * __autoreleasing *)error {
   return [self nodesForXPath:xpath namespaces:nil error:error];
 }
 
 - (NSArray *)nodesForXPath:(NSString *)xpath
                 namespaces:(NSDictionary *)namespaces
-                     error:(NSError **)error {
+                     error:(NSError * __autoreleasing *)error {
   if (xmlDoc_ != NULL) {
     GDataXMLNode *docNode = [GDataXMLElement nodeBorrowingXMLNode:(xmlNodePtr)xmlDoc_];
     NSArray *array = [docNode nodesForXPath:xpath

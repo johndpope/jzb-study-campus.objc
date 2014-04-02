@@ -207,7 +207,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (NSArray *) getUserMapList:(NSError **)error {
+- (NSArray *) getUserMapList:(NSError * __autoreleasing *)error {
     
     NSLog(@"ModelService - _getUserMapList");
     
@@ -222,7 +222,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (NSArray *) getFlatElemensInMap:(MEMap *)map forCategories:(NSArray *)categories error:(NSError **)error {
+- (NSArray *) getFlatElemensInMap:(MEMap *)map forCategories:(NSArray *)categories error:(NSError * __autoreleasing *)error {
     
     NSLog(@"ModelService - _getFlatElemensInMap");
     
@@ -275,7 +275,7 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (NSArray *) getCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories error:(NSError **)error {
+- (NSArray *) getCategorizedElemensInMap:(MEMap *)map forCategories:(NSArray *)categories error:(NSError * __autoreleasing *)error {
     
     NSLog(@"ModelService - _getCategorizedElemensInMap");
     

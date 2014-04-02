@@ -40,7 +40,7 @@ typedef enum
 
 @interface SWDirectionPanGestureRecognizer : UIPanGestureRecognizer
 
-@property (nonatomic, assign) SWDirectionPanGestureRecognizerDirection direction;
+@property (assign, nonatomic) SWDirectionPanGestureRecognizerDirection direction;
 
 @end
 
@@ -122,10 +122,10 @@ static CGFloat statusBarAdjustment( UIView* view )
     __weak SWRevealViewController *_c;
 }
 
-@property (nonatomic, readonly) UIView *rearView;
-@property (nonatomic, readonly) UIView *rightView;
-@property (nonatomic, readonly) UIView *frontView;
-@property (nonatomic, assign)   BOOL disableLayout;
+@property (readonly, nonatomic) UIView *rearView;
+@property (readonly, nonatomic) UIView *rightView;
+@property (readonly, nonatomic) UIView *frontView;
+@property (assign, nonatomic)   BOOL disableLayout;
 
 @end
 

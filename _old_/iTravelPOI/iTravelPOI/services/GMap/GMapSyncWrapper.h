@@ -35,15 +35,15 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void)             setUserCredentialsWithUsername:(NSString *)email password:(NSString *)password;
 
-- (GDataFeedBase *)  fetchUserMapList:(NSError **)err;
-- (GDataFeedBase *)  fetchMapDataWithGID:(NSString *)mapGID error:(NSError **)err;
-- (GDataEntryMap *)  inserMapEntry:(GDataEntryMap *)gmapEntry userID:(NSString *)loggedID error:(NSError **)err;
-- (GDataEntryMap *)  deleteMapWithGID:(NSString *)mapGID error:(NSError **)err;
-- (GDataEntryMap *)  fetchUpdatedMapDataWithGID:(NSString *)mapGID error:(NSError **)err;
+- (GDataFeedBase *)  fetchUserMapList:(NSError * __autoreleasing *)err;
+- (GDataFeedBase *)  fetchMapDataWithGID:(NSString *)mapGID error:(NSError * __autoreleasing *)err;
+- (GDataEntryMap *)  inserMapEntry:(GDataEntryMap *)gmapEntry userID:(NSString *)loggedID error:(NSError * __autoreleasing *)err;
+- (GDataEntryMap *)  deleteMapWithGID:(NSString *)mapGID error:(NSError * __autoreleasing *)err;
+- (GDataEntryMap *)  fetchUpdatedMapDataWithGID:(NSString *)mapGID error:(NSError * __autoreleasing *)err;
 
-- (GDataEntryMapFeature *) inserMapFeatureEntry:(GDataEntryMapFeature *)featureEntry  inMapWithGID:(NSString *)mapGID error:(NSError **)err;
-- (GDataEntryMapFeature *) deleteMapFeatureEntryWithGID:(NSString *)featureGID  inMapWithGID:(NSString *)mapGID error:(NSError **)err;
-- (GDataEntryMapFeature *) updateMapFeatureEntry:(GDataEntryMapFeature *)featureEntry  withGID:(NSString *)featureGID inMapWithGID:(NSString *)mapGID error:(NSError **)err;
+- (GDataEntryMapFeature *) inserMapFeatureEntry:(GDataEntryMapFeature *)featureEntry  inMapWithGID:(NSString *)mapGID error:(NSError * __autoreleasing *)err;
+- (GDataEntryMapFeature *) deleteMapFeatureEntryWithGID:(NSString *)featureGID  inMapWithGID:(NSString *)mapGID error:(NSError * __autoreleasing *)err;
+- (GDataEntryMapFeature *) updateMapFeatureEntry:(GDataEntryMapFeature *)featureEntry  withGID:(NSString *)featureGID inMapWithGID:(NSString *)mapGID error:(NSError * __autoreleasing *)err;
 
 
 @end

@@ -536,7 +536,7 @@ typedef void *GDataServiceUploadProgressHandler;
 - (BOOL)waitForTicket:(GDataServiceTicketBase *)ticket
               timeout:(NSTimeInterval)timeoutInSeconds
         fetchedObject:(GDataObject **)outObjectOrNil
-                error:(NSError **)outErrorOrNil;
+                error:(NSError * __autoreleasing *)outErrorOrNil;
 
 //
 // internal utilities

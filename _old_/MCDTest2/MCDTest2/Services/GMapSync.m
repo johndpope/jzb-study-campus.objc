@@ -72,7 +72,7 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
-- (GDataFeedBase *)  fetchUserMapList:(NSError **)err {
+- (GDataFeedBase *)  fetchUserMapList:(NSError * __autoreleasing *)err {
     
     // Variable de salida del block
     __block BOOL endLoop = false;
