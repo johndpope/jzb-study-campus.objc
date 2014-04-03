@@ -11,9 +11,6 @@
 
 
 
-@implementation TPointPath
-@end
-
 
 //*********************************************************************************************************************
 #pragma mark -
@@ -81,7 +78,8 @@
 //*********************************************************************************************************************
 @interface CustomOfflineTileOverlay()
 
-
+@property (nonatomic, strong) NSString  *offlineMapPath;
+@property (nonatomic, assign) int       maxBucketA;
 
 @end
 
@@ -100,7 +98,7 @@
 #pragma mark -
 #pragma mark CLASS methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (CustomOfflineTileOverlay *) overlay {
++ (CustomOfflineTileOverlay *) overlay:(NSString *)mapName {
     
     // Las URLs que tenemos para sacar tiles[max zoom] son:
     // (En algunas hay varios servidores para hacer peticiones simultaneas)
@@ -111,13 +109,31 @@
 
     NSString *template = @"http://otile3.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpg";
     CustomOfflineTileOverlay *overlay = [[CustomOfflineTileOverlay alloc] initWithURLTemplate:template];
-    overlay.canReplaceMapContent = YES;
+    overlay.canReplaceMapContent = NO;
     overlay.minimumZ = 3;
     overlay.maximumZ = 19;
+    
+    [overlay initOfflineMapFolderInfo:mapName];
     
     return overlay;
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (void) initOfflineMapFolderInfo:(NSString *)mapName {
+    
+    //Get the get the path to the Documents directory
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    
+    //Combine Documents directory path with your file name to get the full path
+    self.offlineMapPath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"offlineMaps/%@",mapName]];
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSArray *fileNames = [fileManager contentsOfDirectoryAtPath:self.offlineMapPath error:nil];
+    for(NSString *name in fileNames) {
+        if([name hasPrefix:@"a"]) self.maxBucketA++;
+    }
+}
 
 
 //=====================================================================================================================
@@ -127,12 +143,21 @@
 - (void)loadTileAtPath:(MKTileOverlayPath)path result:(void (^)(NSData *tileData, NSError *error))result {
     
     // tendremos guardados los mapas del 3 al 6 y el 17
+
     
+    NSError *localError = nil;
+    UIImage *tileImg = [self _loadTileImageAtPath:path error:&localError];
+    NSData *tileData = UIImagePNGRepresentation(tileImg);
+    result(tileData, nil);
+    return;
+
+    /*
     if(path.z<17) {
         [self _loadTileAtPathAtSmallerZoomLevel:path result:result];
     } else {
         [self _loadTileAtPathAtBiggerZoomLevel:path result:result];
     }
+     */
 }
 
 
@@ -141,34 +166,39 @@
 #pragma mark Private methods
 //---------------------------------------------------------------------------------------------------------------------
 - (UIImage *) _loadTileImageAtPath:(MKTileOverlayPath)path error:(NSError * __autoreleasing *)error {
- 
-    if(![self isNearPath:path]) return nil;
-    
-    return [UIImage imageNamed:@"MapEmptyTile"];
-    
-    // Carga la imagen desde una URL... Luego la sacara de fichero
-    NSURL *scaledUrl = [super URLForTilePath:path];
-    NSData *tileData = [[NSData alloc] initWithContentsOfURL:scaledUrl options:NSDataReadingMappedIfSafe error:error];
 
-    if (tileData!=nil && *error==nil) {
-        UIImage *tileImg = [UIImage imageWithData: tileData];
-        return tileImg;
+    static NSInteger xx1 = NSIntegerMax, xx2 = NSIntegerMin;
+    static NSInteger yy1 = NSIntegerMax, yy2 = NSIntegerMin;
+    
+    UIImage *emptyMapTile = [UIImage imageNamed:@"emptyMapTile"];
+    
+    NSInteger xxx1 = MIN(xx1, path.x);
+    NSInteger xxx2 = MAX(xx2, path.x);
+    NSInteger yyy1 = MIN(yy1, path.y);
+    NSInteger yyy2 = MAX(yy2, path.y);
+    
+    if(xxx1!=xx1 || xxx2!=xx2 || yyy1!=yy1 || yyy2!=yy2) {
+        xx1=xxx1; xx2=xxx2; yy1=yyy1; yy2 = yyy2;
+        NSLog(@"map tile = %d - %d, %d - %d, %d", path.z, xx1, yy1, xx2, yy2);
     }
-    return nil;
     
-}
-
-- (BOOL) isNearPath:(MKTileOverlayPath)path {
-
-#define TILES_SIZE 5
+    return emptyMapTile;
     
-    for(TPointPath *pp in self.pointPaths) {
-        BOOL value = abs(pp.x-path.x)<=TILES_SIZE && abs(pp.y-path.y)<=TILES_SIZE;
-        if(value) {
-            return TRUE;
+    /*
+    NSString *fileName = [NSString stringWithFormat:@"%d_%d.png",path.x,path.y];
+    
+    for(int bucketA=0;bucketA<self.maxBucketA;bucketA++) {
+        for(int bucketB=0;bucketB<16;bucketB++) {
+            
+            NSString *withBucketPath=[NSString stringWithFormat:@"a%d/b%d/%@",bucketA,bucketB,fileName];
+            NSString *fullOfflineFile = [self.offlineMapPath stringByAppendingPathComponent:withBucketPath];
+
+            UIImage *tileImg = [UIImage imageWithContentsOfFile:fullOfflineFile];
+            if(tileImg) return tileImg;
         }
     }
-    return FALSE;
+    return nil;
+     */
 }
 
 //---------------------------------------------------------------------------------------------------------------------

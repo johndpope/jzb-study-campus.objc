@@ -8,7 +8,7 @@
 
 #define __TopViewController__IMPL__
 #import "TopViewController.h"
-
+#import "UINavigationPopProtocol.h"
 
 
 
@@ -24,7 +24,7 @@ static TopViewController *_instance;
 #pragma mark -
 #pragma mark PRIVATE interface definition
 //*********************************************************************************************************************
-@interface TopViewController ()
+@interface TopViewController () <UINavigationControllerDelegate>
 
 
 @end
@@ -99,8 +99,39 @@ static TopViewController *_instance;
     
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
+    
+    // Make sure your segue name in storyboard is the same as this line
+    if ([[segue identifier] isEqualToString:@"rootVC"]) {
+        
+        if([segue.destinationViewController isKindOfClass:[UINavigationController class]]) {
+
+            UINavigationController *navCtlr = (UINavigationController *)segue.destinationViewController;
+            navCtlr.delegate = self;
+        }
+    }
+    
+}
 
 
+
+//=====================================================================================================================
+#pragma mark -
+#pragma mark <UINavigationControllerDelegate> superclass methods
+//---------------------------------------------------------------------------------------------------------------------
+- (id<UIViewControllerAnimatedTransitioning>) navigationController:(UINavigationController *)navigationController
+                                   animationControllerForOperation:(UINavigationControllerOperation)operation
+                                                fromViewController:(UIViewController *)fromVC
+                                                  toViewController:(UIViewController *)toVC {
+    
+    if(operation==UINavigationControllerOperationPop && [toVC conformsToProtocol:@protocol(UINavigationPopProtocol)]) {
+        [toVC performSelector:@selector(poppedFromVC:) withObject:fromVC];
+    }
+    
+    return nil;
+}
 
 //=====================================================================================================================
 #pragma mark -

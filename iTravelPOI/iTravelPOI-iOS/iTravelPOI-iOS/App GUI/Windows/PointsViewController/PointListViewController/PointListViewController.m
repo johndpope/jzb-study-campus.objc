@@ -188,8 +188,6 @@
     [self.distanceFormatterKm setRoundingMode:NSNumberFormatterRoundHalfUp];
     [self.distanceFormatterKm setPositiveFormat:@"#,##0.# Km"];
 
-    // Empieza sin celdas seleccionadas
-    [self setSelectedPointAndPath:nil];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -198,6 +196,13 @@
     [super viewDidAppear:animated];
     
     [self.locationManager startUpdatingLocation];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) viewWillAppear:(BOOL)animated {
+
+    [super viewWillAppear:animated];
+    [self refreshSelectedPoint];
 }
 
 //---------------------------------------------------------------------------------------------------------------------

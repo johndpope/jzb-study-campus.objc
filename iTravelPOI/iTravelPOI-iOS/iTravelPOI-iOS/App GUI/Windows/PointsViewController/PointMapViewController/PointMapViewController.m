@@ -171,6 +171,20 @@
     }
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (void) toggleOfflineMap:(MMap *)map {
+    
+    if(self.overlay) {
+        [self.pointsMapView removeOverlay:self.overlay];
+        self.overlay = nil;
+    } else {
+        // Establece un overlay si no tiene conexion
+        // TODO: ¿PORQUE NO PUEDE ENTERARSE DE QUE SE PERDIO LA CONEXION?
+        self.overlay = [CustomOfflineTileOverlay overlay:map.name];
+        [self.pointsMapView addOverlay:self.overlay level:MKOverlayLevelAboveLabels];
+    }
+}
+
 
 
 
@@ -199,14 +213,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void) viewWillAppear:(BOOL)animated {
     
-    
     [super viewWillAppear:animated];
-    
-    // Establece un overlay si no tiene conexion
-    // TODO: ¿PORQUE NO PUEDE ENTERARSE DE QUE SE PERDIO LA CONEXION?
-    self.overlay = [CustomOfflineTileOverlay overlay];
-    //[self.pointsMapView addOverlay:self.overlay level:MKOverlayLevelAboveLabels];
-    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -527,28 +534,7 @@
     }
     
     // Add new annotations from points
-    [self.pointsMapView addAnnotations:pointList];
-    
-    NSMutableArray *pointPaths = [NSMutableArray array];
-    
-    for(MPoint *point in pointList) {
-        TPointPath *pp = [[TPointPath alloc] init];
-        MKMapPoint mp = MKMapPointForCoordinate(point.coordinate);
-        
-        double sinLatitude = sin(point.coordinate.latitude * M_PI/180.0);
-        
-        double zoomLevel = 17;
-        double pixelX = ((point.coordinate.longitude + 180.0) / 360.0) * pow(2, zoomLevel);
-        double pixelY = (0.5 - log((1.0 + sinLatitude) / (1.0 - sinLatitude)) / (4.0 * M_PI)) * pow(2, zoomLevel);
-        
-        pp.x = mp.x/powl(2, 28-17);
-        pp.y = mp.y/powl(2, 28-17);
-        
-        NSLog(@"%d,%d",  pp.x-(int)pixelX,pp.y-(int)pixelY);
-        
-        [pointPaths addObject:pp];
-    }
-    self.overlay.pointPaths = pointPaths;
+    [self.pointsMapView addAnnotations:pointList];    
 }
 
 //---------------------------------------------------------------------------------------------------------------------

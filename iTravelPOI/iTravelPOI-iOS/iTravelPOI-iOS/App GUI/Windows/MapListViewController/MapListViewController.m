@@ -10,6 +10,7 @@
 #import "MapListViewController.h"
 #import "BaseCoreDataService.h"
 #import "PointsViewController.h"
+#import "UINavigationPopProtocol.h"
 
 
 
@@ -18,13 +19,15 @@
 #pragma mark -
 #pragma mark Private Enumerations & definitions
 //*********************************************************************************************************************
+#define PREVIOUS_SHOWN_MAP_URI_ID   @"previousShownMapUriID"
+
 
 
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark PRIVATE interface definition
 //*********************************************************************************************************************
-@interface MapListViewController () <UITableViewDelegate, UITableViewDataSource>
+@interface MapListViewController () <UINavigationPopProtocol, UITableViewDelegate, UITableViewDataSource>
 
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem    *revealButtonItem;
@@ -84,6 +87,10 @@
     
     self.mapList = [MMap allMapsinContext:self.moContext includeMarkedAsDeleted:FALSE];
     [self.tableViewItemList reloadData];
+
+    
+    // Antes de termina de mostrarse comprueba si debe auto-activar el mostrar un mapa
+    [self _restorePreviousShownMap];
     
 }
 
@@ -101,12 +108,28 @@
     if ([[segue identifier] isEqualToString:@"MapList_to_PointsList"]) {
         
         if([segue.destinationViewController isKindOfClass:[PointsViewController class]]) {
+            
             MMap *map = (MMap *)sender;
             PointsViewController *poiList = (PointsViewController *)segue.destinationViewController;
             poiList.map = map;
+            
+            // Recuerda que esta mostrando este mapa
+            [self _savePreviousShownMap:map];
         }
     }
     
+}
+
+
+
+//=====================================================================================================================
+#pragma mark -
+#pragma mark <UINavigationPopProtocol> protocol methods
+//---------------------------------------------------------------------------------------------------------------------
+- (void) poppedFromVC:(UIViewController *)controller {
+    
+    // Recuerda que ya no se esta mostrando ningun mapa en concreto
+    [self _removePreviousShownMap];
 }
 
 
@@ -216,5 +239,37 @@
     
     return index==0?nil:self.mapList[index-1];
 }
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _savePreviousShownMap:(MMap *)map {
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:map.objectID.URIRepresentation.absoluteString forKey:PREVIOUS_SHOWN_MAP_URI_ID];
+    [userDefaults synchronize];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _removePreviousShownMap {
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults removeObjectForKey:PREVIOUS_SHOWN_MAP_URI_ID];
+    [userDefaults synchronize];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _restorePreviousShownMap {
+    
+    // Comprueba si se cerro la aplicacion cuando se estaba mostrando un mapa para seguir con el
+    NSString *uriObjId = [[NSUserDefaults standardUserDefaults] objectForKey:PREVIOUS_SHOWN_MAP_URI_ID];
+    if(uriObjId) {
+        NSManagedObjectID *mapID = [self.moContext.persistentStoreCoordinator managedObjectIDForURIRepresentation:[NSURL URLWithString:uriObjId]];
+        MMap *prevSelMap = (MMap *)[self.moContext objectWithID:mapID];
+        if(prevSelMap) {
+            [self performSegueWithIdentifier: @"MapList_to_PointsList" sender: prevSelMap];
+        }
+    }
+    
+}
+
 
 @end

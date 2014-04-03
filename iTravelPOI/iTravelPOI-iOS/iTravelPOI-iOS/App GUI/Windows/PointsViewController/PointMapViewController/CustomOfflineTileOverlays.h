@@ -9,14 +9,6 @@
 #import <MapKit/MapKit.h>
 
 
-@interface TPointPath : NSObject
-
-@property (assign,nonatomic) NSInteger x;
-@property (assign,nonatomic) NSInteger y;
-
-@end
-
-
 
 //*********************************************************************************************************************
 #pragma mark -
@@ -62,7 +54,7 @@
 #pragma mark -
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (CustomOfflineTileOverlay *) overlay;
++ (CustomOfflineTileOverlay *) overlay:(NSString *)mapName;
 
 
 //=====================================================================================================================

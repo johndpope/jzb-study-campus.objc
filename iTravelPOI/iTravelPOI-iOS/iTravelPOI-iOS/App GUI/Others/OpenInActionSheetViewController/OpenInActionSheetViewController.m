@@ -10,6 +10,7 @@
 #import "OpenInActionSheetViewController.h"
 #import "MyCollectionViewCell.h"
 #import "TopViewController.h"
+#import "UIViewController+Storyboard.h"
 
 
 
@@ -60,9 +61,7 @@
 + (void) showOpenInActionSheetWithControllerWithPoint:(MPoint *)point {
 
     // Crea una instancia a partir del storyboard
-    UIWindow *wnd = UIApplication.sharedApplication.keyWindow;
-    UIViewController *rvc = wnd.rootViewController;
-    OpenInActionSheetViewController *me =  [rvc.storyboard instantiateViewControllerWithIdentifier:@"OpenInActionSheetViewController"];
+    OpenInActionSheetViewController *me = (OpenInActionSheetViewController *)[UIViewController instantiateViewControllerFromStoryboardWithID:@"OpenInActionSheetViewController"];
 
     // Copia el color del tinte
     //me.view.tintColor = TopViewController.instance.view.tintColor;

@@ -11,6 +11,7 @@
 #import "TagTreeTableViewController.h"
 #import "TopViewController.h"
 #import "Util_Macros.h"
+#import "UIViewController+Storyboard.h"
 
 
 
@@ -55,10 +56,8 @@
 + (TagFilterViewController *) createInstanceWithDelegate:(id<TagTreeTableViewControllerDelegate>) tagTreeDelegate {
     
     // Crea una instancia a partir del storyboard
-    UIWindow *wnd = UIApplication.sharedApplication.keyWindow;
-    UIViewController *rvc = wnd.rootViewController;
-    TagFilterViewController *me =  [rvc.storyboard instantiateViewControllerWithIdentifier:@"TagFilterViewController"];
-    
+    TagFilterViewController *me = (TagFilterViewController *)[UIViewController instantiateViewControllerFromStoryboardWithID:@"TagFilterViewController"];
+        
     // Copia los valores pasados
     me.tagTreeDelegate = tagTreeDelegate;
 

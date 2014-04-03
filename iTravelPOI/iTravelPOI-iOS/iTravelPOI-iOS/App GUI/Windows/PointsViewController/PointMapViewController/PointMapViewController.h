@@ -45,7 +45,7 @@
 - (void) zoomOnMyLocation;
 - (void) zoomAndShowAll;
 - (void) zoomOnSelected;
-
+- (void) toggleOfflineMap:(MMap *)map;
 
 
 @end

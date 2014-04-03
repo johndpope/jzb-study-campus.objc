@@ -116,8 +116,11 @@
 		42828E8518E610150003B092 /* sync-update.png in Resources */ = {isa = PBXBuildFile; fileRef = 42828E7F18E610140003B092 /* sync-update.png */; };
 		42828E8618E610150003B092 /* sync-update@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42828E8018E610140003B092 /* sync-update@2x.png */; };
 		42828E8918E7274F0003B092 /* KmlBackup.m in Sources */ = {isa = PBXBuildFile; fileRef = 42828E8818E7274F0003B092 /* KmlBackup.m */; };
-		42828E8C18E82A810003B092 /* CustomOfflineTileOverlays.m in Sources */ = {isa = PBXBuildFile; fileRef = 42828E8B18E82A810003B092 /* CustomOfflineTileOverlays.m */; };
-		4286936118EB4F11008C840B /* MapEmptyTile.png in Resources */ = {isa = PBXBuildFile; fileRef = 4286936018EB4F11008C840B /* MapEmptyTile.png */; };
+		4286936418EBFDAD008C840B /* CustomOfflineTileOverlays.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286936318EBFDAD008C840B /* CustomOfflineTileOverlays.m */; };
+		4286936918EC1B62008C840B /* UIViewController+Storyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286936818EC1B62008C840B /* UIViewController+Storyboard.m */; };
+		4286936C18EC6977008C840B /* tbar-no-connection.png in Resources */ = {isa = PBXBuildFile; fileRef = 4286936A18EC6976008C840B /* tbar-no-connection.png */; };
+		4286936D18EC6977008C840B /* tbar-no-connection@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4286936B18EC6977008C840B /* tbar-no-connection@2x.png */; };
+		429E797718ED434300B11A8D /* emptyMapTile.png in Resources */ = {isa = PBXBuildFile; fileRef = 429E797618ED434300B11A8D /* emptyMapTile.png */; };
 		42BBBBA01872A8D5009813A0 /* MBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BBBB931872A8D5009813A0 /* MBase.m */; };
 		42BBBBA11872A8D5009813A0 /* MBaseSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BBBB951872A8D5009813A0 /* MBaseSync.m */; };
 		42BBBBA21872A8D5009813A0 /* MIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BBBB971872A8D5009813A0 /* MIcon.m */; };
@@ -344,9 +347,14 @@
 		42828E8018E610140003B092 /* sync-update@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sync-update@2x.png"; sourceTree = "<group>"; };
 		42828E8718E7274F0003B092 /* KmlBackup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KmlBackup.h; sourceTree = "<group>"; };
 		42828E8818E7274F0003B092 /* KmlBackup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KmlBackup.m; sourceTree = "<group>"; };
-		42828E8A18E82A810003B092 /* CustomOfflineTileOverlays.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomOfflineTileOverlays.h; sourceTree = "<group>"; };
-		42828E8B18E82A810003B092 /* CustomOfflineTileOverlays.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomOfflineTileOverlays.m; sourceTree = "<group>"; };
-		4286936018EB4F11008C840B /* MapEmptyTile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MapEmptyTile.png; sourceTree = "<group>"; };
+		4286936218EBFDAD008C840B /* CustomOfflineTileOverlays.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomOfflineTileOverlays.h; sourceTree = "<group>"; };
+		4286936318EBFDAD008C840B /* CustomOfflineTileOverlays.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomOfflineTileOverlays.m; sourceTree = "<group>"; };
+		4286936618EC12F3008C840B /* UINavigationPopProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UINavigationPopProtocol.h; sourceTree = "<group>"; };
+		4286936718EC1B62008C840B /* UIViewController+Storyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Storyboard.h"; sourceTree = "<group>"; };
+		4286936818EC1B62008C840B /* UIViewController+Storyboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Storyboard.m"; sourceTree = "<group>"; };
+		4286936A18EC6976008C840B /* tbar-no-connection.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tbar-no-connection.png"; sourceTree = "<group>"; };
+		4286936B18EC6977008C840B /* tbar-no-connection@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tbar-no-connection@2x.png"; sourceTree = "<group>"; };
+		429E797618ED434300B11A8D /* emptyMapTile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = emptyMapTile.png; sourceTree = "<group>"; };
 		42BBBB921872A8D5009813A0 /* MBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBase.h; sourceTree = "<group>"; };
 		42BBBB931872A8D5009813A0 /* MBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBase.m; sourceTree = "<group>"; };
 		42BBBB941872A8D5009813A0 /* MBaseSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBaseSync.h; sourceTree = "<group>"; };
@@ -524,8 +532,6 @@
 			children = (
 				423F30F218B8D75E00845826 /* MapListViewController.h */,
 				423F30F318B8D75E00845826 /* MapListViewController.m */,
-				42828E8A18E82A810003B092 /* CustomOfflineTileOverlays.h */,
-				42828E8B18E82A810003B092 /* CustomOfflineTileOverlays.m */,
 			);
 			path = MapListViewController;
 			sourceTree = "<group>";
@@ -556,6 +562,8 @@
 		423F310C18B8D79200845826 /* PointMapViewController */ = {
 			isa = PBXGroup;
 			children = (
+				4286936218EBFDAD008C840B /* CustomOfflineTileOverlays.h */,
+				4286936318EBFDAD008C840B /* CustomOfflineTileOverlays.m */,
 				423F310D18B8D79200845826 /* MPointMapAnnotation.h */,
 				423F310E18B8D79200845826 /* MPointMapAnnotation.m */,
 				423F310F18B8D79200845826 /* PointMapViewController.h */,
@@ -567,7 +575,7 @@
 		423F330218B8E29700845826 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				4286936018EB4F11008C840B /* MapEmptyTile.png */,
+				429E797618ED434300B11A8D /* emptyMapTile.png */,
 				42828E7B18E610140003B092 /* sync-add.png */,
 				42828E7C18E610140003B092 /* sync-add@2x.png */,
 				42828E7D18E610140003B092 /* sync-delete.png */,
@@ -604,6 +612,8 @@
 		423F332E18B8E29700845826 /* toolbar */ = {
 			isa = PBXGroup;
 			children = (
+				4286936A18EC6976008C840B /* tbar-no-connection.png */,
+				4286936B18EC6977008C840B /* tbar-no-connection@2x.png */,
 				42828E3C18DF27FB0003B092 /* tbar-mapMenu.png */,
 				42828E3D18DF27FB0003B092 /* tbar-mapMenu@2x.png */,
 				42828E3818DF1FC80003B092 /* tbar-expand.png */,
@@ -693,6 +703,7 @@
 		42828E1D18DDF0DF0003B092 /* TopViewController */ = {
 			isa = PBXGroup;
 			children = (
+				4286936618EC12F3008C840B /* UINavigationPopProtocol.h */,
 				42828E1E18DDF0DF0003B092 /* TopViewController.h */,
 				42828E1F18DDF0DF0003B092 /* TopViewController.m */,
 			);
@@ -1036,6 +1047,8 @@
 		42F6E8141869FDFC00005AFB /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				4286936718EC1B62008C840B /* UIViewController+Storyboard.h */,
+				4286936818EC1B62008C840B /* UIViewController+Storyboard.m */,
 				42828E7518E1FEAE0003B092 /* NSManagedObjectContext+Utils.h */,
 				42828E7618E1FEAE0003B092 /* NSManagedObjectContext+Utils.m */,
 				42828E6E18E1E3CE0003B092 /* NSString+HTML.h */,
@@ -1143,6 +1156,7 @@
 				42828E1118DCE5A80003B092 /* openInGoogleMaps@2x.png in Resources */,
 				423F338218B8E29700845826 /* tbar-viewMap@2x.png in Resources */,
 				423F336E18B8E29700845826 /* location-target@2x.png in Resources */,
+				4286936C18EC6977008C840B /* tbar-no-connection.png in Resources */,
 				42828DF318DCE46C0003B092 /* tagtree-circledTagIcon@2x.png in Resources */,
 				42828E2F18DEF45B0003B092 /* location_dot@2x.png in Resources */,
 				423F337018B8E29700845826 /* tbar-delete@2x.png in Resources */,
@@ -1191,9 +1205,10 @@
 				42828E8618E610150003B092 /* sync-update@2x.png in Resources */,
 				42828E3718DF1DBF0003B092 /* tbar-sort2@2x.png in Resources */,
 				42828DF418DCE46C0003B092 /* tagtree-expanded.png in Resources */,
-				4286936118EB4F11008C840B /* MapEmptyTile.png in Resources */,
 				42BE7AEB18672EB200AECD57 /* README.txt in Resources */,
 				423F345518B944D000845826 /* tableHSepLine@2x.png in Resources */,
+				4286936D18EC6977008C840B /* tbar-no-connection@2x.png in Resources */,
+				429E797718ED434300B11A8D /* emptyMapTile.png in Resources */,
 				423F338118B8E29700845826 /* tbar-viewMap.png in Resources */,
 				42BE7AED18672EB200AECD57 /* tpl_interface.txt in Resources */,
 				423F338318B8E29700845826 /* uncheckedMark.png in Resources */,
@@ -1278,7 +1293,6 @@
 				4235D99F187AC6610023E00C /* _MBaseSync.m in Sources */,
 				42828E1418DCE5A80003B092 /* OpenInActionSheetViewController.m in Sources */,
 				42828E5E18E1D5300003B092 /* GMapSyncService.m in Sources */,
-				42828E8C18E82A810003B092 /* CustomOfflineTileOverlays.m in Sources */,
 				42828E7718E1FEAE0003B092 /* NSManagedObjectContext+Utils.m in Sources */,
 				42BE7AE918672EB200AECD57 /* ContextFilterLogFormatter.m in Sources */,
 				42C8AABC187977B100E992E3 /* MComplexFilter.m in Sources */,
@@ -1313,8 +1327,10 @@
 				421FA3DB18C46F9800792990 /* TestMapViewController.m in Sources */,
 				42828E6318E1D5300003B092 /* GMTPoint.m in Sources */,
 				42828E7418E1F9AF0003B092 /* SyncMapsViewController.m in Sources */,
+				4286936418EBFDAD008C840B /* CustomOfflineTileOverlays.m in Sources */,
 				42828E5D18E1D5300003B092 /* GMapService.m in Sources */,
 				423F30EE18B8D71700845826 /* BlockActionSheet.m in Sources */,
+				4286936918EC1B62008C840B /* UIViewController+Storyboard.m in Sources */,
 				42BBBBA31872A8D5009813A0 /* MMap.m in Sources */,
 				4235D99E187AC6610023E00C /* _MBase.m in Sources */,
 				423F30ED18B8D71700845826 /* BaseKeyboardViewController.m in Sources */,

@@ -135,7 +135,7 @@
 {
     [super viewDidLoad];
     
-    self.overlay = [CustomOfflineTileOverlay overlay];
+    self.overlay = [CustomOfflineTileOverlay overlay:@""];
     self.mapZoom = 17;
     self.overlay.maximumZ = self.overlay.minimumZ = self.mapZoom;
     [self.mapView addOverlay:self.overlay level:MKOverlayLevelAboveLabels];

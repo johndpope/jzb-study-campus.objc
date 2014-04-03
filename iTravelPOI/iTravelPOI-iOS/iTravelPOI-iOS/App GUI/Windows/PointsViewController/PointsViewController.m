@@ -35,6 +35,8 @@
 #pragma mark -
 #pragma mark Private Enumerations & definitions
 //*********************************************************************************************************************
+#define PREVIOUS_SELECTED_POINT_URI_ID   @"previousSelectedPointUriID"
+
 typedef NS_ENUM(NSUInteger, MENU_MORE_CMDS) {
     MENU_MORE_MOVE    = 1,
     MENU_MORE_TAGGING = 2,
@@ -58,8 +60,8 @@ typedef NS_ENUM(NSUInteger, MENU_MAP_LOCATION) {
 
 @property (weak, nonatomic) IBOutlet UIToolbar                          *doneToolbar;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem                    *changeControllerTbItem;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem                    *sortAndLocateMenuItem;
 @property (weak, nonatomic) IBOutlet UIView                             *contentView;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *sortAndLocateMenuItem;
 
 @property (strong, nonatomic) TagFilterViewController                   *tagsFilterVC;
 
@@ -118,6 +120,19 @@ typedef NS_ENUM(NSUInteger, MENU_MAP_LOCATION) {
     return self.filter.moContext;
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (void) setSelectedPoint:(MPoint *)selectedPoint {
+
+    // Recuerda la informacion referente al ultimo punto seleccionado para la restauracion en el arranque
+    if(selectedPoint) {
+        [self _savePreviousSelectedPoint:selectedPoint];
+    } else {
+        [self _removePreviousSelectedPoint];
+    }
+        
+    _selectedPoint = selectedPoint;
+}
+
 
 //=====================================================================================================================
 #pragma mark -
@@ -156,18 +171,6 @@ typedef NS_ENUM(NSUInteger, MENU_MAP_LOCATION) {
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) viewDidAppear:(BOOL)animated {
-    
-    [super viewDidAppear:animated];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) viewDidDisappear:(BOOL)animated {
-
-    [super viewDidDisappear:animated];
-}
-
-//---------------------------------------------------------------------------------------------------------------------
 - (void) viewWillAppear:(BOOL)animated {
 
     
@@ -175,6 +178,9 @@ typedef NS_ENUM(NSUInteger, MENU_MAP_LOCATION) {
 
     // Pone el titulo de la ventana atendiendo al titulo
     self.title = self.map ? self.map.name : @"Any Map";
+    
+    // Recupera la informacion del ultimo punto seleccionado
+    [self _restorePreviousSelectedPoint];
     
     // Comienza mostrando los puntos en una lista (AQUI PORQUE ES DONDE ESTAN BIEN LOS TAMAÑOS DE LAS VISTAS)
     if(self.activeVC==nil) {
@@ -188,6 +194,9 @@ typedef NS_ENUM(NSUInteger, MENU_MAP_LOCATION) {
     
     [super viewWillDisappear:animated];
 
+    // Borra la informacion del ultimo punto seleccionado
+    [self _removePreviousSelectedPoint];
+    
     if(!self.doneToolbar.hidden) {
 
         CGFloat visibleY = self.doneToolbar.frame.origin.y;
@@ -405,6 +414,11 @@ typedef NS_ENUM(NSUInteger, MENU_MAP_LOCATION) {
                                     target:self
                                     action:@selector(locationMenuItem:)
                                    cmdData:[NSNumber numberWithInt:MENU_ZOOM_ON_SELECTED]],
+                      [KxMenuItem menuItem:@"Off-Line"
+                                     image:[UIImage imageNamed:@"tbar-no-connection"]
+                                    target:self
+                                    action:@selector(offlineMapMenuItem:)
+                                   cmdData:nil]
                       ];
     }
 
@@ -656,6 +670,13 @@ typedef NS_ENUM(NSUInteger, MENU_MAP_LOCATION) {
 
 
 //---------------------------------------------------------------------------------------------------------------------
+- (void) offlineMapMenuItem:(KxMenuItem *)sender {
+
+    [self.pointMapVC toggleOfflineMap:self.map
+     ];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 - (void) locationMenuItem:(KxMenuItem *)sender
 {
     NSNumber *option = (NSNumber *)sender.cmdData;
@@ -817,6 +838,37 @@ typedef NS_ENUM(NSUInteger, MENU_MAP_LOCATION) {
                                     [self.checkedPoints removeAllObjects];
                                 }
                             }];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _savePreviousSelectedPoint:(MPoint *)point {
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:point.objectID.URIRepresentation.absoluteString forKey:PREVIOUS_SELECTED_POINT_URI_ID];
+    [userDefaults synchronize];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _removePreviousSelectedPoint {
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults removeObjectForKey:PREVIOUS_SELECTED_POINT_URI_ID];
+    [userDefaults synchronize];
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) _restorePreviousSelectedPoint {
+    
+    // Comprueba si se cerro la aplicacion cuando se estaba mostrando un mapa para seguir con el
+    NSString *uriObjId = [[NSUserDefaults standardUserDefaults] objectForKey:PREVIOUS_SELECTED_POINT_URI_ID];
+    if(uriObjId) {
+        NSManagedObjectID *pointID = [self.moContext.persistentStoreCoordinator managedObjectIDForURIRepresentation:[NSURL URLWithString:uriObjId]];
+        MPoint *prevSelPoint = (MPoint *)[self.moContext objectWithID:pointID];
+        if(prevSelPoint) {
+            self.selectedPoint = prevSelPoint;
+        }
+    }
+    
 }
 
 
