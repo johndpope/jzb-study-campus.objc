@@ -425,7 +425,7 @@
         }
         [self.syncTable reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
         
-        self.syncButton.title = [NSString stringWithFormat:@"Cancel [%d/%d]",index, self.compTuples.count];
+        self.syncButton.title = [NSString stringWithFormat:@"Cancel [%td/%td]",index, self.compTuples.count];
     });
 }
 

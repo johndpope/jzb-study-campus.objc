@@ -109,9 +109,9 @@
 
     NSString *template = @"http://otile3.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpg";
     CustomOfflineTileOverlay *overlay = [[CustomOfflineTileOverlay alloc] initWithURLTemplate:template];
-    overlay.canReplaceMapContent = NO;
+    overlay.canReplaceMapContent = YES;
     overlay.minimumZ = 3;
-    overlay.maximumZ = 19;
+    overlay.maximumZ = 18;
     
     [overlay initOfflineMapFolderInfo:mapName];
     
@@ -133,6 +133,9 @@
     for(NSString *name in fileNames) {
         if([name hasPrefix:@"a"]) self.maxBucketA++;
     }
+    
+    // El valor maximo va por zoom
+    self.maxBucketA = 2;
 }
 
 
@@ -143,21 +146,11 @@
 - (void)loadTileAtPath:(MKTileOverlayPath)path result:(void (^)(NSData *tileData, NSError *error))result {
     
     // tendremos guardados los mapas del 3 al 6 y el 17
-
-    
-    NSError *localError = nil;
-    UIImage *tileImg = [self _loadTileImageAtPath:path error:&localError];
-    NSData *tileData = UIImagePNGRepresentation(tileImg);
-    result(tileData, nil);
-    return;
-
-    /*
-    if(path.z<17) {
-        [self _loadTileAtPathAtSmallerZoomLevel:path result:result];
+    if(path.z<7) {
+        result(nil,nil);
     } else {
-        [self _loadTileAtPathAtBiggerZoomLevel:path result:result];
+        [self _loadTileWithBiggerZoomLevelAtPath:path result:result];
     }
-     */
 }
 
 
@@ -167,30 +160,17 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (UIImage *) _loadTileImageAtPath:(MKTileOverlayPath)path error:(NSError * __autoreleasing *)error {
 
-    static NSInteger xx1 = NSIntegerMax, xx2 = NSIntegerMin;
-    static NSInteger yy1 = NSIntegerMax, yy2 = NSIntegerMin;
-    
-    UIImage *emptyMapTile = [UIImage imageNamed:@"emptyMapTile"];
-    
-    NSInteger xxx1 = MIN(xx1, path.x);
-    NSInteger xxx2 = MAX(xx2, path.x);
-    NSInteger yyy1 = MIN(yy1, path.y);
-    NSInteger yyy2 = MAX(yy2, path.y);
-    
-    if(xxx1!=xx1 || xxx2!=xx2 || yyy1!=yy1 || yyy2!=yy2) {
-        xx1=xxx1; xx2=xxx2; yy1=yyy1; yy2 = yyy2;
-        NSLog(@"map tile = %d - %d, %d - %d, %d", path.z, xx1, yy1, xx2, yy2);
-    }
-    
-    return emptyMapTile;
-    
     /*
-    NSString *fileName = [NSString stringWithFormat:@"%d_%d.png",path.x,path.y];
+    UIImage *emptyMapTile = [UIImage imageNamed:@"emptyMapTile"];
+    return emptyMapTile;
+    */
     
-    for(int bucketA=0;bucketA<self.maxBucketA;bucketA++) {
-        for(int bucketB=0;bucketB<16;bucketB++) {
+    NSString *fileName = [NSString stringWithFormat:@"%zd_%zd.jpg",path.x,path.y];
+    
+    for(NSUInteger bucketA=0;bucketA<self.maxBucketA;bucketA++) {
+        for(NSUInteger bucketB=0;bucketB<16;bucketB++) {
             
-            NSString *withBucketPath=[NSString stringWithFormat:@"a%d/b%d/%@",bucketA,bucketB,fileName];
+            NSString *withBucketPath=[NSString stringWithFormat:@"%zd/a%td/b%td/%@",path.z,bucketA,bucketB,fileName];
             NSString *fullOfflineFile = [self.offlineMapPath stringByAppendingPathComponent:withBucketPath];
 
             UIImage *tileImg = [UIImage imageWithContentsOfFile:fullOfflineFile];
@@ -198,19 +178,21 @@
         }
     }
     return nil;
-     */
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (void) _loadTileAtPathAtBiggerZoomLevel:(MKTileOverlayPath)path result:(void (^)(NSData *tileData, NSError *error))result {
+- (void) _loadTileWithBiggerZoomLevelAtPath:(MKTileOverlayPath)path  result:(void (^)(NSData *tileData, NSError *error))result {
+    
+    //    NSInteger zoomLevel = (path.z -1) | 1;
+    NSInteger zoomLevel = path.z -1;
     
     // Calcula la scala de zoom entre el actual y el del mapa almacenado
-    NSUInteger zoomScale = path.z - 17;
+    NSUInteger zoomScale = path.z - zoomLevel;
     
     // Busca el tile del mapa almacenado equivalente al pedido
     MKTileOverlayPath scaledPath;
     scaledPath.contentScaleFactor = path.contentScaleFactor;
-    scaledPath.z = 17;
+    scaledPath.z = zoomLevel;
     scaledPath.x= path.x >>zoomScale;
     scaledPath.y= path.y >>zoomScale;
 
@@ -243,58 +225,6 @@
     }
     
 }
-
-//---------------------------------------------------------------------------------------------------------------------
-- (void) _loadTileAtPathAtSmallerZoomLevel:(MKTileOverlayPath)path result:(void (^)(NSData *tileData, NSError *error))result {
-    
-    
-    // Calcula la scala de zoom entre el actual y el del mapa almacenado
-    NSUInteger zoomScale = 17 - path.z;
-    
-    // Hay que pedir varios tiles de los almacenados
-    MKTileOverlayPath scaledPath;
-    scaledPath.contentScaleFactor = path.contentScaleFactor;
-    scaledPath.z = 17;
-    NSUInteger baseX = ((NSUInteger)path.x) << zoomScale;
-    NSUInteger baseY = ((NSUInteger)path.y) << zoomScale;
-    
-    NSUInteger scaledSize = 256 >> zoomScale;
-    
-    UIGraphicsBeginImageContext(CGSizeMake(256, 256));
-    
-    // Hay que recuperar varios tiles para crear el resultado
-    int iterations = 1 << zoomScale;
-    for(int y=0;y<iterations; y++) {
-        
-        scaledPath.y = baseY + y;
-        NSUInteger offsetY = y * scaledSize;
-        
-        for(int x=0;x<iterations; x++) {
-            
-            scaledPath.x = baseX + x;
-            NSUInteger offsetX = x * scaledSize;
-            
-            // Busca el tile del mapa almacenado equivalente al pedido
-            NSError *localError = nil;
-            UIImage *tileImg = [self _loadTileImageAtPath:scaledPath error:&localError];
-            
-            // Si lo ha encontrado lo pinta
-            if (tileImg!=nil && !localError) {
-                CGRect rect = CGRectMake(offsetX, offsetY, scaledSize, scaledSize);
-                [tileImg drawInRect:rect];
-            }
-        }
-    }
-    
-    UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
-    
-    UIGraphicsEndImageContext();
-    
-    NSData *scaledData = UIImagePNGRepresentation(scaledImage);
-    result(scaledData, nil);
-    
-}
-
 
 @end
 

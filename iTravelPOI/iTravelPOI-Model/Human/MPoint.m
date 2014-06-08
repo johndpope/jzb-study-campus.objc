@@ -45,11 +45,9 @@
 //*********************************************************************************************************************
 @implementation MPoint
 
-@synthesize directTags = _directTags;
-@synthesize directNoAutoTags = _directNoAutoTags;
-@synthesize coordinate = _coordinate;
 @synthesize viewDistance = _viewDistance;
 @synthesize viewStringDistance = _viewStringDistance;
+@synthesize  htmlDescription = _htmlDescription;
 
 
 
@@ -136,7 +134,7 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 - (NSString *) subtitle {
-    return @"kkvaca";
+    return nil;
 }
 
 
@@ -214,9 +212,13 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (BOOL) updateDesc:(NSString *)value {
     
+    // Primero "limpia" el valor
+    value = [self _cleanHtmlDescription:value];
+    
     if((value || self.descr) && ![self.descr isEqualToString:value]) {
         [self markAsModified];
         self.descr = value;
+        self.htmlDescription = nil;
         return TRUE;
     }
     return FALSE;
@@ -249,6 +251,7 @@
     
     // Si hay un cambio de coordenadas las establece
     if(self.latitudeValue!=lat || self.longitudeValue!=lng) {
+        [self markAsModified];
         self.latitudeValue = lat;
         self.longitudeValue = lng;
         return TRUE;
@@ -330,6 +333,7 @@
 
 
 
+
 //=====================================================================================================================
 #pragma mark -
 #pragma mark Protected methods
@@ -346,9 +350,48 @@
 //=====================================================================================================================
 #pragma mark -
 #pragma mark Private methods
-//---------------------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------
+- (NSString *) _cleanHtmlDescription:(NSString *)htmlDesc {
 
-
+    // Evita procesar cadenas vacias
+    if(!htmlDesc || htmlDesc.length==0) return htmlDesc;
+    
+    // Quita espacios de mas
+    htmlDesc = [htmlDesc trim];
+    
+    // Quita el DIV externo que "envuelve" el texto porque no aporta nada
+    NSString *lowerHtml = [htmlDesc lowercaseString];
+    
+    if([lowerHtml hasPrefix:@"<div dir=\"ltr\">"]) {
+        
+        htmlDesc = [htmlDesc subStrFrom:15 to:htmlDesc.length-6];
+        
+    } else if([lowerHtml hasPrefix:@"<div>"]) {
+        
+        htmlDesc = [htmlDesc subStrFrom:5 to:htmlDesc.length-6];
+        
+    } else if([lowerHtml hasPrefix:@"<div dir=\"rtr\">"]) {
+        
+        htmlDesc = [htmlDesc subStrFrom:15 to:htmlDesc.length-6];
+        
+    } else if([lowerHtml hasPrefix:@"<div dir=\"auto\">"]) {
+        
+        htmlDesc = [htmlDesc subStrFrom:16 to:htmlDesc.length-6];
+        
+    }
+    
+    // Quita los saltos de linea iniciales
+    while([[htmlDesc lowercaseString] hasPrefix:@"<br>"]) {
+        htmlDesc = [htmlDesc subStrFrom:4];
+    }
+    
+    // Quita los saltos de linea iniciales
+    while([[htmlDesc lowercaseString] hasPrefix:@"<br/>"]) {
+        htmlDesc = [htmlDesc subStrFrom:5];
+    }
+    
+    return htmlDesc;
+}
 
 
 @end

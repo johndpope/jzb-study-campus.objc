@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3401" systemVersion="13A603" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="iOS 7.0">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13D65" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="iOS 7.0">
     <entity name="MBase" representedClassName="MBase" isAbstract="YES" syncable="YES">
         <attribute name="name" attributeType="String" indexed="YES" syncable="YES">
             <userInfo>
@@ -58,6 +58,15 @@
             </userInfo>
         </attribute>
     </entity>
+    <entity name="MCoordinate" representedClassName="MCoordinate" syncable="YES">
+        <attribute name="latitude" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="longitude" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <relationship name="placemark" maxCount="1" deletionRule="Nullify" destinationEntity="MPolyLine" inverseName="coordinates" inverseEntity="MPolyLine" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </relationship>
+    </entity>
     <entity name="MIcon" representedClassName="MIcon" syncable="YES">
         <attribute name="iconHREF" attributeType="String" indexed="YES" syncable="YES">
             <userInfo>
@@ -109,6 +118,18 @@
             </userInfo>
         </relationship>
         <relationship name="rTags" toMany="YES" deletionRule="Cascade" destinationEntity="RPointTag" inverseName="point" inverseEntity="RPointTag" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </relationship>
+    </entity>
+    <entity name="MPolyLine" representedClassName="MPolyLine" parentEntity="MPoint" syncable="YES">
+        <attribute name="hexColor" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
+            <userInfo>
+                <entry key="readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <relationship name="coordinates" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="MCoordinate" inverseName="placemark" inverseEntity="MCoordinate" syncable="YES">
             <userInfo>
                 <entry key="readonly" value="YES"/>
             </userInfo>
@@ -180,6 +201,8 @@
         <element name="MMap" positionX="-3566" positionY="-73" width="128" height="73"/>
         <element name="MPoint" positionX="-3332" positionY="-108" width="128" height="118"/>
         <element name="MTag" positionX="-2954" positionY="-130" width="128" height="163"/>
-        <element name="RPointTag" positionX="-3152" positionY="-133" width="128" height="88"/>
+        <element name="RPointTag" positionX="-3141" positionY="-63" width="128" height="88"/>
+        <element name="MPolyLine" positionX="-3330" positionY="167" width="128" height="73"/>
+        <element name="MCoordinate" positionX="-3107" positionY="137" width="101" height="88"/>
     </elements>
 </model>

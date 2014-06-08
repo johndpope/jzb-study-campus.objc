@@ -268,6 +268,7 @@ typedef NS_ENUM(NSUInteger, LocationEditingState) {
         LocationEditorViewController *locationEditor = (LocationEditorViewController *)segue.destinationViewController;
         locationEditor.coordinate = self.point.coordinate;
         locationEditor.image = self.point.icon.image;
+        locationEditor.offlineMapName = self.point.map.name;
         locationEditor.delegate = self;
         [self.view endEditing:TRUE];
         

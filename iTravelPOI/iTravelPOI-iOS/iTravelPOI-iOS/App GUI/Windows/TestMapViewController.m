@@ -70,7 +70,7 @@
     
     self.mapZoom = floor(sender.value);
 
-    self.zoomLabel.text = [NSString stringWithFormat:@"Zoom: %u", self.mapZoom];
+    self.zoomLabel.text = [NSString stringWithFormat:@"Zoom: %td", self.mapZoom];
     self.overlay.minimumZ = self.overlay.maximumZ = self.mapZoom;
     [self.mapView setCenterCoordinate:self.mapView.centerCoordinate zoomLevel:self.mapZoom animated:FALSE];
 
@@ -86,31 +86,31 @@
     
     NSUInteger totalSize = 0;
     
-    for(int zoom=6;zoom<11;zoom++) {
+    for(NSUInteger zoom=6;zoom<11;zoom++) {
         
         NSUInteger tiles = pow(2, zoom);
         NSUInteger zoomTotalSize = 0;
-        NSLog(@"** Downloading zoom %d",zoom);
+        NSLog(@"** Downloading zoom %td",zoom);
         
         for(NSUInteger y=0;y<tiles;y++) {
             for(NSUInteger x=0;x<tiles;x++) {
-                NSString *urlStr = [NSString stringWithFormat:@"http://otile3.mqcdn.com/tiles/1.0.0/osm/%d/%d/%d.jpg",zoom,x,y];
+                NSString *urlStr = [NSString stringWithFormat:@"http://otile3.mqcdn.com/tiles/1.0.0/osm/%td/%td/%td.jpg",zoom,x,y];
                 //NSLog(@"Downloading %@",urlStr);
                 NSData * imgData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:urlStr]];
                 if (imgData!= nil) {
                     //NSLog(@"Done!");
                     zoomTotalSize+=imgData.length;
-                    NSString *filePath = [NSString stringWithFormat:@"/Users/jzarzuela/Desktop/imgs/z%d/mapTile_%d_%d_%d.jpg",zoom,zoom,x,y];
+                    NSString *filePath = [NSString stringWithFormat:@"/Users/jzarzuela/Desktop/imgs/z%td/mapTile_%td_%td_%td.jpg",zoom,zoom,x,y];
                     [imgData writeToFile:filePath atomically:YES];
                 } else {
                     NSLog(@"--- ERROR ---");
                 }
             }
         }
-        NSLog(@"    Zoom %d --> %d bytes",zoom, zoomTotalSize);
+        NSLog(@"    Zoom %td --> %td bytes",zoom, zoomTotalSize);
         totalSize += zoomTotalSize;
     }
-    NSLog(@"Total size %d bytes",totalSize);
+    NSLog(@"Total size %td bytes",totalSize);
 
 }
 //---------------------------------------------------------------------------------------------------------------------
@@ -158,7 +158,7 @@
     [self _setMapAnnotations];
     
     self.zoomSlider.value = self.mapZoom;
-    self.zoomLabel.text = [NSString stringWithFormat:@"Zoom: %u", self.mapZoom];
+    self.zoomLabel.text = [NSString stringWithFormat:@"Zoom: %td", self.mapZoom];
     
     CLLocationCoordinate2D centre = [self _calcAllPointsCentre];
     
@@ -356,8 +356,8 @@
         NSLog(@"boundingMapRect = %f,%f - %f,%f",to.boundingMapRect.origin.x,to.boundingMapRect.origin.y,to.boundingMapRect.size.width,to.boundingMapRect.size.height);
         NSLog(@"tileSize = %f,%f",to.tileSize.width,to.tileSize.height);
         NSLog(@"geometryFlipped = %d",to.geometryFlipped);
-        NSLog(@"minimumZ = %d",to.minimumZ);
-        NSLog(@"maximumZ = %d",to.maximumZ);
+        NSLog(@"minimumZ = %zd",to.minimumZ);
+        NSLog(@"maximumZ = %zd",to.maximumZ);
         NSLog(@"canReplaceMapContent = %d",to.canReplaceMapContent);
         NSLog(@"URLTemplate = %@",to.URLTemplate);
         NSLog(@"-------------------------------------------------------------------------------------------------");

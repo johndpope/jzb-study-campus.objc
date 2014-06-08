@@ -10,6 +10,7 @@
 
 #import "GMTMap.h"
 #import "GMTPoint.h"
+#import "GMTPolyLine.h"
 #import "GMTCompTuple.h"
 
 
@@ -33,12 +34,14 @@
 // Point methods
 - (NSArray *) getLocalPointListForMap:(id)localMap error:(NSError * __autoreleasing *)err;
 
-- (GMTPoint *) createRemotePointFrom:(id)localPoint error:(NSError * __autoreleasing *)err;
-- (BOOL)       updateRemotePoint:(GMTPoint *)remotePoint withLocalPoint:(id)localPoint error:(NSError * __autoreleasing *)err;
+- (GMTItem *)  createRemotePointFrom:(id)localPoint error:(NSError * __autoreleasing *)err;
+- (BOOL)       updateRemotePoint:(GMTItem *)remotePoint withLocalPoint:(id)localPoint error:(NSError * __autoreleasing *)err;
 
-- (id)         createLocalPointFrom:(GMTPoint *)gmPoint inLocalMap:(id)map error:(NSError * __autoreleasing *)err;
-- (BOOL)       updateLocalPoint:(id)localPoint withRemotePoint:(GMTPoint *)remotePoint error:(NSError * __autoreleasing *)err;
+- (id)         createLocalPointFrom:(GMTItem *)gmPoint inLocalMap:(id)map error:(NSError * __autoreleasing *)err;
+- (BOOL)       updateLocalPoint:(id)localPoint withRemotePoint:(GMTItem *)remotePoint error:(NSError * __autoreleasing *)err;
 - (BOOL)       deleteLocalPoint:(id)localPoint inLocalMap:(id)map error:(NSError * __autoreleasing *)err;
+
+
 
 @end
 

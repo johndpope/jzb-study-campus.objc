@@ -9,6 +9,7 @@
 #define __LocationEditorViewController__IMPL__
 #import <MapKit/MapKit.h>
 #import "LocationEditorViewController.h"
+#import "CustomOfflineTileOverlays.h"
 #import "MIcon.h"
 
 
@@ -33,6 +34,8 @@
 
 @property (weak, nonatomic) IBOutlet MKMapView      *mapView;
 @property (weak, nonatomic) IBOutlet UILabel        *gpsAccuracy;
+
+@property (strong, nonatomic) CustomOfflineTileOverlay    *overlay;
 
 @property (strong, nonatomic) CLLocationManager     *locationManager;
 
@@ -172,6 +175,24 @@
     [self.mapView setCenterCoordinate:self.coordinate animated:TRUE];
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
+- (IBAction)offlineMapBtnAction:(UIBarButtonItem *)sender {
+    
+    // Esto solo funciona si hay un nombre de mapa a utilizar en modo offline
+    if(!self.offlineMapName) return;
+    
+    
+    if(self.overlay) {
+        [self.mapView removeOverlay:self.overlay];
+        self.overlay = nil;
+    } else {
+        // Establece un overlay si no tiene conexion
+        // TODO: ¿PORQUE NO PUEDE ENTERARSE DE QUE SE PERDIO LA CONEXION?
+        self.overlay = [CustomOfflineTileOverlay overlay:self.offlineMapName];
+        [self.mapView addOverlay:self.overlay level:MKOverlayLevelAboveLabels];
+    }
+
+}
 
 
 
@@ -220,6 +241,27 @@
     view.centerOffset = CGPointMake(0, -self.image.size.height/2);
     
     return view;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay {
+    
+    
+    if ([overlay isKindOfClass:[CustomOfflineTileOverlay class]]) {
+        //        MKTileOverlay *to = overlay;
+        //        NSLog(@"-------------------------------------------------------------------------------------------------");
+        //        NSLog(@"coordinate lat=%f, lng=%f",to.coordinate.latitude, to.coordinate.longitude);
+        //        NSLog(@"boundingMapRect = %f,%f - %f,%f",to.boundingMapRect.origin.x,to.boundingMapRect.origin.y,to.boundingMapRect.size.width,to.boundingMapRect.size.height);
+        //        NSLog(@"tileSize = %f,%f",to.tileSize.width,to.tileSize.height);
+        //        NSLog(@"geometryFlipped = %d",to.geometryFlipped);
+        //        NSLog(@"minimumZ = %d",to.minimumZ);
+        //        NSLog(@"maximumZ = %d",to.maximumZ);
+        //        NSLog(@"canReplaceMapContent = %d",to.canReplaceMapContent);
+        //        NSLog(@"URLTemplate = %@",to.URLTemplate);
+        //        NSLog(@"-------------------------------------------------------------------------------------------------");
+        return [[CustomOfflineTileOverlayRenderer alloc] initWithOverlay:overlay];
+    }
+    return nil;
 }
 
 

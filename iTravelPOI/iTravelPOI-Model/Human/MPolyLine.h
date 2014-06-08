@@ -1,12 +1,11 @@
 //
-//  MPoint.h
+//  MPolyLine.h
 //
 
+
 #import <MapKit/MapKit.h>
-#import "_MPoint.h"
-
-
-@class MMap;
+#import "_MPolyLine.h"
+#import "MCoordinate.h"
 
 
 
@@ -17,43 +16,28 @@
 
 
 
+
 //*********************************************************************************************************************
 #pragma mark -
 #pragma mark Public Interface definition
 //*********************************************************************************************************************
-@interface MPoint : _MPoint <MKAnnotation> {}
+@interface MPolyLine : _MPolyLine {}
 
+@property (nonatomic, assign) UIColor *color;
 
-@property (readonly, nonatomic) NSSet               *directTags;
-@property (readonly, nonatomic) NSSet               *directNoAutoTags;
-
-@property (assign, nonatomic)   CLLocationDistance  viewDistance;
-@property (strong, nonatomic)   NSString            *viewStringDistance;
-@property (strong, nonatomic)   NSAttributedString  *htmlDescription;
 
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark CLASS public methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (MPoint *)  emptyPointWithName:(NSString *)name inMap:(MMap *)map;
-+ (NSArray *) allWithMap:(MMap *)map sortOrder:(NSArray *)sortOrder;
-
-+ (NSMutableSet *) allTagsFromPoints:(NSArray *)points;
-+ (NSMutableSet *) allNonAutoTagsFromPoints:(NSArray *)points;
++ (MPolyLine *) emptyPolyLineWithName:(NSString *)name inMap:(MMap *)map;
 
 
 //=====================================================================================================================
 #pragma mark -
 #pragma mark INSTANCE public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (BOOL) updateLatitude:(double)lat longitude:(double)lng;
-- (BOOL) updateDesc:(NSString *)value;
-
-- (void) removeAllNonAutoTags;
-
-// With format: $[tag1, tag2, ...]$
-- (NSString *) combinedDescAndTagsInfo;
-- (void) updateFromCombinedDescAndTagsInfo:(NSString *)descAndTags;
+- (void) setCoordinatesFromLocations:(NSArray *)locations;
 
 @end

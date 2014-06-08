@@ -45,8 +45,9 @@ typedef NS_ENUM(NSUInteger, MENU_MORE_CMDS) {
 
 typedef NS_ENUM(NSUInteger, MENU_MAP_LOCATION) {
     MENU_ZOOM_ON_MY_LOCATION = 1,
-    MENU_ZOOM_SHOW_ALL       = 2,
-    MENU_ZOOM_ON_SELECTED    = 3
+    MENU_SWITCH_COMPASS_MODE = 2,
+    MENU_ZOOM_SHOW_ALL       = 3,
+    MENU_ZOOM_ON_SELECTED    = 4
 };
 
 
@@ -404,6 +405,11 @@ typedef NS_ENUM(NSUInteger, MENU_MAP_LOCATION) {
                                     target:self
                                     action:@selector(locationMenuItem:)
                                    cmdData:[NSNumber numberWithInt:MENU_ZOOM_ON_MY_LOCATION]],
+                      [KxMenuItem menuItem:@"Compass"
+                                     image:[UIImage imageNamed:@"tbar-compass"]
+                                    target:self
+                                    action:@selector(locationMenuItem:)
+                                   cmdData:[NSNumber numberWithInt:MENU_SWITCH_COMPASS_MODE]],
                       [KxMenuItem menuItem:@"All points"
                                      image:[UIImage imageNamed:@"tbar-expand"]
                                     target:self
@@ -684,6 +690,9 @@ typedef NS_ENUM(NSUInteger, MENU_MAP_LOCATION) {
         case MENU_ZOOM_ON_MY_LOCATION:
             [self.pointMapVC zoomOnMyLocation];
             break;
+        case MENU_SWITCH_COMPASS_MODE:
+            [self.pointMapVC switchCompassMode];
+            break;
         case MENU_ZOOM_ON_SELECTED:
             [self.pointMapVC zoomOnSelected];
             break;
@@ -863,9 +872,11 @@ typedef NS_ENUM(NSUInteger, MENU_MAP_LOCATION) {
     NSString *uriObjId = [[NSUserDefaults standardUserDefaults] objectForKey:PREVIOUS_SELECTED_POINT_URI_ID];
     if(uriObjId) {
         NSManagedObjectID *pointID = [self.moContext.persistentStoreCoordinator managedObjectIDForURIRepresentation:[NSURL URLWithString:uriObjId]];
-        MPoint *prevSelPoint = (MPoint *)[self.moContext objectWithID:pointID];
-        if(prevSelPoint) {
-            self.selectedPoint = prevSelPoint;
+        if(pointID) {
+            MPoint *prevSelPoint = (MPoint *)[self.moContext objectWithID:pointID];
+            if(prevSelPoint) {
+                self.selectedPoint = prevSelPoint;
+            }
         }
     }
     

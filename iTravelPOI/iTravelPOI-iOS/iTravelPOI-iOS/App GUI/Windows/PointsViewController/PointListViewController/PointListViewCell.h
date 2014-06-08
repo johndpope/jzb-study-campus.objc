@@ -24,6 +24,7 @@
 //*********************************************************************************************************************
 @interface PointListViewCell : UITableViewCell
 
-@property (assign, nonatomic) BOOL checked;
+@property (assign, nonatomic) BOOL      checked;
+@property (weak, nonatomic)   NSString *viewDistance;
 
 @end

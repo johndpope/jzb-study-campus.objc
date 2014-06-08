@@ -188,7 +188,7 @@
         cell.textLabel.text = @"[* Any map *]";
     } else {
         cell.textLabel.text = mapToShow.name;
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"%d points",mapToShow.pointsCount];
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"%d points",(int)mapToShow.pointsCount];
     }
 
     
@@ -263,9 +263,11 @@
     NSString *uriObjId = [[NSUserDefaults standardUserDefaults] objectForKey:PREVIOUS_SHOWN_MAP_URI_ID];
     if(uriObjId) {
         NSManagedObjectID *mapID = [self.moContext.persistentStoreCoordinator managedObjectIDForURIRepresentation:[NSURL URLWithString:uriObjId]];
-        MMap *prevSelMap = (MMap *)[self.moContext objectWithID:mapID];
-        if(prevSelMap) {
-            [self performSegueWithIdentifier: @"MapList_to_PointsList" sender: prevSelMap];
+        if(mapID) {
+            MMap *prevSelMap = (MMap *)[self.moContext objectWithID:mapID];
+            if(prevSelMap) {
+                [self performSegueWithIdentifier: @"MapList_to_PointsList" sender: prevSelMap];
+            }
         }
     }
     

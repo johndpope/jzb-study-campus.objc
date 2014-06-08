@@ -40,6 +40,7 @@
 @property (weak, nonatomic)   id<LocationEditorViewControllerDelegate>  delegate;
 @property (assign, nonatomic) CLLocationCoordinate2D                    coordinate;
 @property (strong, nonatomic) UIImage                                   *image;
+@property (strong, nonatomic) NSString                                  *offlineMapName;
 
 
 

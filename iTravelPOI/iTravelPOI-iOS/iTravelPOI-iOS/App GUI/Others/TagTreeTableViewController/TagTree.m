@@ -214,7 +214,7 @@
     
     // Lo segundo es asignarles un indice de forma recursiva
     [children enumerateObjectsUsingBlock:^(TagTreeNode *child, NSUInteger idx, BOOL *stop) {
-        child.treeIndex = index + 1 + idx;
+        child.treeIndex = index + 1 + (int)idx;
         [TagTree _sortChildren:child.wChildren andCalcTreeIndexFrom:child.treeIndex];
     }];
 }

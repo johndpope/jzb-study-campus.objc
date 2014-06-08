@@ -10,6 +10,7 @@
 
 #import "GMTMap.h"
 #import "GMTPoint.h"
+#import "GMTPolyLine.h"
 #import "GMTCompTuple.h"
 
 

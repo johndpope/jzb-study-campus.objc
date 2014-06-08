@@ -12,6 +12,8 @@
 #import "MockUp.h"
 #import "DDTTYLogger.h"
 
+#import "MMap.h"
+#import "MPoint.h"
 
 #import <MapKit/MapKit.h>
 
@@ -50,6 +52,15 @@
     
     // Inicializa el modelo de datos
     [self _initDataModel];
+    
+    // Inicializa la carpeta para los mapas offline y los backups
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *offlineMapPath = [documentsDirectory stringByAppendingPathComponent:@"offlineMaps"];
+    [[NSFileManager defaultManager] createDirectoryAtPath:offlineMapPath withIntermediateDirectories:YES attributes:nil error:nil];
+    NSString *backupMapPath = [documentsDirectory stringByAppendingPathComponent:@"backup"];
+    [[NSFileManager defaultManager] createDirectoryAtPath:backupMapPath withIntermediateDirectories:YES attributes:nil error:nil];
+
     
     // Se crea la ventana y controller inicial de la aplicación
     UIViewController *viewController = self.window.rootViewController;
@@ -107,7 +118,7 @@ void _uncaughtExceptionHandler(NSException *exception) {
     
     // ---------------------------------------
     // ---------------------------------------
-//////// [MockUp resetModel:@"iTravelPOI-Model"];
+////////    [MockUp resetModel:@"iTravelPOI-Model"];
     // ---------------------------------------
     // ---------------------------------------
     
@@ -125,8 +136,7 @@ void _uncaughtExceptionHandler(NSException *exception) {
 
     // ---------------------------------------
     // ---------------------------------------
-////////
-    [MockUp listModel];
+//////// [MockUp listModel];
     // ---------------------------------------
     // ---------------------------------------
 

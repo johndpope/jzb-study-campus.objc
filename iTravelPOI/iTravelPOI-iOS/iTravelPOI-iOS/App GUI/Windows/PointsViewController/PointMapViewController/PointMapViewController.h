@@ -43,6 +43,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (CLLocationCoordinate2D) mapCenter;
 - (void) zoomOnMyLocation;
+- (void) switchCompassMode;
 - (void) zoomAndShowAll;
 - (void) zoomOnSelected;
 - (void) toggleOfflineMap:(MMap *)map;

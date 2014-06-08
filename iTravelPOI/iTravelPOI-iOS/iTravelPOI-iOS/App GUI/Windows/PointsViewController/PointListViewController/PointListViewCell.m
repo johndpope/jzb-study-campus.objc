@@ -28,6 +28,7 @@
 @interface PointListViewCell ()
 
 @property (strong, nonatomic) UIImageView *leftCheckedView;
+@property (strong, nonatomic) UILabel     *viewDistanceLabel;
 
 @end
 
@@ -51,9 +52,27 @@
 {
 	if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
 	{
+        // Control para poder marcar/seleccionar una celda
         UIImage *img = [PointListViewCell leftCheckedImage:self.tintColor];
         self.leftCheckedView = [[UIImageView alloc] initWithFrame:CGRectMake(-img.size.width, 15, img.size.width, img.size.height)];
         [self.contentView addSubview:self.leftCheckedView];
+
+        // Pone varias lineas para el texto de detalle
+        self.detailTextLabel.numberOfLines = 2;
+        
+        // Crea la etiqueta que contendra la distancia del punto
+        UIFont *lblFont = [UIFont italicSystemFontOfSize:10.0f];
+        NSAttributedString *attributedText =[[NSAttributedString alloc] initWithString:@"99,999 Km" attributes:@{NSFontAttributeName: lblFont}];
+        CGRect lblFrm = [attributedText boundingRectWithSize:(CGSize){CGFLOAT_MAX, CGFLOAT_MAX} options:NSStringDrawingUsesLineFragmentOrigin context:nil];
+
+        self.viewDistanceLabel = [[UILabel alloc] initWithFrame:lblFrm];
+        self.viewDistanceLabel.font = lblFont;
+        self.viewDistanceLabel.textColor = [UIColor colorWithIntRed:150 intGreen:150 intBlue:150 alpha:1.0];
+        self.viewDistanceLabel.textAlignment = NSTextAlignmentCenter;
+
+        [self.imageView.superview addSubview:self.viewDistanceLabel];
+        
+
 	}
 	return self;
 }
@@ -62,6 +81,16 @@
 //=====================================================================================================================
 #pragma mark -
 #pragma mark Public methods
+//---------------------------------------------------------------------------------------------------------------------
+- (NSString *) viewDistance {
+    return  self.viewDistanceLabel.text;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) setViewDistance:(NSString *)value {
+    self.viewDistanceLabel.text = value;
+}
+
 //---------------------------------------------------------------------------------------------------------------------
 - (void)layoutSubviews {
     
@@ -92,6 +121,13 @@
     r = self.detailTextLabel.frame;
     r.origin.y += diff;
     self.detailTextLabel.frame = r;
+    
+    
+    CGPoint lblOrig = self.imageView.frame.origin;
+    lblOrig.x = self.imageView.frame.origin.x - (self.viewDistanceLabel.frame.size.width-self.imageView.frame.size.width)/2;
+    lblOrig.y = 4 + self.imageView.frame.origin.y + self.imageView.frame.size.height;
+    self.viewDistanceLabel.frame = CGRectMake(lblOrig.x, lblOrig.y, self.viewDistanceLabel.frame.size.width, self.viewDistanceLabel.frame.size.height);
+
 }
 
 //=====================================================================================================================

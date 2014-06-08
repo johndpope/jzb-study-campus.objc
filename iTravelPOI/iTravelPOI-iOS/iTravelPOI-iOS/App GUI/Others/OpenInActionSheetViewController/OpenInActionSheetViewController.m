@@ -295,10 +295,26 @@
     urlStr2 = [urlStr2 stringByReplacingOccurrencesOfString:@"{lng}" withString:[NSString stringWithFormat:@"%f",coord.longitude]];
     urlStr2 = [urlStr2 stringByReplacingOccurrencesOfString:@"{name}" withString:[poiName stringByReplacingOccurrencesOfString:@" " withString:@"+"]];
     
+    urlStr2 = [self _cleanUrlStr:urlStr2];
     
     return [NSURL URLWithString:urlStr2];
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+- (NSString *) _cleanUrlStr:(NSString *)urlStr {
+    
+    NSMutableString *result = [NSMutableString stringWithString:urlStr];
+    NSString *lowerUrlStr = [urlStr lowercaseString];
+    for(NSUInteger n=0;n<lowerUrlStr.length;n++) {
+        unichar c = [lowerUrlStr characterAtIndex:n];
+        if((c<'a' || c>'z') && (c<'0' || c>'9') && c!='.' && c!=L'á' && c!=L'é' && c!=L'í' && c!=L'ó' && c!=L'ú') {
+            if(c!='&' && c!=',' && c!='=' && c!=':' && c!='/' && c!='@' && c!='?' && c!='-' && c!='+' & c!='_') {
+                [result replaceCharactersInRange:NSMakeRange(n,1) withString:@"_"];
+            }
+        }
+    }
+    return result;
+}
 
 @end
 

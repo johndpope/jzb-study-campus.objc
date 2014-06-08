@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "GMTMap.h"
 #import "GMTPoint.h"
+#import "GMTPolyLine.h"
 #import "GMTBatchCmd.h"
 
 

@@ -218,7 +218,7 @@ static __strong NSMutableDictionary    *_nameToIndex = nil;
         CGFloat xPos = ICON_OFFSET + ICON_SIZE * col;
         iconRowRect = CGRectMake(xPos, 0, ICON_SIZE, ICON_SIZE);
     } else {
-        int row = [self _calcIconIndex] / P_ICONS_PER_ROW;
+        NSUInteger row = [self _calcIconIndex] / P_ICONS_PER_ROW;
         CGFloat yPos = ICON_OFFSET + ICON_SIZE * row;
         iconRowRect = CGRectMake(0, yPos, ICON_SIZE, ICON_SIZE);
     }
@@ -235,10 +235,10 @@ static __strong NSMutableDictionary    *_nameToIndex = nil;
     
     CGSize size = self.selectionFrame.bounds.size;
     
-    int index = [self _calcIconIndex];
+    NSUInteger index = [self _calcIconIndex];
     
-    int col = index % ([self _isInLandscape] ? L_ICONS_PER_ROW : P_ICONS_PER_ROW);
-    int row = index / ([self _isInLandscape] ? L_ICONS_PER_ROW : P_ICONS_PER_ROW);
+    NSUInteger col = index % ([self _isInLandscape] ? L_ICONS_PER_ROW : P_ICONS_PER_ROW);
+    NSUInteger row = index / ([self _isInLandscape] ? L_ICONS_PER_ROW : P_ICONS_PER_ROW);
     
     CGFloat xPos = ICON_OFFSET +  col * ICON_SIZE + (ICON_SIZE-size.width)/2;
     CGFloat yPos = ICON_OFFSET +  row * ICON_SIZE + (ICON_SIZE-size.height)/2;
@@ -294,7 +294,7 @@ static __strong NSMutableDictionary    *_nameToIndex = nil;
     NSDictionary *iconsInfo = [NSDictionary dictionaryWithContentsOfFile:thePath];
     NSArray *iconsData = [iconsInfo valueForKey:@"iconsData"];
     
-    NSInteger index = 0;
+    unsigned int index = 0;
     for(NSDictionary *iconData in iconsData) {
         
         NSString *iconHREF = [iconData valueForKey:@"url"];

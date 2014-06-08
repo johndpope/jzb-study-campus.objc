@@ -10,6 +10,7 @@
 #import "SyncDataSource.h"
 #import "MMap.h"
 #import "MPoint.h"
+#import "MPolyLine.h"
 #import "MIcon.h"
 #import "MTag.h"
 #import "NSString+JavaStr.h"
@@ -127,7 +128,8 @@
 
 
 //---------------------------------------------------------------------------------------------------------------------
-// Point methods
+// Point AND GMTPolyLine methods
+//---------------------------------------------------------------------------------------------------------------------
 - (NSArray *) getLocalPointListForMap:(MMap *)localMap error:(NSError * __autoreleasing *)err {
     
     // Retorna todos los puntos del mapa. Incluidos los marcados para borrar
@@ -135,15 +137,72 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (GMTPoint *) createRemotePointFrom:(MPoint *)localPoint error:(NSError * __autoreleasing *)err {
+- (GMTItem *) createRemotePointFrom:(id)localPoint error:(NSError * __autoreleasing *)err {
+    
+    if([localPoint isKindOfClass:MPolyLine.class]) {
+        return [self _createRemotePolyLineFrom:localPoint error:err];
+    } else {
+        return [self _createRemotePointFrom:localPoint error:err];
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL) updateRemotePoint:(GMTItem *)remotePoint withLocalPoint:(id)localPoint error:(NSError * __autoreleasing *)err {
+    
+    if([localPoint isKindOfClass:MPolyLine.class]) {
+        return [self _updateRemotePolyLine:(GMTPolyLine *)remotePoint withLocalPolyLine:localPoint error:err];
+    } else {
+        return [self _updateRemotePoint:(GMTPoint *)remotePoint withLocalPoint:localPoint error:err];
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (id) createLocalPointFrom:(GMTItem *)gmPoint inLocalMap:(id)map error:(NSError * __autoreleasing *)err {
+ 
+    if([gmPoint isKindOfClass:GMTPolyLine.class]) {
+        return [self _createLocalPolyLineFrom:(GMTPolyLine *)gmPoint inLocalMap:map error:err];
+    } else {
+        return [self _createLocalPointFrom:(GMTPoint *)gmPoint inLocalMap:map error:err];
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL) updateLocalPoint:(id)localPoint withRemotePoint:(GMTItem *)remotePoint error:(NSError * __autoreleasing *)err {
+
+    if([remotePoint isKindOfClass:GMTPolyLine.class]) {
+        return [self _updateLocalPolyLine:localPoint withRemotePolyLine:(GMTPolyLine *)remotePoint error:err];
+    } else {
+        return [self _updateLocalPoint:localPoint withRemotePoint:(GMTPoint *)remotePoint error:err];
+    }
+    
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL) deleteLocalPoint:(id)localPoint inLocalMap:(id)map error:(NSError * __autoreleasing *)err {
+
+    if([localPoint isKindOfClass:MPolyLine.class]) {
+        return [self _deleteLocalPolyLine:localPoint inLocalMap:map error:err];
+    } else {
+        return [self _deleteLocalPoint:localPoint inLocalMap:map error:err];
+    }
+   
+}
+
+
+
+//---------------------------------------------------------------------------------------------------------------------
+// Point methods
+//---------------------------------------------------------------------------------------------------------------------
+- (GMTPoint *) _createRemotePointFrom:(MPoint *)localPoint error:(NSError * __autoreleasing *)err {
     
     GMTPoint *remotePoint = [GMTPoint emptyPointWithName:localPoint.name];
-    [self updateRemotePoint:remotePoint withLocalPoint:localPoint error:err];
+    [self _updateRemotePoint:remotePoint withLocalPoint:localPoint error:err];
     return  remotePoint;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (BOOL) updateRemotePoint:(GMTPoint *)remotePoint withLocalPoint:(MPoint *)localPoint error:(NSError * __autoreleasing *)err {
+- (BOOL) _updateRemotePoint:(GMTPoint *)remotePoint withLocalPoint:(MPoint *)localPoint error:(NSError * __autoreleasing *)err {
     
     remotePoint.gID = localPoint.gID;
     remotePoint.etag = localPoint.etag;
@@ -156,15 +215,15 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (MPoint *) createLocalPointFrom:(GMTPoint *)gmPoint inLocalMap:(MMap *)localMap error:(NSError * __autoreleasing *)err {
+- (MPoint *) _createLocalPointFrom:(GMTPoint *)gmPoint inLocalMap:(MMap *)localMap error:(NSError * __autoreleasing *)err {
     
     MPoint *point = [MPoint emptyPointWithName:gmPoint.name inMap:localMap];
-    BOOL ok = [self updateLocalPoint:point withRemotePoint:gmPoint error:err];
+    BOOL ok = [self _updateLocalPoint:point withRemotePoint:gmPoint error:err];
     return ok?point:nil;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (BOOL) updateLocalPoint:(MPoint *)localPoint withRemotePoint:(GMTPoint *)remotePoint error:(NSError * __autoreleasing *)err {
+- (BOOL) _updateLocalPoint:(MPoint *)localPoint withRemotePoint:(GMTPoint *)remotePoint error:(NSError * __autoreleasing *)err {
     
     [localPoint updateGID:remotePoint.gID andETag:remotePoint.etag];
     [localPoint updateName:remotePoint.name];
@@ -180,12 +239,76 @@
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-- (BOOL) deleteLocalPoint:(MPoint *)localPoint inLocalMap:(id)map error:(NSError * __autoreleasing *)err {
+- (BOOL) _deleteLocalPoint:(MPoint *)localPoint inLocalMap:(id)map error:(NSError * __autoreleasing *)err {
     
     // El borrado en la sincronizacion es definitivo y lo elimina del almacen
     [localPoint deleteEntity];
     return TRUE;
 }
+
+
+//---------------------------------------------------------------------------------------------------------------------
+// GMTPolyLine methods
+//---------------------------------------------------------------------------------------------------------------------
+- (GMTPolyLine *) _createRemotePolyLineFrom:(MPolyLine *)localPolyLine error:(NSError * __autoreleasing *)err {
+    
+    GMTPolyLine *remotePolyLine = [GMTPolyLine emptyPolyLineWithName:localPolyLine.name];
+    [self _updateRemotePolyLine:remotePolyLine withLocalPolyLine:localPolyLine error:err];
+    return  remotePolyLine;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL) _updateRemotePolyLine:(GMTPolyLine *)remotePolyLine withLocalPolyLine:(MPolyLine *)localPolyLine error:(NSError * __autoreleasing *)err {
+    
+    remotePolyLine.gID = localPolyLine.gID;
+    remotePolyLine.etag = localPolyLine.etag;
+    remotePolyLine.name = localPolyLine.name;
+    remotePolyLine.descr = [localPolyLine combinedDescAndTagsInfo];
+    
+    [remotePolyLine.coordinates removeAllObjects];
+    
+    for(MCoordinate *coord in localPolyLine.coordinates) {
+        [remotePolyLine addCoordWithLatitude:coord.latitudeValue andLongitude:coord.longitudeValue];
+    }
+    
+    remotePolyLine.color = localPolyLine.color;
+
+    return TRUE;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (id) _createLocalPolyLineFrom:(GMTPolyLine *)gmPolyLine inLocalMap:(MMap *)map error:(NSError * __autoreleasing *)err {
+    
+    MPolyLine *polyLine = [MPolyLine emptyPolyLineWithName:gmPolyLine.name inMap:map];
+    BOOL ok = [self _updateLocalPolyLine:polyLine withRemotePolyLine:gmPolyLine error:err];
+    return ok?polyLine:nil;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL) _updateLocalPolyLine:(MPolyLine *)localPolyLine withRemotePolyLine:(GMTPolyLine *)remotePolyLine error:(NSError * __autoreleasing *)err {
+    
+    [localPolyLine updateGID:remotePolyLine.gID andETag:remotePolyLine.etag];
+    [localPolyLine updateName:remotePolyLine.name];
+    [localPolyLine updateFromCombinedDescAndTagsInfo:remotePolyLine.descr];
+    
+    [localPolyLine setCoordinatesFromLocations:remotePolyLine.coordinates];
+    
+    [localPolyLine setColor:remotePolyLine.color];
+    
+    [localPolyLine markAsSynchronized];
+    
+    return  TRUE;
+    
+}
+//---------------------------------------------------------------------------------------------------------------------
+- (BOOL) _deleteLocalPolyLine:(MPolyLine *)localPolyLine inLocalMap:(id)map error:(NSError * __autoreleasing *)err {
+    
+    // El borrado en la sincronizacion es definitivo y lo elimina del almacen
+    [localPolyLine deleteEntity];
+    return TRUE;
+    
+}
+
 
 
 

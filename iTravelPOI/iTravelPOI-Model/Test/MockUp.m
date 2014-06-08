@@ -321,7 +321,7 @@ BOOL _init_model_ = TRUE;
         for(NSString *tagIndexStr in tagIndexList) {
             NSUInteger p1 = [tagIndexStr indexOf:@"-"];
             if(p1==NSNotFound) {
-                NSNumber *index = [NSNumber numberWithInt:[tagIndexStr integerValue]];
+                NSNumber *index = [NSNumber numberWithLong:[tagIndexStr integerValue]];
                 NSString *childTagName = [readTags objectForKey:index];
                 [readTags setObject:[NSString stringWithFormat:@"%@%@%@",parentTagName,TAG_NAME_SEPARATOR,childTagName] forKey:index];
             } else {
@@ -350,7 +350,7 @@ BOOL _init_model_ = TRUE;
         for(NSString *poiIndexStr in poiIndexList) {
             NSUInteger p1 = [poiIndexStr indexOf:@"-"];
             if(p1==NSNotFound) {
-                NSNumber *index = [NSNumber numberWithInt:[poiIndexStr integerValue]];
+                NSNumber *index = [NSNumber numberWithLong:[poiIndexStr integerValue]];
                 MPoint *point = [readPois objectForKey:index];
                 if(point) {
                     [MockUp _toPoint:point addTag:tag];

@@ -302,10 +302,11 @@
 
     // Itera creando todos los puntos locales a partir de los remotos
     BOOL allOK = true;
-    for(GMTPoint *gmPoint in remotePoints) {
+    for(GMTItem *gmItem in remotePoints) {
         localError = nil;
-        id localPoint = [self.dataSource createLocalPointFrom:gmPoint inLocalMap:localMap error:&localError];
-        if(localPoint == nil) {
+        
+        id localItem = [self.dataSource createLocalPointFrom:(GMTPoint *)gmItem inLocalMap:localMap error:&localError];
+        if(localItem == nil) {
             allOK = false;
             [allErrors addObject:[self _createError:@"local point from remote returned nil" withError:localError data:nil]];
         }
@@ -386,7 +387,8 @@
 
         // Consigue el punto remoto a crear
         localError = nil;
-        GMTPoint *remotePoint = [self.dataSource createRemotePointFrom:localPoint error:&localError];
+        
+        GMTItem *remotePoint = [self.dataSource createRemotePointFrom:localPoint error:&localError];
         if(remotePoint == nil) {
             allOK = false;
             [allErrors addObject:[self _createError:@"remote point from local" withError:localError data:nil]];
@@ -543,7 +545,7 @@
         // Chequea periodicamente si debe cancelar
         if(self.mustCancelSync) return false;
 
-        GMTPoint *remotePoint;
+        GMTItem *remotePoint;
         GMTBatchCmd *bCmd;
 
         localError = nil;

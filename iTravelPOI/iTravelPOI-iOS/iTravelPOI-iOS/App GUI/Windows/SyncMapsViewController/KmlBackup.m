@@ -176,7 +176,7 @@
     
     NSDictionary *styleIndexes = [self _calcStyleIndexes:map];
     [styleIndexes enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSNumber *value, BOOL *stop) {
-        [kmlStr appendFormat:@"  <Style id=\"style-%d\">\n", value.integerValue];
+        [kmlStr appendFormat:@"  <Style id=\"style-%zd\">\n", value.integerValue];
         [kmlStr appendString:@"    <IconStyle>\n"];
         [kmlStr appendString:@"      <Icon>\n"];
         [kmlStr appendFormat:@"        <href>%@</href>\n", key];
@@ -210,7 +210,7 @@
     [kmlStr appendString:@"  <Placemark>\n"];
     [kmlStr appendFormat:@"    <name>%@</name>\n", [self _escapeStr:point.name]];
     [kmlStr appendFormat:@"    <description><![CDATA[%@]]></description>\n",[point combinedDescAndTagsInfo]];
-    [kmlStr appendFormat:@"    <styleUrl>#style-%d</styleUrl>\n", index.integerValue];
+    [kmlStr appendFormat:@"    <styleUrl>#style-%zd</styleUrl>\n", index.integerValue];
     [kmlStr appendString:@"    <Point>\n"];
     [kmlStr appendFormat:@"      <coordinates>%06f,%06f,0.000000</coordinates>\n", point.coordinate.longitude, point.coordinate.latitude];
     [kmlStr appendString:@"    </Point>\n"];
@@ -232,7 +232,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 + (NSDictionary *) _calcStyleIndexes:(MMap *)map {
     
-    NSUInteger index = 100;
+    unsigned int index = 100;
 
     NSMutableDictionary *styleIndexes = [NSMutableDictionary dictionary];
     [styleIndexes setObject:[NSNumber numberWithUnsignedInt:0] forKey:@"http://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png"];

@@ -84,6 +84,33 @@
     return array;
 }
 
+//---------------------------------------------------------------------------------------------------------------------
++ (NSArray *) mapsWithName:(NSString *)name inContext:(NSManagedObjectContext *)moContext {
+    
+    // Crea la peticion de busqueda
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"MMap"];
+    
+    // Se asigna una condicion de filtro
+    if(name.length > 0) {
+        NSPredicate *query = [NSPredicate predicateWithFormat:@"name = %@", name];
+        [request setPredicate:query];
+    }
+    
+    // Se asigna el criterio de ordenacion
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:TRUE];
+    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+    [request setSortDescriptors:sortDescriptors];
+    
+    // Se ejecuta y retorna el resultado
+    NSError *localError = nil;
+    NSArray *array = [moContext executeFetchRequest:request error:&localError];
+    if(array==nil) {
+        [ErrorManagerService manageError:localError compID:@"Model" messageWithFormat:@"MMap:mapsWithName - Error fetching all maps in context with name=%d",name];
+    }
+    
+    return array;
+
+}
 
 
 //=====================================================================================================================

@@ -1,40 +1,62 @@
 //
-//  MMap.h
+//  MCoordinate.m
 //
 
+#define __MCoordinate__IMPL__
+#define __MCoordinate__PROTECTED__
 
-#import "_MMap.h"
-
-
-//*********************************************************************************************************************
-#pragma mark -
-#pragma mark Public Enumerations & definitions
-//*********************************************************************************************************************
-
+#import "MCoordinate.h"
 
 
 
 //*********************************************************************************************************************
 #pragma mark -
-#pragma mark Public Interface definition
+#pragma mark Private Enumerations & definitions
 //*********************************************************************************************************************
-@interface MMap : _MMap {}
+
+
+
+
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark PRIVATE interface definition
+//*********************************************************************************************************************
+@interface MCoordinate ()
+
+@end
+
+
+
+//*********************************************************************************************************************
+#pragma mark -
+#pragma mark Implementation
+//*********************************************************************************************************************
+@implementation MCoordinate
+
 
 
 //=====================================================================================================================
 #pragma mark -
-#pragma mark CLASS public methods
+#pragma mark CLASS methods
 //---------------------------------------------------------------------------------------------------------------------
-+ (MMap *)     emptyMapWithName:(NSString *)name inContext:(NSManagedObjectContext *)moContext;
-+ (NSArray *)  allMapsinContext:(NSManagedObjectContext *)moContext includeMarkedAsDeleted:(BOOL)withDeleted;
-+ (NSArray *)  mapsWithName:(NSString *)name inContext:(NSManagedObjectContext *)moContext;
+
+
 
 
 //=====================================================================================================================
 #pragma mark -
-#pragma mark INSTANCE public methods
+#pragma mark Public methods
 //---------------------------------------------------------------------------------------------------------------------
-- (BOOL)      updateSummary:(NSString *)value;
-- (NSInteger) pointsCount;
+
+
+
+
+//=====================================================================================================================
+#pragma mark -
+#pragma mark Private methods
+//---------------------------------------------------------------------------------------------------------------------
+
+
+
 
 @end

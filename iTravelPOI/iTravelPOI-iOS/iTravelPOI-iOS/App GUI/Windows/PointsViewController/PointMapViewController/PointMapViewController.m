@@ -10,10 +10,12 @@
 #import <MapKit/MapKit.h>
 #import "PointMapViewController.h"
 #import "MPoint.h"
+#import "MPolyLine.h"
 #import "MIcon.h"
 #import "UIImage+Tint.h"
 #import "Util_Macros.h"
 #import "MKMapView+ZoomLevel.h"
+#import "MKPolylineWithColor.h"
 
 
 #import "MMap.h"
@@ -47,7 +49,7 @@
 
 @property (assign, nonatomic)               BOOL                        isEditing;
 @property (assign, nonatomic)               NSUInteger                  zoomLevel;
-@property (strong, nonatomic)               CustomOfflineTileOverlay    *overlay;
+@property (strong, nonatomic)               CustomOfflineTileOverlay    *offlineMapOverlay;
 
 
 @end
@@ -152,9 +154,19 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void) zoomOnMyLocation {
     
+
     if(self.pointsMapView.userLocation) {
         [self.pointsMapView setCenterCoordinate:self.pointsMapView.userLocation.coordinate zoomLevel:17 animated:FALSE];
     }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+- (void) switchCompassMode {
+    
+    if(self.pointsMapView.userTrackingMode == MKUserTrackingModeNone)
+        self.pointsMapView.userTrackingMode = MKUserTrackingModeFollowWithHeading;
+    else
+        self.pointsMapView.userTrackingMode = MKUserTrackingModeNone;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -174,14 +186,14 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void) toggleOfflineMap:(MMap *)map {
     
-    if(self.overlay) {
-        [self.pointsMapView removeOverlay:self.overlay];
-        self.overlay = nil;
+    if(self.offlineMapOverlay) {
+        [self.pointsMapView removeOverlay:self.offlineMapOverlay];
+        self.offlineMapOverlay = nil;
     } else {
         // Establece un overlay si no tiene conexion
         // TODO: ¿PORQUE NO PUEDE ENTERARSE DE QUE SE PERDIO LA CONEXION?
-        self.overlay = [CustomOfflineTileOverlay overlay:map.name];
-        [self.pointsMapView addOverlay:self.overlay level:MKOverlayLevelAboveLabels];
+        self.offlineMapOverlay = [CustomOfflineTileOverlay overlay:map.name];
+        [self.pointsMapView addOverlay:self.offlineMapOverlay level:MKOverlayLevelAboveRoads];
     }
 }
 
@@ -214,6 +226,7 @@
 - (void) viewWillAppear:(BOOL)animated {
     
     [super viewWillAppear:animated];
+    
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -312,16 +325,16 @@
 //---------------------------------------------------------------------------------------------------------------------
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
 
-    MKCoordinateRegion region = self.pointsMapView.region;
-    CGRect bounds = self.pointsMapView.bounds;
-    MKMapRect vrect = self.pointsMapView.visibleMapRect;
+//    MKCoordinateRegion region = self.pointsMapView.region;
+//    CGRect bounds = self.pointsMapView.bounds;
+//    MKMapRect vrect = self.pointsMapView.visibleMapRect;
 
-    NSLog(@"------------------");
-    NSLog(@"bounds => x=%f, y=%f, w=%f, h=%f",bounds.origin.x,bounds.origin.y,bounds.size.width,bounds.size.height);
-    NSLog(@"vrect  => x=%f, y=%f, w=%f, h=%f",vrect.origin.x,vrect.origin.y,vrect.size.width,vrect.size.height);
-    NSLog(@"region => lat=%f, lng=%f, latDelta=%f, lngDelta=%f",region.center.latitude,region.center.longitude,region.span.latitudeDelta,region.span.longitudeDelta);
-    NSLog(@"Zoom L => %d", mapView.zoomLevel);
-    NSLog(@"------------------");
+//    NSLog(@"------------------");
+//    NSLog(@"bounds => x=%f, y=%f, w=%f, h=%f",bounds.origin.x,bounds.origin.y,bounds.size.width,bounds.size.height);
+//    NSLog(@"vrect  => x=%f, y=%f, w=%f, h=%f",vrect.origin.x,vrect.origin.y,vrect.size.width,vrect.size.height);
+//    NSLog(@"region => lat=%f, lng=%f, latDelta=%f, lngDelta=%f",region.center.latitude,region.center.longitude,region.span.latitudeDelta,region.span.longitudeDelta);
+//    NSLog(@"Zoom L => %d", mapView.zoomLevel);
+//    NSLog(@"------------------");
 
     /*************
     // Si estaba cambiando de region porque estaba centrando un punto en edicion lo muestra
@@ -467,20 +480,28 @@
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay {
     
     
-    if ([overlay isKindOfClass:[CustomOfflineTileOverlay class]]) {
-        MKTileOverlay *to = overlay;
-        NSLog(@"-------------------------------------------------------------------------------------------------");
-        NSLog(@"coordinate lat=%f, lng=%f",to.coordinate.latitude, to.coordinate.longitude);
-        NSLog(@"boundingMapRect = %f,%f - %f,%f",to.boundingMapRect.origin.x,to.boundingMapRect.origin.y,to.boundingMapRect.size.width,to.boundingMapRect.size.height);
-        NSLog(@"tileSize = %f,%f",to.tileSize.width,to.tileSize.height);
-        NSLog(@"geometryFlipped = %d",to.geometryFlipped);
-        NSLog(@"minimumZ = %d",to.minimumZ);
-        NSLog(@"maximumZ = %d",to.maximumZ);
-        NSLog(@"canReplaceMapContent = %d",to.canReplaceMapContent);
-        NSLog(@"URLTemplate = %@",to.URLTemplate);
-        NSLog(@"-------------------------------------------------------------------------------------------------");
+    if ([overlay isKindOfClass:CustomOfflineTileOverlay.class]) {
+//        MKTileOverlay *to = overlay;
+//        NSLog(@"-------------------------------------------------------------------------------------------------");
+//        NSLog(@"coordinate lat=%f, lng=%f",to.coordinate.latitude, to.coordinate.longitude);
+//        NSLog(@"boundingMapRect = %f,%f - %f,%f",to.boundingMapRect.origin.x,to.boundingMapRect.origin.y,to.boundingMapRect.size.width,to.boundingMapRect.size.height);
+//        NSLog(@"tileSize = %f,%f",to.tileSize.width,to.tileSize.height);
+//        NSLog(@"geometryFlipped = %d",to.geometryFlipped);
+//        NSLog(@"minimumZ = %d",to.minimumZ);
+//        NSLog(@"maximumZ = %d",to.maximumZ);
+//        NSLog(@"canReplaceMapContent = %d",to.canReplaceMapContent);
+//        NSLog(@"URLTemplate = %@",to.URLTemplate);
+//        NSLog(@"-------------------------------------------------------------------------------------------------");
         return [[CustomOfflineTileOverlayRenderer alloc] initWithOverlay:overlay];
+    } else if ([overlay isKindOfClass:MKPolylineWithColor.class]) {
+        
+        MKPolylineWithColor *polyLine = overlay;
+        MKPolylineRenderer *renderer = [[MKPolylineRenderer alloc] initWithPolyline:polyLine];
+        renderer.strokeColor = polyLine.color;
+        renderer.lineWidth = 4.0;
+        return renderer;
     }
+    
     return nil;
 }
 
@@ -531,10 +552,43 @@
     } else {
         
         [self.pointsMapView removeAnnotations:self.pointsMapView.annotations];
+        
     }
     
-    // Add new annotations from points
-    [self.pointsMapView addAnnotations:pointList];    
+    // Remove all overlays except offline map
+    NSMutableArray *overlays = [NSMutableArray arrayWithArray:self.pointsMapView.overlays];
+    if(self.offlineMapOverlay) {
+        [overlays removeObject:self.offlineMapOverlay];
+    }
+    [self.pointsMapView removeOverlays:overlays];
+    
+    
+    // Add new annotations from point list
+    for(MPoint *point in pointList) {
+        
+        if(![point isKindOfClass:MPolyLine.class]) {
+            
+            [self.pointsMapView addAnnotation:point];
+            
+        } else {
+            
+            MPolyLine *polyLine = (MPolyLine *)point;
+
+            NSInteger numberOfSteps = polyLine.coordinates.count;
+            CLLocationCoordinate2D coordinates[numberOfSteps];
+            
+            NSInteger index = 0;
+            for (MCoordinate *singleCoord in polyLine.coordinates) {
+                CLLocationCoordinate2D coordinate = {singleCoord.latitudeValue, singleCoord.longitudeValue};
+                coordinates[index++] = coordinate;
+            }
+            
+            MKPolylineWithColor *overlay = [MKPolylineWithColor polylineWithCoordinates:coordinates count:numberOfSteps];
+            overlay.color = polyLine.color;
+            [self.pointsMapView addOverlay:overlay];
+
+        }
+    }
 }
 
 //---------------------------------------------------------------------------------------------------------------------

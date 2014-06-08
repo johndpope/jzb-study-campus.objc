@@ -160,6 +160,14 @@
 		42BE7AF218672EE100AECD57 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BE7AF118672EE100AECD57 /* CoreLocation.framework */; };
 		42C8AABC187977B100E992E3 /* MComplexFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 42C8AABB187977B100E992E3 /* MComplexFilter.m */; };
 		42CADFB718687BB20057AE84 /* KxMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 42CADFB618687BB20057AE84 /* KxMenu.m */; };
+		42D471D7193CE2E30075F91F /* tbar-compass.png in Resources */ = {isa = PBXBuildFile; fileRef = 42D471D5193CE2E20075F91F /* tbar-compass.png */; };
+		42D471D8193CE2E30075F91F /* tbar-compass@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42D471D6193CE2E30075F91F /* tbar-compass@2x.png */; };
+		42D471DB19435A7F0075F91F /* _MPolyLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D471DA19435A7F0075F91F /* _MPolyLine.m */; };
+		42D471DE19435A8B0075F91F /* MPolyLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D471DD19435A8B0075F91F /* MPolyLine.m */; };
+		42D471E119435B6F0075F91F /* GMTPolyLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D471E019435B6F0075F91F /* GMTPolyLine.m */; };
+		42D471E41943683A0075F91F /* MCoordinate.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D471E31943683A0075F91F /* MCoordinate.m */; };
+		42D471E7194368410075F91F /* _MCoordinate.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D471E6194368410075F91F /* _MCoordinate.m */; };
+		42D471ED194394130075F91F /* MKPolylineWithColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 42D471EC194394120075F91F /* MKPolylineWithColor.m */; };
 		42F1277D18D743F200A38EFF /* tbar-tagging.png in Resources */ = {isa = PBXBuildFile; fileRef = 42F1277B18D743F200A38EFF /* tbar-tagging.png */; };
 		42F1277E18D743F200A38EFF /* tbar-tagging@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42F1277C18D743F200A38EFF /* tbar-tagging@2x.png */; };
 		42F3A58718BB518500DBCB4A /* IconEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F3A57318BB518500DBCB4A /* IconEditorViewController.m */; };
@@ -417,6 +425,20 @@
 		42C8AABB187977B100E992E3 /* MComplexFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MComplexFilter.m; sourceTree = "<group>"; };
 		42CADFB518687BB20057AE84 /* KxMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KxMenu.h; sourceTree = "<group>"; };
 		42CADFB618687BB20057AE84 /* KxMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KxMenu.m; sourceTree = "<group>"; };
+		42D471D5193CE2E20075F91F /* tbar-compass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tbar-compass.png"; sourceTree = "<group>"; };
+		42D471D6193CE2E30075F91F /* tbar-compass@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tbar-compass@2x.png"; sourceTree = "<group>"; };
+		42D471D919435A7F0075F91F /* _MPolyLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MPolyLine.h; sourceTree = "<group>"; };
+		42D471DA19435A7F0075F91F /* _MPolyLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MPolyLine.m; sourceTree = "<group>"; };
+		42D471DC19435A8B0075F91F /* MPolyLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPolyLine.h; sourceTree = "<group>"; };
+		42D471DD19435A8B0075F91F /* MPolyLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPolyLine.m; sourceTree = "<group>"; };
+		42D471DF19435B6F0075F91F /* GMTPolyLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMTPolyLine.h; sourceTree = "<group>"; };
+		42D471E019435B6F0075F91F /* GMTPolyLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMTPolyLine.m; sourceTree = "<group>"; };
+		42D471E21943683A0075F91F /* MCoordinate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCoordinate.h; sourceTree = "<group>"; };
+		42D471E31943683A0075F91F /* MCoordinate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCoordinate.m; sourceTree = "<group>"; };
+		42D471E5194368410075F91F /* _MCoordinate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MCoordinate.h; sourceTree = "<group>"; };
+		42D471E6194368410075F91F /* _MCoordinate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MCoordinate.m; sourceTree = "<group>"; };
+		42D471EB194394120075F91F /* MKPolylineWithColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKPolylineWithColor.h; sourceTree = "<group>"; };
+		42D471EC194394120075F91F /* MKPolylineWithColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKPolylineWithColor.m; sourceTree = "<group>"; };
 		42F1277B18D743F200A38EFF /* tbar-tagging.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tbar-tagging.png"; sourceTree = "<group>"; };
 		42F1277C18D743F200A38EFF /* tbar-tagging@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tbar-tagging@2x.png"; sourceTree = "<group>"; };
 		42F3A57218BB518500DBCB4A /* IconEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconEditorViewController.h; sourceTree = "<group>"; };
@@ -568,6 +590,8 @@
 				423F310E18B8D79200845826 /* MPointMapAnnotation.m */,
 				423F310F18B8D79200845826 /* PointMapViewController.h */,
 				423F311018B8D79200845826 /* PointMapViewController.m */,
+				42D471EB194394120075F91F /* MKPolylineWithColor.h */,
+				42D471EC194394120075F91F /* MKPolylineWithColor.m */,
 			);
 			path = PointMapViewController;
 			sourceTree = "<group>";
@@ -612,6 +636,8 @@
 		423F332E18B8E29700845826 /* toolbar */ = {
 			isa = PBXGroup;
 			children = (
+				42D471D5193CE2E20075F91F /* tbar-compass.png */,
+				42D471D6193CE2E30075F91F /* tbar-compass@2x.png */,
 				4286936A18EC6976008C840B /* tbar-no-connection.png */,
 				4286936B18EC6977008C840B /* tbar-no-connection@2x.png */,
 				42828E3C18DF27FB0003B092 /* tbar-mapMenu.png */,
@@ -741,6 +767,8 @@
 				42828E5218E1D5300003B092 /* GMTMap.m */,
 				42828E5318E1D5300003B092 /* GMTPoint.h */,
 				42828E5418E1D5300003B092 /* GMTPoint.m */,
+				42D471DF19435B6F0075F91F /* GMTPolyLine.h */,
+				42D471E019435B6F0075F91F /* GMTPolyLine.m */,
 			);
 			path = GMapService;
 			sourceTree = "<group>";
@@ -941,6 +969,10 @@
 		42CADF8E1868268A0057AE84 /* Human */ = {
 			isa = PBXGroup;
 			children = (
+				42D471E21943683A0075F91F /* MCoordinate.h */,
+				42D471E31943683A0075F91F /* MCoordinate.m */,
+				42D471DC19435A8B0075F91F /* MPolyLine.h */,
+				42D471DD19435A8B0075F91F /* MPolyLine.m */,
 				42C8AABB187977B100E992E3 /* MComplexFilter.m */,
 				42C8AABA187977AC00E992E3 /* MComplexFilter.h */,
 				42BBBB921872A8D5009813A0 /* MBase.h */,
@@ -964,6 +996,10 @@
 		42CADF951868268A0057AE84 /* Machine */ = {
 			isa = PBXGroup;
 			children = (
+				42D471E5194368410075F91F /* _MCoordinate.h */,
+				42D471E6194368410075F91F /* _MCoordinate.m */,
+				42D471D919435A7F0075F91F /* _MPolyLine.h */,
+				42D471DA19435A7F0075F91F /* _MPolyLine.m */,
 				4235D990187AC6610023E00C /* _MBase.h */,
 				4235D991187AC6610023E00C /* _MBase.m */,
 				4235D992187AC6610023E00C /* _MBaseSync.h */,
@@ -1118,6 +1154,9 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Jose Zarzuela";
 				TargetAttributes = {
+					42BE7A7018672C6F00AECD57 = {
+						DevelopmentTeam = 2R26YD9UG6;
+					};
 					42BE7A9118672C6F00AECD57 = {
 						TestTargetID = 42BE7A7018672C6F00AECD57;
 					};
@@ -1206,7 +1245,9 @@
 				42828E3718DF1DBF0003B092 /* tbar-sort2@2x.png in Resources */,
 				42828DF418DCE46C0003B092 /* tagtree-expanded.png in Resources */,
 				42BE7AEB18672EB200AECD57 /* README.txt in Resources */,
+				42D471D7193CE2E30075F91F /* tbar-compass.png in Resources */,
 				423F345518B944D000845826 /* tableHSepLine@2x.png in Resources */,
+				42D471D8193CE2E30075F91F /* tbar-compass@2x.png in Resources */,
 				4286936D18EC6977008C840B /* tbar-no-connection@2x.png in Resources */,
 				429E797718ED434300B11A8D /* emptyMapTile.png in Resources */,
 				423F338118B8E29700845826 /* tbar-viewMap.png in Resources */,
@@ -1274,6 +1315,8 @@
 				4235D9A4187AC6610023E00C /* _RPointTag.m in Sources */,
 				42BBBBA51872A8D5009813A0 /* MTag.m in Sources */,
 				42828E7A18E5F4D00003B092 /* SyncDataSource.m in Sources */,
+				42D471E119435B6F0075F91F /* GMTPolyLine.m in Sources */,
+				42D471DE19435A8B0075F91F /* MPolyLine.m in Sources */,
 				423F30F418B8D75E00845826 /* MapListViewController.m in Sources */,
 				42BBBBA61872A8D5009813A0 /* RPointTag.m in Sources */,
 				423F312718B8D79300845826 /* PointMapViewController.m in Sources */,
@@ -1301,6 +1344,7 @@
 				4235D9A1187AC6610023E00C /* _MMap.m in Sources */,
 				42828E5F18E1D5300003B092 /* GMTBatchCmd.m in Sources */,
 				42828E6118E1D5300003B092 /* GMTItem.m in Sources */,
+				42D471E7194368410075F91F /* _MCoordinate.m in Sources */,
 				42828DE918DCE3100003B092 /* TreeTableViewCell.m in Sources */,
 				42828E2018DDF0DF0003B092 /* TopViewController.m in Sources */,
 				42828DE818DCE3100003B092 /* TagTreeTableViewController.m in Sources */,
@@ -1311,6 +1355,7 @@
 				4235D9A2187AC6610023E00C /* _MPoint.m in Sources */,
 				42828E8918E7274F0003B092 /* KmlBackup.m in Sources */,
 				42F3A59718BB521200DBCB4A /* TagListEditorViewController.m in Sources */,
+				42D471DB19435A7F0075F91F /* _MPolyLine.m in Sources */,
 				42F6E81C1869FDFC00005AFB /* NSString+JavaStr.m in Sources */,
 				42828E6D18E1DD220003B092 /* GMapHttpDataFetcher.m in Sources */,
 				42BE7AE718672EB200AECD57 /* DDLog.m in Sources */,
@@ -1323,11 +1368,13 @@
 				42F3A59218BB518500DBCB4A /* PointDataEditorViewController.m in Sources */,
 				42BBBBA01872A8D5009813A0 /* MBase.m in Sources */,
 				42828E7018E1E3CE0003B092 /* NSString+HTML.m in Sources */,
+				42D471E41943683A0075F91F /* MCoordinate.m in Sources */,
 				42214EAE18745454006A72B9 /* UIImage+Tint.m in Sources */,
 				421FA3DB18C46F9800792990 /* TestMapViewController.m in Sources */,
 				42828E6318E1D5300003B092 /* GMTPoint.m in Sources */,
 				42828E7418E1F9AF0003B092 /* SyncMapsViewController.m in Sources */,
 				4286936418EBFDAD008C840B /* CustomOfflineTileOverlays.m in Sources */,
+				42D471ED194394130075F91F /* MKPolylineWithColor.m in Sources */,
 				42828E5D18E1D5300003B092 /* GMapService.m in Sources */,
 				423F30EE18B8D71700845826 /* BlockActionSheet.m in Sources */,
 				4286936918EC1B62008C840B /* UIViewController+Storyboard.m in Sources */,
@@ -1467,11 +1514,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iTravelPOI-iOS/iTravelPOI-iOS-Prefix.pch";
 				INFOPLIST_FILE = "iTravelPOI-iOS/iTravelPOI-iOS-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1481,11 +1531,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iTravelPOI-iOS/iTravelPOI-iOS-Prefix.pch";
 				INFOPLIST_FILE = "iTravelPOI-iOS/iTravelPOI-iOS-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

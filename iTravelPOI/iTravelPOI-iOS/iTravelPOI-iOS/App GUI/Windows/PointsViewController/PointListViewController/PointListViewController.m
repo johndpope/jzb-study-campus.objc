@@ -22,7 +22,7 @@
 #pragma mark Private Enumerations & definitions
 //*********************************************************************************************************************
 #define MIN_GPS_DISTANCE_PRECISION   +50
-#define LOCATION_TIMER_INTERVAL      60.0
+#define LOCATION_TIMER_INTERVAL       0.4
 
 
 //*********************************************************************************************************************
@@ -40,6 +40,7 @@
 
 @property (strong, nonatomic) CLLocationManager         *locationManager;
 @property (strong, nonatomic) NSTimer                   *timer;
+@property (strong, nonatomic) CLLocation                *lastKnownLocation;
 
 @property (strong, nonatomic) NSNumberFormatter         *distanceFormatterMeters;
 @property (strong, nonatomic) NSNumberFormatter         *distanceFormatterKm;
@@ -184,10 +185,9 @@
     
     self.distanceFormatterKm = [[NSNumberFormatter alloc] init];
     [self.distanceFormatterKm setNumberStyle:NSNumberFormatterDecimalStyle];
-    [self.distanceFormatterKm setMaximumFractionDigits:2];
+    [self.distanceFormatterKm setMaximumFractionDigits:0];
     [self.distanceFormatterKm setRoundingMode:NSNumberFormatterRoundHalfUp];
-    [self.distanceFormatterKm setPositiveFormat:@"#,##0.# Km"];
-
+    [self.distanceFormatterKm setPositiveFormat:@"#,##0 Km"];
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -325,7 +325,14 @@
     MPoint *itemToShow = (MPoint *)[self.dataSource.pointList objectAtIndex:[indexPath indexAtPosition:1]];
     
     cell.textLabel.text = itemToShow.name;
-    cell.detailTextLabel.text = itemToShow.viewStringDistance;
+    cell.viewDistance = itemToShow.viewStringDistance;
+    
+    //cell.detailTextLabel.text = itemToShow.descr;
+    if(itemToShow.descr && !itemToShow.htmlDescription) {
+        itemToShow.htmlDescription = [self attrStringFromHtml:itemToShow.descr];
+    }
+    cell.detailTextLabel.attributedText = itemToShow.htmlDescription;
+    
     cell.imageView.image = itemToShow.icon.image;
 
     if(tableView.isEditing) {
@@ -354,12 +361,13 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
 
     // Actualiza la información si ha habido un cambio importante de posicion
-    CLLocationDistance dist = [newLocation distanceFromLocation:oldLocation];
-    if(!oldLocation || dist>=MIN_GPS_DISTANCE_PRECISION) {
+    CLLocationDistance dist = [newLocation distanceFromLocation:self.lastKnownLocation];
+    if(!self.lastKnownLocation || dist>=MIN_GPS_DISTANCE_PRECISION) {
         [self updatePointsDistanceWithLocation:newLocation];
+        self.lastKnownLocation = newLocation;
     }
     
-    // Si la precision ya es buena, para el uso del GPS y estableciendo 2 minutos para activarlo de nuevo
+    // Si la precision ya es buena, para el uso del GPS y estableciendo un intervalo para activarlo de nuevo
     if(newLocation && newLocation.horizontalAccuracy<=MIN_GPS_DISTANCE_PRECISION) {
         [self.locationManager stopUpdatingLocation];
         [self.timer invalidate];
@@ -375,6 +383,7 @@
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
     
     [self updatePointsDistanceWithLocation:nil];
+    self.lastKnownLocation = nil;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -459,7 +468,7 @@
         } else {
             CLLocation *pointLocation = [[CLLocation alloc] initWithLatitude:point.coordinate.latitude longitude:point.coordinate.longitude];
             point.viewDistance = [location distanceFromLocation:pointLocation];
-            if(point.viewDistance<10000) {
+            if(point.viewDistance<10000) { // 10 Km
                 NSNumber *number = [NSNumber numberWithDouble:point.viewDistance];
                 point.viewStringDistance = [self.distanceFormatterMeters stringFromNumber:number];
             } else {
@@ -467,7 +476,7 @@
                 point.viewStringDistance = [self.distanceFormatterKm stringFromNumber:number];
             }
         }
-        
+    
     }
     
     // Reordena los puntos con la nueva informacion
@@ -477,5 +486,26 @@
     [self.pointsTable reloadData];
 
 }
+
+
+//---------------------------------------------------------------------------------------------------------------------
+- (NSAttributedString *) attrStringFromHtml:(NSString *)htmlText {
+
+    if([htmlText isEqualToString:@"<div dir=\"ltr\"></div>"]) {
+        return nil;
+    }
+    
+    //    NSString *style = @"<meta charset=\"UTF-8\"><style> body { font-family: 'HelveticaNeue'; font-size: 10px; } b {font-family: 'MarkerFelt-Wide'; }</style>";
+    NSString *style = @"<meta charset=\"UTF-8\"><style> body { font-family: 'HelveticaNeue'; font-size: 10px; }</style>";
+    NSString *styledHtmlText = [NSString stringWithFormat:@"%@%@", style, htmlText];
+    NSDictionary *options = @{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType };
+    NSAttributedString *attrStr = [[NSAttributedString alloc] initWithData:[styledHtmlText dataUsingEncoding:NSUTF8StringEncoding]
+                                                                   options:options
+                                                        documentAttributes:NULL
+                                                                     error:NULL];
+
+    return attrStr;
+}
+
 
 @end

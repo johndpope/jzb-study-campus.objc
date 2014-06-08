@@ -175,9 +175,7 @@
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // ******* SEGURO ***************************
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if(![map.name hasPrefix:@"@"] && ![map.name hasPrefix:@"TMP"] ) {
-        // Solo deja añadir mapas cuyo nombre empiece por @
-        *err = [self _createError:@"Map name must start with @" withError:nil data:map];
+    if(![self __isSafeName__:map.name error:err]) {
         return nil;
     }
 
@@ -222,8 +220,7 @@
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // ******* SEGURO ***************************
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if(![map.name hasPrefix:@"@"] && ![map.name hasPrefix:@"TMP"] ) {
-        // Solo deja actualizar mapas cuyo nombre empiece por @
+    if(![self __isSafeName__:map.name error:err]) {
         return map;
     }
 
@@ -269,9 +266,7 @@
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // ******* SEGURO ***************************
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if(![map.name hasPrefix:@"@"] && ![map.name hasPrefix:@"TMP"] ) {
-        // Solo deja borrar mapas cuyo nombre empiece por @
-        *err = [self _createError:@"Map name must start with @" withError:nil data:map];
+    if(![self __isSafeName__:map.name error:err]) {
         return false;
     }
 
@@ -332,17 +327,25 @@
 
             for(NSDictionary *entry in entries) {
 
-                // Solo procesa las features tipo "point"
+                // Solo procesa las features tipo "Point" && "LineString"
                 BOOL isPoint = [entry valueForKeyPath:@"atom:content.Placemark.Point"] != nil;
-                if(!isPoint) {
+                BOOL isPolyLine = [entry valueForKeyPath:@"atom:content.Placemark.LineString"] != nil;
+                if(!isPoint && !isPolyLine) {
                     continue;
                 }
+                
+                GMTItem *item = nil;
+                
+                if(isPoint) {
+                    item = [self _parseDictPointData:entry error:err];
+                } else {
+                    item = [self _parseDictPolyLineData:entry error:err];
+                }
 
-                GMTPoint *point = [self _parseDictPointData:entry error:err];
-                if(!point) {
+                if(!item) {
                     return nil;
                 }
-                [points addObject:point];
+                [points addObject:item];
 
             }
         }
@@ -375,9 +378,7 @@
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // ******* SEGURO ***************************
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if(![map.name hasPrefix:@"@"] && ![map.name hasPrefix:@"TMP"] ) {
-        // Solo deja añadir puntos a mapas cuyo nombre empiece por @
-        *err = [self _createError:@"Map name must start with @" withError:nil data:map];
+    if(![self __isSafeName__:map.name error:err]) {
         return nil;
     }
 
@@ -430,9 +431,7 @@
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // ******* SEGURO ***************************
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if(![map.name hasPrefix:@"@"] && ![map.name hasPrefix:@"TMP"] ) {
-        // Solo deja modificar puntos en mapas cuyo nombre empiece por @
-        *err = [self _createError:@"Map name must start with @" withError:nil data:map];
+    if(![self __isSafeName__:map.name error:err]) {
         return nil;
     }
 
@@ -486,9 +485,7 @@
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // ******* SEGURO ***************************
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if(![map.name hasPrefix:@"@"] && ![map.name hasPrefix:@"TMP"] ) {
-        // Solo deja borrar puntos en mapas cuyo nombre empiece por @
-        *err = [self _createError:@"Map name must start with @" withError:nil data:map];
+    if(![self __isSafeName__:map.name error:err]) {
         return false;
     }
 
@@ -527,24 +524,41 @@
 
     DDLogVerbose(@"GMapService - processBatchCmds [%@][%lu]", map.name, (unsigned long)batchCmds.count);
 
-
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // ******* SEGURO ***************************
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if(![map.name hasPrefix:@"@"] && ![map.name hasPrefix:@"TMP"] ) {
-        // Solo deja procesar puntos en bacth en mapas cuyo nombre empiece por @
-        for(GMTBatchCmd *bcmd in batchCmds) {
-            bcmd.resultItem = bcmd.item;
-            bcmd.resultCode = BATCH_RC_ERROR;
-        }
-        return false;
-    }
-
-
+    
     // Si la lista esta vacia no hace nada
     if(batchCmds == nil || batchCmds.count == 0) {
         return true;
     }
+
+
+    
+    
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // ******* SEGURO ***************************
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    __autoreleasing NSError *safeNameError = nil;
+    if(![self __isSafeName__:map.name error:&safeNameError]) {
+        for(GMTBatchCmd *bcmd in batchCmds) {
+            bcmd.resultItem = bcmd.item;
+            bcmd.resultCode = BATCH_RC_ERROR;
+        }
+        [allErrors addObject:safeNameError];
+        return false;
+    }
+
+
+    
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // ******* NO SABE ACTUALIZAR LOS POLY LINES ************************
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    NSMutableArray *batchCmds_clean = [NSMutableArray array];
+    for(GMTBatchCmd *bCmd in batchCmds) {
+        if(![bCmd.item isKindOfClass:GMTPolyLine.class]) {
+            [batchCmds_clean addObject:bCmd];
+        }
+    }
+    batchCmds = batchCmds_clean;
+
 
 
     NSString *errMsg = [map verifyFieldsNotNil];
@@ -563,6 +577,7 @@
             [allErrors addObject:localError];
         }
     }
+    
     if(allErrors.count > 0) {
         return false;
     }
@@ -784,7 +799,7 @@
 
 
     map.name = [[dictMapData valueForKeyPath:@"title.text"] gtm_stringByUnescapingFromHTML];
-    map.summary = [[dictMapData valueForKeyPath:@"summary.text"] gtm_stringByUnescapingFromHTML];
+    map.summary = [dictMapData valueForKeyPath:@"summary.text"];
     if(map.summary == nil) map.summary = @"";
     map.etag = [dictMapData valueForKeyPath:@"gd:etag"];
     map.gID = [dictMapData valueForKeyPath:@"id.text"];
@@ -805,13 +820,16 @@
     }
 }
 
+
 // ---------------------------------------------------------------------------------------------------------------------
 - (GMTPoint *) _parseDictPointData:(NSDictionary *)dictPointData error:(NSError * __autoreleasing *)err {
 
     GMTPoint __block *point = [GMTPoint emptyPoint];
 
+    
     point.name = [[dictPointData valueForKeyPath:@"atom:content.Placemark.name.text"] gtm_stringByUnescapingFromHTML];
-    point.descr = [[dictPointData valueForKeyPath:@"atom:content.Placemark.description.text"] gtm_stringByUnescapingFromHTML];
+    point.descr = [dictPointData valueForKeyPath:@"atom:content.Placemark.description.text"];
+    
     if(point.descr == nil) point.descr = @"";
     point.iconHREF = [[dictPointData valueForKeyPath:@"atom:content.Placemark.Style.IconStyle.Icon.href.text"] gtm_stringByUnescapingFromHTML];
     if(point.iconHREF == nil) point.iconHREF = GM_DEFAULT_POINT_ICON_HREF;
@@ -849,6 +867,67 @@
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
+- (GMTPolyLine *) _parseDictPolyLineData:(NSDictionary *)dictPointData error:(NSError * __autoreleasing *)err {
+    
+    GMTPolyLine __block *polyLine = [GMTPolyLine emptyPolyLine];
+    
+    polyLine.name = [[dictPointData valueForKeyPath:@"atom:content.Placemark.name.text"] gtm_stringByUnescapingFromHTML];
+    polyLine.descr = [dictPointData valueForKeyPath:@"atom:content.Placemark.description.text"];
+    if(polyLine.descr == nil) polyLine.descr = @"";
+    
+    
+    //<!-- lon,lat[,alt] -->
+    NSString *coordinates = [dictPointData valueForKeyPath:@"atom:content.Placemark.LineString.coordinates.text"];
+    NSArray *splittedStr1 = [coordinates componentsSeparatedByString:@" "];
+    for(NSString* singleCoordStr in splittedStr1) {
+        
+        NSArray *splittedStr2 = [singleCoordStr componentsSeparatedByString:@","];
+        if(splittedStr2.count == 3) {
+            CLLocationDegrees longitude = [splittedStr2[0] doubleValue];
+            CLLocationDegrees latitude = [splittedStr2[1] doubleValue];
+            CLLocation *coord = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
+            [polyLine.coordinates addObject:coord];
+        }
+        
+    }
+    
+
+    // PolyLine color ------
+    NSString *hexColorStr = [dictPointData valueForKeyPath:@"atom:content.Placemark.Style.LineStyle.color.text"];
+    if(hexColorStr) {
+        unsigned int hexValue;
+        [[NSScanner scannerWithString:hexColorStr] scanHexInt:&hexValue];
+        int a = (hexValue >> 24) & 0xFF;
+        int b = (hexValue >> 16) & 0xFF;
+        int g = (hexValue >>  8) & 0xFF;
+        int r = (hexValue)       & 0xFF;
+        UIColor *color = [UIColor colorWithRed:r/255.0f green:g / 255.0f blue:b / 255.0f alpha:a / 255.0f];
+        polyLine.color = color;
+    } else {
+        polyLine.color = [UIColor colorWithRed:0.0f green:0.0f blue:1.0f alpha:0.6f];
+    }
+    
+    
+    polyLine.etag = [dictPointData valueForKeyPath:@"gd:etag"];
+    polyLine.gID = [dictPointData valueForKeyPath:@"atom:id.text"];
+    polyLine.published_Date = [GMTItem dateFromString:[dictPointData valueForKeyPath:@"atom:published.text"]];
+    polyLine.updated_Date = [GMTItem dateFromString:[dictPointData valueForKeyPath:@"atom:updated.text"]];
+    
+    
+    // Chequea el resultado y lo retorna
+    NSString *errMsg = [polyLine verifyFieldsNotNil];
+    if(errMsg) {
+        if(err != nil) {
+            NSString *errDesc = [NSString stringWithFormat:@"Parsing NSDictionary object. %@", errMsg];
+            *err = [self _createError:errDesc withError:nil data:dictPointData];
+        }
+        return nil;
+    } else {
+        return polyLine;
+    }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
 - (NSError *) _createError:(NSString *)desc withError:(NSError *)prevErr data:(id)data {
 
     NSString *content = data == nil ? @"" : [data description];
@@ -858,6 +937,22 @@
                              [NSString stringWithFormat:@"%@", prevErr], @"PreviousErrorInfo", nil];
     NSError *err = [NSError errorWithDomain:@"GMapServiceErrorDomain" code:200 userInfo:errInfo];
     return err;
+}
+
+
+// =====================================================================================================================
+// =====================================================================================================================
+- (BOOL) __isSafeName__:(NSString *)name error:(NSError * __autoreleasing *)err {
+    
+    
+    if(![name hasPrefix:@"@"] && ![name hasPrefix:@"TMP"] && ![name hasPrefix:@"PREP"]
+       && ![name hasPrefix:@"HT_Holanda_2014"] && ![name hasPrefix:@"HT_Galicia_2014"]) {
+        *err = [self _createError:@"Map name must start by @ to be modified" withError:nil data:nil];
+        return false;
+    } else {
+        return true;
+    }
+   
 }
 
 @end
