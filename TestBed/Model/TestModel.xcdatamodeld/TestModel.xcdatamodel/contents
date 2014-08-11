@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13E28" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="TBDetalle" representedClassName="TBDetalle" syncable="YES">
+        <attribute name="nombre" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="maestro" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TBMaestro" inverseName="detalles" inverseEntity="TBMaestro" syncable="YES"/>
+    </entity>
+    <entity name="TBMaestro" representedClassName="TBMaestro" syncable="YES">
+        <attribute name="nombre" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="detalles" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TBDetalle" inverseName="maestro" inverseEntity="TBDetalle" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="TBMaestro" positionX="-2279" positionY="-1134" width="128" height="73"/>
+        <element name="TBDetalle" positionX="-2036" positionY="-1008" width="128" height="73"/>
+    </elements>
+</model>

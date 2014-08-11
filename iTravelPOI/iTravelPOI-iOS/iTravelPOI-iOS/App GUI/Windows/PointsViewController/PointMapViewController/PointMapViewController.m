@@ -193,7 +193,7 @@
         // Establece un overlay si no tiene conexion
         // TODO: ¿PORQUE NO PUEDE ENTERARSE DE QUE SE PERDIO LA CONEXION?
         self.offlineMapOverlay = [CustomOfflineTileOverlay overlay:map.name];
-        [self.pointsMapView addOverlay:self.offlineMapOverlay level:MKOverlayLevelAboveRoads];
+        [self.pointsMapView insertOverlay:self.offlineMapOverlay atIndex:0 level:MKOverlayLevelAboveLabels];
     }
 }
 
@@ -585,7 +585,7 @@
             
             MKPolylineWithColor *overlay = [MKPolylineWithColor polylineWithCoordinates:coordinates count:numberOfSteps];
             overlay.color = polyLine.color;
-            [self.pointsMapView addOverlay:overlay];
+            [self.pointsMapView addOverlay:overlay level:MKOverlayLevelAboveLabels];
 
         }
     }
