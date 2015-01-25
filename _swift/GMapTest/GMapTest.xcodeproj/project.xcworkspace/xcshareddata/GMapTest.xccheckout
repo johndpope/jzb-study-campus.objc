@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>C6B55B86-BCC3-422F-8002-A9D2EA15A3B8</string>
+	<key>IDESourceControlProjectName</key>
+	<string>GMapTest</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>90C88CAC0EB389A2F2880AE968A5A1241138ABE3</key>
+		<string>https://code.google.com/p/jzb-study-campus.objc/</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>_swift/GMapTest/GMapTest.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>90C88CAC0EB389A2F2880AE968A5A1241138ABE3</key>
+		<string>../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://code.google.com/p/jzb-study-campus.objc/</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>90C88CAC0EB389A2F2880AE968A5A1241138ABE3</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>90C88CAC0EB389A2F2880AE968A5A1241138ABE3</string>
+			<key>IDESourceControlWCCName</key>
+			<string>objC-Campus</string>
+		</dict>
+	</array>
+</dict>
+</plist>

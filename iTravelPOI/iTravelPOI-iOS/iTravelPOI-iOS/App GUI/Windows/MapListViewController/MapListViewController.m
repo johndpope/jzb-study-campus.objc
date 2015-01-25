@@ -11,6 +11,8 @@
 #import "BaseCoreDataService.h"
 #import "PointsViewController.h"
 #import "UINavigationPopProtocol.h"
+#import "KmlBackup.h"
+#import "KMLReader.h"
 
 
 
@@ -58,7 +60,45 @@
 #pragma mark -
 #pragma mark Public methods
 //---------------------------------------------------------------------------------------------------------------------
+- (IBAction)importKLMs:(UIBarButtonItem *)sender {
+    
+    // Primero hacemos una copia de seguridad
+    [self exportKLMs:sender];
+    
+    // Importamos lo que haya
+    [KMLReader importKmlFiles];
+    self.mapList = [MMap allMapsinContext:self.moContext includeMarkedAsDeleted:FALSE];
+    [self.tableViewItemList reloadData];
+}
 
+//---------------------------------------------------------------------------------------------------------------------
+- (IBAction)exportKLMs:(UIBarButtonItem *)sender {
+    
+    BOOL wasOK = TRUE;
+    NSError *err = nil;
+    
+    
+    NSString *backupFolder;
+    backupFolder = [KmlBackup backupFolderWithDate:[NSDate date] error:&err];
+    if(!backupFolder || err!=nil) {
+        wasOK = FALSE;
+    } else {
+        NSArray *allMaps = [MMap allMapsinContext:BaseCoreDataService.moContext includeMarkedAsDeleted:FALSE];
+        for(MMap *localMap in allMaps) {
+            wasOK &= [KmlBackup backupLocalMap:localMap inFolder:backupFolder error:&err];
+        }
+    }
+    
+    if(!wasOK) {
+        UIAlertView *someError = [[UIAlertView alloc] initWithTitle: @"Backup error"
+                                                            message: @"Error creating maps backups"
+                                                           delegate: nil
+                                                  cancelButtonTitle: @"Ok"
+                                                  otherButtonTitles: nil];
+        [someError show];
+    }
+
+}
 
 
 //=====================================================================================================================

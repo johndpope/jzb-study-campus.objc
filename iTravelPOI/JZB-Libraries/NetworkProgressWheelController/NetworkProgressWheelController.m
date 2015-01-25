@@ -83,18 +83,26 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) start {
     
+    
+#if !TARGET_OS_MAC
+    
     // Lo sincroniza con el thread main por si viene de otro hilo
     dispatch_sync(dispatch_get_main_queue(), ^{
         
         // Incrementa el indicador de uso e indica que se muestre un "spinner" en la barra de estado para indicar el acceso a la red
         self.usageCount++;
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-        
     });
+
+#endif
+
+    
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) stop {
+    
+#if !TARGET_OS_MAC
     
     // Lo sincroniza con el thread main por si viene de otro hilo
     dispatch_sync(dispatch_get_main_queue(), ^{
@@ -112,8 +120,9 @@
         }
     });
     
+#endif
+    
 }
-
 
 
 @end

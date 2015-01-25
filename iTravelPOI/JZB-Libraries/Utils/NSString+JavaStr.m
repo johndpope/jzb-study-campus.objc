@@ -21,21 +21,25 @@
 #pragma mark -
 #pragma mark General PUBLIC methods
 // ---------------------------------------------------------------------------------------------------------------------
+// Devuelve NSNotFound si no se encontro
 - (NSUInteger) indexOf:(NSString *)str {
     return [self rangeOfString:str options:0].location;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
+// Devuelve NSNotFound si no se encontro
 - (NSUInteger) indexOf:(NSString *)str startIndex:(NSUInteger)p1 {
     return [self rangeOfString:str options:0 range:(NSRange){p1, [self length] - p1}].location;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
+// Devuelve NSNotFound si no se encontro
 - (NSUInteger) lastIndexOf:(NSString *)str {
     return [self rangeOfString:str options:NSBackwardsSearch].location;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
+// Devuelve NSNotFound si no se encontro
 - (NSUInteger) lastIndexOf:(NSString *)str startIndex:(NSUInteger)p1 {
     return [self rangeOfString:str options:NSBackwardsSearch range:(NSRange){p1, [self length] - p1}].location;
 }

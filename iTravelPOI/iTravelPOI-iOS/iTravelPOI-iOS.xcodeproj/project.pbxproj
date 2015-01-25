@@ -121,6 +121,7 @@
 		4286936C18EC6977008C840B /* tbar-no-connection.png in Resources */ = {isa = PBXBuildFile; fileRef = 4286936A18EC6976008C840B /* tbar-no-connection.png */; };
 		4286936D18EC6977008C840B /* tbar-no-connection@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4286936B18EC6977008C840B /* tbar-no-connection@2x.png */; };
 		429E797718ED434300B11A8D /* emptyMapTile.png in Resources */ = {isa = PBXBuildFile; fileRef = 429E797618ED434300B11A8D /* emptyMapTile.png */; };
+		42B3FD4319DA0F8C00345146 /* KMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B3FD4219DA0F8C00345146 /* KMLReader.m */; };
 		42BBBBA01872A8D5009813A0 /* MBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BBBB931872A8D5009813A0 /* MBase.m */; };
 		42BBBBA11872A8D5009813A0 /* MBaseSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BBBB951872A8D5009813A0 /* MBaseSync.m */; };
 		42BBBBA21872A8D5009813A0 /* MIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BBBB971872A8D5009813A0 /* MIcon.m */; };
@@ -363,6 +364,8 @@
 		4286936A18EC6976008C840B /* tbar-no-connection.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tbar-no-connection.png"; sourceTree = "<group>"; };
 		4286936B18EC6977008C840B /* tbar-no-connection@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tbar-no-connection@2x.png"; sourceTree = "<group>"; };
 		429E797618ED434300B11A8D /* emptyMapTile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = emptyMapTile.png; sourceTree = "<group>"; };
+		42B3FD4119DA0F8C00345146 /* KMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KMLReader.h; sourceTree = "<group>"; };
+		42B3FD4219DA0F8C00345146 /* KMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KMLReader.m; sourceTree = "<group>"; };
 		42BBBB921872A8D5009813A0 /* MBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBase.h; sourceTree = "<group>"; };
 		42BBBB931872A8D5009813A0 /* MBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBase.m; sourceTree = "<group>"; };
 		42BBBB941872A8D5009813A0 /* MBaseSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBaseSync.h; sourceTree = "<group>"; };
@@ -785,6 +788,8 @@
 		42828E7118E1F9AF0003B092 /* SyncMapsViewController */ = {
 			isa = PBXGroup;
 			children = (
+				42B3FD4119DA0F8C00345146 /* KMLReader.h */,
+				42B3FD4219DA0F8C00345146 /* KMLReader.m */,
 				42828E8718E7274F0003B092 /* KmlBackup.h */,
 				42828E8818E7274F0003B092 /* KmlBackup.m */,
 				42828E7218E1F9AF0003B092 /* SyncMapsViewController.h */,
@@ -1356,6 +1361,7 @@
 				42828E8918E7274F0003B092 /* KmlBackup.m in Sources */,
 				42F3A59718BB521200DBCB4A /* TagListEditorViewController.m in Sources */,
 				42D471DB19435A7F0075F91F /* _MPolyLine.m in Sources */,
+				42B3FD4319DA0F8C00345146 /* KMLReader.m in Sources */,
 				42F6E81C1869FDFC00005AFB /* NSString+JavaStr.m in Sources */,
 				42828E6D18E1DD220003B092 /* GMapHttpDataFetcher.m in Sources */,
 				42BE7AE718672EB200AECD57 /* DDLog.m in Sources */,

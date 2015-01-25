@@ -11,6 +11,6 @@
 @interface SimpleXMLReader : NSObject <NSXMLParserDelegate>
 
 + (NSDictionary *) dictionaryForXMLData:(NSData *)data error:(NSError * __autoreleasing *)errorPointer;
-+ (NSDictionary *) dictionaryForXMLString:(NSString *)string error:(NSError * __autoreleasing *)errorPointer;
++ (NSDictionary *) dictionaryForXMLString:(NSString *)string error:(NSError * __autoreleasing *)erorPointer;
 
 @end

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:../JZBUtils/JZBUtils.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../GMapService/Mac/GMapService/GMapService.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "container:GMapTest.xcodeproj">
+   </FileRef>
+</Workspace>

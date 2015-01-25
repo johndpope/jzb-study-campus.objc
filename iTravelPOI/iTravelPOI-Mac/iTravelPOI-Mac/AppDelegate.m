@@ -9,8 +9,10 @@
 #import "AppDelegate.h"
 
 #import "BaseCoreDataService.h"
-#import "MockUp.h"
 #import "DDTTYLogger.h"
+
+
+#import "GMRemoteService.h"
 
 
 
@@ -48,12 +50,10 @@
     // Inicializa el sistema de logging
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
     
-    // Inicializa el modelo de datos
-    [self _initDataModel];
+    GMRemoteService *gmapService = [[GMRemoteService alloc] init];
+    [gmapService description];
     
     
-    // Hace unas pruebas minimas
-    [MockUp listModel];
     
     
     // Se crea la ventana y controller inicial de la aplicación
@@ -114,27 +114,6 @@ void _uncaughtExceptionHandler(NSException *exception) {
 }
 
 
-// ---------------------------------------------------------------------------------------------------------------------
-- (void) _initDataModel {
-    
-    // ---------------------------------------
-    // ---------------------------------------
-    [MockUp resetModel:@"iTravelPOI"];
-    // ---------------------------------------
-    // ---------------------------------------
-    
-    
-    if(![BaseCoreDataService initCDStack:@"iTravelPOI-Model"]) {
-        abort();
-    }
-    
-    
-    // ---------------------------------------
-    // ---------------------------------------
-    [MockUp populateModel];
-    // ---------------------------------------
-    // ---------------------------------------
-    
-}
+
 
 @end

@@ -7,18 +7,48 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		422E9CD119A8ACF8004EC346 /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 422E9CD019A8ACF8004EC346 /* OCMock.framework */; };
+		422E9CD219A8ADCC004EC346 /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 422E9CD019A8ACF8004EC346 /* OCMock.framework */; };
+		42363EF819B2097800AA27F2 /* NSError+SimpleInit.m in Sources */ = {isa = PBXBuildFile; fileRef = 42363EF719B2097800AA27F2 /* NSError+SimpleInit.m */; };
+		42363EFE19B2160400AA27F2 /* GMapService_Assertions.m in Sources */ = {isa = PBXBuildFile; fileRef = 42363EFD19B2160400AA27F2 /* GMapService_Assertions.m */; };
+		4242B91B19B360820077E70C /* FilteredRemoteService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4242B91A19B360820077E70C /* FilteredRemoteService.m */; };
+		4242B91C19B360820077E70C /* FilteredRemoteService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4242B91A19B360820077E70C /* FilteredRemoteService.m */; };
+		4242B95F19B3A9200077E70C /* GMComparer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4242B94119B3A9200077E70C /* GMComparer.m */; };
+		4242B96019B3A9200077E70C /* GMCoordinates.m in Sources */ = {isa = PBXBuildFile; fileRef = 4242B94319B3A9200077E70C /* GMCoordinates.m */; };
+		4242B96119B3A9200077E70C /* GMSynchronizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4242B94819B3A9200077E70C /* GMSynchronizer.m */; };
+		4242B96219B3A9200077E70C /* GMapDataHttpFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 4242B94B19B3A9200077E70C /* GMapDataHttpFetcher.m */; };
+		4242B96319B3A9200077E70C /* GMAtomGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4242B94D19B3A9200077E70C /* GMAtomGenerator.m */; };
+		4242B96419B3A9200077E70C /* GMFeedProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4242B94F19B3A9200077E70C /* GMFeedProcessor.m */; };
+		4242B96519B3A9200077E70C /* GMItemValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4242B95119B3A9200077E70C /* GMItemValidator.m */; };
+		4242B96619B3A9200077E70C /* GMRemoteService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4242B95319B3A9200077E70C /* GMRemoteService.m */; };
+		4242B96719B3A9200077E70C /* GMSimpleItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4242B95519B3A9200077E70C /* GMSimpleItem.m */; };
+		4242B96919B3A9200077E70C /* GMSimpleMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 4242B95819B3A9200077E70C /* GMSimpleMap.m */; };
+		4242B96A19B3A9200077E70C /* GMSimplePlacemark.m in Sources */ = {isa = PBXBuildFile; fileRef = 4242B95B19B3A9200077E70C /* GMSimplePlacemark.m */; };
+		4242B96B19B3A9200077E70C /* GMSimplePoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 4242B95C19B3A9200077E70C /* GMSimplePoint.m */; };
+		4242B96C19B3A9200077E70C /* GMSimplePolyLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 4242B95D19B3A9200077E70C /* GMSimplePolyLine.m */; };
+		4242B96F19B3BEE50077E70C /* Mock_LocalStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4242B96E19B3BEE50077E70C /* Mock_LocalStorage.m */; };
+		4267A6C7199B9D3A0070F46A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4267A6C5199B9D3A0070F46A /* MainMenu.xib */; };
+		4267A6CA199BA9F40070F46A /* Cypher.m in Sources */ = {isa = PBXBuildFile; fileRef = 4267A6C9199BA9F40070F46A /* Cypher.m */; };
+		4267A6D7199CEECE0070F46A /* GMapService_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4267A6D5199CEECE0070F46A /* GMapService_Tests.m */; };
+		4274359A19B2715F00A02E94 /* GMapService_Synchronizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4274359919B2715F00A02E94 /* GMapService_Synchronizer.m */; };
+		4292A17D19B10804006C06A3 /* GMapService_Comparer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4292A17C19B10804006C06A3 /* GMapService_Comparer.m */; };
+		42A16B03199B67A30041F101 /* BenchMark.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A16AEF199B67A30041F101 /* BenchMark.m */; };
+		42A16B05199B67A30041F101 /* NSManagedObjectContext+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A16AF3199B67A30041F101 /* NSManagedObjectContext+Utils.m */; };
+		42A16B06199B67A30041F101 /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A16AF5199B67A30041F101 /* NSString+HTML.m */; };
+		42A16B07199B67A30041F101 /* NSString+JavaStr.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A16AF7199B67A30041F101 /* NSString+JavaStr.m */; };
+		42A16B08199B67A30041F101 /* SimpleXMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A16AF9199B67A30041F101 /* SimpleXMLReader.m */; };
+		42A16B10199B69A10041F101 /* NetworkProgressWheelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A16B0F199B69A10041F101 /* NetworkProgressWheelController.m */; };
+		42A16B12199B6BC10041F101 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42A16B11199B6BC10041F101 /* CoreLocation.framework */; };
 		42BE7975186702B600AECD57 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BE7974186702B600AECD57 /* Cocoa.framework */; };
 		42BE797F186702B600AECD57 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 42BE797D186702B600AECD57 /* InfoPlist.strings */; };
 		42BE7981186702B600AECD57 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BE7980186702B600AECD57 /* main.m */; };
 		42BE7985186702B600AECD57 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 42BE7983186702B600AECD57 /* Credits.rtf */; };
 		42BE7988186702B600AECD57 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BE7987186702B600AECD57 /* AppDelegate.m */; };
-		42BE798B186702B600AECD57 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 42BE7989186702B600AECD57 /* MainMenu.xib */; };
 		42BE7990186702B600AECD57 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42BE798F186702B600AECD57 /* Images.xcassets */; };
 		42BE7997186702B600AECD57 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BE7996186702B600AECD57 /* XCTest.framework */; };
 		42BE7998186702B600AECD57 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BE7974186702B600AECD57 /* Cocoa.framework */; };
 		42BE79A0186702B600AECD57 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 42BE799E186702B600AECD57 /* InfoPlist.strings */; };
 		42BE79A2186702B600AECD57 /* iTravelPOI_MacTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BE79A1186702B600AECD57 /* iTravelPOI_MacTests.m */; };
-		42BE79B51867050400AECD57 /* iTravelPOI-Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 42BE79B31867050400AECD57 /* iTravelPOI-Model.xcdatamodeld */; };
 		42BE79E618670E0F00AECD57 /* ErrorManagerService.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BE79E518670E0F00AECD57 /* ErrorManagerService.m */; };
 		42BE79FC18670E6C00AECD57 /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BE79EA18670E6C00AECD57 /* DDAbstractDatabaseLogger.m */; };
 		42BE79FD18670E6C00AECD57 /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BE79EC18670E6C00AECD57 /* DDASLLogger.m */; };
@@ -31,15 +61,9 @@
 		42BE7A0418670E6C00AECD57 /* tpl_implementation.txt in Resources */ = {isa = PBXBuildFile; fileRef = 42BE79F918670E6C00AECD57 /* tpl_implementation.txt */; };
 		42BE7A0518670E6C00AECD57 /* tpl_interface.txt in Resources */ = {isa = PBXBuildFile; fileRef = 42BE79FA18670E6C00AECD57 /* tpl_interface.txt */; };
 		42BE7A0618670E6C00AECD57 /* tpl_protected_int.txt in Resources */ = {isa = PBXBuildFile; fileRef = 42BE79FB18670E6C00AECD57 /* tpl_protected_int.txt */; };
-		42BE7A18186716E700AECD57 /* MBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BE7A09186716E700AECD57 /* MBase.m */; };
-		42BE7A19186716E700AECD57 /* MMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BE7A0B186716E700AECD57 /* MMap.m */; };
-		42BE7A1A186716E700AECD57 /* MPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BE7A0D186716E700AECD57 /* MPoint.m */; };
-		42BE7A1B186716E700AECD57 /* _MBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BE7A10186716E700AECD57 /* _MBase.m */; };
-		42BE7A1C186716E700AECD57 /* _MMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BE7A12186716E700AECD57 /* _MMap.m */; };
-		42BE7A1D186716E700AECD57 /* _MPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BE7A14186716E700AECD57 /* _MPoint.m */; };
-		42BE7A1E186716E700AECD57 /* MockUp.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BE7A17186716E700AECD57 /* MockUp.m */; };
 		42BE7A21186717F800AECD57 /* BaseCoreDataService.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BE7A20186717F800AECD57 /* BaseCoreDataService.m */; };
-		42BE7A2418671BED00AECD57 /* NSManagedObjectContext+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BE7A2318671BED00AECD57 /* NSManagedObjectContext+Utils.m */; };
+		42DEB70C19CDA58200CCEA84 /* GMSimpleItemFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 42DEB70B19CDA58200CCEA84 /* GMSimpleItemFactory.m */; };
+		42F908BF19A9E0B7002BD779 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42A16B11199B6BC10041F101 /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,7 +76,73 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		429B062F19A7C77700F635DA /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		422E9CD019A8ACF8004EC346 /* OCMock.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OCMock.framework; path = "../JZB-Libraries/OCMock/OSX/OCMock.framework"; sourceTree = "<group>"; };
+		42363EF619B2097800AA27F2 /* NSError+SimpleInit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+SimpleInit.h"; sourceTree = "<group>"; };
+		42363EF719B2097800AA27F2 /* NSError+SimpleInit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSError+SimpleInit.m"; sourceTree = "<group>"; };
+		42363EFC19B2160400AA27F2 /* GMapService_Assertions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMapService_Assertions.h; sourceTree = "<group>"; };
+		42363EFD19B2160400AA27F2 /* GMapService_Assertions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapService_Assertions.m; sourceTree = "<group>"; };
+		4242B91919B360820077E70C /* FilteredRemoteService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilteredRemoteService.h; sourceTree = "<group>"; };
+		4242B91A19B360820077E70C /* FilteredRemoteService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilteredRemoteService.m; sourceTree = "<group>"; };
+		4242B94019B3A9200077E70C /* GMComparer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMComparer.h; sourceTree = "<group>"; };
+		4242B94119B3A9200077E70C /* GMComparer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMComparer.m; sourceTree = "<group>"; };
+		4242B94219B3A9200077E70C /* GMCoordinates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMCoordinates.h; sourceTree = "<group>"; };
+		4242B94319B3A9200077E70C /* GMCoordinates.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMCoordinates.m; sourceTree = "<group>"; };
+		4242B94419B3A9200077E70C /* GMDataStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMDataStorage.h; sourceTree = "<group>"; };
+		4242B94619B3A9200077E70C /* GMModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMModel.h; sourceTree = "<group>"; };
+		4242B94719B3A9200077E70C /* GMSynchronizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMSynchronizer.h; sourceTree = "<group>"; };
+		4242B94819B3A9200077E70C /* GMSynchronizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMSynchronizer.m; sourceTree = "<group>"; };
+		4242B94A19B3A9200077E70C /* GMapDataHttpFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMapDataHttpFetcher.h; sourceTree = "<group>"; };
+		4242B94B19B3A9200077E70C /* GMapDataHttpFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapDataHttpFetcher.m; sourceTree = "<group>"; };
+		4242B94C19B3A9200077E70C /* GMAtomGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMAtomGenerator.h; sourceTree = "<group>"; };
+		4242B94D19B3A9200077E70C /* GMAtomGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMAtomGenerator.m; sourceTree = "<group>"; };
+		4242B94E19B3A9200077E70C /* GMFeedProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMFeedProcessor.h; sourceTree = "<group>"; };
+		4242B94F19B3A9200077E70C /* GMFeedProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMFeedProcessor.m; sourceTree = "<group>"; };
+		4242B95019B3A9200077E70C /* GMItemValidator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMItemValidator.h; sourceTree = "<group>"; };
+		4242B95119B3A9200077E70C /* GMItemValidator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMItemValidator.m; sourceTree = "<group>"; };
+		4242B95219B3A9200077E70C /* GMRemoteService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMRemoteService.h; sourceTree = "<group>"; };
+		4242B95319B3A9200077E70C /* GMRemoteService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMRemoteService.m; sourceTree = "<group>"; };
+		4242B95519B3A9200077E70C /* GMSimpleItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMSimpleItem.m; sourceTree = "<group>"; };
+		4242B95819B3A9200077E70C /* GMSimpleMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMSimpleMap.m; sourceTree = "<group>"; };
+		4242B95919B3A9200077E70C /* GMSimpleModel+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GMSimpleModel+Protected.h"; sourceTree = "<group>"; };
+		4242B95A19B3A9200077E70C /* GMSimpleModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMSimpleModel.h; sourceTree = "<group>"; };
+		4242B95B19B3A9200077E70C /* GMSimplePlacemark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMSimplePlacemark.m; sourceTree = "<group>"; };
+		4242B95C19B3A9200077E70C /* GMSimplePoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMSimplePoint.m; sourceTree = "<group>"; };
+		4242B95D19B3A9200077E70C /* GMSimplePolyLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMSimplePolyLine.m; sourceTree = "<group>"; };
+		4242B96D19B3BEE50077E70C /* Mock_LocalStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mock_LocalStorage.h; sourceTree = "<group>"; };
+		4242B96E19B3BEE50077E70C /* Mock_LocalStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Mock_LocalStorage.m; sourceTree = "<group>"; };
+		4267A6C6199B9D3A0070F46A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		4267A6C8199BA9F40070F46A /* Cypher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cypher.h; sourceTree = "<group>"; };
+		4267A6C9199BA9F40070F46A /* Cypher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Cypher.m; sourceTree = "<group>"; };
+		4267A6D5199CEECE0070F46A /* GMapService_Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapService_Tests.m; sourceTree = "<group>"; };
+		4274359919B2715F00A02E94 /* GMapService_Synchronizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapService_Synchronizer.m; sourceTree = "<group>"; };
+		4292A17C19B10804006C06A3 /* GMapService_Comparer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMapService_Comparer.m; sourceTree = "<group>"; };
+		42A16AEE199B67A30041F101 /* BenchMark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenchMark.h; sourceTree = "<group>"; };
+		42A16AEF199B67A30041F101 /* BenchMark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenchMark.m; sourceTree = "<group>"; };
+		42A16AF2199B67A30041F101 /* NSManagedObjectContext+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObjectContext+Utils.h"; sourceTree = "<group>"; };
+		42A16AF3199B67A30041F101 /* NSManagedObjectContext+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObjectContext+Utils.m"; sourceTree = "<group>"; };
+		42A16AF4199B67A30041F101 /* NSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+HTML.h"; sourceTree = "<group>"; };
+		42A16AF5199B67A30041F101 /* NSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+HTML.m"; sourceTree = "<group>"; };
+		42A16AF6199B67A30041F101 /* NSString+JavaStr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+JavaStr.h"; sourceTree = "<group>"; };
+		42A16AF7199B67A30041F101 /* NSString+JavaStr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+JavaStr.m"; sourceTree = "<group>"; };
+		42A16AF8199B67A30041F101 /* SimpleXMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleXMLReader.h; sourceTree = "<group>"; };
+		42A16AF9199B67A30041F101 /* SimpleXMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleXMLReader.m; sourceTree = "<group>"; };
+		42A16B02199B67A30041F101 /* Util_Macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util_Macros.h; sourceTree = "<group>"; };
+		42A16B0E199B69A10041F101 /* NetworkProgressWheelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkProgressWheelController.h; sourceTree = "<group>"; };
+		42A16B0F199B69A10041F101 /* NetworkProgressWheelController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkProgressWheelController.m; sourceTree = "<group>"; };
+		42A16B11199B6BC10041F101 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		42BE7971186702B600AECD57 /* iTravelPOI-Mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iTravelPOI-Mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		42BE7974186702B600AECD57 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		42BE7977186702B600AECD57 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -65,14 +155,12 @@
 		42BE7984186702B600AECD57 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		42BE7986186702B600AECD57 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		42BE7987186702B600AECD57 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		42BE798A186702B600AECD57 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		42BE798F186702B600AECD57 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		42BE7995186702B600AECD57 /* iTravelPOI-MacTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "iTravelPOI-MacTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		42BE7996186702B600AECD57 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		42BE799D186702B600AECD57 /* iTravelPOI-MacTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "iTravelPOI-MacTests-Info.plist"; sourceTree = "<group>"; };
 		42BE799F186702B600AECD57 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		42BE79A1186702B600AECD57 /* iTravelPOI_MacTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iTravelPOI_MacTests.m; sourceTree = "<group>"; };
-		42BE79B41867050400AECD57 /* iTravelPOI-Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "iTravelPOI-Model.xcdatamodel"; sourceTree = "<group>"; };
 		42BE79E418670E0F00AECD57 /* ErrorManagerService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ErrorManagerService.h; sourceTree = "<group>"; };
 		42BE79E518670E0F00AECD57 /* ErrorManagerService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ErrorManagerService.m; sourceTree = "<group>"; };
 		42BE79E918670E6C00AECD57 /* DDAbstractDatabaseLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDAbstractDatabaseLogger.h; sourceTree = "<group>"; };
@@ -93,24 +181,11 @@
 		42BE79F918670E6C00AECD57 /* tpl_implementation.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tpl_implementation.txt; sourceTree = "<group>"; };
 		42BE79FA18670E6C00AECD57 /* tpl_interface.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tpl_interface.txt; sourceTree = "<group>"; };
 		42BE79FB18670E6C00AECD57 /* tpl_protected_int.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tpl_protected_int.txt; sourceTree = "<group>"; };
-		42BE7A08186716E700AECD57 /* MBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBase.h; sourceTree = "<group>"; };
-		42BE7A09186716E700AECD57 /* MBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBase.m; sourceTree = "<group>"; };
-		42BE7A0A186716E700AECD57 /* MMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMap.h; sourceTree = "<group>"; };
-		42BE7A0B186716E700AECD57 /* MMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMap.m; sourceTree = "<group>"; };
-		42BE7A0C186716E700AECD57 /* MPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPoint.h; sourceTree = "<group>"; };
-		42BE7A0D186716E700AECD57 /* MPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPoint.m; sourceTree = "<group>"; };
-		42BE7A0F186716E700AECD57 /* _MBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MBase.h; sourceTree = "<group>"; };
-		42BE7A10186716E700AECD57 /* _MBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MBase.m; sourceTree = "<group>"; };
-		42BE7A11186716E700AECD57 /* _MMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MMap.h; sourceTree = "<group>"; };
-		42BE7A12186716E700AECD57 /* _MMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MMap.m; sourceTree = "<group>"; };
-		42BE7A13186716E700AECD57 /* _MPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MPoint.h; sourceTree = "<group>"; };
-		42BE7A14186716E700AECD57 /* _MPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MPoint.m; sourceTree = "<group>"; };
-		42BE7A16186716E700AECD57 /* MockUp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockUp.h; sourceTree = "<group>"; };
-		42BE7A17186716E700AECD57 /* MockUp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockUp.m; sourceTree = "<group>"; };
 		42BE7A1F186717F800AECD57 /* BaseCoreDataService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseCoreDataService.h; sourceTree = "<group>"; };
 		42BE7A20186717F800AECD57 /* BaseCoreDataService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseCoreDataService.m; sourceTree = "<group>"; };
-		42BE7A2218671BED00AECD57 /* NSManagedObjectContext+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObjectContext+Utils.h"; sourceTree = "<group>"; };
-		42BE7A2318671BED00AECD57 /* NSManagedObjectContext+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObjectContext+Utils.m"; sourceTree = "<group>"; };
+		42DEB70A19CDA4F300CCEA84 /* GMItemFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMItemFactory.h; sourceTree = "<group>"; };
+		42DEB70B19CDA58200CCEA84 /* GMSimpleItemFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMSimpleItemFactory.m; sourceTree = "<group>"; };
+		42DEB70D19CDA5A600CCEA84 /* GMSimpleItemFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMSimpleItemFactory.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +193,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				422E9CD119A8ACF8004EC346 /* OCMock.framework in Frameworks */,
+				42A16B12199B6BC10041F101 /* CoreLocation.framework in Frameworks */,
 				42BE7975186702B600AECD57 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -126,6 +203,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				42F908BF19A9E0B7002BD779 /* CoreLocation.framework in Frameworks */,
+				422E9CD219A8ADCC004EC346 /* OCMock.framework in Frameworks */,
 				42BE7998186702B600AECD57 /* Cocoa.framework in Frameworks */,
 				42BE7997186702B600AECD57 /* XCTest.framework in Frameworks */,
 			);
@@ -134,12 +213,110 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4242B94919B3A9200077E70C /* RemoteService */ = {
+			isa = PBXGroup;
+			children = (
+				4242B94A19B3A9200077E70C /* GMapDataHttpFetcher.h */,
+				4242B94B19B3A9200077E70C /* GMapDataHttpFetcher.m */,
+				4242B94C19B3A9200077E70C /* GMAtomGenerator.h */,
+				4242B94D19B3A9200077E70C /* GMAtomGenerator.m */,
+				4242B94E19B3A9200077E70C /* GMFeedProcessor.h */,
+				4242B94F19B3A9200077E70C /* GMFeedProcessor.m */,
+				4242B95019B3A9200077E70C /* GMItemValidator.h */,
+				4242B95119B3A9200077E70C /* GMItemValidator.m */,
+				4242B95219B3A9200077E70C /* GMRemoteService.h */,
+				4242B95319B3A9200077E70C /* GMRemoteService.m */,
+			);
+			path = RemoteService;
+			sourceTree = "<group>";
+		};
+		4242B95419B3A9200077E70C /* SimpleModel */ = {
+			isa = PBXGroup;
+			children = (
+				42DEB70B19CDA58200CCEA84 /* GMSimpleItemFactory.m */,
+				42DEB70D19CDA5A600CCEA84 /* GMSimpleItemFactory.h */,
+				4242B95A19B3A9200077E70C /* GMSimpleModel.h */,
+				4242B95919B3A9200077E70C /* GMSimpleModel+Protected.h */,
+				4242B95519B3A9200077E70C /* GMSimpleItem.m */,
+				4242B95819B3A9200077E70C /* GMSimpleMap.m */,
+				4242B95B19B3A9200077E70C /* GMSimplePlacemark.m */,
+				4242B95C19B3A9200077E70C /* GMSimplePoint.m */,
+				4242B95D19B3A9200077E70C /* GMSimplePolyLine.m */,
+			);
+			path = SimpleModel;
+			sourceTree = "<group>";
+		};
+		4267A6D2199CEECE0070F46A /* GMapService_Tests */ = {
+			isa = PBXGroup;
+			children = (
+				4242B91919B360820077E70C /* FilteredRemoteService.h */,
+				4242B91A19B360820077E70C /* FilteredRemoteService.m */,
+				4242B96D19B3BEE50077E70C /* Mock_LocalStorage.h */,
+				4242B96E19B3BEE50077E70C /* Mock_LocalStorage.m */,
+				42363EFC19B2160400AA27F2 /* GMapService_Assertions.h */,
+				42363EFD19B2160400AA27F2 /* GMapService_Assertions.m */,
+				4292A17C19B10804006C06A3 /* GMapService_Comparer.m */,
+				4274359919B2715F00A02E94 /* GMapService_Synchronizer.m */,
+				4267A6D5199CEECE0070F46A /* GMapService_Tests.m */,
+			);
+			name = GMapService_Tests;
+			path = "../../iTravelPOI-Services/GMapService/Tests";
+			sourceTree = "<group>";
+		};
+		4292A11F19B107B5006C06A3 /* GMapService */ = {
+			isa = PBXGroup;
+			children = (
+				42DEB70A19CDA4F300CCEA84 /* GMItemFactory.h */,
+				4242B94019B3A9200077E70C /* GMComparer.h */,
+				4242B94119B3A9200077E70C /* GMComparer.m */,
+				4242B94219B3A9200077E70C /* GMCoordinates.h */,
+				4242B94319B3A9200077E70C /* GMCoordinates.m */,
+				4242B94419B3A9200077E70C /* GMDataStorage.h */,
+				4242B94619B3A9200077E70C /* GMModel.h */,
+				4242B94719B3A9200077E70C /* GMSynchronizer.h */,
+				4242B94819B3A9200077E70C /* GMSynchronizer.m */,
+				4242B94919B3A9200077E70C /* RemoteService */,
+				4242B95419B3A9200077E70C /* SimpleModel */,
+			);
+			path = GMapService;
+			sourceTree = "<group>";
+		};
+		42A16AED199B67A30041F101 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				4267A6C8199BA9F40070F46A /* Cypher.h */,
+				4267A6C9199BA9F40070F46A /* Cypher.m */,
+				42A16AEE199B67A30041F101 /* BenchMark.h */,
+				42A16AEF199B67A30041F101 /* BenchMark.m */,
+				42363EF619B2097800AA27F2 /* NSError+SimpleInit.h */,
+				42363EF719B2097800AA27F2 /* NSError+SimpleInit.m */,
+				42A16AF2199B67A30041F101 /* NSManagedObjectContext+Utils.h */,
+				42A16AF3199B67A30041F101 /* NSManagedObjectContext+Utils.m */,
+				42A16AF4199B67A30041F101 /* NSString+HTML.h */,
+				42A16AF5199B67A30041F101 /* NSString+HTML.m */,
+				42A16AF6199B67A30041F101 /* NSString+JavaStr.h */,
+				42A16AF7199B67A30041F101 /* NSString+JavaStr.m */,
+				42A16AF8199B67A30041F101 /* SimpleXMLReader.h */,
+				42A16AF9199B67A30041F101 /* SimpleXMLReader.m */,
+				42A16B02199B67A30041F101 /* Util_Macros.h */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		42A16B0D199B69A10041F101 /* NetworkProgressWheelController */ = {
+			isa = PBXGroup;
+			children = (
+				42A16B0E199B69A10041F101 /* NetworkProgressWheelController.h */,
+				42A16B0F199B69A10041F101 /* NetworkProgressWheelController.m */,
+			);
+			path = NetworkProgressWheelController;
+			sourceTree = "<group>";
+		};
 		42BE7968186702B600AECD57 = {
 			isa = PBXGroup;
 			children = (
 				42BE79E718670E6C00AECD57 /* JZB-Libraries */,
 				42BE79E318670E0F00AECD57 /* iTravelPOI-Services */,
-				42BE79B21867050400AECD57 /* iTravelPOI-Model */,
 				42BE797A186702B600AECD57 /* iTravelPOI-Mac */,
 				42BE799B186702B600AECD57 /* iTravelPOI-MacTests */,
 				42BE7973186702B600AECD57 /* Frameworks */,
@@ -159,6 +336,8 @@
 		42BE7973186702B600AECD57 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				422E9CD019A8ACF8004EC346 /* OCMock.framework */,
+				42A16B11199B6BC10041F101 /* CoreLocation.framework */,
 				42BE7974186702B600AECD57 /* Cocoa.framework */,
 				42BE7996186702B600AECD57 /* XCTest.framework */,
 				42BE7976186702B600AECD57 /* Other Frameworks */,
@@ -179,9 +358,9 @@
 		42BE797A186702B600AECD57 /* iTravelPOI-Mac */ = {
 			isa = PBXGroup;
 			children = (
+				4267A6C5199B9D3A0070F46A /* MainMenu.xib */,
 				42BE7986186702B600AECD57 /* AppDelegate.h */,
 				42BE7987186702B600AECD57 /* AppDelegate.m */,
-				42BE7989186702B600AECD57 /* MainMenu.xib */,
 				42BE798F186702B600AECD57 /* Images.xcassets */,
 				42BE797B186702B600AECD57 /* Supporting Files */,
 			);
@@ -204,6 +383,7 @@
 			isa = PBXGroup;
 			children = (
 				42BE79A1186702B600AECD57 /* iTravelPOI_MacTests.m */,
+				4267A6D2199CEECE0070F46A /* GMapService_Tests */,
 				42BE799C186702B600AECD57 /* Supporting Files */,
 			);
 			path = "iTravelPOI-MacTests";
@@ -218,23 +398,10 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		42BE79B21867050400AECD57 /* iTravelPOI-Model */ = {
-			isa = PBXGroup;
-			children = (
-				42BE7A07186716E700AECD57 /* Human */,
-				42BE7A0E186716E700AECD57 /* Machine */,
-				42BE7A15186716E700AECD57 /* Test */,
-				42BE79B31867050400AECD57 /* iTravelPOI-Model.xcdatamodeld */,
-			);
-			name = "iTravelPOI-Model";
-			path = "../iTravelPOI-Model";
-			sourceTree = "<group>";
-		};
 		42BE79E318670E0F00AECD57 /* iTravelPOI-Services */ = {
 			isa = PBXGroup;
 			children = (
-				42BE7A2218671BED00AECD57 /* NSManagedObjectContext+Utils.h */,
-				42BE7A2318671BED00AECD57 /* NSManagedObjectContext+Utils.m */,
+				4292A11F19B107B5006C06A3 /* GMapService */,
 				42BE7A1F186717F800AECD57 /* BaseCoreDataService.h */,
 				42BE7A20186717F800AECD57 /* BaseCoreDataService.m */,
 				42BE79E418670E0F00AECD57 /* ErrorManagerService.h */,
@@ -247,6 +414,8 @@
 		42BE79E718670E6C00AECD57 /* JZB-Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				42A16B0D199B69A10041F101 /* NetworkProgressWheelController */,
+				42A16AED199B67A30041F101 /* Utils */,
 				42BE79E818670E6C00AECD57 /* Lumberjack */,
 				42BE79F918670E6C00AECD57 /* tpl_implementation.txt */,
 				42BE79FA18670E6C00AECD57 /* tpl_interface.txt */,
@@ -286,41 +455,6 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		42BE7A07186716E700AECD57 /* Human */ = {
-			isa = PBXGroup;
-			children = (
-				42BE7A08186716E700AECD57 /* MBase.h */,
-				42BE7A09186716E700AECD57 /* MBase.m */,
-				42BE7A0A186716E700AECD57 /* MMap.h */,
-				42BE7A0B186716E700AECD57 /* MMap.m */,
-				42BE7A0C186716E700AECD57 /* MPoint.h */,
-				42BE7A0D186716E700AECD57 /* MPoint.m */,
-			);
-			path = Human;
-			sourceTree = "<group>";
-		};
-		42BE7A0E186716E700AECD57 /* Machine */ = {
-			isa = PBXGroup;
-			children = (
-				42BE7A0F186716E700AECD57 /* _MBase.h */,
-				42BE7A10186716E700AECD57 /* _MBase.m */,
-				42BE7A11186716E700AECD57 /* _MMap.h */,
-				42BE7A12186716E700AECD57 /* _MMap.m */,
-				42BE7A13186716E700AECD57 /* _MPoint.h */,
-				42BE7A14186716E700AECD57 /* _MPoint.m */,
-			);
-			path = Machine;
-			sourceTree = "<group>";
-		};
-		42BE7A15186716E700AECD57 /* Test */ = {
-			isa = PBXGroup;
-			children = (
-				42BE7A16186716E700AECD57 /* MockUp.h */,
-				42BE7A17186716E700AECD57 /* MockUp.m */,
-			);
-			path = Test;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -328,7 +462,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 42BE79A5186702B600AECD57 /* Build configuration list for PBXNativeTarget "iTravelPOI-Mac" */;
 			buildPhases = (
-				42BE79B61867060600AECD57 /* ShellScript */,
 				42BE796D186702B600AECD57 /* Sources */,
 				42BE796E186702B600AECD57 /* Frameworks */,
 				42BE796F186702B600AECD57 /* Resources */,
@@ -349,6 +482,7 @@
 				42BE7991186702B600AECD57 /* Sources */,
 				42BE7992186702B600AECD57 /* Frameworks */,
 				42BE7993186702B600AECD57 /* Resources */,
+				429B062F19A7C77700F635DA /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -402,10 +536,10 @@
 				42BE7990186702B600AECD57 /* Images.xcassets in Resources */,
 				42BE7985186702B600AECD57 /* Credits.rtf in Resources */,
 				42BE7A0418670E6C00AECD57 /* tpl_implementation.txt in Resources */,
-				42BE798B186702B600AECD57 /* MainMenu.xib in Resources */,
 				42BE7A0318670E6C00AECD57 /* README.txt in Resources */,
 				42BE7A0618670E6C00AECD57 /* tpl_protected_int.txt in Resources */,
 				42BE7A0518670E6C00AECD57 /* tpl_interface.txt in Resources */,
+				4267A6C7199B9D3A0070F46A /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -419,47 +553,45 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		42BE79B61867060600AECD57 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "cd ../iTravelPOI-Model\necho \"Running mogenerator\"\nmogenerator --template-var arc=true -m iTravelPOI-Model.xcdatamodeld/iTravelPOI-Model.xcdatamodel/ -M Machine/ -H Human/ --template-path ~/Documents/objC-Campus/motemplates";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		42BE796D186702B600AECD57 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				42BE7A19186716E700AECD57 /* MMap.m in Sources */,
+				4242B96519B3A9200077E70C /* GMItemValidator.m in Sources */,
 				42BE79FF18670E6C00AECD57 /* DDLog.m in Sources */,
+				4242B96119B3A9200077E70C /* GMSynchronizer.m in Sources */,
 				42BE79E618670E0F00AECD57 /* ErrorManagerService.m in Sources */,
-				42BE7A1B186716E700AECD57 /* _MBase.m in Sources */,
+				4242B96319B3A9200077E70C /* GMAtomGenerator.m in Sources */,
+				42DEB70C19CDA58200CCEA84 /* GMSimpleItemFactory.m in Sources */,
 				42BE79FE18670E6C00AECD57 /* DDFileLogger.m in Sources */,
-				42BE7A1A186716E700AECD57 /* MPoint.m in Sources */,
 				42BE7988186702B600AECD57 /* AppDelegate.m in Sources */,
 				42BE79FC18670E6C00AECD57 /* DDAbstractDatabaseLogger.m in Sources */,
-				42BE7A1E186716E700AECD57 /* MockUp.m in Sources */,
+				42A16B05199B67A30041F101 /* NSManagedObjectContext+Utils.m in Sources */,
+				4242B96B19B3A9200077E70C /* GMSimplePoint.m in Sources */,
+				4242B96419B3A9200077E70C /* GMFeedProcessor.m in Sources */,
+				42A16B07199B67A30041F101 /* NSString+JavaStr.m in Sources */,
+				4242B96719B3A9200077E70C /* GMSimpleItem.m in Sources */,
+				42A16B06199B67A30041F101 /* NSString+HTML.m in Sources */,
+				4242B91B19B360820077E70C /* FilteredRemoteService.m in Sources */,
+				4242B96619B3A9200077E70C /* GMRemoteService.m in Sources */,
+				42A16B10199B69A10041F101 /* NetworkProgressWheelController.m in Sources */,
+				4267A6CA199BA9F40070F46A /* Cypher.m in Sources */,
 				42BE7A0018670E6C00AECD57 /* DDTTYLogger.m in Sources */,
-				42BE7A1D186716E700AECD57 /* _MPoint.m in Sources */,
-				42BE7A18186716E700AECD57 /* MBase.m in Sources */,
 				42BE7A21186717F800AECD57 /* BaseCoreDataService.m in Sources */,
 				42BE7A0118670E6C00AECD57 /* ContextFilterLogFormatter.m in Sources */,
 				42BE7981186702B600AECD57 /* main.m in Sources */,
-				42BE7A2418671BED00AECD57 /* NSManagedObjectContext+Utils.m in Sources */,
-				42BE7A1C186716E700AECD57 /* _MMap.m in Sources */,
+				4242B96C19B3A9200077E70C /* GMSimplePolyLine.m in Sources */,
+				4242B96219B3A9200077E70C /* GMapDataHttpFetcher.m in Sources */,
+				4242B95F19B3A9200077E70C /* GMComparer.m in Sources */,
+				42A16B03199B67A30041F101 /* BenchMark.m in Sources */,
+				42363EF819B2097800AA27F2 /* NSError+SimpleInit.m in Sources */,
 				42BE79FD18670E6C00AECD57 /* DDASLLogger.m in Sources */,
+				42A16B08199B67A30041F101 /* SimpleXMLReader.m in Sources */,
+				4242B96A19B3A9200077E70C /* GMSimplePlacemark.m in Sources */,
 				42BE7A0218670E6C00AECD57 /* DispatchQueueLogFormatter.m in Sources */,
-				42BE79B51867050400AECD57 /* iTravelPOI-Model.xcdatamodeld in Sources */,
+				4242B96919B3A9200077E70C /* GMSimpleMap.m in Sources */,
+				4242B96019B3A9200077E70C /* GMCoordinates.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -467,7 +599,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4274359A19B2715F00A02E94 /* GMapService_Synchronizer.m in Sources */,
+				4242B91C19B360820077E70C /* FilteredRemoteService.m in Sources */,
 				42BE79A2186702B600AECD57 /* iTravelPOI_MacTests.m in Sources */,
+				4292A17D19B10804006C06A3 /* GMapService_Comparer.m in Sources */,
+				4267A6D7199CEECE0070F46A /* GMapService_Tests.m in Sources */,
+				42363EFE19B2160400AA27F2 /* GMapService_Assertions.m in Sources */,
+				4242B96F19B3BEE50077E70C /* Mock_LocalStorage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -482,6 +620,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		4267A6C5199B9D3A0070F46A /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4267A6C6199B9D3A0070F46A /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
 		42BE797D186702B600AECD57 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -496,14 +642,6 @@
 				42BE7984186702B600AECD57 /* en */,
 			);
 			name = Credits.rtf;
-			sourceTree = "<group>";
-		};
-		42BE7989186702B600AECD57 /* MainMenu.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				42BE798A186702B600AECD57 /* Base */,
-			);
-			name = MainMenu.xib;
 			sourceTree = "<group>";
 		};
 		42BE799E186702B600AECD57 /* InfoPlist.strings */ = {
@@ -590,6 +728,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/jzarzuela/Documents/objC-Campus/iTravelPOI/JZB-Libraries/OCMock/OSX",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iTravelPOI-Mac/iTravelPOI-Mac-Prefix.pch";
 				INFOPLIST_FILE = "iTravelPOI-Mac/iTravelPOI-Mac-Info.plist";
@@ -603,6 +745,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/jzarzuela/Documents/objC-Campus/iTravelPOI/JZB-Libraries/OCMock/OSX",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iTravelPOI-Mac/iTravelPOI-Mac-Prefix.pch";
 				INFOPLIST_FILE = "iTravelPOI-Mac/iTravelPOI-Mac-Info.plist";
@@ -619,6 +765,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
+					"/Users/jzarzuela/Documents/objC-Campus/iTravelPOI/JZB-Libraries/OCMock/OSX",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iTravelPOI-Mac/iTravelPOI-Mac-Prefix.pch";
@@ -641,6 +788,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
+					"/Users/jzarzuela/Documents/objC-Campus/iTravelPOI/JZB-Libraries/OCMock/OSX",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iTravelPOI-Mac/iTravelPOI-Mac-Prefix.pch";
@@ -670,6 +818,7 @@
 				42BE79A7186702B600AECD57 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		42BE79A8186702B600AECD57 /* Build configuration list for PBXNativeTarget "iTravelPOI-MacTests" */ = {
 			isa = XCConfigurationList;
@@ -678,21 +827,9 @@
 				42BE79AA186702B600AECD57 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		42BE79B31867050400AECD57 /* iTravelPOI-Model.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				42BE79B41867050400AECD57 /* iTravelPOI-Model.xcdatamodel */,
-			);
-			currentVersion = 42BE79B41867050400AECD57 /* iTravelPOI-Model.xcdatamodel */;
-			path = "iTravelPOI-Model.xcdatamodeld";
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 42BE7969186702B600AECD57 /* Project object */;
 }

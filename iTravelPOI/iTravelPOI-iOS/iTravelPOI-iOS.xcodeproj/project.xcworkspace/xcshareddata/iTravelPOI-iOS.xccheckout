@@ -10,29 +10,29 @@
 	<string>iTravelPOI-iOS</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>E43A93D8-4046-4D3A-977F-14E5E36803DD</key>
+		<key>90C88CAC0EB389A2F2880AE968A5A1241138ABE3</key>
 		<string>https://code.google.com/p/jzb-study-campus.objc/</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>iTravelPOI/iTravelPOI-iOS/iTravelPOI-iOS.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>E43A93D8-4046-4D3A-977F-14E5E36803DD</key>
+		<key>90C88CAC0EB389A2F2880AE968A5A1241138ABE3</key>
 		<string>../../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://code.google.com/p/jzb-study-campus.objc/</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>E43A93D8-4046-4D3A-977F-14E5E36803DD</string>
+	<string>90C88CAC0EB389A2F2880AE968A5A1241138ABE3</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>E43A93D8-4046-4D3A-977F-14E5E36803DD</string>
+			<string>90C88CAC0EB389A2F2880AE968A5A1241138ABE3</string>
 			<key>IDESourceControlWCCName</key>
 			<string>objC-Campus</string>
 		</dict>
